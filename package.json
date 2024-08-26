@@ -1,0 +1,24 @@
+{
+  "name": "techecho",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"tailwindcss -i ./src/styles/style.css -o ./static/styles/style.css --watch\" \"esbuild ./src/scripts/app.js --bundle --outfile=./static/scripts/app.js --watch\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "daisyui": "^4.12.10",
+    "esbuild": "^0.23.0",
+    "tailwindcss": "^3.4.7"
+  },
+  "description": "",
+  "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0"
+  }
+}
