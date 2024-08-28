@@ -1,0 +1,43 @@
+{% extends "layouts/base.html" %} {% block content %}
+
+<div class="flex justify-center mt-10">
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Client Name</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Email</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+        <tr class="hover">
+          <th>{{ client.id }}</th>
+          <td>{{ client.client_name }}</td>
+          <td>{{ client.phone_number }}</td>
+          <td>{{ client.address }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.note }}</td>
+          <td>
+            <a
+              href="{% url 'inventory:edit' inventory.id %}"
+              class="btn btn-primary"
+              >Edit</a
+            >
+            <a
+              href="{% url 'inventory:delete' inventory.id %}"
+              class="btn btn-error"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
