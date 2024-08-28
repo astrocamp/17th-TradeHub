@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<a href="{% url 'products:index' %}">商品資料</a>
+
+<form action="{% url 'products:index' %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button>新增</button>
+</form>
+
+
+{% endblock %}
