@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %} {% block content %}
 
-<div class="flex justify-center mt-10">
-  <div class="overflow-x-auto">
+<div class="flex justify-center mt-32">
+  <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
@@ -10,31 +10,31 @@
           <th>Supplier Name</th>
           <th>Quantity</th>
           <th>Last Updated</th>
+          <th>Safety Stock</th>
           <th>Operate</th>
         </tr>
       </thead>
       <tbody>
-        {% for inventory in inventory %}
+        {% for item in inventory %}
         <tr class="hover">
-          <th>{{ inventory.id }}</th>
-          <td>{{ inventory.product_name }}</td>
-          <td>{{ inventory.supplier_name }}</td>
-          <td>{{ inventory.quantity }}</td>
-          <td>{{ inventory.last_updated }}</td>
+          <th>{{ item.id }}</th>
+          <td>{{ item.product }}</td>
+          <td>{{ item.supplier }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.last_updated }}</td>
+          <td>{{ item.safety_stock }}</td>
           <td>
             <a
-              href="{% url 'inventory:edit' inventory.id %}"
+              onclick="my_modal_1.showModal()"
+              href="{% url 'inventory:edit' item.id %}"
               class="btn btn-primary"
               >Edit</a
             >
-            <a
-              href="{% url 'inventory:delete' inventory.id %}"
-              class="btn btn-error"
+            <a href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
               >Delete</a
             >
           </td>
         </tr>
-        {% endfor %}
       </tbody>
       <tfoot>
         <tr>
@@ -43,10 +43,11 @@
           <th>supplier_name</th>
           <th>quantity</th>
           <th>last_updated</th>
+          <th>safety_stock</th>
           <th>operate</th>
         </tr>
       </tfoot>
     </table>
   </div>
 </div>
-{% endblock %}
+{% include "pages/edit.html" %} {% endfor %} {% endblock %}

@@ -1,11 +1,14 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require("tailwindcss/defaultTheme");
+
 module.exports = {
   content: ["./**/templates/**/*.{html,js,py}"],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: ["Inter var", ...defaultTheme.fontFamily.sans],
+      },
+    },
   },
-  plugins: [
-    require('daisyui'),
-  ],
-}
-
+  plugins: [require("daisyui")],
+};
