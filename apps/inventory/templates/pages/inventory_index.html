@@ -1,6 +1,10 @@
 {% extends "layouts/base.html" %} {% block content %}
-
-<div class="flex justify-center mt-32">
+<div class="flex justify-end mt-32">
+  <a href="{% url 'inventory:create' %}" class="btn bg-orange-600 text-white"
+    >Create</a
+  >
+</div>
+<div class="flex justify-center">
   <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
       <thead>
@@ -18,7 +22,7 @@
         {% for item in inventory %}
         <tr class="hover">
           <th>{{ item.id }}</th>
-          <td>{{ item.product }}</td>
+          <td>{{ item.product.title }}</td>
           <td>{{ item.supplier }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.last_updated }}</td>
@@ -50,4 +54,4 @@
     </table>
   </div>
 </div>
-{% include "pages/edit.html" %} {% endfor %} {% endblock %}
+{% include "pages/inventory_edit.html" %} {% endfor %} {% endblock %}

@@ -1,10 +1,7 @@
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.products.models import Product
-
-from .forms import ProductForm
-
-# Create your views here.
+from .forms.product_form import ProductForm
+from .models import Product
 
 
 def index(req):
