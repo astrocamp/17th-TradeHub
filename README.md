@@ -21,9 +21,6 @@ https://github.com/KangPeiHsuan
 賴奕浤
 https://github.com/Roger-0227
 
-蘇彥霖
-https://github.com/Y3n1in
-
 陳政杰
 https://github.com/jaychen1007
 

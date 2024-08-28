@@ -49,6 +49,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "apps.products",
+    "apps.inventory",
+    "apps.pages",
 ]
 
 if is_dev():

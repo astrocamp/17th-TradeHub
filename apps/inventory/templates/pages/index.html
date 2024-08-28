@@ -1,0 +1,52 @@
+{% extends "layouts/base.html" %} {% block content %}
+
+<div class="flex justify-center mt-10">
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Product Name</th>
+          <th>Supplier Name</th>
+          <th>Quantity</th>
+          <th>Last Updated</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inventory in inventory %}
+        <tr class="hover">
+          <th>{{ inventory.id }}</th>
+          <td>{{ inventory.product_name }}</td>
+          <td>{{ inventory.supplier_name }}</td>
+          <td>{{ inventory.quantity }}</td>
+          <td>{{ inventory.last_updated }}</td>
+          <td>
+            <a
+              href="{% url 'inventory:edit' inventory.id %}"
+              class="btn btn-primary"
+              >Edit</a
+            >
+            <a
+              href="{% url 'inventory:delete' inventory.id %}"
+              class="btn btn-error"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>product_name</th>
+          <th>supplier_name</th>
+          <th>quantity</th>
+          <th>last_updated</th>
+          <th>operate</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+{% endblock %}
