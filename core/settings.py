@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     "apps.inventory",
     "apps.pages",
     "apps.users",
+    "apps.products",
 ]
 
 if is_dev():
