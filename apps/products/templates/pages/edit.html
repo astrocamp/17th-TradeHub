@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<a href="{% url 'products:show' product.id %}">商品資料</a>
+
+<form action="{% url 'products:show' product.id %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button>更新</button>
+</form>
+
+{% endblock %}

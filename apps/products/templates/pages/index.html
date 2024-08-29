@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+<h3>商品資料列表</h3>
+
+<div>
+    <ul>
+        {% for product in products %}
+        <a href="{% url 'products:show' product.id %}">
+            <p>{{product.productNumber}}</p>
+            <p>{{product.title}}</p>
+            <p>{{product.price}}</p>
+            <p>{{product.quantity}}</p>
+            <p>{{product.note}}</p>
+        </a>
+        {% endfor %}
+    </ul>
+</div>
+
+<a href="{% url 'products:new' %}">新增</a>
+
+{% endblock %}
