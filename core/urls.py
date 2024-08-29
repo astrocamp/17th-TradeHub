@@ -7,4 +7,5 @@ urlpatterns = [
     path("", include("apps.pages.urls")),
     path("admin/", admin.site.urls),
     path("inventory/", include("apps.inventory.urls")),
+    path("suppliers/", include("apps.suppliers.urls")),
 ] + debug_toolbar_urls()

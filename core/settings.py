@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "apps.inventory",
     "apps.pages",
+    "apps.suppliers",
 ]
 
 if is_dev():
