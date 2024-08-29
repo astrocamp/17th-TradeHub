@@ -1,5 +1,6 @@
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms.form import SupplierForm
 from .models import Supplier
@@ -13,7 +14,7 @@ def index(req):
             return redirect("suppliers:index")
         else:
             return render(req, "suppliers/new.html", {"form": form})
-    suppliers = Supplier.objects.order_by("-id")
+    suppliers = Supplier.objects.order_by("id")
     return render(req, "suppliers/index.html", {"suppliers": suppliers})
 
 
@@ -45,5 +46,11 @@ def edit(req, id):
 def delete(req, id):
     supplier = get_object_or_404(Supplier, pk=id)
     supplier.delete()
-    suppliers = Supplier.objects.order_by("-id")
-    return render(req, "suppliers/index.html", {"suppliers": suppliers})
+    return redirect("suppliers:index")
+
+
+@require_POST
+def delete_selected_suppliers(request):
+    selected_suppliers = request.POST.getlist("selected_suppliers")
+    Supplier.objects.filter(id__in=selected_suppliers).delete()
+    return redirect("suppliers:index")
