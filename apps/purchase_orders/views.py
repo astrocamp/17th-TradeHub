@@ -29,7 +29,28 @@ def new(request):
 
 def show(req, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    if req.method == "POST":
+        form = PurchaseOrderForm(req.POST, instance=purchase_order)
+        if form.is_valid():
+            form.save()
+            return redirect("purchase_orders:show", purchase_order.id)
+        else:
+            return render(
+                req,
+                "purchase_orders/edit.html",
+                {"purchase_order": purchase_order, "form": form},
+            )
     return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
+
+
+def edit(req, id):
+    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    form = PurchaseOrderForm(instance=purchase_order)
+    return render(
+        req,
+        "purchase_orders/edit.html",
+        {"purchase_order": purchase_order, "form": form},
+    )
 
 
 @require_POST
