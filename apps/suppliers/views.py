@@ -40,3 +40,10 @@ def edit(req, id):
     supplier = get_object_or_404(Supplier, pk=id)
     form = SupplierForm(instance=supplier)
     return render(req, "suppliers/edit.html", {"supplier": supplier, "form": form})
+
+
+def delete(req, id):
+    supplier = get_object_or_404(Supplier, pk=id)
+    supplier.delete()
+    suppliers = Supplier.objects.order_by("-id")
+    return render(req, "suppliers/index.html", {"suppliers": suppliers})
