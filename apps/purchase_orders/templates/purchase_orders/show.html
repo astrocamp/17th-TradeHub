@@ -13,7 +13,7 @@
             <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Edit
             </a>
-            <form action="" method="POST" class="inline-block">
+            <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST" class="inline-block">
                 {% csrf_token %}
                 <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
                     Delete

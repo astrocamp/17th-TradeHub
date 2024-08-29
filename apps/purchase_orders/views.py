@@ -52,6 +52,10 @@ def edit(req, id):
         {"purchase_order": purchase_order, "form": form},
     )
 
+def delete(req, id):
+    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    purchase_order.delete()
+    return redirect("purchase_orders:index")
 
 @require_POST
 def delete_selected_purchase_orders(request):
