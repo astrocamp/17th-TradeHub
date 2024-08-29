@@ -18,7 +18,7 @@
 
                 <!-- 編輯和刪除按鈕 -->
                 <div class="flex gap-3">
-                    <a href="" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                    <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                         Edit
                     </a>
                     <form action="" method="POST" class="inline-block">
