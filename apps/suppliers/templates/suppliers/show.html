@@ -1,0 +1,13 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <!-- Product Information -->
+    <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg space-y-6 mt-6">
+        <h1 class="text-3xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Phone:</span> {{ supplier.tel }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Contact:</span> {{ supplier.contact }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">GUI Number:</span> {{ supplier.GUInumber }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Address:</span> {{ supplier.address }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Remark:</span> {{ supplier.remark }}</p>
+    </div>
+{% endblock %}
