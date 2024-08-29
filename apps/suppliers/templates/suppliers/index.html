@@ -12,7 +12,7 @@
             {% for supplier in suppliers %}
             <div class="flex items-center justify-between p-6 bg-white shadow-lg rounded-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105">
                 <!-- 供應商名稱和電話 -->
-                <a href="" class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out">
+                <a href="{% url 'suppliers:show' supplier.id %}" class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out">
                     {{ supplier.name }} - {{ supplier.tel }}
                 </a>
 

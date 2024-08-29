@@ -20,3 +20,8 @@ def index(req):
 def new(req):
     form = SupplierForm()
     return render(req, "suppliers/new.html", {"form": form})
+
+
+def show(req, id):
+    supplier = get_object_or_404(Supplier, pk=id)
+    return render(req, "suppliers/show.html", {"supplier": supplier})
