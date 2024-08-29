@@ -4,20 +4,35 @@
 
 <h3>商品資料列表</h3>
 
-<div>
-    <ul>
-        {% for product in products %}
-        <a href="{% url 'products:show' product.id %}">
-            <p>{{product.productNumber}}</p>
-            <p>{{product.title}}</p>
-            <p>{{product.price}}</p>
-            <p>{{product.quantity}}</p>
-            <p>{{product.note}}</p>
-        </a>
-        {% endfor %}
-    </ul>
-</div>
+<a href="{% url 'products:new' %}" class="btn btn-primary">新增</a>
 
-<a href="{% url 'products:new' %}">新增</a>
+<div class="flex justify-center mt-10">
+    <div class="overflow-x-auto">
+        <table class="table table-xl text-center">
+            <thead>
+                <tr class="text-xl">
+                    <th></th>
+                    <th>品號</th>
+                    <th>品名</th>
+                    <th>價格</th>
+                    <th>數量</th>
+                    <th>備註</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                <tr class="hover">
+                    <th></th>
+                    <th><a href="{% url 'products:show' product.id %}">{{product.productNumber}}</a></th>
+                    <th>{{product.title}}</th>
+                    <th>{{product.price}}</th>
+                    <th>{{product.quantity}}</th>
+                    <th>{{product.note}}</th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

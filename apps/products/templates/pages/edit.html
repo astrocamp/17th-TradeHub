@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<a href="{% url 'products:show' product.id %}">商品資料</a>
+<a href="{% url 'products:show' product.id %}" class="btn btn-primary">回商品資料列表</a>
 
 <form action="{% url 'products:show' product.id %}" method="POST">
     {% csrf_token %}
     {{form}}
-    <button>更新</button>
+    <button class="btn btn-primary">更新</button>
 </form>
 
 {% endblock %}
