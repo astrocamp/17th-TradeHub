@@ -27,6 +27,11 @@ def new(request):
     )  # Update template
 
 
+def show(req, id):
+    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
+
+
 @require_POST
 def delete_selected_purchase_orders(request):
     selected_purchase_orders = request.POST.getlist("selected_purchase_orders")
