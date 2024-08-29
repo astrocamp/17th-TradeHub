@@ -1,6 +1,8 @@
-from django.shortcuts import render, redirect
-from .models import Inventory
 from datetime import datetime
+
+from django.shortcuts import redirect, render
+
+from .models import Inventory
 
 
 def index(request):

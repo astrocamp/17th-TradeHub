@@ -7,7 +7,7 @@ class Supplier(models.Model):
     tel = models.CharField(max_length=20)
     contact = models.CharField(max_length=100)
     GUInumber = models.IntegerField(unique=True)
-    address = models.TextField()    
+    address = models.TextField()
     remark = models.TextField(blank=True, null=True)
 
     def __str__(self):

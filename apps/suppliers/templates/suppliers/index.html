@@ -1,0 +1,35 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="p-4">
+        <!-- 新增產品按鈕 -->
+        <a href="{% url 'suppliers:new' %}" class="mb-6 inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105">
+            Add a new supplier
+        </a>
+
+        <!-- 供應商列表 -->
+        <div class="space-y-4">
+            {% for supplier in suppliers %}
+            <div class="flex items-center justify-between p-6 bg-white shadow-lg rounded-xl hover:shadow-2xl transition duration-300 ease-in-out transform hover:scale-105">
+                <!-- 供應商名稱和電話 -->
+                <a href="" class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out">
+                    {{ supplier.name }} - {{ supplier.tel }}
+                </a>
+
+                <!-- 編輯和刪除按鈕 -->
+                <div class="flex gap-3">
+                    <a href="" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                        Edit
+                    </a>
+                    <form action="" method="POST" class="inline-block">
+                        {% csrf_token %}
+                        <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                            Delete
+                        </button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
