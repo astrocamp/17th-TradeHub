@@ -1,0 +1,24 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <!-- Purchase Order Information -->
+    <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg space-y-6 mt-8">
+        <h1 class="text-3xl font-extrabold text-gray-900">Purchase Order: {{ purchase_order.order_number }}</h1>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Supplier:</span> {{ purchase_order.supplier.name }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Order Date:</span> {{ purchase_order.order_date }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Total Amount:</span> ${{ purchase_order.total_amount }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Notes:</span> {{ purchase_order.notes }}</p>
+        <!-- Edit and Delete Buttons -->
+        <div class="flex gap-3">
+            <a href="" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Edit
+            </a>
+            <form action="" method="POST" class="inline-block">
+                {% csrf_token %}
+                <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                    Delete
+                </button>
+            </form>
+        </div>
+    </div>
+{% endblock %}
