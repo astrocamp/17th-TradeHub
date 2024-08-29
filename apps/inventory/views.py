@@ -12,14 +12,11 @@ def index(request):
 def create(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
-        breakpoint()
         if form.is_valid():
             form.save()
-            return redirect("inventory:create")
-        return render(request, "pages/inventory_create.html", {"form": form})
-    else:
-        form = RestockForm()
-        return render(request, "pages/inventory_create.html", {"form": form})
+            return redirect("inventory:index")
+    form = RestockForm()
+    return render(request, "pages/inventory_create.html", {"form": form})
 
 
 def edit(request, id):
@@ -27,16 +24,15 @@ def edit(request, id):
     if request.method == "POST":
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
+            inventory.update_state()
             form.save()
             return redirect("inventory:index")
-        return render(
-            request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
-        )
     else:
         form = RestockForm(instance=inventory)
-        return render(
-            request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
-        )
+
+    return render(
+        request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
+    )
 
 
 def delete(request, id):

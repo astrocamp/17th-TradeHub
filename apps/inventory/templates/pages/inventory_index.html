@@ -1,57 +1,104 @@
-{% extends "layouts/base.html" %} {% block content %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 <div class="flex justify-end mt-32">
   <a href="{% url 'inventory:create' %}" class="btn bg-orange-600 text-white"
     >Create</a
   >
 </div>
+
 <div class="flex justify-center">
   <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
       <thead>
-        <tr class="text-xl">
-          <th></th>
-          <th>Product Name</th>
-          <th>Supplier Name</th>
+        <tr class="text-xl text-center">
+          <th>
+            <div class="join join-vertical text-right gap-2">
+              <div class="join-item text-success">
+                <span>Normal</span>
+                <input
+                  type="checkbox"
+                  class="toggle toggle-success"
+                  checked="checked"
+                  name="normal"
+                />
+              </div>
+              <div class="join-item text-warning">
+                <span>Low</span>
+                <input
+                  type="checkbox"
+                  class="toggle toggle-warning"
+                  checked="checked"
+                  name="low"
+                />
+              </div>
+              <div class="join-item text-error">
+                <span>Out</span>
+                <input
+                  type="checkbox"
+                  class="toggle toggle-error"
+                  checked="checked"
+                  name="out"
+                />
+              </div>
+            </div>
+          </th>
+          <th>Product</th>
+          <th>Supplier</th>
           <th>Quantity</th>
-          <th>Last Updated</th>
           <th>Safety Stock</th>
+          <th>Note</th>
+          <th>Last Updated</th>
           <th>Operate</th>
         </tr>
       </thead>
+      {% for item in inventory %}
       <tbody>
-        {% for item in inventory %}
         <tr class="hover">
-          <th>{{ item.id }}</th>
-          <td>{{ item.product.title }}</td>
+          {% if item.state == "normal" %}
+          <th>
+            <span class="btn btn-sm btn-success text-lg">{{ item.state }}</span>
+          </th>
+          {% elif item.state == "low_stock" %}
+          <th>
+            <span class="btn btn-sm btn-warning text-lg">{{ item.state }}</span>
+          </th>
+          {% else %}
+          <th>
+            <span class="btn btn-sm btn-error text-lg">{{ item.state }}</span>
+          </th>
+          {% endif %}
+          <td>{{ item.product }}</td>
           <td>{{ item.supplier }}</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ item.last_updated }}</td>
           <td>{{ item.safety_stock }}</td>
+          <td>{{ item.note }}</td>
+          <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
           <td>
             <a
-              onclick="my_modal_1.showModal()"
               href="{% url 'inventory:edit' item.id %}"
               class="btn btn-primary"
-              >Edit</a
             >
+              Edit
+            </a>
             <a href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
               >Delete</a
             >
           </td>
         </tr>
+        {% endfor %}
       </tbody>
       <tfoot>
         <tr>
           <th></th>
-          <th>product_name</th>
-          <th>supplier_name</th>
+          <th>product</th>
+          <th>supplier</th>
           <th>quantity</th>
-          <th>last_updated</th>
           <th>safety_stock</th>
+          <th>note</th>
+          <th>last_updated</th>
           <th>operate</th>
         </tr>
       </tfoot>
     </table>
   </div>
 </div>
-{% include "pages/inventory_edit.html" %} {% endfor %} {% endblock %}
+{% endblock %}
