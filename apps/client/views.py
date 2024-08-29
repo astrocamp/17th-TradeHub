@@ -26,11 +26,11 @@ def client_update_and_delete(req, id):
             return redirect("client:list")
 
         else:
-            client.name = (req.POST["client_name"],)
-            client.phone_number = (req.POST["phone_number"],)
-            client.address = (req.POST["address"],)
-            client.email = (req.POST["email"],)
-            client.note = (req.POST["note"],)
+            client.name = req.POST["client_name"]
+            client.phone_number = req.POST["phone_number"]
+            client.address = req.POST["address"]
+            client.email = req.POST["email"]
+            client.note = req.POST["note"]
 
             client.save()
             return redirect("client:list")
