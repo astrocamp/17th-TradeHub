@@ -2,6 +2,7 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
+
 class CustomUser(AbstractUser):
 
     # 名稱、電話、地址、email、帳號、密碼、職稱、入職時間、備註
