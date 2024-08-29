@@ -20,7 +20,7 @@ def index(req):
 
 
 def new(req):
-    form = ProductForm
+    form = ProductForm()
     return render(req, "pages/new.html", {"form": form})
 
 

@@ -2,22 +2,41 @@
 
 {% block content %}
 
-<a href="{% url 'products:index' %}">回商品資料列表</a>
+<a href="{% url 'products:index' %}" class="btn btn-primary">回商品資料列表</a>
 
-<div>
-    <p>{{product.productNumber}}</p>
-    <p>{{product.title}}</p>
-    <p>{{product.price}}</p>
-    <p>{{product.quantity}}</p>
-    <p>{{product.note}}</p>
+<div class="flex justify-center mt-10">
+    <div class="overflow-x-auto">
+        <table class="table table-xl text-center">
+            <thead>
+                <tr class="text-xl">
+                    <th>品號</th>
+                    <th>品名</th>
+                    <th>價格</th>
+                    <th>數量</th>
+                    <th>備註</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="hover">
+                    <th>{{product.productNumber}}</th>
+                    <th>{{product.title}}</th>
+                    <th>{{product.price}}</th>
+                    <th>{{product.quantity}}</th>
+                    <th>{{product.note}}</th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 
-<div>
-    <a href="{% url 'products:edit' product.id %}">編輯</a>
-</div>
+<div class="flex justify-center mt-10">
+    <div>
+        <a href="{% url 'products:edit' product.id %}" class="btn btn-primary">編輯</a>
+    </div>
 
-<div>
-    <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}">刪除</a>
+    <div>
+        <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-primary">刪除</a>
+    </div>
 </div>
 
 {% endblock %}
