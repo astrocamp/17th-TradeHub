@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+  <h1 class="heading-1">登入</h1>
+
+  <section class="max-w-sm bg-white shadow-sm card">
+    <form action="{% url 'users:log_in' %}"
+          autocomplete="off"
+          class="card-body"
+          method="POST">
+      {% csrf_token %}
+
+      {% if request.GET.next %}
+        <input type="hidden" name="next" value="{{ request.GET.next }}" />
+      {% endif %}
+
+      <div>
+        <label class="label">帳號</label>
+        <input type="text" class="w-full input input-bordered" name="username" />
+      </div>
+
+      <div>
+        <label class="label">密碼</label>
+        <input type="password" class="w-full input input-bordered" name="password" />
+      </div>
+
+      <div>
+        <button class="mt-4 btn btn-primary">
+          登入
+        </button>
+        <div>
+          <a href="{% url 'users:forget_password' %}">忘記密碼？</a>
+        </div>
+      </div>
+    </form>
+
+    <div class="divider"></div>
+    <div><a class="link" href="{% url 'users:register' %}">註冊帳號</a></div>
+  </section>
+
+{% endblock %}
