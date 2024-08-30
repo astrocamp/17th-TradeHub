@@ -1,115 +1,149 @@
+from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import DateInput, HiddenInput, PasswordInput, TextInput
+from django.forms import (DateInput, TextInput)
+from django.utils import timezone
 
 from apps.users.models import CustomUser
 
 
 class CustomUserCreationForm(UserCreationForm):
+    first_name = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的姓名",
+            }
+        ),
+        label="姓名",
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的電子郵件",
+            }
+        ),
+        label="電子郵件",
+    )
+    phone = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的電話號碼",
+            }
+        ),
+        label="電話",
+    )
+    address = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的地址",
+            }
+        ),
+        label="地址",
+    )
+    title = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的職稱",
+            }
+        ),
+        label="職稱",
+    )
 
-    class Meta:
+    username = forms.CharField(
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的帳號",
+            }
+        ),
+        label="帳號",
+    )
+
+    password1 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請輸入您的密碼",
+            }
+        ),
+        label="密碼",
+        help_text=" 密碼至少包含8個字元，且包含數字、英文字母",
+    )
+    password2 = forms.CharField(
+        widget=forms.PasswordInput(
+            attrs={
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "請再次確認您的密碼",
+            }
+        ),
+        label="確認密碼",
+        help_text=" 兩次輸入的密碼必須一致",
+    )
+
+    # 欄位拉出meta，才會顯示出必填
+    class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = [
-            "username",
-            "password",
-            "password1",
             "first_name",
             "email",
             "phone",
             "address",
             "title",
             "hire_date",
-        ]  # 根據需要添加字段
+            "note",
+            "username",
+            "password1",
+            "password2",
+        ] 
         widgets = {
-            # 名稱、電話、地址、email、帳號、密碼、職稱、入職時間、備註
-            "username": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "帳號",
-                    "required": "True",
-                    "placeholder": "請設定您的帳號",
-                }
-            ),
-            "first_name": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "名稱",
-                    "placeholder": "請輸入您的姓名",
-                }
-            ),
-            "email": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "電子郵件",
-                    "required": "True",
-                    "placeholder": "請輸入您的電子郵件",
-                }
-            ),
-            "phone": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "電話",
-                    "required": "True",
-                    "placeholder": "請輸入您的電話號碼",
-                }
-            ),
-            "address": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "地址",
-                    "required": "True",
-                    "placeholder": "請輸入您的地址",
-                }
-            ),
-            "title": TextInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "職稱",
-                    "readonly": "readonly",
-                }
-            ),
             "hire_date": DateInput(
                 attrs={
-                    "class": "form-control w-full input input-bordered text-gray-200",
-                    "label": "入職時間",
+                    "class": "form-control w-full input input-bordered text-gray-300",
+                    "placeholder": "請選擇您的入職時間",
                     "readonly": "readonly",
+                    "value": timezone.now().strftime("%Y-%m-%d"),
                 }
             ),
-            "remark": TextInput(
+            "note": TextInput(
                 attrs={
                     "class": "form-control w-full input input-bordered",
-                    "label": "備註",
-                }
-            ),
-            "password": PasswordInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "密碼",
-                    "required": "True",
-                    "placeholder": "請設定您的密碼",
-                }
-            ),
-            "password1": PasswordInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered",
-                    "label": "確認密碼",
-                    "required": "True",
-                    "placeholder": "請再次確認您的密碼",
+                    "placeholder": "請輸入您的備註",
                 }
             ),
         }
         labels = {
-            "username": "帳號",
-            "password": "密碼",
-            "first_name": "姓名",
-            "email": "電子郵件",
-            "phone": "電話",
-            "address": "地址",
-            "title": "職稱",
             "hire_date": "入職時間",
-            "remark": "備註",
+            "note": "備註",
         }
 
+        # 初始化方法，用於在表單實例化時做初始設定
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
-            if "name" not in self.labels:
-                self.fields["password-based authentication"].widget = HiddenInput()
+
+            # 假設您希望根據某個條件來刪除 usable_password 字段
+            if kwargs.get("name") == "usable_password":  # 正確的比較方式
+                del self.fields['usable_password']  # 刪除 usable_password 字段
+
+
+        # clean_password2 方法可用來加強密碼的驗證邏輯，UserCreationForm 預設已包含檢查兩次密碼是否一致
+        def clean_password2(self):
+            password1 = self.cleaned_data.get("password1")
+            password2 = self.cleaned_data.get("password2")
+
+            # 檢查兩次密碼是否一致
+            if password1 and password2 and password1 != password2:
+                raise forms.ValidationError("兩次輸入的密碼不一致")
+
+            # 檢查密碼長度和內容
+            if len(password2) < 8:
+                raise forms.ValidationError("密碼長度必須大於 8 個字符。")
+            if not any(char.isdigit() for char in password2):
+                raise forms.ValidationError("密碼必須包含至少一個數字。")
+            if not any(char.isalpha() for char in password2):
+                raise forms.ValidationError("密碼必須包含至少一個字母。")
+
+            return password2
