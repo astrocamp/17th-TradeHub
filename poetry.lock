@@ -244,6 +244,17 @@ files = [
 Django = ">=3.2"
 
 [[package]]
+name = "django-fsm"
+version = "3.0.0"
+description = "Django friendly finite state machine support."
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-fsm-3.0.0.tar.gz", hash = "sha256:0112bcac573ad14051cf8ebe73bf296b6d5409f093e5f1677eb16e2196e263b3"},
+    {file = "django_fsm-3.0.0-py2.py3-none-any.whl", hash = "sha256:fa28f84f47eae7ce9247585ac6c1895e4ada08efff93fb243a59e9ff77b2d4ec"},
+]
+
+[[package]]
 name = "filelock"
 version = "3.15.4"
 description = "A platform independent file lock."
@@ -638,4 +649,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.12"
-content-hash = "399edd7750590d1c3f6ee713a5fda1459181812b4d5972343d87ffb01b6ec60a"
+content-hash = "f4af1145b9c0d5acdfcac5c14f0d2794cbc49a2524f8750dcb8df7fbd5aa87d5"
