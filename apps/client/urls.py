@@ -1,5 +1,6 @@
 from debug_toolbar.toolbar import debug_toolbar_urls
-from django.urls import path, include
+from django.urls import include, path
+
 from . import views
 
 app_name = "client"

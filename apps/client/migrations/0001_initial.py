@@ -7,21 +7,28 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Client',
+            name="Client",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30)),
-                ('phone_number', models.IntegerField()),
-                ('address', models.CharField(max_length=150)),
-                ('email', models.CharField(max_length=30)),
-                ('create_at', models.IntegerField()),
-                ('delete_at', models.IntegerField()),
-                ('note', models.TextField(max_length=150)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30)),
+                ("phone_number", models.IntegerField()),
+                ("address", models.CharField(max_length=150)),
+                ("email", models.CharField(max_length=30)),
+                ("create_at", models.IntegerField()),
+                ("delete_at", models.IntegerField()),
+                ("note", models.TextField(max_length=150)),
             ],
         ),
     ]
