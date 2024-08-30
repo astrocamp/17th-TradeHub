@@ -8,4 +8,5 @@ urlpatterns = [
     path("products/", include("apps.products.urls")),
     path("inventory/", include("apps.inventory.urls")),
     path("suppliers/", include("apps.suppliers.urls")),
+    path("clients/", include("apps.client.urls")),
 ] + debug_toolbar_urls()
