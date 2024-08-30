@@ -2,8 +2,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms.inventory_form import RestockForm
 from .models import Inventory
 from datetime import datetime
-from django.shortcuts import redirect, render
-from .models import Inventory
 
 
 def index(request):
