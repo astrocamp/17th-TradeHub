@@ -9,4 +9,5 @@ urlpatterns = [
     path("inventory/", include("apps.inventory.urls")),
     path("suppliers/", include("apps.suppliers.urls")),
     path("clients/", include("apps.client.urls")),
+    path("purchase-orders/", include("apps.purchase_orders.urls")),
 ] + debug_toolbar_urls()
