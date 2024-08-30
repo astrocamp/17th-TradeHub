@@ -5,7 +5,11 @@ from .models import Inventory
 
 
 def index(request):
-    inventory = Inventory.objects.order_by("-id")
+    state = request.GET.get("select")
+    if state is None:
+        inventory = Inventory.objects.order_by("-id")
+    else:
+        inventory = Inventory.objects.filter(state=state)
     return render(request, "pages/inventory_index.html", {"inventory": inventory})
 
 
