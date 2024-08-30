@@ -48,8 +48,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+<<<<<<< HEAD
     "apps.client",
     "apps.products",
+=======
+    "apps.inventory",
+    "apps.pages",
+>>>>>>> 364e2f2 (Create Inventory model and startapp pages and add base.html)
 ]
 
 if is_dev():
