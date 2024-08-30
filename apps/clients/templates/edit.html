@@ -1,6 +1,4 @@
 {% extends "layouts/base.html" %} {% block content %}
-
-<h1>Client edit</h1>
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
@@ -18,7 +16,7 @@
         <tr class="hover">
           <form action="{% url 'client:edit' client.id %}" method="post">
             {% csrf_token %}
-            <th>ID自動生成</th>
+            <th>ID Auto gen</th>
             <td>
               <input
                 type="text"
@@ -53,7 +51,7 @@
             </td>
             <td><input type="text" name="note" value="{{client.note}}" /></td>
             <td>
-              <button>更新</button>
+              <button>Update</button>
             </td>
           </form>
         </tr>
