@@ -6,4 +6,4 @@ from apps.products.models import Product
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ["productNumber", "title", "price", "quantity", "note"]
+        fields = ["product_id", "product_name", "price", "supplier", "note"]

@@ -15,7 +15,7 @@
                     <th>品號</th>
                     <th>品名</th>
                     <th>價格</th>
-                    <th>數量</th>
+                    <th>供應商</th>
                     <th>備註</th>
                 </tr>
             </thead>
@@ -23,10 +23,10 @@
                 {% for product in products %}
                 <tr class="hover">
                     <th></th>
-                    <th><a href="{% url 'products:show' product.id %}">{{product.productNumber}}</a></th>
-                    <th>{{product.title}}</th>
+                    <th><a href="{% url 'products:show' product.id %}">{{product.product_id}}</a></th>
+                    <th>{{product.product_name}}</th>
                     <th>{{product.price}}</th>
-                    <th>{{product.quantity}}</th>
+                    <th>{{product.supplier}}</th>
                     <th>{{product.note}}</th>
                 </tr>
                 {% endfor %}
