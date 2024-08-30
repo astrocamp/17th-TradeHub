@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Client edit</h1>
+    <form action="{% url 'client:edit' client.id %}" method="post">
+      {% csrf_token %}
+      <input
+        type="text"
+        name="client_name"
+        value="{{ client.name }}"
+        required
+      />
+      <input
+        type="tel"
+        name="phone_number"
+        value="{{ client.phone_number }}"
+        required
+      />
+      <input type="text" name="address" value="{{ client.address }}" required />
+      <input type="text" name="email" value="{{ client.email }}" required />
+      <input type="text" name="note" value="{{ client.note }}" />
+      <input type="submit" />
+    </form>
+    <form action="{% url 'client:edit' client.id %}" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="delete" />
+      <button>Delete</button>
+    </form>
+    <a href="{% url 'client:list' %}">back to Client list</a>
+  </body>
+</html>

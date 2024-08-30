@@ -5,7 +5,7 @@
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
-          <th></th>
+          <th>ID</th>
           <th>Client Name</th>
           <th>Phone Number</th>
           <th>Address</th>
@@ -14,28 +14,48 @@
         </tr>
       </thead>
       <tbody>
-        {% for client in clients %}
         <tr class="hover">
-          <th>{{ client.id }}</th>
-          <td>{{ client.client_name }}</td>
-          <td>{{ client.phone_number }}</td>
-          <td>{{ client.address }}</td>
-          <td>{{ client.email }}</td>
-          <td>{{ client.note }}</td>
-          <td>
-            <a
-              href="{% url 'inventory:edit' inventory.id %}"
-              class="btn btn-primary"
-              >Edit</a
-            >
-            <a
-              href="{% url 'inventory:delete' inventory.id %}"
-              class="btn btn-error"
-              >Delete</a
-            >
-          </td>
+          <form action="{% url 'client:list' %}" method="post">
+            {% csrf_token %}
+            <th>ID自動生成</th>
+            <td>
+              <input
+                type="text"
+                name="client_name"
+                value="{{client.name}}"
+                required
+              />
+            </td>
+            <td>
+              <input
+                type="tel"
+                name="phone_number"
+                value="{{client.phone_number}}"
+                required
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="address"
+                value="{{client.address}}"
+                required
+              />
+            </td>
+            <td>
+              <input
+                type="text"
+                name="email"
+                value="{{client.email}}"
+                required
+              />
+            </td>
+            <td><input type="text" name="note" value="{{client.note}}" /></td>
+            <td>
+              <button>更新</button>
+            </td>
+          </form>
         </tr>
-        {% endfor %}
       </tbody>
     </table>
   </div>

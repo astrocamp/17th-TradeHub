@@ -20,6 +20,6 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("", include("apps.client.urls")),
+    path("client/", include("apps.client.urls")),
     path("admin/", admin.site.urls),
 ] + debug_toolbar_urls()
