@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "concurrently \"tailwindcss -i ./src/styles/style.css -o ./static/styles/style.css --watch\" \"esbuild ./src/scripts/app.js --bundle --outfile=./static/scripts/app.js --watch\""
+    "dev": "concurrently \"tailwindcss -i ./src/styles/styles.css -o ./static/styles/style.css --watch\" \"esbuild ./src/scripts/app.js --bundle --outfile=./static/scripts/app.js --watch\""
   },
   "keywords": [],
   "author": "",

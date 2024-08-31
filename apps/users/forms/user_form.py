@@ -125,15 +125,10 @@ class CustomUserCreationForm(UserCreationForm):
             super().__init__(*args, **kwargs)
 
         # ----------這段目前看起來沒成功----------
-        # clean_XXXX 方法可用來加強表單的驗證邏輯
+        # cleaned_data 方法可用來儲存經過驗證的數據，可以用來加強驗證邏輯
         # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
         def clean_password2(self):
-            password1 = self.cleaned_data.get("password1")
             password2 = self.cleaned_data.get("password2")
-
-            # 檢查兩次密碼是否一致
-            if password1 and password2 and password1 != password2:
-                raise forms.ValidationError("兩次輸入的密碼不一致")
 
             # 檢查密碼長度和內容
             if len(password2) < 8:
@@ -145,14 +140,16 @@ class CustomUserCreationForm(UserCreationForm):
 
             return password2
 
+        # 檢查 email 是否已存在
         def clean_email(self):
             email = self.cleaned_data.get("email")
             if CustomUser.objects.filter(email=email).exists():
                 raise forms.ValidationError("Email already exists")
             return email
 
+        # 檢查帳號長度，至少6個字符
         def clean_username(self):
             username = self.cleaned_data.get("username")
-            if len(username) < 10:
-                raise forms.ValidationError("帳號長度必須大於 10 個字符。")
+            if len(username) < 6:
+                raise forms.ValidationError("帳號長度必須大於 6 個字符。")
             return username
