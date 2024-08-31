@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from .forms.user_form import CustomUserCreationForm
 
@@ -66,7 +66,7 @@ def profile(req):
 
 
 def reset_password(req):
-    # 送出重設密碼表單，未完成
+    # 送出重設密碼表單
     if req.method == "POST":
         username = req.POST.get("username")
         password = req.POST.get("password")
@@ -78,23 +78,24 @@ def reset_password(req):
                 user = User.objects.get(username=username)
             except User.DoesNotExist:
                 return render(
-                    req, "users/reset_password.html", {"error": "User does not exist"}
+                    req, "users/reset_password.html", {"error": "User does not exist."}
                 )
 
             # 檢查密碼是否一致
             if password == password_confirm:
                 user.set_password(password)
                 user.save()
+                login(req, user)
                 return redirect("users:log_in")
             else:
                 return render(
-                    req, "users/reset_password.html", {"error": "password not match"}
+                    req,
+                    "users/reset_password.html",
+                    {"error": "Password does not match."},
                 )
 
         else:
-            return render(
-                req, "users/reset_password.html", {"error": "username not exist"}
-            )
+            return render(req, "users/reset_password.html")
 
 
 def forget_password(req):

@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-  <h1 class="heading-1">會員註冊</h1>
+  <h1 class="heading-1">Sign Up</h1>
 
   <section class="max-w-sm bg-white shadow-sm card">
     <form action="{% url 'users:index' %}"
@@ -31,14 +31,14 @@
         {% endfor %}
 
         <div>
-          <button class="mt-4 btn btn-primary">註冊</button>
+          <button class="mt-4 btn btn-primary">Sign Up</button>
         </div>
     </form>
 
     <div class="divider"></div>
 
     <div>
-        <a class="link" href="{% url 'users:log_in' %}">直接登入</a>
+        <a class="link" href="{% url 'users:log_in' %}">Log In</a>
     </div>
 
 </section>

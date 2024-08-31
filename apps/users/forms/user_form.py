@@ -11,77 +11,77 @@ class CustomUserCreationForm(UserCreationForm):
         widget=forms.TextInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的姓名",
+                "placeholder": "Please enter your name.",
             }
         ),
-        label="姓名",
+        label="Name",
     )
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的電子郵件",
+                "placeholder": "Please enter your email.",
             }
         ),
-        label="電子郵件",
+        label="Email",
     )
     phone = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的電話號碼",
+                "placeholder": "Please enter your phone number.",
             }
         ),
-        label="電話",
+        label="Phone",
     )
     address = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的地址",
+                "placeholder": "Please enter your address.",
             }
         ),
-        label="地址",
+        label="Address",
     )
     title = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的職稱",
+                "placeholder": "Please enter your title.",
             }
         ),
-        label="職稱",
+        label="Title",
     )
 
     username = forms.CharField(
         widget=forms.TextInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的帳號",
+                "placeholder": "Please enter your username.",
             }
         ),
-        label="帳號",
+        label="Username",
     )
 
     password1 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請輸入您的密碼",
+                "placeholder": "Please enter your password.",
             }
         ),
-        label="密碼",
-        help_text=" 密碼至少包含8個字元，且包含數字、英文字母",
+        label="Password",
+        help_text="Password must be at least 8 characters long.",
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(
             attrs={
                 "class": "form-control w-full input input-bordered",
-                "placeholder": "請再次確認您的密碼",
+                "placeholder": "Please confirm your password again.",
             }
         ),
-        label="確認密碼",
-        help_text=" 兩次輸入的密碼必須一致",
+        label="Confirm Password",
+        help_text="The passwords must match.",
     )
 
     # 欄位拉出meta，才會顯示出必填
@@ -103,7 +103,6 @@ class CustomUserCreationForm(UserCreationForm):
             "hire_date": DateInput(
                 attrs={
                     "class": "form-control w-full input input-bordered text-gray-300",
-                    "placeholder": "請選擇您的入職時間",
                     "readonly": "readonly",
                     "value": timezone.now().strftime("%Y-%m-%d"),
                 }
@@ -111,20 +110,20 @@ class CustomUserCreationForm(UserCreationForm):
             "note": TextInput(
                 attrs={
                     "class": "form-control w-full input input-bordered",
-                    "placeholder": "請輸入您的備註",
+                    "placeholder": "Any additional information.",
                 }
             ),
         }
         labels = {
-            "hire_date": "入職時間",
-            "note": "備註",
+            "hire_date": "Hire Date",
+            "note": "Note",
         }
 
         # 初始化方法，用於在表單實例化時做初始設定
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
-        # ----------這段目前看起來沒成功----------
+        # ----------------這段目前看起來沒成功----------------------
         # cleaned_data 方法可用來儲存經過驗證的數據，可以用來加強驗證邏輯
         # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
         def clean_password2(self):
@@ -132,11 +131,17 @@ class CustomUserCreationForm(UserCreationForm):
 
             # 檢查密碼長度和內容
             if len(password2) < 8:
-                raise forms.ValidationError("密碼長度必須大於 8 個字符。")
+                raise forms.ValidationError(
+                    "Password must be at least 8 characters long."
+                )
             if not any(char.isdigit() for char in password2):
-                raise forms.ValidationError("密碼必須包含至少一個數字。")
+                raise forms.ValidationError(
+                    "Password must contain at least one number."
+                )
             if not any(char.isalpha() for char in password2):
-                raise forms.ValidationError("密碼必須包含至少一個字母。")
+                raise forms.ValidationError(
+                    "Password must contain at least one letter."
+                )
 
             return password2
 
@@ -151,5 +156,7 @@ class CustomUserCreationForm(UserCreationForm):
         def clean_username(self):
             username = self.cleaned_data.get("username")
             if len(username) < 6:
-                raise forms.ValidationError("帳號長度必須大於 6 個字符。")
+                raise forms.ValidationError(
+                    "Username must be at least 6 characters long."
+                )
             return username
