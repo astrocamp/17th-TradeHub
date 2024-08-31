@@ -5,7 +5,7 @@
   <section class="log_in-container">
     <div class="log_in-card">
       <div class="log_in-card-front">
-        <h2>TradeHub</h2>
+        <h2>Log In</h2>
       </div>
       <div class="log_in-card-back">
         <form action="{% url 'users:log_in' %}"
@@ -29,11 +29,11 @@
           </div>
 
           <div class="flex flex-col items-center text-xs justify-center gap-2 text-sm">
-            <button class="log_in-btn">
+            <button class="log_in-btn w-[90px]">
               Log In
             </button>
             <span class="text-gray-500 text-sm">---------- OR ----------</span>
-            <a class="log_in-btn" href="{% url 'users:register' %}">
+            <a class="log_in-btn w-[90px]" href="{% url 'users:register' %}">
               Sign Up
             </a>
             <span class="text-gray-500 text-sm">---------- OR ----------</span>
