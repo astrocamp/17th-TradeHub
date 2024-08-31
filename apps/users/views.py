@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms.user_form import CustomUserCreationForm
 
@@ -9,8 +9,10 @@ User = get_user_model()
 
 
 def index(req):
+    # 送出註冊表單
     if req.method == "POST":
         form = CustomUserCreationForm(req.POST)
+
         if form.is_valid():
             form.save()
             login(req, form.instance)
@@ -18,13 +20,18 @@ def index(req):
         else:
             return render(req, "users/register.html", {"form": form})
 
+    # 跳轉到登入頁面
+    return redirect("users:log_in")
+
 
 def register(req):
+    # 註冊頁面
     form = CustomUserCreationForm()
     return render(req, "users/register.html", {"form": form})
 
 
 def log_in(req):
+    # 送出登入表單
     if req.method == "POST":
         username = req.POST.get("username")
         password = req.POST.get("password")
@@ -46,6 +53,7 @@ def log_in(req):
 
 
 def log_out(req):
+    # 登出
     if req.method == "POST":
         logout(req)
         messages.success(req, "登出成功")
@@ -53,6 +61,42 @@ def log_out(req):
 
 
 def profile(req):
+    # 職員資料頁面，未完成
     return render(req, "users/profile.html")
 
 
+def reset_password(req):
+    # 送出重設密碼表單，未完成
+    if req.method == "POST":
+        username = req.POST.get("username")
+        password = req.POST.get("password")
+        password_confirm = req.POST.get("password_confirm")
+
+        # 檢查帳號是否存在
+        if username:
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                return render(
+                    req, "users/reset_password.html", {"error": "User does not exist"}
+                )
+
+            # 檢查密碼是否一致
+            if password == password_confirm:
+                user.set_password(password)
+                user.save()
+                return redirect("users:log_in")
+            else:
+                return render(
+                    req, "users/reset_password.html", {"error": "password not match"}
+                )
+
+        else:
+            return render(
+                req, "users/reset_password.html", {"error": "username not exist"}
+            )
+
+
+def forget_password(req):
+    # 忘記密碼頁面，未完成
+    return render(req, "users/reset_password.html")

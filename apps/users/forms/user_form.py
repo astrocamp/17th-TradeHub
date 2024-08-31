@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import (DateInput, TextInput)
+from django.forms import DateInput, TextInput
 from django.utils import timezone
 
 from apps.users.models import CustomUser
@@ -98,7 +98,7 @@ class CustomUserCreationForm(UserCreationForm):
             "username",
             "password1",
             "password2",
-        ] 
+        ]
         widgets = {
             "hire_date": DateInput(
                 attrs={
@@ -124,12 +124,9 @@ class CustomUserCreationForm(UserCreationForm):
         def __init__(self, *args, **kwargs):
             super().__init__(*args, **kwargs)
 
-            # 假設您希望根據某個條件來刪除 usable_password 字段
-            if kwargs.get("name") == "usable_password":  # 正確的比較方式
-                del self.fields['usable_password']  # 刪除 usable_password 字段
-
-
-        # clean_password2 方法可用來加強密碼的驗證邏輯，UserCreationForm 預設已包含檢查兩次密碼是否一致
+        # ----------這段目前看起來沒成功----------
+        # clean_XXXX 方法可用來加強表單的驗證邏輯
+        # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
         def clean_password2(self):
             password1 = self.cleaned_data.get("password1")
             password2 = self.cleaned_data.get("password2")
@@ -147,3 +144,15 @@ class CustomUserCreationForm(UserCreationForm):
                 raise forms.ValidationError("密碼必須包含至少一個字母。")
 
             return password2
+
+        def clean_email(self):
+            email = self.cleaned_data.get("email")
+            if CustomUser.objects.filter(email=email).exists():
+                raise forms.ValidationError("Email already exists")
+            return email
+
+        def clean_username(self):
+            username = self.cleaned_data.get("username")
+            if len(username) < 10:
+                raise forms.ValidationError("帳號長度必須大於 10 個字符。")
+            return username

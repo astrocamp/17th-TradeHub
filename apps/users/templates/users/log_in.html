@@ -16,12 +16,12 @@
 
       <div>
         <label class="label">帳號</label>
-        <input type="text" class="w-full input input-bordered" name="username" />
+        <input type="text" class="w-full input input-bordered" name="username" placeholder="請輸入帳號"/>
       </div>
 
       <div>
         <label class="label">密碼</label>
-        <input type="password" class="w-full input input-bordered" name="password" />
+        <input type="password" class="w-full input input-bordered" name="password" placeholder="請輸入密碼"/>
       </div>
 
       <div>
@@ -29,7 +29,7 @@
           登入
         </button>
         <div>
-          <a href="#">忘記密碼？</a>
+          <a href="{% url 'users:forget_password' %}">忘記密碼？</a>
         </div>
       </div>
     </form>
