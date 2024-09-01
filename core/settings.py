@@ -42,15 +42,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 匯入順序會影響migrate順序，有依賴關係的app要放在後面
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "apps.inventory",
     "apps.pages",
     "apps.users",
+    "apps.inventory",
 ]
 
 if is_dev():

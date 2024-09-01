@@ -69,29 +69,19 @@
       </li>
     </ul>
   </div>
-  <!-- search -->
-  <div class="navbar-center">
-    <div class="form-control">
-      <input
-        type="text"
-        placeholder="Search"
-        class="input input-bordered w-24 md:w-auto"
-      />
-    </div>
-  </div>
   <!-- user status -->
   <div class="navbar-end">
-    <div class="flex gap-5">
+    <div class="flex gap-2">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %}
-        <a href="{% url "users:profile" %}">{{ request.user.username }}</a>
-        <form action="{% url "users:log_out" %}" method="post">
+        <a href="{% url "users:profile" %}" class="w-[60px] flex justify-center">{{ request.user.username }}</a>
+        <form action="{% url "users:log_out" %}" method="post" class="w-[60px] flex justify-center">
           {% csrf_token %}
-          <button type="submit">登出</button>
+          <button type="submit">Log Out</button>
         </form>
       {% else %}
-        <a href="{% url "users:register" %}">註冊</a>
-        <a href="{% url "users:log_in" %}">登入</a>
+        <a href="{% url "users:register" %}" class="w-[60px] flex justify-center">Sign Up</a>
+        <a href="{% url "users:log_in" %}" class="w-[60px] flex justify-center">Log In</a>
       {% endif %}
     </div>
   </div>

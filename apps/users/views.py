@@ -1,6 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import redirect, render
 
 from .forms.user_form import CustomUserCreationForm
 
@@ -99,5 +99,4 @@ def reset_password(req):
 
 
 def forget_password(req):
-    # 忘記密碼頁面，未完成
     return render(req, "users/reset_password.html")
