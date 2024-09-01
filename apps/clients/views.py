@@ -6,6 +6,13 @@ from .models import Client
 def client_list(req):
     clients = Client.objects.order_by("-id")
     if req.method == "POST":
+        phone_number = req.POST.get("phone_number", "")
+        if not phone_number.isdigit():
+            return render(
+                req,
+                "list.html",
+                {"clients": clients, "error": "請輸入有效的電話號碼。"},
+            )
         client = Client(
             name=req.POST["client_name"],
             phone_number=req.POST["phone_number"],
@@ -25,6 +32,12 @@ def client_update_and_delete(req, id):
         if "delete" in req.POST:
             client.delete()
             return redirect("client:list")
+
+        phone_number = req.POST.get("phone_number", "")
+        if not phone_number.isdigit():
+            return render(
+                req, "edit.html", {"client": client, "error": "請輸入有效的電話號碼。"}
+            )
 
         else:
             client.name = req.POST["client_name"]

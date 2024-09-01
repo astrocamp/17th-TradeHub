@@ -27,8 +27,11 @@
             </td>
             <td>
               <input
-                type="tel"
+                type="text"
                 name="phone_number"
+                placeholder="Phone Number"
+                pattern="\d*"
+                title="請輸入數字"
                 value="{{client.phone_number}}"
                 required
               />
@@ -43,7 +46,7 @@
             </td>
             <td>
               <input
-                type="text"
+                type="email"
                 name="email"
                 value="{{client.email}}"
                 required
