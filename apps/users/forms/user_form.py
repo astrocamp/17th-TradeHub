@@ -94,7 +94,6 @@ class CustomUserCreationForm(UserCreationForm):
             "address",
             "title",
             "hire_date",
-            "note",
             "username",
             "password1",
             "password2",

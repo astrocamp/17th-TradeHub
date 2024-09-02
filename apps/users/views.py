@@ -16,6 +16,7 @@ def index(req):
         if form.is_valid():
             form.save()
             login(req, form.instance)
+            messages.success(req, "Successfully registered.")
             return redirect("pages:home")
         else:
             return render(req, "users/register.html", {"form": form})
@@ -41,7 +42,7 @@ def log_in(req):
 
         if user is not None:
             login(req, user)
-            messages.success(req, "登入成功")
+            messages.success(req, "Successfully logged in.")
             if next_url:
                 return redirect(next_url)
 
@@ -56,7 +57,7 @@ def log_out(req):
     # 登出
     if req.method == "POST":
         logout(req)
-        messages.success(req, "登出成功")
+        messages.success(req, "Successfully logged out.")
         return redirect("pages:home")
 
 

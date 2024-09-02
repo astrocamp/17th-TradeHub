@@ -19,6 +19,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.6.0",
     "@fortawesome/free-regular-svg-icons": "^6.6.0",
-    "@fortawesome/free-solid-svg-icons": "^6.6.0"
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "alpinejs": "^3.14.1"
   }
 }
