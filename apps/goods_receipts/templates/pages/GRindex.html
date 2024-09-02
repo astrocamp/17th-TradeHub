@@ -19,6 +19,7 @@
                     <th>Method</th> 
                     <th>Date</th> 
                     <th>Note</th> 
+                    <th>Operate</th>
                 </tr> 
             </thead> 
             <tbody> 
@@ -32,6 +33,16 @@
                     <th>{{goods_receipt.method}}</th> 
                     <th>{{goods_receipt.date}}</th> 
                     <th>{{goods_receipt.note}}</th> 
+                    <th>
+                        <div class="flex justify-center mt-10">
+                            <div>
+                                <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
+                            </div>
+                            <div>
+                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-primary">Delete</a>
+                            </div>
+                        </div>
+                    </th>
                 </tr> 
                 {% endfor %} 
             </tbody> 
