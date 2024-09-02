@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+
+  <section class="log_in-container">
+    <div class="log_in-card">
+      <div class="log_in-card-front">
+        <h2>Log In</h2>
+      </div>
+      <div class="log_in-card-back">
+        <form action="{% url 'users:log_in' %}"
+              autocomplete="off"
+              class="log_in-card-back-form"
+              method="POST">
+          {% csrf_token %}
+
+          {% if request.GET.next %}
+            <input type="hidden" name="next" value="{{ request.GET.next }}" />
+          {% endif %}
+
+          <div class="log_in-form-item">
+            <label class="">Username</label>
+            <input type="text" class="" name="username" placeholder="Please enter your username."/>
+          </div>
+
+          <div class="log_in-form-item">
+            <label class="">Password</label>
+            <input type="password" class="" name="password" placeholder="Please enter your password."/>
+          </div>
+
+          <div class="flex flex-col items-center text-xs justify-center gap-2 text-sm">
+            <button class="log_in-btn w-[90px]">
+              Log In
+            </button>
+            <span class="text-gray-500 text-sm">---------- OR ----------</span>
+            <a class="log_in-btn w-[90px]" href="{% url 'users:register' %}">
+              Sign Up
+            </a>
+            <span class="text-gray-500 text-sm">---------- OR ----------</span>
+            <a class="text-blue-500 text-sm" href="{% url 'users:forget_password' %}">
+              Forget Password?
+            </a>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+{% endblock %}
