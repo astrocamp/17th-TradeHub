@@ -17,6 +17,7 @@
                     <th>Price</th>
                     <th>Supplier</th>
                     <th>Note</th>
+                    <th>Operate</th>
                 </tr>
             </thead>
             <tbody>
@@ -28,6 +29,17 @@
                     <th>{{product.price}}</th>
                     <th>{{product.supplier}}</th>
                     <th>{{product.note}}</th>
+                    <th>
+                        <div class="flex justify-center mt-10">
+                            <div>
+                                <a href="{% url 'products:edit' product.id %}" class="btn btn-primary">Edit</a>
+                            </div>
+                        
+                            <div>
+                                <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-primary">Delete</a>
+                            </div>
+                        </div>
+                    </th>
                 </tr>
                 {% endfor %}
             </tbody>
