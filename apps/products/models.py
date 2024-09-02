@@ -1,11 +1,15 @@
 from django.db import models
 
+from apps.suppliers.models import Supplier
+
 # Create your models here.
 
 
 class Product(models.Model):
-    productNumber = models.CharField(max_length=10)
-    title = models.CharField(max_length=20)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    quantity = models.IntegerField()
+    product_id = models.CharField(max_length=10)
+    product_name = models.CharField(max_length=20)
+    price = models.IntegerField(null=False, blank=False)
+    supplier = models.ForeignKey(
+        Supplier, on_delete=models.CASCADE, related_name="products"
+    )
     note = models.TextField()

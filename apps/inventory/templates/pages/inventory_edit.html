@@ -1,56 +1,74 @@
-<dialog id="my_modal_1" class="modal">
-  <div class="modal-box">
-    <h3 class="text-xl font-bold text-center">Edit</h3>
-    <form method="dialog">
-      <button class="btn btn-lg btn-circle btn-ghost absolute right-2 top-2">
-        ✕
-      </button>
-    </form>
-    <form
-      method="POST"
-      action="{% url 'inventory:index' inventory.id %}"
-      class="text-lg m-4"
-    >
-      {% csrf_token %}
-      <div class="form-control">
-        <label for="product">Product Name</label>
-        <input
-          type="text"
-          name="product"
-          value="{{ inventory.product }}"
-          class="input input-bordered w-full"
-        />
-      </div>
-      <div class="form-control">
-        <label for="supplier">Supplier Name</label>
-        <input
-          type="text"
-          name="supplier"
-          value="{{ inventory.supplier }}"
-          class="input input-bordered w-full"
-        />
-      </div>
-      <div class="form-control">
-        <label for="quantity">Quantity</label>
-        <input
-          type="number"
-          name="quantity"
-          value="{{ inventory.quantity }}"
-          class="input input-bordered w-full"
-        />
-      </div>
-      <div class="form-control">
-        <label for="last_updated">Last Updated</label>
-        <input
-          type="date"
-          name="last_updated"
-          value="{{ inventory.last_updated }}"
-          class="input input-bordered w-full"
-        />
-      </div>
-      <div class="flex justify-center mt-5">
-        <button type="submit" class="btn btn-primary">Submit</button>
-      </div>
-    </form>
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<form
+  method="POST"
+  action="{% url 'inventory:edit' inventory.id %}"
+  class="text-lg m-4"
+>
+  {% csrf_token %}
+  <div class="form-control">
+    <label class="label" for="product">Product</label>
+    <input
+      type="text"
+      name="product"
+      value="{{ inventory.product }}"
+      class="input input-bordered w-full"
+    />
   </div>
-</dialog>
+  <div class="form-control">
+    <label class="label" for="supplier">Supplier</label>
+    <input
+      type="text"
+      name="supplier"
+      value="{{ inventory.supplier }}"
+      class="input input-bordered w-full"
+    />
+  </div>
+  <div class="form-control">
+    <label class="label" for="quantity">Quantity</label>
+    <input
+      type="number"
+      name="quantity"
+      value="{{ inventory.quantity }}"
+      class="input input-bordered w-full"
+    />
+  </div>
+  <div class="form-control">
+    <label class="label" for="safety_stock">Safety Stock</label>
+    <input
+      type="number"
+      name="safety_stock"
+      value="{{ inventory.safety_stock }}"
+      class="input input-bordered w-full"
+    />
+  </div>
+  <div class="form-control">
+    <label class="label" for="note">Note</label>
+    <input
+      type="text"
+      name="note"
+      value="{{ inventory.note }}"
+      class="input input-bordered w-full"
+    />
+  </div>
+  <div class="form-control">
+    <label class="label" for="last_updated">Last Updated</label>
+    <input
+      type="datetime"
+      name="last_updated"
+      value="{{inventory.last_updated|date:'Y-m-d H:i' }}"
+      class="input input-bordered w-full"
+    />
+  </div>
+  <div class="flex justify-center mt-5 gap-4">
+    <div>
+      <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+    </div>
+    <div>
+      <a href="{% url 'inventory:index' %}" class="btn btn-warning btn-lg"
+        >Cancel</a
+      >
+    </div>
+  </div>
+</form>
+{% endblock %}

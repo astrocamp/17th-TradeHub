@@ -7,21 +7,37 @@ from .models import Inventory
 
 
 def index(request):
-    inventory = Inventory.objects.order_by("-id")
-    return render(request, "pages/inventory_index.html", {"inventory": inventory})
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
+    title = request.GET.get("title")
+    state_match = {"normal", "low_stock", "out_stock"}
+
+    inventory = Inventory.objects.order_by(order_by)
+
+    if state in state_match:
+        inventory = Inventory.objects.filter(state=state)
+    order_by_field = f"{'-' if is_desc else ''}{order_by}"
+    inventory = inventory.order_by(order_by_field)
+
+    context = {
+        "inventory": inventory,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
+    }
+
+    return render(request, "pages/inventory_index.html", context)
 
 
 def create(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
-        breakpoint()
         if form.is_valid():
-            form.save()
-            return redirect("inventory:create")
-        return render(request, "pages/inventory_create.html", {"form": form})
-    else:
-        form = RestockForm()
-        return render(request, "pages/inventory_create.html", {"form": form})
+            form.save().update_state()
+            return redirect("inventory:index")
+    form = RestockForm()
+    return render(request, "pages/inventory_create.html", {"form": form})
 
 
 def edit(request, id):
@@ -29,16 +45,14 @@ def edit(request, id):
     if request.method == "POST":
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
-            form.save()
+            form.save().update_state()
             return redirect("inventory:index")
-        return render(
-            request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
-        )
     else:
         form = RestockForm(instance=inventory)
-        return render(
-            request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
-        )
+
+    return render(
+        request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
+    )
 
 
 def delete(request, id):
