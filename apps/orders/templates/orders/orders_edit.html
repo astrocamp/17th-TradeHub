@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %} {% block content %}
+<div class="flex justify-center mt-10">
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>ID</th>
+          <th>Order Code</th>
+          <th>Client</th>
+          <th>Product</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hover">
+          <form action="{% url 'orders:edit' order.id %}" method="post">
+            {% csrf_token %}
+            <th>ID Auto gen</th>
+            <td>{{form.code}}</td>
+            <td>{{form.client_fk}}</td>
+            <td>{{form.product_fk}}</td>
+            <td>{{form.note}}</td>
+            <td>
+              <button>Update</button>
+            </td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

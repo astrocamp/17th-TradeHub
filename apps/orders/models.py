@@ -1,6 +1,7 @@
 from django.db import models
-from ..products.models import Product
+
 from ..clients.models import Client
+from ..products.models import Product
 
 
 class Orders(models.Model):
@@ -8,6 +9,6 @@ class Orders(models.Model):
     created_at = models.DateTimeField(auto_now=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(auto_now=True)
-    product = models.ForeignKey(Product, on_delete=models.PROTECT)
-    client = models.ForeignKey(Client, on_delete=models.PROTECT)
+    product_fk = models.ForeignKey(Product, on_delete=models.PROTECT)
+    client_fk = models.ForeignKey(Client, on_delete=models.PROTECT)
     note = models.TextField(blank=True)

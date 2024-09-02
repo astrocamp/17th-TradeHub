@@ -10,3 +10,6 @@ class Client(models.Model):
     create_at = models.DateTimeField(auto_now=True)
     delete_at = models.DateTimeField(auto_now=True)
     note = models.TextField(null=True, max_length=150)
+
+    def __str__(self):
+        return self.name

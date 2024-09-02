@@ -1,4 +1,6 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
+
+from .forms.form import OrderForm
 from .models import Orders
 
 
@@ -6,16 +8,12 @@ from .models import Orders
 def order_list(req):
     orders = Orders.objects.order_by("-id")
     if req.method == "POST":
-        order = Orders(
-            code=req.POST["code"],
-            client=req.POST["client"],
-            product=req.POST["product"],
-            note=req.POST["note"],
-        )
-        order.save()
-        return redirect("orders:list")
-    else:
-        return render(req, "list.html", {"orders": orders})
+        form = OrderForm(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("orders:list")
+    form = OrderForm()
+    return render(req, "orders/orders_list.html", {"orders": orders, "form": form})
 
 
 def order_update_and_delete(req, id):
@@ -25,12 +23,9 @@ def order_update_and_delete(req, id):
             order.delete()
             return redirect("orders:list")
         else:
-            order.code = req.POST["code"]
-            order.client = req.POST["client"]
-            order.product = req.POST["product"]
-            order.note = req.POST["note"]
-
-            order.save()
-            return redirect("order:list")
-
-    return render(req, "edit.html", {"order": order})
+            form = OrderForm(req.POST, instance=order)
+            if form.is_valid():
+                form.save()
+                return redirect("orders:list")
+    form = OrderForm(instance=order)
+    return render(req, "orders/orders_edit.html", {"order": order, "form": form})
