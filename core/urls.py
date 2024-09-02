@@ -10,4 +10,5 @@ urlpatterns = [
     path("suppliers/", include("apps.suppliers.urls")),
     path("clients/", include("apps.clients.urls")),
     path("purchase-orders/", include("apps.purchase_orders.urls")),
+    path("sales_orders/", include("apps.sales_orders.urls")),
 ] + debug_toolbar_urls()
