@@ -6,12 +6,23 @@ from ..models import Inventory
 class RestockForm(forms.ModelForm):
     class Meta:
         model = Inventory
-        fields = "__all__"
+        fields = ["product", "supplier", "quantity", "safety_stock", "note"]
 
         widgets = {
-            "product": forms.TextInput(attrs={"class": "form-control"}),
-            "supplier": forms.TextInput(attrs={"class": "form-control"}),
-            "quantity": forms.NumberInput(attrs={"class": "form-control"}),
-            "safety_stock": forms.NumberInput(attrs={"class": "form-control"}),
-            "note": forms.Textarea(attrs={"class": "form-control"}),
+            "product": forms.TextInput(
+                attrs={"class": "form-control input input-bordered w-full"}
+            ),
+            "supplier": forms.TextInput(
+                attrs={"class": "form-control input input-bordered w-full"}
+            ),
+            "quantity": forms.NumberInput(
+                attrs={"class": "form-control input input-bordered w-full"}
+            ),
+            "safety_stock": forms.NumberInput(
+                attrs={"class": "form-control input input-bordered w-full"}
+            ),
+            "note": forms.TextInput(
+                attrs={"class": "form-control input input-bordered w-full"}
+            ),
+            "last_updated": forms.DateTimeInput(attrs={"class": "form-control"}),
         }
