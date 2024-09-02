@@ -1,8 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
-from apps.suppliers.models import \
-    Supplier  # Import Supplier model from the suppliers app
+from apps.suppliers.models import Supplier
 
 
 class PurchaseOrder(models.Model):

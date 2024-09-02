@@ -1,13 +1,12 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %}
 
-{% block content %}
-
-<a href="{% url 'products:show' product.id %}" class="btn btn-primary">Back to Products List</a>
+<a href="{% url 'products:show' product.id %}" class="btn btn-primary"
+  >Back to Products List</a
+>
 
 <form action="{% url 'products:show' product.id %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button class="btn btn-primary">Renew</button>
+  {% csrf_token %} {{form}}
+  <button class="btn btn-primary">Renew</button>
 </form>
 
 {% endblock %}
