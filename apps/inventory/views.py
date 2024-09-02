@@ -6,18 +6,33 @@ from .models import Inventory
 
 def index(request):
     state = request.GET.get("select")
-    if state is None:
-        inventory = Inventory.objects.order_by("-id")
-    else:
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
+    title = request.GET.get("title")
+    state_match = {"normal", "low_stock", "out_stock"}
+
+    inventory = Inventory.objects.order_by(order_by)
+
+    if state in state_match:
         inventory = Inventory.objects.filter(state=state)
-    return render(request, "pages/inventory_index.html", {"inventory": inventory})
+    order_by_field = f"{'-' if is_desc else ''}{order_by}"
+    inventory = inventory.order_by(order_by_field)
+
+    context = {
+        "inventory": inventory,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
+    }
+
+    return render(request, "pages/inventory_index.html", context)
 
 
 def create(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save().update_state()
             return redirect("inventory:index")
     form = RestockForm()
     return render(request, "pages/inventory_create.html", {"form": form})
@@ -28,8 +43,7 @@ def edit(request, id):
     if request.method == "POST":
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
-            inventory.update_state()
-            form.save()
+            form.save().update_state()
             return redirect("inventory:index")
     else:
         form = RestockForm(instance=inventory)
