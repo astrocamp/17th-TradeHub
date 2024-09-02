@@ -6,33 +6,33 @@
 
 <a href="{% url 'goods_receipts:GRnew' %}" class="btn btn-primary">Add</a>
 
-<div class="flex justify-center mt-10"> 
-    <div class="overflow-x-auto"> 
-        <table class="table table-xl text-center"> 
-            <thead> 
-                <tr class="text-xl"> 
-                    <th></th> 
-                    <th>Receipt Number</th> 
-                    <th>Supplier</th> 
-                    <th>Goods Name</th> 
-                    <th>Quantity</th> 
-                    <th>Method</th> 
-                    <th>Date</th> 
-                    <th>Note</th> 
+<div class="flex justify-center mt-10">
+    <div class="overflow-x-auto">
+        <table class="table table-xl text-center">
+            <thead>
+                <tr class="text-xl">
+                    <th></th>
+                    <th>Receipt Number</th>
+                    <th>Supplier</th>
+                    <th>Goods Name</th>
+                    <th>Quantity</th>
+                    <th>Method</th>
+                    <th>Date</th>
+                    <th>Note</th>
                     <th>Operate</th>
-                </tr> 
-            </thead> 
-            <tbody> 
-                {% for goods_receipt in goods_receipts %} 
-                <tr class="hover"> 
-                    <th></th> 
+                </tr>
+            </thead>
+            <tbody>
+                {% for goods_receipt in goods_receipts %}
+                <tr class="hover">
+                    <th></th>
                     <th><a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}">{{goods_receipt.receipt_number}}</a></th>
-                    <th>{{goods_receipt.supplier}}</th> 
-                    <th>{{goods_receipt.goods_name}}</th> 
-                    <th>{{goods_receipt.quantity}}</th> 
-                    <th>{{goods_receipt.method}}</th> 
-                    <th>{{goods_receipt.date}}</th> 
-                    <th>{{goods_receipt.note}}</th> 
+                    <th>{{goods_receipt.supplier}}</th>
+                    <th>{{goods_receipt.goods_name}}</th>
+                    <th>{{goods_receipt.quantity}}</th>
+                    <th>{{goods_receipt.method}}</th>
+                    <th>{{goods_receipt.date}}</th>
+                    <th>{{goods_receipt.note}}</th>
                     <th>
                         <div class="flex justify-center mt-10">
                             <div>
@@ -43,11 +43,11 @@
                             </div>
                         </div>
                     </th>
-                </tr> 
-                {% endfor %} 
-            </tbody> 
-        </table> 
-    </div> 
-</div> 
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 
 {% endblock %}

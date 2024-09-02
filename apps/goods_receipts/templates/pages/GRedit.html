@@ -7,7 +7,7 @@
 <form action="{% url 'goods_receipts:GRshow' goods_receipt.id %}" method="POST">
     {% csrf_token %}
     {{form}}
-    <button class="btn btn-primary">Renew</button> 
+    <button class="btn btn-primary">Renew</button>
 </form>
 
 {% endblock %}
