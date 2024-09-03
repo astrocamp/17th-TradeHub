@@ -1,6 +1,5 @@
-from datetime import date
-
 from django.db import models
+from django.utils import timezone
 
 
 class Supplier(models.Model):
@@ -10,7 +9,7 @@ class Supplier(models.Model):
     email = models.CharField(max_length=254, blank=True, null=False)
     gui_number = models.CharField(max_length=8, unique=True, blank=True, null=False)
     address = models.TextField(blank=True, null=False)
-    established_date = models.DateField(default=date.today)
+    established_date = models.DateTimeField(default=timezone.now)
     note = models.TextField(blank=True, null=False)
 
     def __str__(self):
