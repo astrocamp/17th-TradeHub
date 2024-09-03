@@ -9,11 +9,15 @@ class RestockForm(forms.ModelForm):
         fields = ["product", "supplier", "quantity", "safety_stock", "note"]
 
         widgets = {
-            "product": forms.TextInput(
-                attrs={"class": "form-control input input-bordered w-full"}
+            "product": forms.Select(
+                attrs={
+                    "class": "form-control w-full select select-bordered flex items-center justify-center"
+                }
             ),
-            "supplier": forms.TextInput(
-                attrs={"class": "form-control input input-bordered w-full"}
+            "supplier": forms.Select(
+                attrs={
+                    "class": "form-control w-full select select-bordered flex items-center justify-center"
+                }
             ),
             "quantity": forms.NumberInput(
                 attrs={"class": "form-control input input-bordered w-full"}

@@ -1,0 +1,42 @@
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<div class="flex justify-center mt-32">
+  <div class="overflow-x-auto w-full">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Client</th>
+          <th>Product</th>
+          <th>Quantity</th>
+          <th>Stock</th>
+          <th>Price</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hover">
+          <form
+            class="text-center"
+            method="POST"
+            action="{% url 'sales_orders:create' %}"
+          >
+            {% csrf_token %}
+            <th class="text-xl">Create<br />SalesOrder</th>
+            <td>{{ form.client }}</td>
+            <td>{{ form.product }}</td>
+            <td>{{ form.quantity }}</td>
+            <td>{{ form.stock }}</td>
+            <td>{{ form.price }}</td>
+            <td>
+              <button type="submit" class="btn bg-orange-600 text-white">
+                Add
+              </button>
+            </td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
