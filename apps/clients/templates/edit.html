@@ -14,7 +14,7 @@
       </thead>
       <tbody>
         <tr class="hover">
-          <form action="{% url 'client:edit' client.id %}" method="post">
+          <form action="{% url 'clients:edit' client.id %}" method="post">
             {% csrf_token %}
             <th>ID Auto gen</th>
             <td>

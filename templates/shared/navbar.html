@@ -1,4 +1,4 @@
-<div class="navbar bg-base-100 shadow-xl rounded-box">
+<div class="navbar bg-base-100 shadow-xl rounded-box z-50">
   <div class="navbar-start">
     <div class="dropdown">
       <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -21,22 +21,23 @@
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
-        <li><a>Client</a></li>
+        <li>Client</li>
         <ul class="p-2">
-          <li><a>Information</a></li>
+          <li><a href="{% url 'clients:list' %}">Overview</a></li>
           <li><a>Sell Order</a></li>
         </ul>
-        <li><a href="{% url 'products:index' %}">Product</a></li>
+        <li>Product</li>
         <ul class="p-2">
-          <li><a>Information</a></li>
+          <li><a href="{% url 'products:index' %}">Overview</a></li>
         </ul>
-        <li><a>Supplier</a></li>
+        <li>Supplier</li>
         <ul class="p-2">
-          <li><a>Purchase</a></li>
-          <li><a>Purchase Order</a></li>
+          <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
+          <li><a href="{% url 'purchase_orders:index' %}">Purchase Order</a></li>
         </ul>
-        <li><a href="{% url 'inventory:index' %}">Inventory</a></li>
+        <li>Inventory</li>
         <ul class="p-2">
+          <li><a href="{% url 'inventory:index' %}">Overview</a></li>
           <li><a>Warehouse Receipt</a></li>
           <li><a>Outbound Order</a></li>
         </ul>
@@ -50,32 +51,33 @@
         <details>
           <summary>Client</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a>Information</a></li>
+            <li><a href="{% url 'clients:list' %}">Overview</a></li>
             <li><a>Sell Order</a></li>
           </ul>
         </details>
       </li>
       <li>
         <details>
-          <summary><a href="{% url 'products:index' %}">Product</a></summary>
+          <summary>Product</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a>Information</a></li>
+            <li><a href="{% url 'products:index' %}">Overview</a></li>
           </ul>
         </details>
       </li>
       <li>
         <details>
-          <summary><a href="{% url 'suppliers:index' %}">Supplier</a></summary>
+          <summary>Supplier</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a>Purchase</a></li>
-            <li><a>Purchase Order</a></li>
+            <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
+            <li><a href="{% url 'purchase_orders:index' %}">Purchase Order</a></li>
           </ul>
         </details>
       </li>
       <li>
         <details>
-          <summary><a href="{% url 'inventory:index' %}">Inventory</a></summary>
+          <summary>Inventory</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
+            <li><a href="{% url 'inventory:index' %}">Overview</a></li>
             <li><a>Warehouse Receipt</a></li>
             <li><a>Outbound Order</a></li>
           </ul>
@@ -85,35 +87,17 @@
   </div>
   <!-- user status -->
   <div class="navbar-end gap-2">
-    <div class="form-control flex-row">
-      <input
-        type="text"
-        placeholder="Search"
-        class="input input-bordered w-12 md:w-auto"
-      />
-      <button class="btn btn-square btn-xl">
-        <svg
-          class="w-5 h-5"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-        >
-          <path
-            d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-          />
-        </svg>
-      </button>
-    </div>
     <div class="flex gap-2 w-[160px]">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %}
-        <a href="{% url "users:profile" %}" class="w-[60px] flex justify-center">{{ request.user.username }}</a>
-        <form action="{% url "users:log_out" %}" method="post" class="w-[60px] flex justify-center">
+        <a href="{% url 'users:profile' %}" class="w-[60px] flex justify-center">{{ request.user.username }}</a>
+        <form action="{% url 'users:log_out' %}" method="post" class="w-[60px] flex justify-center">
           {% csrf_token %}
           <button type="submit">Log Out</button>
         </form>
       {% else %}
-        <a href="{% url "users:register" %}" class="w-[60px] flex justify-center">Sign Up</a>
-        <a href="{% url "users:log_in" %}" class="w-[60px] flex justify-center">Log In</a>
+        <a href="{% url 'users:register' %}" class="w-[60px] flex justify-center">Sign Up</a>
+        <a href="{% url 'users:log_in' %}" class="w-[60px] flex justify-center">Log In</a>
       {% endif %}
     </div>
   </div>

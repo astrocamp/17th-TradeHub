@@ -3,7 +3,7 @@ from django.urls import include, path
 
 from . import views
 
-app_name = "client"
+app_name = "clients"
 
 urlpatterns = [
     path("", views.client_list, name="list"),

@@ -21,7 +21,7 @@ def client_list(req):
             note=req.POST["note"],
         )
         client.save()
-        return redirect("client:list")
+        return redirect("clients:list")
     else:
         return render(req, "list.html", {"clients": clients})
 
@@ -31,7 +31,7 @@ def client_update_and_delete(req, id):
     if req.method == "POST":
         if "delete" in req.POST:
             client.delete()
-            return redirect("client:list")
+            return redirect("clients:list")
 
         phone_number = req.POST.get("phone_number", "")
         if not phone_number.isdigit():
@@ -47,6 +47,6 @@ def client_update_and_delete(req, id):
             client.note = req.POST["note"]
 
             client.save()
-            return redirect("client:list")
+            return redirect("clients:list")
 
     return render(req, "edit.html", {"client": client})
