@@ -3,7 +3,7 @@ from django_fsm import FSMField, transition
 
 from apps.clients.models import Client
 from apps.inventory.models import Inventory
-from apps.products.models import Product, Price
+from apps.products.models import Product
 
 
 class SalesOrder(models.Model):
