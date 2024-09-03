@@ -5,14 +5,40 @@
         <h2 class="text-2xl font-bold mb-6 text-gray-800">Add New Supplier</h2>
         <form action="{% url 'suppliers:index' %}" method="POST" class="grid grid-cols-1 gap-6 md:grid-cols-2">
             {% csrf_token %}
-            {% for field in form %}
-            <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
-                <div>
-                    {{ field }}
+            <!-- 顯示表單錯誤 -->
+            {% if form.non_field_errors %}
+                <div class="col-span-full">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Please correct the following errors:</strong>
+                        <ul class="mt-2 list-disc pl-5">
+                            {% for error in form.non_field_errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            {% endif %}
+
+            <!-- 顯示字段錯誤 -->
+            {% for field in form %}
+                <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+                    <label for="{{ field.id_for_label }}" class="text-xl font-semibold text-gray-800">{{ field.label }}</label>
+                    <div>
+                        {% if field.help_text %}
+                            <p class="text-gray-600 text-sm mb-2">{{ field.help_text }}</p>
+                        {% endif %}
+                        {{ field }}
+                        {% if field.errors %}
+                            <ul class="errorlist text-red-500 text-sm mt-2">
+                                {% for error in field.errors %}
+                                    <li>{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                </div>
             {% endfor %}
+
             <!-- 保持提交按鈕全寬 -->
             <div class="col-span-full">
                 <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">Add</button>
