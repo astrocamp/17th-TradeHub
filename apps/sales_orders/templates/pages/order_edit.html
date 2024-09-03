@@ -5,61 +5,12 @@
   action="{% url 'sales_orders:edit' sales_orders.id %}"
   class="text-lg m-4"
 >
-  {% csrf_token %}
+  {% csrf_token %} {% for field in form %}
   <div class="form-control">
-    <label class="label" for="client">Client</label>
-    <input
-      type="text"
-      name="client"
-      value="{{ sales_orders.client }}"
-      class="input input-bordered w-full"
-    />
+    <label class="label" for="{{ field.name }}">{{ field.label }}</label>
+    {{ field }}
   </div>
-  <div class="form-control">
-    <label class="label" for="product">Product</label>
-    <input
-      type="text"
-      name="product"
-      value="{{ sales_orders.product }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="quantity">Quantity</label>
-    <input
-      type="number"
-      name="quantity"
-      value="{{ sales_orders.quantity }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="stock">Stock</label>
-    <input
-      type="number"
-      name="stock"
-      value="{{ sales_orders.stock }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="price">Price</label>
-    <input
-      type="text"
-      name="price"
-      value="{{ sales_orders.price }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="last_updated">Last Updated</label>
-    <input
-      type="datetime"
-      name="last_updated"
-      value="{{sales_orders.last_updated|date:'Y-m-d H:i' }}"
-      class="input input-bordered w-full"
-    />
-  </div>
+  {% endfor %}
   <div class="flex justify-center mt-5 gap-4">
     <div>
       <button type="submit" class="btn btn-primary btn-lg">Submit</button>

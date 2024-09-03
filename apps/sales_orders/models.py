@@ -3,21 +3,23 @@ from django_fsm import FSMField, transition
 
 from apps.clients.models import Client
 from apps.inventory.models import Inventory
-from apps.products.models import Product
+from apps.products.models import Product, Price
 
 
 class SalesOrder(models.Model):
-    client = models.ForeignKey(Client, on_delete=models.CASCADE)
-    products = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.IntegerField()
-    stock = models.ManyToManyField(Inventory)
-    price = models.IntegerField()
+    client = models.ForeignKey(
+        Client, on_delete=models.CASCADE, related_name="sales_orders"
+    )
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="sales_orders"
+    )
+    quantity = models.PositiveIntegerField()
+    stock = models.ForeignKey(
+        Inventory, on_delete=models.CASCADE, related_name="sales_orders"
+    )
+    price = models.DecimalField(max_digits=10, decimal_places=0)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
-
-    @property
-    def stock_prices(self):
-        return [item.price for item in self.stock.filter(product=self.products)]
 
     def __str__(self):
         return f"訂單 #{self.id} - 客戶: {self.client.name} ({self.created_at.date()})"
@@ -31,32 +33,28 @@ class SalesOrder(models.Model):
     ]
 
     state = FSMField(
-        default=STOCK_STATE_NORMAL,
+        default=STOCK_STATE_ABNORMAL,
         choices=STOCK_STATE_CHOICES,
         protected=True,
     )
 
     def update_state(self):
-        if self.quantity < self.stock.safety_stock:
-            self.set_stock_abnormal()
+        if self.quantity > self.stock.quantity:
+            self.set_abnormal()
         else:
             self.set_normal()
         self.save()
 
     @transition(field=state, source="*", target=STOCK_STATE_ABNORMAL)
-    def set_stock_abnormal(self):
-        # 異常時的邏輯
+    def set_abnormal(self):
         pass
 
     @transition(field=state, source="*", target=STOCK_STATE_NORMAL)
     def set_normal(self):
-        # 正常時的邏輯
         pass
 
     def add_order(self, amount):
-
-        self.update_state()
+        pass
 
     def remove_order(self, amount):
-
-        self.update_state()
+        pass

@@ -36,16 +36,16 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}">client{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=products&select={{ selected_state }}&desc={{ is_desc }}">products{% if order_by == 'products' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}">Client{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=products&select={{ selected_state }}&desc={{ is_desc }}">Products{% if order_by == 'products' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}">Stock{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">price{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">Price{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}">Last Updated{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th>Operate</th>
         </tr>
       </thead>
-      {% for item in inventory %}
+      {% for item in sales_orders %}
       <tbody>
         <tr class="hover">
           {% if item.state == "normal" %}
@@ -58,9 +58,9 @@
           </th>
           {% endif %}
           <td>{{ item.client }}</td>
-          <td>{{ item.products }}</td>
+          <td>{{ item.product }}</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ item.stock_prices }}</td>
+          <td>{{ item.stock }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
           <td>

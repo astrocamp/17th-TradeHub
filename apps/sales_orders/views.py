@@ -10,15 +10,15 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"finish", "unfinish"}
 
-    sales_order = SalesOrder.objects.order_by(order_by)
+    sales_orders = SalesOrder.objects.order_by(order_by)
 
     if state in state_match:
-        sales_order = SalesOrder.objects.filter(state=state)
+        sales_orders = SalesOrder.objects.filter(state=state)
     order_by_field = f"{'-' if is_desc else ''}{order_by}"
-    sales_order = sales_order.order_by(order_by_field)
+    sales_orders = sales_orders.order_by(order_by_field)
 
     content = {
-        "sales_order": sales_order,
+        "sales_orders": sales_orders,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
@@ -30,31 +30,34 @@ def index(request):
 def create(request):
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
+        print(form.is_valid())
+        print(form.errors)
         if form.is_valid():
-            form.save().update_state()
+            form.save()
             return redirect("sales_orders:index")
-    form = SalesOrderForm()
+    else:
+        form = SalesOrderForm()
     return render(request, "pages/order_create.html", {"form": form})
 
 
 def edit(request, id):
-    sales_order = get_object_or_404(SalesOrder, id=id)
+    sales_orders = get_object_or_404(SalesOrder, id=id)
     if request.method == "POST":
-        form = SalesOrderForm(request.POST, instance=sales_order)
+        form = SalesOrderForm(request.POST, instance=sales_orders)
         if form.is_valid():
-            form.save().update_state()
+            form.save()
             return redirect("sales_orders:index")
     else:
-        form = SalesOrderForm(instance=sales_order)
+        form = SalesOrderForm(instance=sales_orders)
 
     return render(
         request,
         "pages/order_edit.html",
-        {"sales_order": sales_order, "form": form},
+        {"sales_orders": sales_orders, "form": form},
     )
 
 
 def delete(request, id):
-    sales_order = get_object_or_404(SalesOrder, id=id)
-    sales_order.delete()
-    return redirect("orders:index")
+    sales_orders = get_object_or_404(SalesOrder, id=id)
+    sales_orders.delete()
+    return redirect("sales_orders:index")
