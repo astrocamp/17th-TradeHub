@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, SelectMultiple
 
 from apps.products.models import Product
 
@@ -6,4 +6,11 @@ from apps.products.models import Product
 class ProductForm(ModelForm):
     class Meta:
         model = Product
-        fields = ["product_id", "product_name", "price", "supplier", "note"]
+        fields = ["product_id", "product_name", "quantity", "price", "supplier", "note"]
+        widgets = {
+            "supplier": SelectMultiple(
+                attrs={
+                    "class": "form-control w-full select select-bordered flex items-center justify-center"
+                }
+            )
+        }

@@ -1,16 +1,17 @@
 from django.db import models
 from django_fsm import FSMField, transition
 
-# from apps.products.models import Product
-
-# from apps.suppliers.models import Supplier
+from apps.products.models import Product
+from apps.suppliers.models import Supplier
 
 
 class Inventory(models.Model):
-    product = models.CharField(max_length=255, null=False, blank=False)
-    supplier = models.CharField(max_length=255, null=False, blank=False)
-    # pro_fk = models.ForeignKey(Product, on_delete=models.PROTECT)
-    # sup_fk = models.ForeignKey(Supplier, on_delete=models.PROTECT)
+    product = models.ForeignKey(
+        Product, on_delete=models.PROTECT, related_name="inventories"
+    )
+    supplier = models.ForeignKey(
+        Supplier, on_delete=models.PROTECT, related_name="inventories"
+    )
     quantity = models.IntegerField(null=False, blank=False)
     safety_stock = models.IntegerField(null=True, blank=False)
     last_updated = models.DateTimeField(auto_now=True)

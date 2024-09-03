@@ -10,13 +10,14 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
+        ("clients", "0001_initial"),
+        ("inventory", "0001_initial"),
         ("products", "0001_initial"),
-        ("suppliers", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="Inventory",
+            name="SalesOrder",
             fields=[
                 (
                     "id",
@@ -27,37 +28,41 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("quantity", models.IntegerField()),
-                ("safety_stock", models.IntegerField(null=True)),
+                ("quantity", models.PositiveIntegerField()),
+                ("price", models.DecimalField(decimal_places=0, max_digits=10)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("last_updated", models.DateTimeField(auto_now=True)),
-                ("note", models.TextField(blank=True)),
                 (
                     "state",
                     django_fsm.FSMField(
-                        choices=[
-                            ("out_stock", "缺貨"),
-                            ("low_stock", "低於安全庫存量"),
-                            ("normal", "正常"),
-                        ],
-                        default="normal",
+                        choices=[("unfinish", "未完成"), ("finish", "完成")],
+                        default="unfinish",
                         max_length=50,
                         protected=True,
                     ),
                 ),
                 (
+                    "client",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sales_orders",
+                        to="clients.client",
+                    ),
+                ),
+                (
                     "product",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name="inventories",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sales_orders",
                         to="products.product",
                     ),
                 ),
                 (
-                    "supplier",
+                    "stock",
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.PROTECT,
-                        related_name="inventories",
-                        to="suppliers.supplier",
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="sales_orders",
+                        to="inventory.inventory",
                     ),
                 ),
             ],

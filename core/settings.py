@@ -55,7 +55,11 @@ INSTALLED_APPS = [
     "apps.pages",
     "apps.suppliers",
     "apps.purchase_orders",
+<<<<<<< HEAD
+    "apps.sales_orders",
+=======
     "apps.goods_receipts",
+>>>>>>> dev
 ]
 
 if is_dev():
