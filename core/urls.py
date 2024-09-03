@@ -11,5 +11,9 @@ urlpatterns = [
     path("clients/", include("apps.clients.urls")),
     path("purchase-orders/", include("apps.purchase_orders.urls")),
     path("orders/", include("apps.orders.urls")),
+<<<<<<< HEAD
     path("sales_orders/", include("apps.sales_orders.urls")),
+=======
+    path("goods_receipts/", include("apps.goods_receipts.urls")),
+>>>>>>> dev
 ] + debug_toolbar_urls()
