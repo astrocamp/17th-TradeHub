@@ -1,15 +1,17 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-    <!-- Product Information -->
+    <!-- Supplier Information -->
     <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg space-y-6 mt-8">
         <h1 class="text-3xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Phone:</span> {{ supplier.tel }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Contact:</span> {{ supplier.contact }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">GUI Number:</span> {{ supplier.GUInumber }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Telephone:</span> {{ supplier.telephone }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Contact Person:</span> {{ supplier.contact_person }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Email:</span> {{ supplier.email }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">GUI Number:</span> {{ supplier.gui_number }}</p>
         <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Address:</span> {{ supplier.address }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Remark:</span> {{ supplier.remark }}</p>
-        <!-- 編輯和刪除按鈕 -->
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Note:</span> {{ supplier.note }}</p>
+        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Established Date:</span> {{ supplier.established_date|date:"F j, Y, g:i a" }}</p>
+        <!-- Edit and Delete Buttons -->
         <div class="flex gap-3">
             <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Edit
