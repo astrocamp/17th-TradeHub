@@ -64,7 +64,18 @@
             </div>
         </div>
         {% endif %}
-        <button type="submit" class="mt-4 bg-blue-500 text-white p-2 rounded">Save</button>
+        <div class="flex justify-start">
+            <button type="submit" class="mt-4 bg-blue-500 text-white p-2 rounded mr-6">Save</button>
+            {% if form.errors %}
+                <div class="text-red-500 mt-4 w-2/3">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="text-red-500 text-xs">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
     </form>
 </div>
 {% endblock %}
