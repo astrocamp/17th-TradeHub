@@ -35,5 +35,6 @@ class Migration(migrations.Migration):
                 related_name="products",
                 to="suppliers.supplier",
             ),
+            preserve_default=False,
         ),
     ]
