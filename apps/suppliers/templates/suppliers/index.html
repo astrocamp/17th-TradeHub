@@ -29,12 +29,12 @@
                     <th>
                         <input type="checkbox" name="selected_suppliers" value="{{ supplier.id }}" class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
                     </th>
-                    <th>{{ supplier.name }}</th>
-                    <th>{{ supplier.tel }}</th>
-                    <th>{{ supplier.contact }}</th>
-                    <th>{{ supplier.GUInumber }}</th>
+                    <th><a href="{% url 'suppliers:show' supplier.id %}">{{ supplier.name }}</a></th>
+                    <th>{{ supplier.telephone }}</th>
+                    <th>{{ supplier.contact_person }}</th>
+                    <th>{{ supplier.gui_number }}</th>
                     <th>{{ supplier.address }}</th>
-                    <th>{{ supplier.remark }}</th>
+                    <th>{{ supplier.note }}</th>
                     <th>
                         <div class="flex gap-3">
                             <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
