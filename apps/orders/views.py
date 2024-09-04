@@ -14,14 +14,17 @@ class DataListView(ListView):
 
 def order_list(req):
     orders = Orders.objects.order_by("-id")
-    if req.method == "POST":
-        form = OrderForm(req.POST)
+    return render(req, "orders/orders_list.html", {"orders": orders})
+
+
+def create(request):
+    if request.method == "POST":
+        form = OrderForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("orders:list")
-
     form = OrderForm()
-    return render(req, "orders/orders_list.html", {"orders": orders, "form": form})
+    return render(request, "orders/orders_create.html", {"form": form})
 
 
 def order_update_and_delete(req, id):

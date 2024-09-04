@@ -1,5 +1,9 @@
 {% extends "layouts/base.html" %} {% block content %}
-
+<div class="flex justify-end mt-12">
+  <a href="{% url 'orders:create' %}" class="btn bg-orange-600 text-white"
+    >Create</a
+  >
+</div>
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
@@ -35,19 +39,6 @@
           </td>
         </tr>
         {% endfor %}
-        <tr class="hover">
-          <form action="{% url 'orders:list' %}" method="post">
-            {% csrf_token %}
-            <th>ID Auto gen</th>
-            <td>{{form.code}}</td>
-            <td>{{form.client_fk}}</td>
-            <td>{{form.product_fk}}</td>
-            <td>{{form.note}}</td>
-            <td>
-              <button>Create</button>
-            </td>
-          </form>
-        </tr>
       </tbody>
     </table>
     <div class="pagination">
