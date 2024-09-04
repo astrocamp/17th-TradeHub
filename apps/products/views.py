@@ -8,7 +8,7 @@ def index(request):
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", True) == "False"
-    state_match = {"often", "haply", "less"}
+    state_match = {"often", "haply", "never"}
 
     products = Product.objects.all()
 
