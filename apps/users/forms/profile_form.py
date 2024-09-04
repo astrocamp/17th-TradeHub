@@ -22,30 +22,46 @@ class ProfileForm(forms.ModelForm):
         ]
         widgets = {
             "first_name": forms.TextInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={"class": "w-full form-control border px-2 py-1"}
             ),
             "last_name": forms.TextInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={"class": "w-full form-control border px-2 py-1"}
             ),
             "department": forms.TextInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={"class": "w-full form-control border px-2 py-1"}
             ),
-            "title": forms.TextInput(attrs={"class": "form-control border px-2 py-1"}),
-            "email": forms.EmailInput(attrs={"class": "form-control"}),
+            "title": forms.TextInput(
+                attrs={"class": "w-full form-control border px-2 py-1"}
+            ),
+            "email": forms.EmailInput(
+                attrs={"class": "w-full form-control border px-2 py-1"}
+            ),
             "hire_date": forms.DateInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "type": "date",
+                    "readonly": "readonly",
+                }
             ),
             "username": forms.TextInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={"class": "w-full form-control border px-2 py-1"}
             ),
             "birthday": forms.DateInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "type": "date",
+                    "readonly": "readonly",
+                }
             ),
-            "phone": forms.TextInput(attrs={"class": "form-control border px-2 py-1"}),
+            "phone": forms.TextInput(
+                attrs={"class": "w-full form-control border px-2 py-1"}
+            ),
             "address": forms.TextInput(
-                attrs={"class": "form-control border px-2 py-1"}
+                attrs={"class": "w-full form-control border px-2 py-1"}
             ),
-            "note": forms.TextInput(attrs={"class": "form-control border px-2 py-1"}),
+            "note": forms.TextInput(
+                attrs={"class": "w-full form-control border px-2 py-1"}
+            ),
         }
         labels = {
             "first_name": "Name",
@@ -54,6 +70,7 @@ class ProfileForm(forms.ModelForm):
             "email": "Email",
             "hire_date": "Hire Date",
             "username": "Username",
+            "birthday": "Birthday",
         }
 
     def clean_username(self):
