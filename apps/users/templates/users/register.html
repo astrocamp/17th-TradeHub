@@ -1,9 +1,7 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-  <h1 class="heading-1">Sign Up</h1>
-
-  <section class="max-w-sm bg-white shadow-sm card">
+  <section class="max-w-sm bg-white shadow-sm card mt-10">
     <form action="{% url 'users:index' %}"
           autocomplete="off"
           class="card-body"
@@ -30,16 +28,12 @@
           {% endif %}
         {% endfor %}
 
-        <div>
+        <div class="flex justify-between items-center">
           <button class="mt-4 btn btn-primary">Sign Up</button>
+          <a class="link mr-4 font-bold" href="{% url 'users:log_in' %}">Log In</a>
         </div>
     </form>
 
-    <div class="divider"></div>
-
-    <div>
-        <a class="link" href="{% url 'users:log_in' %}">Log In</a>
-    </div>
 
 </section>
 
