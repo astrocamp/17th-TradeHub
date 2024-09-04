@@ -11,6 +11,7 @@ python = "^3.12"
 django = "^5.1"
 psycopg = "^3.2.1"
 django-fsm = "^3.0.0"
+commitizen = "^3.29.0"
 
 [tool.poetry.group.dev.dependencies]
 django-extensions = "^3.2.3"
