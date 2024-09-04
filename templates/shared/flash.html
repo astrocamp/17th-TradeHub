@@ -1,0 +1,12 @@
+{% if messages %}
+<div x-data class="fixed top-18 right-8 transform bg-white border border-gray-300 rounded rounded-box shadow-lg p-4 w-56 z-50 flex">
+    {% for message in messages %}
+        <div class="rounded font-bold flex justify-between text-sm {{ message.tags }}">
+            <div class="mr-2">{{ message }}</div>
+            <button @click="$root.remove()" class="text-gray-500 hover:text-red-500 focus:outline-none">
+                X
+            </button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}

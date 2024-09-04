@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+  <section class="max-w-sm bg-white shadow-sm card mt-10">
+    <form action="{% url 'users:index' %}"
+          autocomplete="off"
+          class="card-body"
+          method="POST">
+        {% csrf_token %}
+
+        {% for field in form %}
+          {% if field.name != 'usable_password' %}
+            <div>
+              <label for="{{ field.id_for_label}}" class="label display justify-start ">
+                {{ field.label }}
+                {% if field.field.required %}
+                  <span class="text-red-500 ml-1">*</span>
+                {% endif %}
+              </label>
+              {{ field }}
+              {% if field.help_text %}
+                <p class="text-sm text-gray-500">{{ field.help_text }}</p>
+              {% endif %}
+            </div>
+            {% for e in field.errors %}
+              <span class="text-red-500">{{ e }}</span>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+
+        <div class="flex justify-between items-center">
+          <button class="mt-4 btn btn-primary">Sign Up</button>
+          <a class="link mr-4 font-bold" href="{% url 'users:log_in' %}">Log In</a>
+        </div>
+    </form>
+
+
+</section>
+
+</div>
+{% endblock %}

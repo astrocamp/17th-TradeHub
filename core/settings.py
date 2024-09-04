@@ -42,17 +42,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # 匯入順序會影響migrate順序，有依賴關係的app要放在後面
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_fsm",
+    "apps.pages",
+    "apps.users",
     "apps.clients",
     "apps.orders",
     "apps.products",
     "apps.inventory",
-    "apps.pages",
     "apps.suppliers",
     "apps.purchase_orders",
     "apps.sales_orders",
@@ -73,7 +76,11 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "apps.users.middleware.middleware.LoginRequiredMiddleware",
 ]
+
+# 未登入時導向的頁面（登入頁面），如果後續用到login_required裝飾器，也會自動導向這個頁面
+LOGIN_URL = "/users/log_in/"
 
 if is_dev():
     MIDDLEWARE += [
@@ -111,7 +118,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
@@ -130,6 +136,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTH_USER_MODEL = "users.CustomUser"
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.1/topics/i18n/
