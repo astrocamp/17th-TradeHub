@@ -14,13 +14,17 @@ class DataListView(ListView):
 
 def client_list(req):
     clients = Client.objects.order_by("-id")
-    if req.method == "POST":
-        form = ClientForm(req.POST)
+    return render(req, "clients/edit.html", {"clients": clients})
+
+
+def create(request):
+    if request.method == "POST":
+        form = ClientForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("clients:list")
     form = ClientForm()
-    return render(req, "clients/edit.html", {"clients": clients, "form": form})
+    return render(request, "clients/create.html", {"form": form})
 
 
 def client_update_and_delete(req, id):
