@@ -23,11 +23,11 @@
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
           <td>
-            <a href="{% url 'client:edit' client.id %}">Edit</a>
+            <a href="{% url 'clients:edit' client.id %}">Edit</a>
           </td>
           <td>
             <form
-              action="{% url 'client:edit' client.id %}"
+              action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
@@ -38,39 +38,14 @@
         </tr>
         {% endfor %}
         <tr class="hover">
-          <form action="{% url 'client:list' %}" method="post">
+          <form action="{% url 'clients:list' %}" method="post">
             {% csrf_token %}
             <th>ID Auto gen</th>
-            <td>
-              <input
-                type="text"
-                name="client_name"
-                placeholder="Client_Name"
-                required
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="phone_number"
-                placeholder="Phone Number"
-                pattern="\d*"
-                title="請輸入數字"
-                required
-              />
-            </td>
-            <td>
-              <input
-                type="text"
-                name="address"
-                placeholder="Address"
-                required
-              />
-            </td>
-            <td>
-              <input type="email" name="email" placeholder="Email" required />
-            </td>
-            <td><input type="text" name="note" placeholder="Note" /></td>
+            <td>{{form.name}}</td>
+            <td>{{form.phone_number}}</td>
+            <td>{{form.address}}</td>
+            <td>{{form.email}}</td>
+            <td>{{form.note}}</td>
             <td>
               <button>Create</button>
             </td>

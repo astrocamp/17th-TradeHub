@@ -4,7 +4,6 @@ from .forms.form import OrderForm
 from .models import Orders
 
 
-# Create your views here.
 def order_list(req):
     orders = Orders.objects.order_by("-id")
     if req.method == "POST":
@@ -12,6 +11,7 @@ def order_list(req):
         if form.is_valid():
             form.save()
             return redirect("orders:list")
+
     form = OrderForm()
     return render(req, "orders/orders_list.html", {"orders": orders, "form": form})
 
