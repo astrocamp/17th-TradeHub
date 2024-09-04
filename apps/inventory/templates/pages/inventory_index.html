@@ -75,7 +75,7 @@
             >
               Edit
             </a>
-            <a href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
+            <a onclick="return confirm(' Do you want to delete ?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
               >Delete</a
             >
           </td>

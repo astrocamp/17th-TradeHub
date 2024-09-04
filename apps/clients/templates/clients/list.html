@@ -4,39 +4,78 @@
     >Create</a
   >
 </div>
+<div class="divider text-3xl font-bold">Clients</div>
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
-          <th>ID</th>
-          <th>Client Name</th>
-          <th>Phone Number</th>
-          <th>Address</th>
-          <th>Email</th>
-          <th>Note</th>
+          <th>
+            <form action="{% url 'clients:index' %}" method="GET">
+              <select
+                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                name="select"
+              >
+                <option disabled>Select</option>
+                <option value="all" {% if selected_state == "all" %}selected{% endif %}>All</option>
+                <option value="often" {% if selected_state == "often" %}selected{% endif %}>Often</option>
+                <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>Haply</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>Never</option>
+              </select>
+
+              <button type="submit" class="btn btn-square btn-sm">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                  />
+                </svg>
+              </button>
+            </form>
+          </th>
+          <th><a href="{% url 'clients:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}">ID{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}">Client Name{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}">Phone Number{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}">Address{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th>Operate</th>
         </tr>
       </thead>
       <tbody>
-        {% for client in clients %}
-        <tr class="hover">
+            {% for client in clients %}
+          <tr class="hover">
+            {% if client.state == "often" %}
+            <th>
+              <span class="btn btn-sm btn-success text-lg">{{ client.state }}</span>
+            </th>
+            {% elif client.state == "haply" %}
+            <th>
+              <span class="btn btn-sm btn-warning text-lg">{{ client.state }}</span>
+            </th>
+            {% elif client.state == "never" %}
+            <th>
+              <span class="btn btn-sm btn-error text-lg">{{ client.state }}</span>
+            </th>
+            {% endif %}
           <th>{{ client.id }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
           <td>{{ client.address }}</td>
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
-          <td>
-            <a href="{% url 'clients:edit' client.id %}">Edit</a>
-          </td>
-          <td>
+          <td class="flex justify-center">
+            <a href="{% url 'clients:edit' client.id %}" class="btn btn-sm btn-warning">Edit</a>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
               {% csrf_token %}
-              <button name="delete">Delete</button>
+              <button name="delete" class="btn btn-sm btn-error">Delete</button>
             </form>
           </td>
         </tr>
