@@ -23,11 +23,11 @@
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
           <td>
-            <a href="{% url 'client:edit' client.id %}">Edit</a>
+            <a href="{% url 'clients:edit' client.id %}">Edit</a>
           </td>
           <td>
             <form
-              action="{% url 'client:edit' client.id %}"
+              action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
@@ -38,7 +38,7 @@
         </tr>
         {% endfor %}
         <tr class="hover">
-          <form action="{% url 'client:list' %}" method="post">
+          <form action="{% url 'clients:list' %}" method="post">
             {% csrf_token %}
             <th>ID Auto gen</th>
             <td>
