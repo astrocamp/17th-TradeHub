@@ -21,3 +21,9 @@ lint:
 
 commit:
 	poetry run cz commit
+
+suppliers:
+	python manage.py loaddata fake_data/suppliers_data.json
+
+products:
+	python manage.py loaddata fake_data/products_data.json

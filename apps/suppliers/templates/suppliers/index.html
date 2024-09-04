@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="p-4 max-w-3xl mx-auto mt-8">
   <!-- 刪除選中供應商按鈕 -->
@@ -17,6 +18,38 @@
       >
         Delete Selected Suppliers
       </button>
+=======
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+    <div class="p-4 max-w-3xl mx-auto mt-8">
+        <!-- 刪除選中供應商按鈕 -->
+        <form method="post" action="{% url 'suppliers:delete_selected' %}">
+            {% csrf_token %}
+            <!-- 新增產品按鈕 -->
+            <div class="flex space-x-4 mb-6 justify-between">
+                <a href="{% url 'suppliers:new' %}" class="inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105">
+                    Add a new supplier
+                </a>
+                <button type="submit" class="inline-block rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                    Delete Selected Suppliers
+                </button>
+            </div>
+
+            <!-- 供應商列表 -->
+            <div class="space-y-4">
+                {% for supplier in suppliers %}
+                <div class="flex items-center justify-between p-6 bg-white shadow-lg rounded-xl hover:bg-gray-200 transition duration-300 ease-in-out">
+                    <input type="checkbox" name="selected_suppliers" value="{{ supplier.id }}" class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+
+                    <a href="{% url 'suppliers:show' supplier.id %}" class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out">
+                        {{ supplier.name }} - {{ supplier.telephone }} - {{ supplier.note }}
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </form>
+>>>>>>> b601a7cc4d1ba0cae5e14b95a7ad0cdcb392e913
     </div>
 
     <!-- 供應商列表 -->
