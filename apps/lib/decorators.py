@@ -1,5 +1,6 @@
-from django.core.paginator import Paginator
 from functools import wraps
+
+from django.core.paginator import Paginator
 from django.http import Http404
 
 

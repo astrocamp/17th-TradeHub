@@ -74,32 +74,32 @@ class SupplierForm(forms.ModelForm):
 
         # Validate 'name'
         if not name:
-            self.add_error("name", "This field cannot be empty.")
+            self.add_error("name", "Supplier Name is required.")
 
         # Validate 'telephone'
         if not telephone:
-            self.add_error("telephone", "This field cannot be empty.")
+            self.add_error("telephone", "Telephone Number is required.")
         elif not re.match(r"^09\d{8}$", telephone):
             self.add_error("telephone", "Invalid phone number.")
 
         # Validate 'contact_person'
         if not contact_person:
-            self.add_error("contact_person", "This field cannot be empty.")
+            self.add_error("contact_person", "Contact Person is required.")
 
         # Validate 'email'
         if not email:
-            self.add_error("email", "This field cannot be empty.")
+            self.add_error("email", "Email Address is required.")
         elif not re.match(r"^[\w.-]+@[\w.-]+\.\w{2,}$", email):
             self.add_error("email", "Invalid email address.")
 
         # Validate 'gui_number'
         if not gui_number:
-            self.add_error("gui_number", "This field cannot be empty.")
+            self.add_error("gui_number", "GUI Number is required.")
         elif not re.match(r"^\d{8}$", gui_number):
             self.add_error("gui_number", "Invalid GUI number.")
 
         # Validate 'address'
         if not address:
-            self.add_error("address", "This field cannot be empty.")
+            self.add_error("address", "Address is required.")
 
         return cleaned_data
