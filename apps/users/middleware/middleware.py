@@ -17,6 +17,8 @@ class LoginRequiredMiddleware:
 
         # 檢查用戶是否登錄
         if not request.user.is_authenticated and request.path not in exempt_urls:
+            if request.method == "POST" and request.path == reverse("users:index"):
+                return self.get_response(request)
             return redirect("users:log_in")
 
         response = self.get_response(request)
