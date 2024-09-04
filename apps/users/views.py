@@ -1,8 +1,10 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 
+from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
+from .models import CustomUser
 
 # 取得自定義的 User 模型 CustomUser
 User = get_user_model()
@@ -61,11 +63,6 @@ def log_out(req):
         return redirect("pages:home")
 
 
-def profile(req):
-    # 職員資料頁面，未完成
-    return render(req, "users/profile.html")
-
-
 def reset_password(req):
     # 送出重設密碼表單
     if req.method == "POST":
@@ -101,3 +98,32 @@ def reset_password(req):
 
 def forget_password(req):
     return render(req, "users/reset_password.html")
+
+
+def profile(req, id):
+    user = get_object_or_404(CustomUser, pk=id)
+    if req.method == "POST":
+        form = ProfileForm(req.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("users:profile", id=user.id)
+    else:
+        form = ProfileForm(instance=user)
+    return render(req, "users/profile.html", {"user": user, "form": form})
+
+
+def edit_profile(request, id):
+    user = get_object_or_404(CustomUser, pk=id)
+
+    if request.user != user:
+        return redirect("users:profile", user.id)
+
+    if request.method == "POST":
+        form = ProfileForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect("users:profile", user.id)
+    else:
+        form = ProfileForm(instance=user)
+
+    return render(request, "users/edit_profile.html", {"form": form, "user": user})

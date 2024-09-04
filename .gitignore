@@ -7,4 +7,5 @@ static/scripts/
 .env*
 !.env.example
 .DS_Store
-migrations/000*
+*/migrations/*
+!*/migrations/__init__.py
