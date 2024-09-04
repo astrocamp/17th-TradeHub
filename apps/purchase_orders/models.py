@@ -9,6 +9,9 @@ class PurchaseOrder(models.Model):
     supplier = models.ForeignKey(
         Supplier, on_delete=models.CASCADE, related_name="purchase_orders"
     )
+    supplier_tel = models.CharField(max_length=20, blank=True, null=True)
+    contact_person = models.CharField(max_length=100, blank=True, null=True)
+    supplier_email = models.EmailField(blank=True, null=True)
     order_date = models.DateField(default=timezone.now)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     notes = models.TextField(blank=True, null=True)

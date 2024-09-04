@@ -1,5 +1,8 @@
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+
+from apps.suppliers.models import Supplier
 
 from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
 from .models import PurchaseOrder  # Update import
@@ -64,3 +67,14 @@ def delete_selected_purchase_orders(request):
     selected_purchase_orders = request.POST.getlist("selected_purchase_orders")
     PurchaseOrder.objects.filter(id__in=selected_purchase_orders).delete()
     return redirect("purchase_orders:index")  # Update redirect URL
+
+
+def load_supplier_info(request):
+    supplier_id = request.GET.get("supplier_id")
+    supplier = Supplier.objects.get(id=supplier_id)
+    data = {
+        "supplier_tel": supplier.telephone,
+        "contact_person": supplier.contact_person,
+        "supplier_email": supplier.email,
+    }
+    return JsonResponse(data)

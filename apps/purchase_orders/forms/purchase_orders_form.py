@@ -6,9 +6,16 @@ from ..models import PurchaseOrder  # Import the PurchaseOrder model
 class PurchaseOrderForm(forms.ModelForm):
     class Meta:
         model = PurchaseOrder
-        fields = ["order_number", "supplier", "order_date", "total_amount", "notes"]
+        fields = [
+            "order_number",
+            "supplier",
+            "supplier_tel",
+            "contact_person",
+            "supplier_email",
+            "notes",
+            "total_amount",
+        ]
         widgets = {
-            "order_date": forms.DateInput(attrs={"type": "date"}),
-            "total_amount": forms.NumberInput(attrs={"step": "0.01"}),
+            "total_amount": forms.NumberInput(attrs={"step": "0.1"}),
             "notes": forms.Textarea(attrs={"rows": 3}),
         }

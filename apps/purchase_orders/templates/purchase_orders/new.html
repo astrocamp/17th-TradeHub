@@ -19,4 +19,22 @@
             </div>
         </form>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const supplierSelect = document.getElementById('{{ form.supplier.id_for_label }}');
+
+            supplierSelect.addEventListener('change', function() {
+                const supplierId = supplierSelect.value;
+
+                fetch('{% url "purchase_orders:load_supplier_info" %}?supplier_id=' + supplierId)
+                    .then(response => response.json())
+                    .then(data => {
+                        // Update supplier details
+                        document.getElementById('{{ form.supplier_tel.id_for_label }}').value = data.supplier_tel;
+                        document.getElementById('{{ form.contact_person.id_for_label }}').value = data.contact_person;
+                        document.getElementById('{{ form.supplier_email.id_for_label }}').value = data.supplier_email;
+                    });
+            });
+        });
+    </script>
 {% endblock %}
