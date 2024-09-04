@@ -1,5 +1,6 @@
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
@@ -78,3 +79,21 @@ def load_supplier_info(request):
         "supplier_email": supplier.email,
     }
     return JsonResponse(data)
+
+
+def generate_order_number(request):
+    today = timezone.now().strftime("%Y%m%d")
+    last_order = (
+        PurchaseOrder.objects.filter(order_number__startswith=today)
+        .order_by("order_number")
+        .last()
+    )
+
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{last_order_number + 1:03d}"
+    else:
+        new_order_number = "001"
+
+    order_number = f"{today}{new_order_number}"
+    return JsonResponse({"order_number": order_number})
