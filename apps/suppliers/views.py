@@ -3,7 +3,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 from django.views.generic import ListView
 
-from ..lib.decorators import paginate
 from .forms.form import SupplierForm
 from .models import Supplier
 
@@ -15,7 +14,6 @@ class DataListView(ListView):
     paginate_by = 5
 
 
-@paginate(per_page=5)
 def index(req):
     if req.method == "POST":
         form = SupplierForm(req.POST)

@@ -1,10 +1,16 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from apps.goods_receipts.models import GoodsReceipt
 
 from .forms import GoodsReceiptForm
 
-# Create your views here.
+
+class DataListView(ListView):
+    model = GoodsReceipt
+    template_name = "pages/GRindex.html"
+    context_object_name = "goods_receipts"
+    paginate_by = 5
 
 
 def index(req):
@@ -15,7 +21,7 @@ def index(req):
             return redirect("goods_receipts:GRindex")
         return render(req, "pages/GRnew.html", {"form": form})
     goods_receipts = GoodsReceipt.objects.order_by("-id")
-    return render(req, "pages/GRindex.html", {"goods_receipts": goods_receipts})
+    return goods_receipts
 
 
 def new(req):

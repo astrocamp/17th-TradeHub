@@ -1,7 +1,15 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms.form import ClientForm
 from .models import Client
+
+
+class DataListView(ListView):
+    model = Client
+    template_name = "clients/list.html"
+    context_object_name = "clients"
+    paginate_by = 5
 
 
 def client_list(req):
@@ -12,7 +20,7 @@ def client_list(req):
             form.save()
             return redirect("clients:list")
     form = ClientForm()
-    return render(req, "clients/list.html", {"clients": clients, "form": form})
+    return render(req, "clients/edit.html", {"clients": clients, "form": form})
 
 
 def client_update_and_delete(req, id):

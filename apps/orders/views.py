@@ -1,7 +1,15 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms.form import OrderForm
 from .models import Orders
+
+
+class DataListView(ListView):
+    model = Orders
+    template_name = "orders/orders_list.html"
+    context_object_name = "orders"
+    paginate_by = 5
 
 
 def order_list(req):

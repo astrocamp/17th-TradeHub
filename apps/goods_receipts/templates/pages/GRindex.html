@@ -1,53 +1,81 @@
-{% extends "layouts/base.html" %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block content %}
 
 <h3>Goods Receipts List</h3>
 
 <a href="{% url 'goods_receipts:GRnew' %}" class="btn btn-primary">Add</a>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th></th>
-                    <th>Receipt Number</th>
-                    <th>Supplier</th>
-                    <th>Goods Name</th>
-                    <th>Quantity</th>
-                    <th>Delivery Method</th>
-                    <th>Date</th>
-                    <th>Note</th>
-                    <th>Operate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for goods_receipt in goods_receipts %}
-                <tr class="hover">
-                    <th></th>
-                    <th><a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}">{{goods_receipt.receipt_number}}</a></th>
-                    <th>{{goods_receipt.supplier}}</th>
-                    <th>{{goods_receipt.goods_name}}</th>
-                    <th>{{goods_receipt.quantity}}</th>
-                    <th>{{goods_receipt.method}}</th>
-                    <th>{{goods_receipt.date}}</th>
-                    <th>{{goods_receipt.note}}</th>
-                    <th>
-                        <div class="flex justify-center mt-10">
-                            <div>
-                                <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-                            </div>
-                            <div>
-                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-primary">Delete</a>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Receipt Number</th>
+          <th>Supplier</th>
+          <th>Goods Name</th>
+          <th>Quantity</th>
+          <th>Delivery Method</th>
+          <th>Date</th>
+          <th>Note</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for goods_receipt in goods_receipts %}
+        <tr class="hover">
+          <th></th>
+          <th>
+            <a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}"
+              >{{goods_receipt.receipt_number}}</a
+            >
+          </th>
+          <th>{{goods_receipt.supplier}}</th>
+          <th>{{goods_receipt.goods_name}}</th>
+          <th>{{goods_receipt.quantity}}</th>
+          <th>{{goods_receipt.method}}</th>
+          <th>{{goods_receipt.date}}</th>
+          <th>{{goods_receipt.note}}</th>
+          <th>
+            <div class="flex justify-center mt-10">
+              <div>
+                <a
+                  href="{% url 'goods_receipts:GRedit' goods_receipt.id %}"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+              </div>
+              <div>
+                <a
+                  onclick="return confirm('Delete?')"
+                  href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}"
+                  class="btn btn-primary"
+                  >Delete</a
+                >
+              </div>
+            </div>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+      </span>
     </div>
+  </div>
 </div>
 
 {% endblock %}

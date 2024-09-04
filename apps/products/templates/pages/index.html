@@ -1,50 +1,78 @@
-{% extends "layouts/base.html" %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block content %}
 
 <h3>Products List</h3>
 
 <a href="{% url 'products:new' %}" class="btn btn-primary">Add</a>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th></th>
-                    <th>Product ID</th>
-                    <th>Product Name</th>
-                    <th>Price</th>
-                    <th>Supplier</th>
-                    <th>Note</th>
-                    <th>Operate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr class="hover">
-                    <th></th>
-                    <th><a href="{% url 'products:show' product.id %}">{{product.product_id}}</a></th>
-                    <th>{{product.product_name}}</th>
-                    <th>{{product.price}}</th>
-                    <th>{{product.supplier}}</th>
-                    <th>{{product.note}}</th>
-                    <th>
-                        <div class="flex justify-center mt-10">
-                            <div>
-                                <a href="{% url 'products:edit' product.id %}" class="btn btn-primary">Edit</a>
-                            </div>
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Product ID</th>
+          <th>Product Name</th>
+          <th>Price</th>
+          <th>Supplier</th>
+          <th>Note</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for product in products %}
+        <tr class="hover">
+          <th></th>
+          <th>
+            <a href="{% url 'products:show' product.id %}"
+              >{{product.product_id}}</a
+            >
+          </th>
+          <th>{{product.product_name}}</th>
+          <th>{{product.price}}</th>
+          <th>{{product.supplier}}</th>
+          <th>{{product.note}}</th>
+          <th>
+            <div class="flex justify-center mt-10">
+              <div>
+                <a
+                  href="{% url 'products:edit' product.id %}"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+              </div>
 
-                            <div>
-                                <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-primary">Delete</a>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+              <div>
+                <a
+                  onclick="return confirm('確認刪除?')"
+                  href="{% url 'products:delete' product.id %}"
+                  class="btn btn-primary"
+                  >Delete</a
+                >
+              </div>
+            </div>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination">
+      <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; first</a>
+        <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+      </span>
     </div>
+  </div>
 </div>
 
 {% endblock %}

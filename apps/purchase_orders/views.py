@@ -1,8 +1,16 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.views.generic import ListView
 
-from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
-from .models import PurchaseOrder  # Update import
+from .forms.purchase_orders_form import PurchaseOrderForm
+from .models import PurchaseOrder
+
+
+class DataListView(ListView):
+    model = PurchaseOrder
+    template_name = "purchase_orders/index.html"
+    context_object_name = "purchase_orders"
+    paginate_by = 5
 
 
 def index(request):

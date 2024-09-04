@@ -1,4 +1,4 @@
-all: server, migrate, migration, shell, routes, lint, commit
+all: server, migrate, migration, shell, routes, lint, commit, suppliers, products, clients
 .PHONY: all
 
 server:
@@ -27,3 +27,6 @@ suppliers:
 
 products:
 	python manage.py loaddata fake_data/products_data.json
+
+clients:
+	python manage.py loaddata fake_data/clients_data.json
