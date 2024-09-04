@@ -98,7 +98,9 @@
     <div class="flex gap-2 w-[160px]">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %}
-      <a href="{% url 'users:profile' %}" class="w-[60px] flex justify-center"
+      <a
+        href="{% url 'users:profile' user.id %}"
+        class="w-[60px] flex justify-center"
         >{{ request.user.username }}</a
       >
       <form
