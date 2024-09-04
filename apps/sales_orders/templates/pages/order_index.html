@@ -1,0 +1,95 @@
+{% extends "layouts/base.html" %}
+{% block content %} {% load static %}
+<div class="flex justify-end mt-12">
+  <a href="{% url 'sales_orders:create' %}" class="btn bg-orange-600 text-white"
+    >Create</a
+  >
+</div>
+<div class="divider text-3xl font-bold">Sales Order</div>
+<div class="flex justify-center mt-5">
+  <div class="overflow-x-auto w-full">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl text-center">
+          <th>
+            <form action="{% url 'sales_orders:index' %}" method="GET">
+              <select
+                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                name="select"
+              >
+                <option disabled>Select</option>
+                <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
+                <option value="finish" {% if selected_state == "finish" %}selected{% endif %}>Finish</option>
+                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>Unfinish</option>
+              </select>
+
+              <button type="submit" class="btn btn-square btn-sm">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                  />
+                </svg>
+              </button>
+            </form>
+          </th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}">Client{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=products&select={{ selected_state }}&desc={{ is_desc }}">Products{% if order_by == 'products' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}">Stock{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">Price{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}">Last Updated{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      {% for item in sales_orders %}
+      <tbody>
+        <tr class="hover">
+          {% if item.state == "normal" %}
+          <th>
+            <span class="btn btn-sm btn-success text-lg">{{ item.state }}</span>
+          </th>
+          {% else %}
+          <th>
+            <span class="btn btn-sm btn-error text-lg">{{ item.state }}</span>
+          </th>
+          {% endif %}
+          <td>{{ item.client }}</td>
+          <td>{{ item.product }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.stock }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
+          <td>
+            <a
+              href="{% url 'sales_orders:edit' item.id %}"
+              class="btn btn-primary"
+            >
+              Edit
+            </a>
+            <a href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error"
+              >Delete</a
+            >
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>client</th>
+          <th>product</th>
+          <th>quantity</th>
+          <th>stock</th>
+          <th>price</th>
+          <th>last_updated</th>
+          <th>operate</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+{% endblock %}

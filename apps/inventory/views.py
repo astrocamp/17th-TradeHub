@@ -10,7 +10,6 @@ def index(request):
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
-    title = request.GET.get("title")
     state_match = {"normal", "low_stock", "out_stock"}
 
     inventory = Inventory.objects.order_by(order_by)
@@ -20,14 +19,14 @@ def index(request):
     order_by_field = f"{'-' if is_desc else ''}{order_by}"
     inventory = inventory.order_by(order_by_field)
 
-    context = {
+    content = {
         "inventory": inventory,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
     }
 
-    return render(request, "pages/inventory_index.html", context)
+    return render(request, "pages/inventory_index.html", content)
 
 
 def create(request):
