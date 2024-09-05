@@ -1,5 +1,6 @@
-from django import forms
 import re
+
+from django import forms
 
 from ..models import Client
 
@@ -7,18 +8,38 @@ from ..models import Client
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
-        fields = ["name", "phone_number", "address", "email", "note"]
+        fields = [
+            "name",
+            "phone_number",
+            "address",
+            "email",
+            "note",
+        ]
 
         widgets = {
-            "name": forms.TextInput(attrs={"class": "form-control", "placeholder": "Client Name"}),
-            "phone_number": forms.TextInput(attrs={"class": "form-control", "placeholder": "Phone Number"}),
-            "address": forms.TextInput(attrs={"class": "form-control", "placeholder": "Address"}),
-            "email": forms.TextInput(attrs={"class": "form-control", "placeholder": "Email Address"}),
-            "note": forms.Textarea(attrs={"class": "form-control", "placeholder": "Additional Notes", "rows": 3}),
+            "name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Client Name"}
+            ),
+            "phone_number": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Phone Number"}
+            ),
+            "address": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Address"}
+            ),
+            "email": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Email Address"}
+            ),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Additional Notes",
+                    "rows": 3,
+                }
+            ),
         }
 
     def __init__(self, *args, **kwargs):
-        super(ClientForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.required = False
 

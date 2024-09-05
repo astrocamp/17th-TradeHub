@@ -8,21 +8,35 @@
   {% csrf_token %}
   <div class="form-control">
     <label class="label" for="product">Product</label>
+    {% if form.product.help_text %}
+      <span class="text-sm text-gray-500">{{ form.product.help_text }}</span>
+    {% endif %}
     <input
       type="text"
       name="product"
       value="{{ inventory.product }}"
       class="input input-bordered w-full"
+      readonly
     />
+    {% for error in form.product.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="form-control">
     <label class="label" for="supplier">Supplier</label>
+    {% if form.supplier.help_text %}
+      <span class="text-sm text-gray-500">{{ form.supplier.help_text }}</span>
+    {% endif %}
     <input
       type="text"
       name="supplier"
       value="{{ inventory.supplier }}"
       class="input input-bordered w-full"
+      readonly
     />
+    {% for error in form.supplier.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="form-control">
     <label class="label" for="quantity">Quantity</label>
@@ -32,6 +46,9 @@
       value="{{ inventory.quantity }}"
       class="input input-bordered w-full"
     />
+    {% for error in form.quantity.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="form-control">
     <label class="label" for="safety_stock">Safety Stock</label>
@@ -41,6 +58,9 @@
       value="{{ inventory.safety_stock }}"
       class="input input-bordered w-full"
     />
+    {% for error in form.safety_stock.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="form-control">
     <label class="label" for="note">Note</label>
@@ -50,6 +70,9 @@
       value="{{ inventory.note }}"
       class="input input-bordered w-full"
     />
+    {% for error in form.note.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="form-control">
     <label class="label" for="last_updated">Last Updated</label>
@@ -59,6 +82,9 @@
       value="{{inventory.last_updated|date:'Y-m-d H:i' }}"
       class="input input-bordered w-full"
     />
+    {% for error in form.last_updated.errors %}
+      <span class="text-red-500">{{ error }}</span>
+    {% endfor %}
   </div>
   <div class="flex justify-center mt-5 gap-4">
     <div>

@@ -6,7 +6,13 @@ from ..models import SalesOrder
 class SalesOrderForm(forms.ModelForm):
     class Meta:
         model = SalesOrder
-        fields = ["client", "product", "quantity", "stock", "price"]
+        fields = [
+            "client",
+            "product",
+            "quantity",
+            "stock",
+            "price",
+        ]
         widgets = {
             "client": forms.Select(
                 attrs={

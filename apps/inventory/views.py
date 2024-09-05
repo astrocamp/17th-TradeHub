@@ -35,6 +35,8 @@ def create(request):
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
+        else:
+            return render(request, "pages/inventory_create.html", {"form": form})
     form = RestockForm()
     return render(request, "pages/inventory_create.html", {"form": form})
 

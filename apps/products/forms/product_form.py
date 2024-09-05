@@ -1,5 +1,5 @@
 from django import forms
-from django.forms import ModelForm, Select
+from django.forms import ModelForm
 
 from apps.products.models import Product
 
@@ -15,15 +15,27 @@ class ProductForm(ModelForm):
             "note",
         ]
         widgets = {
-            "product_id": forms.TextInput(attrs={"placeholder": "Product ID"}),
-            "product_name": forms.TextInput(attrs={"placeholder": "Product Name"}),
-            "price": forms.NumberInput(attrs={"placeholder": "Price"}),
-            "supplier": Select(
+            "product_id": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Product ID"}
+            ),
+            "product_name": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Product Name"}
+            ),
+            "price": forms.NumberInput(
+                attrs={"class": "form-control", "placeholder": "Price"}
+            ),
+            "supplier": forms.Select(
                 attrs={
                     "class": "form-control w-full select select-bordered flex items-center justify-center"
                 }
             ),
-            "note": forms.Textarea(attrs={"placeholder": "Additional Note", "rows": 3}),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "Additional Note",
+                    "rows": 3,
+                }
+            ),
         }
         labels = {
             "product_id": "Product ID",
@@ -41,29 +53,26 @@ class ProductForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(ProductForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         for field in self.fields.values():
             field.required = False
 
     def clean(self):
-        cleaned_data = super(ProductForm, self).clean()
+        cleaned_data = super().clean()
         product_id = cleaned_data.get("product_id")
         product_name = cleaned_data.get("product_name")
         price = cleaned_data.get("price")
 
         if not product_id:
             self.add_error("product_id", "Product ID is required.")
-        else:
-            if (
-                Product.objects.filter(product_id=product_id)
-                .exclude(id=self.instance.id)
-                .exists()
-            ):
-                self.add_error("product_id", "Product ID already exists.")
 
         if not product_name:
             self.add_error("product_name", "Product Name is required.")
+            
         if not price:
             self.add_error("price", "Price is required.")
+        else:
+            if price < 0:
+                self.add_error("price", "Price cannot be negative.")
 
         return cleaned_data
