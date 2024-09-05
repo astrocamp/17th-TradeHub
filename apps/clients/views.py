@@ -40,3 +40,26 @@ def client_update_and_delete(req, id):
                 return redirect("clients:list")
     form = ClientForm(instance=client)
     return render(req, "clients/edit.html", {"client": client, "form": form})
+
+
+def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort")
+    is_desc = request.GET.get("desc", "True") == "False"
+    state_match = {"often", "haply", "never"}
+
+    clients = Client.objects.all()
+
+    if state in state_match:
+        clients = Client.objects.filter(state=state)
+    order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
+    clients = clients.order_by(order_by_field)
+
+    content = {
+        "clients": clients,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
+    }
+
+    return render(request, "clients/list.html", content)
