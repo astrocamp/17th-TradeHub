@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.order_number:
-            today = timezone.now().strftime("%Y%m%d")
+            today = timezone.localtime().strftime("%Y%m%d")
             last_order = (
                 PurchaseOrder.objects.filter(order_number__startswith=today)
                 .order_by("order_number")

@@ -82,7 +82,7 @@ def load_supplier_info(request):
 
 
 def generate_order_number(request):
-    today = timezone.now().strftime("%Y%m%d")
+    today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
         PurchaseOrder.objects.filter(order_number__startswith=today)
         .order_by("order_number")
