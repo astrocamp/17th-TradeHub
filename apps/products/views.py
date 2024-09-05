@@ -13,18 +13,16 @@ class DataListView(ListView):
 
 
 def index(req):
-    if req.method == "POST":
-        form = ProductForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("products:index")
-        return render(req, "pages/new.html", {"form": form})
-
     products = Product.objects.order_by("-id")
     return render(req, "pages/index.html", {"products": products})
 
 
 def new(req):
+    if req.method == "POST":
+        form = ProductForm(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("products:index")
     form = ProductForm
     return render(req, "pages/new.html", {"form": form})
 
