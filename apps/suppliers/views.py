@@ -15,18 +15,18 @@ class DataListView(ListView):
 
 
 def index(req):
-    if req.method == "POST":
-        form = SupplierForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("suppliers:index")
-        else:
-            return render(req, "suppliers/new.html", {"form": form})
     suppliers = Supplier.objects.order_by("id")
     return suppliers
 
 
 def new(req):
+    if req.method == "POST":
+        form = SupplierForm(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("suppliers:index")
+        print(form)
+        return render(req, "suppliers/new.html", {"form": form})
     form = SupplierForm()
     return render(req, "suppliers/new.html", {"form": form})
 

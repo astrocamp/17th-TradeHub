@@ -2,7 +2,6 @@
 
 import django.db.models.deletion
 import django_fsm
-
 from django.db import migrations, models
 
 
