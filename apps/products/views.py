@@ -12,9 +12,27 @@ class DataListView(ListView):
     paginate_by = 5
 
 
-def index(req):
-    products = Product.objects.order_by("-id")
-    return render(req, "pages/index.html", {"products": products})
+def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", True) == "False"
+    state_match = {"often", "haply", "never"}
+
+    products = Product.objects.all()
+
+    if state in state_match:
+        products = Product.objects.filter(state=state)
+    order_by_field = f"{'-' if is_desc else ''}{order_by}"
+    products = products.order_by(order_by_field)
+
+    content = {
+        "products": products,
+        "selected_state": state,
+        "order_by": order_by,
+        "is_desc": is_desc,
+    }
+
+    return render(request, "pages/index.html", content)
 
 
 def new(req):
@@ -23,28 +41,25 @@ def new(req):
         if form.is_valid():
             form.save()
             return redirect("products:index")
-    form = ProductForm
+        return render(req, "pages/new.html", {"form": form})
+    form = ProductForm()
     return render(req, "pages/new.html", {"form": form})
 
 
-def show(req, id):
-    product = get_object_or_404(Product, id=id)
-    if req.method == "POST":
-        form = ProductForm(req.POST, instance=product)
+def edit(request, id):
+    if request.method == "POST":
+        product = get_object_or_404(Product, id=id)
+        form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
-            return redirect("products:show", id=id)
-        return render(req, "pages/edit.html", {"product": product, "form": form})
-    return render(req, "pages/show.html", {"product": product})
-
-
-def edit(req, id):
+            return redirect("products:index")
+        return render(request, "pages/edit.html", {"product": product, "form": form})
     product = get_object_or_404(Product, id=id)
     form = ProductForm(instance=product)
-    return render(req, "pages/edit.html", {"product": product, "form": form})
+    return render(request, "pages/edit.html", {"product": product, "form": form})
 
 
-def delete(req, id):
+def delete(request, id):
     product = get_object_or_404(Product, id=id)
     product.delete()
     return redirect("products:index")
