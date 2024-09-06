@@ -1,13 +1,20 @@
 {% extends "layouts/base.html" %}
 
-{% block content %}
+{% block content %} {% load static %}
 
-<a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}"class="btn btn-primary">Back to Goods Receipts List</a>
+<!-- <a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}"class="btn btn-primary">Back to Goods Receipts List</a> -->
 
-<form action="{% url 'goods_receipts:GRshow' goods_receipt.id %}" method="POST">
+<form
+    action="{% url 'goods_receipts:GRedit' goods_receipt.id %}" method="POST"
+    class="text-lg m-f"
+>
     {% csrf_token %}
-    {{form}}
-    <button class="btn btn-primary">Renew</button>
+    <div class="container w-1/2 mx-auto flex flex-col gap-4">
+        {{form.as_p}}
+        <button type="submit" class="btn btn-primary">Submit</button>
+        <a href="{% url 'goods_receipts:GRindex' %}" class="btn btn-warning">Cancel</a>
+    </div>
 </form>
+
 
 {% endblock %}

@@ -45,11 +45,20 @@ def show(req, id):
     return render(req, "pages/GRshow.html", {"goods_receipt": goods_receipt})
 
 
-def edit(req, id):
+def edit(request, id):
+    if request.method == "POST":
+        goods_receipt = get_object_or_404(GoodsReceipt, id=id)
+        form = GoodsReceiptForm(request.POST, instance=goods_receipt)
+        if form.is_valid():
+            form.save()
+            return redirect("goods_receipts:GRindex")
+        return render(
+            request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+        )
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     form = GoodsReceiptForm(instance=goods_receipt)
     return render(
-        req, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+        request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
     )
 
 
