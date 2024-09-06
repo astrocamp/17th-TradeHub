@@ -50,3 +50,25 @@ def client_update_and_delete(req, id):
             return redirect("clients:list")
 
     return render(req, "edit.html", {"client": client})
+
+
+def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
+    state_match = {"often", "haply", "never"}
+
+    clients = Client.objects.all()
+
+    if state in state_match:
+        clients = Client.objects.filter(state=state)
+    order_by_field = order_by if is_desc else "-" + order_by
+    clients = clients.order_by(order_by_field)
+
+    content = {
+        "clients": clients,
+        "selected_state": state,
+        "order_by": order_by,
+        "is_desc": is_desc,
+    }
+    return render(request, "list.html", content)

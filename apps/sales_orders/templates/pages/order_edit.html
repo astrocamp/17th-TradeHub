@@ -1,25 +1,16 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
+<div class="divider text-3xl font-bold mt-32">Edit Order</div>
 <form
   method="POST"
   action="{% url 'sales_orders:edit' sales_orders.id %}"
   class="text-lg m-4"
 >
-  {% csrf_token %} {% for field in form %}
-  <div class="form-control">
-    <label class="label" for="{{ field.name }}">{{ field.label }}</label>
-    {{ field }}
-  </div>
-  {% endfor %}
-  <div class="flex justify-center mt-5 gap-4">
-    <div>
-      <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-    </div>
-    <div>
-      <a href="{% url 'sales_orders:index' %}" class="btn btn-warning btn-lg"
-        >Cancel</a
-      >
-    </div>
+  {% csrf_token %}
+  <div class="container w-1/2 mx-auto flex flex-col gap-4">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="{% url 'sales_orders:index' %}" class="btn btn-warning">Cancel</a>
   </div>
 </form>
 {% endblock %}
