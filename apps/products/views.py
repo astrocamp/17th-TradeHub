@@ -1,7 +1,15 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms.product_form import ProductForm
 from .models import Product
+
+
+class DataListView(ListView):
+    model = Product
+    template_name = "pages/index.html"
+    context_object_name = "products"
+    paginate_by = 5
 
 
 def index(request):
@@ -36,17 +44,6 @@ def new(request):
         return render(request, "pages/new.html", {"form": form})
     form = ProductForm()
     return render(request, "pages/new.html", {"form": form})
-
-
-# def show(request, id):
-#     product = get_object_or_404(Product, id=id)
-#     if request.method == "POST":
-#         form = ProductForm(request.POST, instance=product)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("products:show", id=id)
-#         return render(request, "pages/edit.html", {"product": product, "form": form})
-#     return render(request, "pages/show.html", {"product": product})
 
 
 def edit(request, id):

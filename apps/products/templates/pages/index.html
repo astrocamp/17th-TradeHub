@@ -84,7 +84,30 @@
           {% endfor %}
         </tbody>
       </table>
+      <div class="pagination join flex justify-center">
+        <span class="step-links">
+          {% if page_obj.has_previous %}
+          <a href="?page=1"
+            ><button class="join-item btn">first</button></a
+          >
+          <a href="?page={{ page_obj.previous_page_number }}"
+            ><button class="join-item btn">«</button></a
+          >
+          {% endif %}
+          <button class="join-item btn">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </button>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+            ><button class="join-item btn">»</button></a
+          >
+          <a href="?page={{ page_obj.paginator.num_pages }}"
+            ><button class="join-item btn">last</button></a
+          >
+          {% endif %}
+        </span>
+      </div>
     </div>
   </div>
-  {% endblock %}
 </div>
+{% endblock %}

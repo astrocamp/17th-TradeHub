@@ -1,9 +1,17 @@
 from datetime import datetime
 
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms.inventory_form import RestockForm
 from .models import Inventory
+
+
+class DataListView(ListView):
+    model = Inventory
+    template_name = "pages/inventory_index.html"
+    context_object_name = "inventory"
+    paginate_by = 5
 
 
 def index(request):
@@ -46,6 +54,8 @@ def edit(request, id):
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
+        else:
+            print(form.errors)
     else:
         form = RestockForm(instance=inventory)
 
