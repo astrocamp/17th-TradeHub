@@ -18,9 +18,18 @@ def index(req):
     return render(req, "pages/GRindex.html", {"goods_receipts": goods_receipts})
 
 
-def new(req):
-    form = GoodsReceiptForm
-    return render(req, "pages/GRnew.html", {"form": form})
+def new(request):
+    if request.method == "POST":
+        form = GoodsReceiptForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("goods_receipts:GRindex")
+        return render(request, "pages/GRnew.html", {"form": form})
+    form = GoodsReceiptForm()
+    return render(request, "pages/GRnew.html", {"form": form})
+
+    # form = GoodsReceiptForm
+    # return render(req, "pages/GRnew.html", {"form": form})
 
 
 def show(req, id):
