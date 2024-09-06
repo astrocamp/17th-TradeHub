@@ -1,12 +1,18 @@
-{% extends "layouts/base.html" %} {% block content %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-<a href="{% url 'products:index' %}" class="btn btn-primary"
-  >Back to Products List</a
+
+<form
+  method="POST"
+  action="{% url 'products:edit' product.id %}"
+  class="text-lg m-4"
 >
-
-<form action="{% url 'products:edit' product.id %}" method="POST">
-  {% csrf_token %} {{form.as_p}}
-  <button class="btn btn-primary">Renew</button>
+  {% csrf_token %}
+  <div class="container w-1/2 mx-auto flex flex-col gap-4">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="{% url 'products:index' %}" class="btn btn-warning">Cancel</a>
+  </div>
 </form>
+
 
 {% endblock %}
