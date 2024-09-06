@@ -24,7 +24,7 @@
         <li>Client</li>
         <ul class="p-2">
           <li><a href="{% url 'clients:list' %}">Overview</a></li>
-          <li><a>Sell Order</a></li>
+          <li><a href="{% url 'orders:list' %}">Orders</a></li>
         </ul>
         <li>Product</li>
         <ul class="p-2">
@@ -33,12 +33,16 @@
         <li>Supplier</li>
         <ul class="p-2">
           <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
-          <li><a href="{% url 'purchase_orders:index' %}">Purchase Order</a></li>
+          <li>
+            <a href="{% url 'purchase_orders:index' %}">Purchase Order</a>
+          </li>
         </ul>
         <li>Inventory</li>
         <ul class="p-2">
           <li><a href="{% url 'inventory:index' %}">Overview</a></li>
-          <li><a href="{% url 'goods_receipts:GRindex' %}">Warehouse Receipt</a></li>
+          <li>
+            <a href="{% url 'goods_receipts:GRindex' %}">Warehouse Receipt</a>
+          </li>
           <li><a href="{% url 'sales_orders:index' %}">Outbound Order</a></li>
         </ul>
       </ul>
@@ -52,7 +56,7 @@
           <summary>Client</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'clients:list' %}">Overview</a></li>
-            <li><a>Sell Order</a></li>
+            <li><a href="{% url 'orders:list' %}">Orders</a></li>
           </ul>
         </details>
       </li>
@@ -69,7 +73,9 @@
           <summary>Supplier</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
-            <li><a href="{% url 'purchase_orders:index' %}">Purchase Order</a></li>
+            <li>
+              <a href="{% url 'purchase_orders:index' %}">Purchase Order</a>
+            </li>
           </ul>
         </details>
       </li>
@@ -78,7 +84,9 @@
           <summary>Inventory</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'inventory:index' %}">Overview</a></li>
-            <li><a href="{% url 'goods_receipts:GRindex' %}">Warehouse Receipt</a></li>
+            <li>
+              <a href="{% url 'goods_receipts:GRindex' %}">Warehouse Receipt</a>
+            </li>
             <li><a href="{% url 'sales_orders:index' %}">Outbound Order</a></li>
           </ul>
         </details>
@@ -90,14 +98,26 @@
     <div class="flex gap-2 w-[160px]">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %}
-        <a href="{% url 'users:profile' user.id %}" class="w-[60px] flex justify-center">{{ request.user.username }}</a>
-        <form action="{% url 'users:log_out' %}" method="post" class="w-[60px] flex justify-center">
-          {% csrf_token %}
-          <button type="submit">Log Out</button>
-        </form>
+      <a
+        href="{% url 'users:profile' user.id %}"
+        class="w-[60px] flex justify-center"
+        >{{ request.user.username }}</a
+      >
+      <form
+        action="{% url 'users:log_out' %}"
+        method="post"
+        class="w-[60px] flex justify-center"
+      >
+        {% csrf_token %}
+        <button type="submit">Log Out</button>
+      </form>
       {% else %}
-        <a href="{% url 'users:register' %}" class="w-[60px] flex justify-center">Sign Up</a>
-        <a href="{% url 'users:log_in' %}" class="w-[60px] flex justify-center">Log In</a>
+      <a href="{% url 'users:register' %}" class="w-[60px] flex justify-center"
+        >Sign Up</a
+      >
+      <a href="{% url 'users:log_in' %}" class="w-[60px] flex justify-center"
+        >Log In</a
+      >
       {% endif %}
     </div>
   </div>

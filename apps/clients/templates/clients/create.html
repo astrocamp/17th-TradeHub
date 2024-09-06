@@ -1,0 +1,41 @@
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<div class="flex justify-center mt-32">
+  <div class="overflow-x-auto w-full">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>ID</th>
+          <th>Client Name</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Email</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hover">
+          <form
+            class="text-center"
+            method="POST"
+            action="{% url 'clients:create' %}"
+          >
+            {% csrf_token %}
+            <th>ID Auto gen</th>
+            <td>{{form.name}}</td>
+            <td>{{form.phone_number}}</td>
+            <td>{{form.address}}</td>
+            <td>{{form.email}}</td>
+            <td>{{form.note}}</td>
+            <td>
+              <button type="submit" class="btn bg-orange-600 text-white">
+                Add
+              </button>
+            </td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

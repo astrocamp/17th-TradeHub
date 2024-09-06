@@ -1,29 +1,32 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
+from .forms.clients_form import ClientForm
 from .models import Client
+
+
+class DataListView(ListView):
+    model = Client
+    template_name = "clients/list.html"
+    context_object_name = "clients"
+    paginate_by = 5
 
 
 def client_list(req):
     clients = Client.objects.order_by("-id")
+    return render(req, "clients/list.html", {"clients": clients})
+
+
+def create(req):
     if req.method == "POST":
-        phone_number = req.POST.get("phone_number", "")
-        if not phone_number.isdigit():
-            return render(
-                req,
-                "list.html",
-                {"clients": clients, "error": "請輸入有效的電話號碼。"},
-            )
-        client = Client(
-            name=req.POST["client_name"],
-            phone_number=req.POST["phone_number"],
-            address=req.POST["address"],
-            email=req.POST["email"],
-            note=req.POST["note"],
-        )
-        client.save()
-        return redirect("clients:list")
-    else:
-        return render(req, "list.html", {"clients": clients})
+        form = ClientForm(req.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("clients:list")
+        else:
+            print(form.errors)
+    form = ClientForm()
+    return render(req, "clients/create.html", {"form": form})
 
 
 def client_update_and_delete(req, id):
@@ -32,21 +35,33 @@ def client_update_and_delete(req, id):
         if "delete" in req.POST:
             client.delete()
             return redirect("clients:list")
-
-        phone_number = req.POST.get("phone_number", "")
-        if not phone_number.isdigit():
-            return render(
-                req, "edit.html", {"client": client, "error": "請輸入有效的電話號碼。"}
-            )
-
         else:
-            client.name = req.POST["client_name"]
-            client.phone_number = req.POST["phone_number"]
-            client.address = req.POST["address"]
-            client.email = req.POST["email"]
-            client.note = req.POST["note"]
+            form = ClientForm(req.POST, instance=client)
+            if form.is_valid():
+                form.save()
+                return redirect("clients:list")
+    form = ClientForm(instance=client)
+    return render(req, "clients/edit.html", {"client": client, "form": form})
 
-            client.save()
-            return redirect("clients:list")
 
-    return render(req, "edit.html", {"client": client})
+def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort")
+    is_desc = request.GET.get("desc", "True") == "False"
+    state_match = {"often", "haply", "never"}
+
+    clients = Client.objects.all()
+
+    if state in state_match:
+        clients = Client.objects.filter(state=state)
+    order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
+    clients = clients.order_by(order_by_field)
+
+    content = {
+        "clients": clients,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
+    }
+
+    return render(request, "clients/list.html", content)

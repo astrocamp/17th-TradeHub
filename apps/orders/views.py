@@ -1,19 +1,30 @@
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.generic import ListView
 
 from .forms.form import OrderForm
 from .models import Orders
 
 
-# Create your views here.
+class DataListView(ListView):
+    model = Orders
+    template_name = "orders/orders_list.html"
+    context_object_name = "orders"
+    paginate_by = 5
+
+
 def order_list(req):
     orders = Orders.objects.order_by("-id")
-    if req.method == "POST":
-        form = OrderForm(req.POST)
+    return render(req, "orders/orders_list.html", {"orders": orders})
+
+
+def create(request):
+    if request.method == "POST":
+        form = OrderForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("orders:list")
     form = OrderForm()
-    return render(req, "orders/orders_list.html", {"orders": orders, "form": form})
+    return render(request, "orders/orders_create.html", {"form": form})
 
 
 def order_update_and_delete(req, id):
