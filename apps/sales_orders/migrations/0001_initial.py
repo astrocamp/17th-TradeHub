@@ -17,12 +17,10 @@ class Migration(migrations.Migration):
         ("clients", "0001_initial"),
         ("inventory", "0001_initial"),
         ("products", "0001_initial"),
-
     ]
 
     operations = [
         migrations.CreateModel(
-
             name="SalesOrder",
             fields=[
                 (
@@ -71,7 +69,6 @@ class Migration(migrations.Migration):
                         to="inventory.inventory",
                     ),
                 ),
-
             ],
         ),
     ]

@@ -12,13 +12,11 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('suppliers', '0001_initial'),
-
+        ("suppliers", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-
             name="PurchaseOrder",
             fields=[
                 (
@@ -54,7 +52,6 @@ class Migration(migrations.Migration):
                         to="suppliers.supplier",
                     ),
                 ),
-
             ],
         ),
     ]

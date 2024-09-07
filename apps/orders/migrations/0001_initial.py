@@ -13,12 +13,10 @@ class Migration(migrations.Migration):
     dependencies = [
         ("clients", "0001_initial"),
         ("products", "0001_initial"),
-
     ]
 
     operations = [
         migrations.CreateModel(
-
             name="Orders",
             fields=[
                 (
@@ -48,7 +46,6 @@ class Migration(migrations.Migration):
                         to="products.product",
                     ),
                 ),
-
             ],
         ),
     ]

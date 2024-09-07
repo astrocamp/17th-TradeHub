@@ -10,7 +10,6 @@ class Migration(migrations.Migration):
 
     initial = True
 
-
     dependencies = []
 
     operations = [
@@ -37,7 +36,6 @@ class Migration(migrations.Migration):
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 ("note", models.TextField(blank=True)),
-
             ],
         ),
     ]

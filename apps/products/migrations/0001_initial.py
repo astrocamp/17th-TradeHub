@@ -4,7 +4,6 @@
 
 import django.db.models.deletion
 import django_fsm
-
 from django.db import migrations, models
 
 
@@ -15,14 +14,11 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("suppliers", "0001_initial"),
-
     ]
 
     operations = [
         migrations.CreateModel(
-
             name="Product",
-
             fields=[
                 (
                     "id",
@@ -41,7 +37,11 @@ class Migration(migrations.Migration):
 
                     "state",
                     django_fsm.FSMField(
-                        choices=[("often", "經常"), ("haply", "偶爾"), ("never", "從不")],
+                        choices=[
+                            ("often", "經常"),
+                            ("haply", "偶爾"),
+                            ("never", "從不"),
+                        ],
                         default="often",
                         max_length=50,
                         protected=True,
@@ -57,7 +57,6 @@ class Migration(migrations.Migration):
                         to="suppliers.supplier",
                     ),
                 ),
-
             ],
         ),
     ]

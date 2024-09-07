@@ -30,7 +30,6 @@ class Migration(migrations.Migration):
                 ("create_at", models.DateTimeField(auto_now_add=True)),
                 ("delete_at", models.DateTimeField(auto_now=True)),
                 ("note", models.TextField(max_length=150, null=True)),
-
             ],
         ),
     ]
