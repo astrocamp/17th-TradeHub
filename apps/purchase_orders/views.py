@@ -5,59 +5,73 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
-from .models import PurchaseOrder  # Update import
+from .forms.purchase_orders_form import (PurchaseOrderForm,
+                                         PurchaseOrderProductFormSet)
+from .models import PurchaseOrder
 
 
 def index(request):
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("purchase_orders:index")  # Update redirect URL
+        formset = PurchaseOrderProductFormSet(request.POST, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
+            purchase_order = form.save()
+            formset.instance = purchase_order
+            formset.save()
+            return redirect("purchase_orders:index")
         else:
-            return render(request, "purchase_orders/new.html", {"form": form})
+            form = PurchaseOrderForm()
+            formset = PurchaseOrderProductFormSet(instance=form.instance)
+            return render(
+                request,
+                "purchase_orders/new.html",
+                {
+                    "form": form,
+                    "formset": formset,
+                },
+            )
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
+    purchase_orders = PurchaseOrder.objects.order_by("id")
     return render(
         request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )  # Update context
+    )
 
 
 def new(request):
-    form = PurchaseOrderForm()  # Update form
-    return render(
-        request, "purchase_orders/new.html", {"form": form}
-    )  # Update template
+    form = PurchaseOrderForm()
+    return render(request, "purchase_orders/new.html", {"form": form})
 
 
-def show(req, id):
+def show(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
-    if req.method == "POST":
-        form = PurchaseOrderForm(req.POST, instance=purchase_order)
+    if request.method == "POST":
+        form = PurchaseOrderForm(request.POST, instance=purchase_order)
         if form.is_valid():
             form.save()
             return redirect("purchase_orders:show", purchase_order.id)
         else:
             return render(
-                req,
+                request,
                 "purchase_orders/edit.html",
                 {"purchase_order": purchase_order, "form": form},
             )
-    return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
+    return render(
+        request, "purchase_orders/show.html", {"purchase_order": purchase_order}
+    )
 
 
-def edit(req, id):
+def edit(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     form = PurchaseOrderForm(instance=purchase_order)
     return render(
-        req,
+        request,
         "purchase_orders/edit.html",
         {"purchase_order": purchase_order, "form": form},
     )
 
 
-def delete(req, id):
+@require_POST
+def delete(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     purchase_order.delete()
     return redirect("purchase_orders:index")
@@ -67,7 +81,7 @@ def delete(req, id):
 def delete_selected_purchase_orders(request):
     selected_purchase_orders = request.POST.getlist("selected_purchase_orders")
     PurchaseOrder.objects.filter(id__in=selected_purchase_orders).delete()
-    return redirect("purchase_orders:index")  # Update redirect URL
+    return redirect("purchase_orders:index")
 
 
 def load_supplier_info(request):

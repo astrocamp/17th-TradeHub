@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils import timezone
 
+from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
 
@@ -15,6 +16,7 @@ class PurchaseOrder(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     total_amount = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
+    products = models.ManyToManyField(Product, through="PurchaseOrderProduct")
 
     def save(self, *args, **kwargs):
         if not self.order_number:
@@ -34,3 +36,15 @@ class PurchaseOrder(models.Model):
 
     def __str__(self):
         return f"PO {self.order_number} - {self.supplier.name}"
+
+
+# 建立中介模型 intermediary model
+class PurchaseOrderProduct(models.Model):
+    purchase_order = models.ForeignKey(
+        "PurchaseOrder", on_delete=models.CASCADE, related_name="order_items"
+    )
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product.product_name} - {self.quantity} pcs"
