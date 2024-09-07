@@ -1,8 +1,17 @@
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
-from .models import PurchaseOrder  # Update import
+from django.views.generic import ListView
+
+from .forms.purchase_orders_form import PurchaseOrderForm
+from .models import PurchaseOrder
+
+
+class DataListView(ListView):
+    model = PurchaseOrder
+    template_name = "purchase_orders/index.html"
+    context_object_name = "purchase_orders"
+    paginate_by = 5
 
 
 def index(request):
@@ -10,7 +19,7 @@ def index(request):
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:index")  # Update redirect URL
+            return redirect("purchase_orders:index1")  # Update redirect URL
         else:
             return render(request, "purchase_orders/new.html", {"form": form})
 
@@ -33,13 +42,7 @@ def show(req, id):
         form = PurchaseOrderForm(req.POST, instance=purchase_order)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:show", purchase_order.id)
-        else:
-            return render(
-                req,
-                "purchase_orders/edit.html",
-                {"purchase_order": purchase_order, "form": form},
-            )
+            return redirect("purchase_orders:index")
     return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
 
 

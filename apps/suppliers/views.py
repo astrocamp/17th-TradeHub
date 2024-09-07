@@ -1,4 +1,3 @@
-# Create your views here.
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
@@ -29,7 +28,7 @@ def show(req, id):
         form = SupplierForm(req.POST, instance=supplier)
         if form.is_valid():
             form.save()
-            return redirect("suppliers:show", supplier.id)
+            return redirect("suppliers:index")
         else:
             return render(
                 req, "supplier/edit.html", {"supplier": supplier, "form": form}
