@@ -1,0 +1,83 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="flex flex-col min-w-[300px] mt-10 bg-gray-300 p-4 rounded-lg shadow-md mx-auto w-1/2 max-w-md ">
+    <div class="flex justify-between items-center">
+        <h2 class="text-2xl font-bolder">{{user.first_name}}</h2>
+        {% if user == request.user %}
+            <div class="flex justify-end">
+                <a href="{% url 'users:profile' user.id %}" class="text-blue-500">Back to profile</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="flex flex-col gap-2 mt-4">
+            <div class="text-xl font-bold">Basic Information</div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.first_name.label }}:</p>
+                <div class="flex w-2/3 space-x-2">
+                    <p class="text-gray-500">{{ form.first_name }}</p>
+                    <p class="text-gray-500">{{ form.last_name }}</p>
+                </div>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.department.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.department }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.title.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.title }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.email.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.email }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.hire_date.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.hire_date }}</p>
+            </div>
+        </div>
+        {% if user == request.user %}
+        <div class="flex flex-col gap-2 mt-4">
+            <div class="text-xl font-bold">Personal Information</div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.username.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.username }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.birthday.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.birthday }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.phone.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.phone }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.address.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.address }}</p>
+            </div>
+            <div class="flex items-center">
+                <p class="text-gray-500 w-1/3">{{ form.note.label }}:</p>
+                <p class="text-gray-500 w-2/3">{{ form.note }}</p>
+            </div>
+        </div>
+        {% endif %}
+        <div class="flex justify-start">
+            <button type="submit" class="mt-4 bg-blue-500 text-white p-2 rounded mr-6">Save</button>
+            {% if form.errors %}
+                <div class="text-red-500 mt-4 w-2/3">
+                    {% for field, errors in form.errors.items %}
+                        {% for error in errors %}
+                            <div class="text-red-500 text-xs">{{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

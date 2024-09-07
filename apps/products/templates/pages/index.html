@@ -1,50 +1,90 @@
-{% extends "layouts/base.html" %}
-
-{% block content %}
-
-<h3>Products List</h3>
-
-<a href="{% url 'products:new' %}" class="btn btn-primary">Add</a>
-
+{% extends "layouts/base.html" %} {% block content %}{% load static %}
+<div class="flex justify-end mt-12">
+  <a href="{% url 'products:new' %}" class="btn bg-orange-600 text-white"
+    >Create</a
+  >
+</div>
+<div class="divider text-3xl font-bold">Products</div>
 <div class="flex justify-center mt-10">
     <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th></th>
-                    <th>Product ID</th>
-                    <th>Product Name</th>
-                    <th>Price</th>
-                    <th>Supplier</th>
-                    <th>Note</th>
-                    <th>Operate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                <tr class="hover">
-                    <th></th>
-                    <th><a href="{% url 'products:show' product.id %}">{{product.product_id}}</a></th>
-                    <th>{{product.product_name}}</th>
-                    <th>{{product.price}}</th>
-                    <th>{{product.supplier}}</th>
-                    <th>{{product.note}}</th>
-                    <th>
-                        <div class="flex justify-center mt-10">
-                            <div>
-                                <a href="{% url 'products:edit' product.id %}" class="btn btn-primary">Edit</a>
-                            </div>
+      <table class="table table-xl text-center">
+        <thead>
+          <tr class="text-xl text-center">
+            <th>
+              <form action="{% url 'products:index' %}" method="GET">
+              <select
+                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                name="select"
+              >
+                <option disabled>Select</option>
+                <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
+                <option value="often" {% if selected_state == "often" %}selected{% endif %}>Often</option>
+                <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>Haply</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>Never</option>
+              </select>
 
-                            <div>
-                                <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-primary">Delete</a>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+              <button type="submit" class="btn btn-square btn-sm">
+                <svg
+                  class="w-5 h-5"
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 512 512"
+                >
+                  <path
+                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                  />
+                </svg>
+              </button>
+            </form>
+            </th>
+            <th><a href="{% url 'products:index' %}?sort=product_id&select={{ selected_state }}&desc={{ is_desc }}">ID{% if order_by == 'product_id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}">Name{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">Price{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th>Operate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr class="hover">
+            {% if product.state == "often" %}
+            <th>
+              <span class="btn btn-sm btn-success text-lg">{{ product.state }}</span>
+            </th>
+            {% elif product.state == "haply" %}
+            <th>
+              <span class="btn btn-sm btn-warning text-lg">{{ product.state }}</span>
+            </th>
+            {% elif product.state == "never" %}
+            <th>
+              <span class="btn btn-sm btn-error text-lg">{{ product.state }}</span>
+            </th>
+            {% endif %}
+            <th>{{product.product_id}}</th>
+            <th>{{product.product_name}}</th>
+            <th>{{product.price}}</th>
+            <th>{{product.supplier}}</th>
+            <th>{{product.note}}</th>
+            <th>
+              <div class="flex justify-center">
+                <div>
+                  <a
+                    href="{% url 'products:edit' product.id %}"
+                    class="btn btn-primary"
+                  >
+                    Edit
+                  </a>
+                  <a onclick="return confirm(' Do you want to delete ?')" href="{% url 'products:delete' product.id %}" class="btn btn-error text-white"
+                    >Delete</a
+                  >
+                </div>
+              </div>
+            </th>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
     </div>
+  </div>
+  {% endblock %}
 </div>
-
-{% endblock %}

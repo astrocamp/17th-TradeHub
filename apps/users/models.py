@@ -6,6 +6,8 @@ from django.utils import timezone
 class CustomUser(AbstractUser):
 
     # 名稱、電話、地址、email、帳號、密碼、職稱、入職時間、備註
+    birthday = models.DateField(blank=True, null=True)
+    department = models.CharField(max_length=100, blank=True, null=True)
     phone = models.CharField(max_length=10, blank=True, null=True)
     address = models.CharField(max_length=100, blank=True, null=True)
     title = models.CharField(max_length=100, blank=True, null=True)

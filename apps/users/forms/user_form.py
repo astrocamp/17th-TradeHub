@@ -16,6 +16,16 @@ class CustomUserCreationForm(UserCreationForm):
         ),
         label="Name",
     )
+    birthday = forms.DateField(
+        widget=forms.DateInput(
+            attrs={
+                "type": "date",
+                "class": "form-control w-full input input-bordered",
+                "placeholder": "Please enter your birth date.",
+            }
+        ),
+        label="Birthday",
+    )
     email = forms.EmailField(
         widget=forms.EmailInput(
             attrs={
@@ -71,7 +81,7 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
         label="Password",
-        help_text="Password must be at least 8 characters long.",
+        help_text="Password must be at least 8 characters long, and cannot be entirely numeric.",
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(
@@ -89,6 +99,7 @@ class CustomUserCreationForm(UserCreationForm):
         model = CustomUser
         fields = [
             "first_name",
+            "birthday",
             "email",
             "phone",
             "address",
