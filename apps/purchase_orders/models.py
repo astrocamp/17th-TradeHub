@@ -12,8 +12,8 @@ class PurchaseOrder(models.Model):
     supplier_tel = models.CharField(max_length=20, blank=True, null=True)
     contact_person = models.CharField(max_length=100, blank=True, null=True)
     supplier_email = models.EmailField(blank=True, null=True)
-    order_date = models.DateField(default=timezone.now)
-    total_amount = models.DecimalField(max_digits=10, decimal_places=2)
+    created_at = models.DateTimeField(default=timezone.now)
+    total_amount = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -28,7 +28,6 @@ class PurchaseOrder(models.Model):
                 last_order_number = int(last_order.order_number[-3:])
                 new_order_number = f"{last_order_number + 1:03d}"
             else:
-                # If this is the first order of the day, start with 001
                 new_order_number = "001"
             self.order_number = f"{today}{new_order_number}"
         super().save(*args, **kwargs)

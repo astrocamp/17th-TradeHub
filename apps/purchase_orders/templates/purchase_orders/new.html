@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %}
-
+{% load static %}
 {% block content %}
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
         <div class="flex justify-between items-center p-4">
@@ -26,33 +26,16 @@
             </div>
         </form>
     </div>
+
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const supplierSelect = document.getElementById('{{ form.supplier.id_for_label }}');
-
-            supplierSelect.addEventListener('change', function() {
-                const supplierId = supplierSelect.value;
-
-                fetch('{% url "purchase_orders:load_supplier_info" %}?supplier_id=' + supplierId)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Update supplier details
-                        document.getElementById('{{ form.supplier_tel.id_for_label }}').value = data.supplier_tel;
-                        document.getElementById('{{ form.contact_person.id_for_label }}').value = data.contact_person;
-                        document.getElementById('{{ form.supplier_email.id_for_label }}').value = data.supplier_email;
-                    });
-            });
-        });
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('{% url "purchase_orders:generate_order_number" %}')
-                .then(response => response.json())
-                .then(data => {
-                    const orderNumberElement = document.getElementById('order-number');
-                    if (orderNumberElement) {
-                        orderNumberElement.textContent = data.order_number;
-                    }
-                })
-                .catch(error => console.error('Error fetching order number:', error));
-        });
+        window.djangoVariables = {
+            supplierIdField: "{{ form.supplier.id_for_label }}",
+            supplierTelField: "{{ form.supplier_tel.id_for_label }}",
+            contactPersonField: "{{ form.contact_person.id_for_label }}",
+            supplierEmailField: "{{ form.supplier_email.id_for_label }}",
+            loadSupplierInfoUrl: "{% url 'purchase_orders:load_supplier_info' %}",
+            generateOrderNumberUrl: "{% url 'purchase_orders:generate_order_number' %}"
+        };
     </script>
+    <script src="{% static 'purchase_orders/new.js' %}" defer></script>
 {% endblock %}

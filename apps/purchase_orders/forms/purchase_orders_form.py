@@ -20,6 +20,6 @@ class PurchaseOrderForm(forms.ModelForm):
             "supplier_tel": forms.TextInput(attrs={"class": "w-full"}),
             "contact_person": forms.TextInput(attrs={"class": "w-full"}),
             "supplier_email": forms.TextInput(attrs={"class": "w-full"}),
-            "total_amount": forms.NumberInput(attrs={"step": "0.1"}),
+            "total_amount": forms.NumberInput(attrs={"class": "w-full"}),
             "notes": forms.Textarea(attrs={"rows": 2, "class": "w-full"}),
         }
