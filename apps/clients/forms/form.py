@@ -51,19 +51,19 @@ class ClientForm(forms.ModelForm):
         email = cleaned_data.get("email")
 
         if not name:
-            self.add_error("name", "Client name is required")
+            self.add_error("name", "Client name is required.")
 
         if not phone_number:
-            self.add_error("phone_number", "Phone number is required")
+            self.add_error("phone_number", "Phone number is required.")
         elif not re.match(r"^09\d{8}$", phone_number):
             self.add_error("phone_number", "Invalid phone number.")
 
         if not email:
-            self.add_error("email", "Email address is required")
+            self.add_error("email", "Email address is required.")
         elif not re.match(r"^[\w.-]+@[\w.-]+\.\w{2,}$", email):
             self.add_error("email", "Invalid email address.")
 
         if not address:
-            self.add_error("address", "Address is required")
+            self.add_error("address", "Address is required.")
 
         return cleaned_data

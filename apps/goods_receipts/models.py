@@ -12,7 +12,7 @@ class GoodsReceipt(models.Model):
         Supplier, on_delete=models.CASCADE, related_name="goods_receipts"
     )
     goods_name = models.CharField(max_length=20)
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField()
     method = models.CharField(max_length=20)
     date = models.DateField(default=timezone.now)
     note = models.TextField()

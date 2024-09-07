@@ -21,10 +21,16 @@ class ProfileForm(forms.ModelForm):
         ]
         widgets = {
             "first_name": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1", "placeholder": "First Name"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "First Name",
+                }
             ),
             "last_name": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1", "placeholder": "Last Name"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "Last Name",
+                }
             ),
             "department": forms.TextInput(
                 attrs={"class": "w-full form-control border px-2 py-1"}

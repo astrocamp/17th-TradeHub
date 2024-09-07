@@ -28,19 +28,13 @@ class RestockForm(forms.ModelForm):
                 }
             ),
             "quantity": forms.NumberInput(
-                attrs={
-                    "class": "form-control input input-bordered w-full"
-                }
+                attrs={"class": "form-control input input-bordered w-full"}
             ),
             "safety_stock": forms.NumberInput(
-                attrs={
-                    "class": "form-control input input-bordered w-full"
-                }
+                attrs={"class": "form-control input input-bordered w-full"}
             ),
             "note": forms.TextInput(
-                attrs={
-                    "class": "form-control input input-bordered w-full"
-                }
+                attrs={"class": "form-control input input-bordered w-full"}
             ),
             "last_updated": forms.DateTimeInput(
                 attrs={
@@ -67,15 +61,12 @@ class RestockForm(forms.ModelForm):
 
         if not product:
             self.add_error("product", "Product is required.")
+
         if not supplier:
             self.add_error("supplier", "Supplier is required.")
+
         if not quantity:
             self.add_error("quantity", "Quantity is required.")
-        else:
-            if quantity < 0:
-                self.add_error("quantity", "Quantity must be greater than 0.")
+
         if not safety_stock:
             self.add_error("safety_stock", "Safety stock is required.")
-        else:
-            if safety_stock < 0:
-                self.add_error("safety_stock", "Safety stock must be greater than 0.")

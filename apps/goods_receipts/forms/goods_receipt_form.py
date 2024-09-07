@@ -96,9 +96,6 @@ class GoodsReceiptForm(forms.ModelForm):
 
         if not quantity:
             self.add_error("quantity", "Quantity is required.")
-        else:
-            if quantity <= 0:
-                self.add_error("quantity", "Quantity must be greater than 0.")
 
         if not method:
             self.add_error("method", "Method is required.")

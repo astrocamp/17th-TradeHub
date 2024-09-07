@@ -32,7 +32,7 @@ def show(req, id):
             return redirect("suppliers:show", supplier.id)
         else:
             return render(
-                req, "supplier/edit.html", {"supplier": supplier, "form": form}
+                req, "suppliers/edit.html", {"supplier": supplier, "form": form}
             )
     return render(req, "suppliers/show.html", {"supplier": supplier})
 

@@ -6,7 +6,7 @@ class Client(models.Model):
     name = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
-    email = models.EmailField()
+    email = models.EmailField(unique=True)
     create_at = models.DateTimeField(auto_now_add=True)
     delete_at = models.DateTimeField(auto_now=True)
     note = models.TextField(null=True, max_length=150)

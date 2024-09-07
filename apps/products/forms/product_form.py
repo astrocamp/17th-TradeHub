@@ -68,11 +68,8 @@ class ProductForm(ModelForm):
 
         if not product_name:
             self.add_error("product_name", "Product Name is required.")
-            
+
         if not price:
             self.add_error("price", "Price is required.")
-        else:
-            if price < 0:
-                self.add_error("price", "Price cannot be negative.")
 
         return cleaned_data
