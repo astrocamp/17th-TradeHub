@@ -2,23 +2,55 @@
 
 {% block content %}
     <!-- Supplier Information -->
-    <div class="max-w-2xl mx-auto p-8 bg-white rounded-lg shadow-lg space-y-6 mt-8">
-        <h1 class="text-3xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Telephone:</span> {{ supplier.telephone }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Contact Person:</span> {{ supplier.contact_person }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Email:</span> {{ supplier.email }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">GUI Number:</span> {{ supplier.gui_number }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Address:</span> {{ supplier.address }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Note:</span> {{ supplier.note }}</p>
-        <p class="text-lg text-gray-600"><span class="font-semibold text-gray-800">Established Date:</span> {{ supplier.established_date|date:"F j, Y, g:i a" }}</p>
+    <div class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8">
+        <!-- Header Section with Supplier Name and Back to List Button -->
+        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
+            <h1 class="text-2xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
+            <a href="{% url 'suppliers:index' %}" class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
+                Back to List
+            </a>
+        </div>
+
+        <!-- Display Supplier Details -->
+        <div class="space-y-6">
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Telephone:</label>
+                <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Contact Person:</label>
+                <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Email:</label>
+                <p class="text-lg text-gray-600">{{ supplier.email }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">GUI Number:</label>
+                <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Address:</label>
+                <p class="text-lg text-gray-600">{{ supplier.address }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Note:</label>
+                <p class="text-lg text-gray-600">{{ supplier.note }}</p>
+            </div>
+            <div class="flex flex-col">
+                <label class="text-lg font-semibold text-gray-800">Established Date:</label>
+                <p class="text-lg text-gray-600">{{ supplier.established_date|date:"F j, Y, g:i a" }}</p>
+            </div>
+        </div>
+
         <!-- Edit and Delete Buttons -->
-        <div class="flex gap-3">
-            <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+        <div class="flex justify-center gap-4 mt-6">
+            <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
                 Edit
             </a>
             <form action="{% url 'suppliers:delete' supplier.id %}" method="POST" class="inline-block">
                 {% csrf_token %}
-                <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                <button type="submit" class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
                     Delete
                 </button>
             </form>
