@@ -50,7 +50,6 @@ class Migration(migrations.Migration):
                         to="suppliers.supplier",
                     ),
                 ),
-
             ],
         ),
     ]
