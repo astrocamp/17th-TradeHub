@@ -17,7 +17,7 @@ def client_list(req):
     return render(req, "clients/list.html", {"clients": clients})
 
 
-def create(req):
+def new(req):
     if req.method == "POST":
         form = ClientForm(req.POST)
         if form.is_valid():

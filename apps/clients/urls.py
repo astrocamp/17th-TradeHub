@@ -8,6 +8,6 @@ app_name = "clients"
 urlpatterns = [
     path("", views.DataListView.as_view(), name="list"),
     path("index", views.index, name="index"),
-    path("create", views.create, name="create"),
+    path("new", views.new, name="new"),
     path("edit/<int:id>", views.client_update_and_delete, name="edit"),
 ]
