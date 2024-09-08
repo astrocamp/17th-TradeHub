@@ -1,74 +1,16 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
+<div class="divider text-3xl font-bold mt-32">Edit Inventory</div>
 <form
   method="POST"
   action="{% url 'inventory:edit' inventory.id %}"
   class="text-lg m-4"
 >
   {% csrf_token %}
-  <div class="form-control">
-    <label class="label" for="product">Product</label>
-    <input
-      type="text"
-      name="product"
-      value="{{ inventory.product }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="supplier">Supplier</label>
-    <input
-      type="text"
-      name="supplier"
-      value="{{ inventory.supplier }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="quantity">Quantity</label>
-    <input
-      type="number"
-      name="quantity"
-      value="{{ inventory.quantity }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="safety_stock">Safety Stock</label>
-    <input
-      type="number"
-      name="safety_stock"
-      value="{{ inventory.safety_stock }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="note">Note</label>
-    <input
-      type="text"
-      name="note"
-      value="{{ inventory.note }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="form-control">
-    <label class="label" for="last_updated">Last Updated</label>
-    <input
-      type="datetime"
-      name="last_updated"
-      value="{{inventory.last_updated|date:'Y-m-d H:i' }}"
-      class="input input-bordered w-full"
-    />
-  </div>
-  <div class="flex justify-center mt-5 gap-4">
-    <div>
-      <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-    </div>
-    <div>
-      <a href="{% url 'inventory:index' %}" class="btn btn-warning btn-lg"
-        >Cancel</a
-      >
-    </div>
+  <div class="container w-1/2 mx-auto flex flex-col gap-4">
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="{% url 'inventory:index' %}" class="btn btn-warning">Cancel</a>
   </div>
 </form>
 {% endblock %}
