@@ -1,17 +1,10 @@
 from datetime import datetime
 
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
 
 from .forms.inventory_form import RestockForm
 from .models import Inventory
-
-
-class DataListView(ListView):
-    model = Inventory
-    template_name = "pages/inventory_index.html"
-    context_object_name = "inventory"
-    paginate_by = 5
 
 
 def index(request):
@@ -24,14 +17,19 @@ def index(request):
 
     if state in state_match:
         inventory = Inventory.objects.filter(state=state)
-    order_by_field = f"{'-' if is_desc else ''}{order_by}"
-    inventory = inventory.order_by(order_by_field)
+        order_by_field = f"{'-' if is_desc else ''}{order_by}"
+        inventory = inventory.order_by(order_by_field)
+
+    paginator = Paginator(inventory, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     content = {
-        "inventory": inventory,
+        "inventory": page_obj,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
+        "page_obj": page_obj,
     }
 
     return render(request, "pages/inventory_index.html", content)

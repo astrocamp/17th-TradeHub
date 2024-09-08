@@ -1,15 +1,8 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
 
 from .forms.product_form import ProductForm
 from .models import Product
-
-
-class DataListView(ListView):
-    model = Product
-    template_name = "pages/index.html"
-    context_object_name = "products"
-    paginate_by = 5
 
 
 def index(request):
@@ -25,11 +18,16 @@ def index(request):
     order_by_field = f"{'-' if is_desc else ''}{order_by}"
     products = products.order_by(order_by_field)
 
+    paginator = Paginator(products, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     content = {
-        "products": products,
+        "products": page_obj,
         "selected_state": state,
         "order_by": order_by,
         "is_desc": is_desc,
+        "page_obj": page_obj,
     }
 
     return render(request, "pages/index.html", content)
