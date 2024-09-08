@@ -9,6 +9,13 @@
   {% csrf_token %}
   <div class="container w-1/2 mx-auto flex flex-col gap-4">
     {{ form.as_p }}
+    <!-- {% if form.errors %}
+      <ul class="errorlist text-red-500 text-sm mt-2">
+        {% for error in form.errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %} -->
     <button type="submit" class="btn btn-primary">Submit</button>
     <a href="{% url 'sales_orders:index' %}" class="btn btn-warning">Cancel</a>
   </div>

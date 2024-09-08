@@ -1,0 +1,50 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div class="flex justify-center mt-10">
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>ID</th>
+          <th>Client Name</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Email</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <form action="{% url 'clients:edit' client.id %}" method="post">
+          <tr class="hover">
+            {% csrf_token %}
+
+            <th>ID Auto gen</th>
+            {% for field in form %}
+            <td>{{ field }}</td>
+            {% endfor %}
+            <td>
+              <button>Update</button>
+            </td>
+
+          </tr>
+          <tr class="hover">
+            <th></th>
+            {% for field in form %}
+            <td>
+              {% if field.errors %}
+                <ul class="errorlist text-red-500 text-sm mt-2">
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+              {% endif %}
+            </td>
+            {% endfor %}
+            <td></td>
+          </tr>
+        </form>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

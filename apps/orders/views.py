@@ -4,7 +4,6 @@ from .forms.form import OrderForm
 from .models import Orders
 
 
-# Create your views here.
 def order_list(req):
     orders = Orders.objects.order_by("-id")
     if req.method == "POST":
@@ -12,6 +11,8 @@ def order_list(req):
         if form.is_valid():
             form.save()
             return redirect("orders:list")
+        return render(req, "orders/orders_list.html", {"form": form})
+
     form = OrderForm()
     return render(req, "orders/orders_list.html", {"orders": orders, "form": form})
 
@@ -27,5 +28,8 @@ def order_update_and_delete(req, id):
             if form.is_valid():
                 form.save()
                 return redirect("orders:list")
+            return render(
+                req, "orders/orders_edit.html", {"order": order, "form": form}
+            )
     form = OrderForm(instance=order)
     return render(req, "orders/orders_edit.html", {"order": order, "form": form})

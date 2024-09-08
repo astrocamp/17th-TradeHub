@@ -6,6 +6,9 @@
 
 <form action="{% url 'products:edit' product.id %}" method="POST">
   {% csrf_token %} {{form.as_p}}
+  <!-- {% for error in form.product.errors %}
+      <span class="text-red-500">{{ error }}</span>
+  {% endfor %} -->
   <button class="btn btn-primary">Renew</button>
 </form>
 

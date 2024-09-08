@@ -1,5 +1,4 @@
 from django import forms
-from django.core.exceptions import ValidationError
 
 from ..models import CustomUser
 
@@ -22,10 +21,16 @@ class ProfileForm(forms.ModelForm):
         ]
         widgets = {
             "first_name": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "First Name",
+                }
             ),
             "last_name": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "Last Name",
+                }
             ),
             "department": forms.TextInput(
                 attrs={"class": "w-full form-control border px-2 py-1"}
@@ -72,21 +77,3 @@ class ProfileForm(forms.ModelForm):
             "username": "Username",
             "birthday": "Birthday",
         }
-
-    def clean_username(self):
-        username = self.cleaned_data.get("username")
-        if username != self.instance.username:
-            if CustomUser.objects.filter(username=username).exists():
-                raise ValidationError(
-                    "This username is already taken. Please choose a different username."
-                )
-        return username
-
-    def clean_email(self):
-        email = self.cleaned_data.get("email")
-        if email != self.instance.email:
-            if CustomUser.objects.filter(email=email).exists():
-                raise ValidationError(
-                    "This email is already taken. Please choose a different email."
-                )
-        return email

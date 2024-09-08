@@ -1,4 +1,5 @@
-{% extends "layouts/base.html" %} {% block content %}
+{% extends "layouts/base.html" %}
+{% block content %}
 
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
@@ -6,26 +7,28 @@
       <thead>
         <tr class="text-xl">
           <th>ID</th>
-          <th>Order Code</th>
-          <th>Client</th>
-          <th>Product</th>
+          <th>Client Name</th>
+          <th>Phone Number</th>
+          <th>Address</th>
+          <th>Email</th>
           <th>Note</th>
         </tr>
       </thead>
       <tbody>
-        {% for order in orders %}
+        {% for client in clients %}
         <tr class="hover">
-          <th>{{ order.id }}</th>
-          <td>{{ order.code }}</td>
-          <td>{{ order.client_fk }}</td>
-          <td>{{ order.product_fk }}</td>
-          <td>{{ order.note }}</td>
+          <th>{{ client.id }}</th>
+          <td>{{ client.name }}</td>
+          <td>{{ client.phone_number }}</td>
+          <td>{{ client.address }}</td>
+          <td>{{ client.email }}</td>
+          <td>{{ client.note }}</td>
           <td>
-            <a href="{% url 'orders:edit' order.id %}">Edit</a>
+            <a href="{% url 'clients:edit' client.id %}">Edit</a>
           </td>
           <td>
             <form
-              action="{% url 'orders:edit' order.id %}"
+              action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
@@ -36,12 +39,13 @@
         </tr>
         {% endfor %}
         <tr class="hover">
-          <form action="{% url 'orders:list' %}" method="post">
+          <form action="{% url 'clients:list' %}" method="post">
             {% csrf_token %}
             <th>ID Auto gen</th>
-            <td>{{form.code}}</td>
-            <td>{{form.client_fk}}</td>
-            <td>{{form.product_fk}}</td>
+            <td>{{form.name}}</td>
+            <td>{{form.phone_number}}</td>
+            <td>{{form.address}}</td>
+            <td>{{form.email}}</td>
             <td>{{form.note}}</td>
             <td>
               <button>Create</button>

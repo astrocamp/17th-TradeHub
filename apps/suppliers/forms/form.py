@@ -18,22 +18,40 @@ class SupplierForm(forms.ModelForm):
             "note",
         ]
         widgets = {
-            "name": forms.TextInput(attrs={"placeholder": "Supplier Name"}),
-            "telephone": forms.TextInput(attrs={"placeholder": "Telephone Number"}),
-            "contact_person": forms.TextInput(attrs={"placeholder": "Contact Person"}),
-            "email": forms.TextInput(attrs={"placeholder": "Email Address"}),
-            "gui_number": forms.TextInput(attrs={"placeholder": "GUI Number"}),
+            "name": forms.TextInput(
+                attrs={
+                    "placeholder": "Supplier Name",
+                    "class": "w-full box-border",
+                }
+            ),
+            "telephone": forms.TextInput(
+                attrs={
+                    "placeholder": "Telephone Number",
+                    "class": "w-full box-border",
+                }
+            ),
+            "contact_person": forms.TextInput(
+                attrs={
+                    "placeholder": "Contact Person",
+                    "class": "w-full box-border",
+                }
+            ),
+            "email": forms.TextInput(
+                attrs={
+                    "placeholder": "Email Address",
+                    "class": "w-full box-border",
+                }
+            ),
             "address": forms.TextInput(
                 attrs={
                     "placeholder": "Address",
-                    "rows": 4,
                     "class": "w-full box-border",
                 }
             ),
             "note": forms.Textarea(
                 attrs={
                     "placeholder": "Additional Notes",
-                    "rows": 4,
+                    "rows": 3,
                     "class": "w-full box-border",
                 }
             ),
@@ -58,7 +76,7 @@ class SupplierForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        super(SupplierForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         # Remove the required attribute from all fields
         for field in self.fields.values():
             field.required = False
@@ -74,32 +92,31 @@ class SupplierForm(forms.ModelForm):
 
         # Validate 'name'
         if not name:
-            self.add_error("name", "This field cannot be empty.")
-
+            self.add_error("name", "Supplier Name is required.")
         # Validate 'telephone'
         if not telephone:
-            self.add_error("telephone", "This field cannot be empty.")
+            self.add_error("telephone", "Telephone Number is required.")
         elif not re.match(r"^09\d{8}$", telephone):
             self.add_error("telephone", "Invalid phone number.")
 
         # Validate 'contact_person'
         if not contact_person:
-            self.add_error("contact_person", "This field cannot be empty.")
+            self.add_error("contact_person", "Contact Person is required.")
 
         # Validate 'email'
         if not email:
-            self.add_error("email", "This field cannot be empty.")
+            self.add_error("email", "Email Address is required.")
         elif not re.match(r"^[\w.-]+@[\w.-]+\.\w{2,}$", email):
             self.add_error("email", "Invalid email address.")
 
         # Validate 'gui_number'
         if not gui_number:
-            self.add_error("gui_number", "This field cannot be empty.")
+            self.add_error("gui_number", "GUI Number is required.")
         elif not re.match(r"^\d{8}$", gui_number):
             self.add_error("gui_number", "Invalid GUI number.")
 
         # Validate 'address'
         if not address:
-            self.add_error("address", "This field cannot be empty.")
+            self.add_error("address", "Address is required.")
 
         return cleaned_data
