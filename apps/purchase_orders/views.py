@@ -1,17 +1,9 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
-from django.views.generic import ListView
-
 from .forms.purchase_orders_form import PurchaseOrderForm
 from .models import PurchaseOrder
-
-
-class DataListView(ListView):
-    model = PurchaseOrder
-    template_name = "purchase_orders/index.html"
-    context_object_name = "purchase_orders"
-    paginate_by = 5
 
 
 def index(request):
@@ -19,14 +11,20 @@ def index(request):
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:index1")  # Update redirect URL
+            return redirect("purchase_orders:index1")
         else:
             return render(request, "purchase_orders/new.html", {"form": form})
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )  # Update context
+    purchase_orders = PurchaseOrder.objects.order_by("id")
+    paginator = Paginator(purchase_orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    content = {
+        "purchase_orders": page_obj,
+        "page_obj": page_obj,
+    }
+    return render(request, "purchase_orders/index.html", content)
 
 
 def new(request):
