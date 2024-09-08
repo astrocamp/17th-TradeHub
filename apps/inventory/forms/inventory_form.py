@@ -33,13 +33,20 @@ class RestockForm(forms.ModelForm):
             "safety_stock": forms.NumberInput(
                 attrs={"class": "form-control input input-bordered w-full"}
             ),
-            "note": forms.TextInput(
-                attrs={"class": "form-control input input-bordered w-full"}
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control input input-bordered w-full",
+                    "placeholder": "Any additional notes",
+                    "rows": 3,
+                }
             ),
         }
         help_texts = {
-            "product": "Product is read-only.",
-            "supplier": "Supplier is read-only.",
+            "product": "Please select the product.",
+            "supplier": "Please select the supplier.",
+            "quantity": "Please enter the quantity of the product.",
+            "safety_stock": "Please enter the safety stock of the product.",
+            "note": "Please enter any additional notes about the product.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -60,8 +67,10 @@ class RestockForm(forms.ModelForm):
         if not supplier:
             self.add_error("supplier", "Supplier is required.")
 
-        if not quantity:
+        if quantity is None:
             self.add_error("quantity", "Quantity is required.")
 
-        if not safety_stock:
+        if safety_stock is None:
             self.add_error("safety_stock", "Safety stock is required.")
+
+        return cleaned_data

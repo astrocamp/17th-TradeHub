@@ -77,7 +77,6 @@ class SupplierForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Remove the required attribute from all fields
         for field in self.fields.values():
             field.required = False
 
@@ -90,32 +89,28 @@ class SupplierForm(forms.ModelForm):
         gui_number = cleaned_data.get("gui_number")
         address = cleaned_data.get("address")
 
-        # Validate 'name'
         if not name:
             self.add_error("name", "Supplier Name is required.")
-        # Validate 'telephone'
-        if not telephone:
-            self.add_error("telephone", "Telephone Number is required.")
-        elif not re.match(r"^09\d{8}$", telephone):
+
+        if telephone == "":
+            self.add_error("telephone", "Telephone is required.")
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            telephone,
+        ):
             self.add_error("telephone", "Invalid phone number.")
 
-        # Validate 'contact_person'
         if not contact_person:
             self.add_error("contact_person", "Contact Person is required.")
 
-        # Validate 'email'
-        if not email:
-            self.add_error("email", "Email Address is required.")
-        elif not re.match(r"^[\w.-]+@[\w.-]+\.\w{2,}$", email):
-            self.add_error("email", "Invalid email address.")
+        if email == "":
+            self.add_error("email", "Email address is required.")
 
-        # Validate 'gui_number'
-        if not gui_number:
+        if gui_number == "":
             self.add_error("gui_number", "GUI Number is required.")
         elif not re.match(r"^\d{8}$", gui_number):
             self.add_error("gui_number", "Invalid GUI number.")
 
-        # Validate 'address'
         if not address:
             self.add_error("address", "Address is required.")
 

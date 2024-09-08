@@ -11,7 +11,9 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.AlterField(
-            model_name="product", name="price", field=models.PositiveIntegerField(),
+            model_name="product",
+            name="price",
+            field=models.PositiveIntegerField(),
         ),
         migrations.AlterField(
             model_name="product",

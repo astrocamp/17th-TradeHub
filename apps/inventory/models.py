@@ -12,8 +12,8 @@ class Inventory(models.Model):
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="inventories"
     )
-    quantity = models.PositiveIntegerField(null=False, blank=False)
-    safety_stock = models.PositiveIntegerField(null=True, blank=False)
+    quantity = models.PositiveIntegerField()
+    safety_stock = models.PositiveIntegerField()
     last_updated = models.DateTimeField(auto_now=True)
     note = models.TextField(blank=True)
 

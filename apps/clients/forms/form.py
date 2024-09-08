@@ -32,10 +32,17 @@ class ClientForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Additional Notes",
+                    "placeholder": "Any additional notes",
                     "rows": 3,
                 }
             ),
+        }
+        help_texts = {
+            "name": "Enter full name of client.",
+            "phone_number": "Enter phone number of client (e.g., 0912345678 or 02-28345678).",
+            "address": "Enter address of client.",
+            "email": "Enter email address of client.",
+            "note": "Enter any additional notes of client.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -53,15 +60,16 @@ class ClientForm(forms.ModelForm):
         if not name:
             self.add_error("name", "Client name is required.")
 
-        if not phone_number:
+        if phone_number == "":
             self.add_error("phone_number", "Phone number is required.")
-        elif not re.match(r"^09\d{8}$", phone_number):
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            phone_number,
+        ):
             self.add_error("phone_number", "Invalid phone number.")
 
-        if not email:
+        if email == "":
             self.add_error("email", "Email address is required.")
-        elif not re.match(r"^[\w.-]+@[\w.-]+\.\w{2,}$", email):
-            self.add_error("email", "Invalid email address.")
 
         if not address:
             self.add_error("address", "Address is required.")

@@ -32,7 +32,7 @@ class ProductForm(ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Additional Note",
+                    "placeholder": "Any additional notes",
                     "rows": 3,
                 }
             ),
@@ -62,6 +62,7 @@ class ProductForm(ModelForm):
         product_id = cleaned_data.get("product_id")
         product_name = cleaned_data.get("product_name")
         price = cleaned_data.get("price")
+        supplier = cleaned_data.get("supplier")
 
         if not product_id:
             self.add_error("product_id", "Product ID is required.")
@@ -69,7 +70,12 @@ class ProductForm(ModelForm):
         if not product_name:
             self.add_error("product_name", "Product Name is required.")
 
-        if not price:
+        if price is None:
             self.add_error("price", "Price is required.")
+        elif price == 0:
+            self.add_error("price", "Price should not be zero.")
+
+        if not supplier:
+            self.add_error("supplier", "Supplier is required.")
 
         return cleaned_data
