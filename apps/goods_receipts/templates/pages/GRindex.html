@@ -1,53 +1,89 @@
-{% extends "layouts/base.html" %}
-
-{% block content %}
+{% extends "layouts/base.html" %} {% block content %}
 
 <h3>Goods Receipts List</h3>
 
-<a href="{% url 'goods_receipts:GRnew' %}" class="btn btn-primary">Add</a>
+<a href="{% url 'goods_receipts:new' %}" class="btn btn-primary">Add</a>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th></th>
-                    <th>Receipt Number</th>
-                    <th>Supplier</th>
-                    <th>Goods Name</th>
-                    <th>Quantity</th>
-                    <th>Delivery Method</th>
-                    <th>Date</th>
-                    <th>Note</th>
-                    <th>Operate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for goods_receipt in goods_receipts %}
-                <tr class="hover">
-                    <th></th>
-                    <th><a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}">{{goods_receipt.receipt_number}}</a></th>
-                    <th>{{goods_receipt.supplier}}</th>
-                    <th>{{goods_receipt.goods_name}}</th>
-                    <th>{{goods_receipt.quantity}}</th>
-                    <th>{{goods_receipt.method}}</th>
-                    <th>{{goods_receipt.date}}</th>
-                    <th>{{goods_receipt.note}}</th>
-                    <th>
-                        <div class="flex justify-center mt-10">
-                            <div>
-                                <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-                            </div>
-                            <div>
-                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-primary">Delete</a>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Receipt Number</th>
+          <th>Supplier</th>
+          <th>Goods Name</th>
+          <th>Quantity</th>
+          <th>Delivery Method</th>
+          <th>Date</th>
+          <th>Note</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for goods_receipt in goods_receipts %}
+        <tr class="hover">
+          <th></th>
+          <th>
+            <a href="{% url 'goods_receipts:show' goods_receipt.id %}"
+              >{{goods_receipt.receipt_number}}</a
+            >
+          </th>
+          <th>{{goods_receipt.supplier}}</th>
+          <th>{{goods_receipt.goods_name}}</th>
+          <th>{{goods_receipt.quantity}}</th>
+          <th>{{goods_receipt.method}}</th>
+          <th>{{goods_receipt.date}}</th>
+          <th>{{goods_receipt.note}}</th>
+          <th>
+            <div class="flex justify-center mt-10">
+              <div>
+                <a
+                  href="{% url 'goods_receipts:edit' goods_receipt.id %}"
+                  class="btn btn-primary"
+                  >Edit</a
+                >
+              </div>
+              <div>
+                <a
+                  onclick="return confirm('Delete?')"
+                  href="{% url 'goods_receipts:delete' goods_receipt.id %}"
+                  class="btn btn-primary"
+                  >Delete</a
+                >
+              </div>
+            </div>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination join flex justify-center">
+      <span class="step-links">
+        <a href="?page=1"><button class="join-item btn">Page 1</button></a>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+          ><button class="join-item btn">«</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
+        {% endif %}
+        <button class="join-item btn">Page {{ page_obj.number }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+          ><button class="join-item btn">»</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
+        {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+          ><button class="join-item btn">
+            Page {{ page_obj.paginator.num_pages }}
+          </button></a
+        >
+      </span>
     </div>
+  </div>
 </div>
 
 {% endblock %}

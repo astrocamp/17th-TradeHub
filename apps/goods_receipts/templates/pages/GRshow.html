@@ -1,45 +1,54 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %}
 
-{% block content %}
-
-<a href="{% url 'goods_receipts:GRindex' %}"class="btn btn-primary">Back to Goods Receipts List</a>
+<a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
+  >Back to Goods Receipts List</a
+>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th>Receipt Number</th>
-                    <th>Supplier</th>
-                    <th>Goods Name</th>
-                    <th>Quantity</th>
-                    <th>Delivery Method</th>
-                    <th>Date</th>
-                    <th>Note</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="hover">
-                    <th>{{goods_receipt.receipt_number}}</th>
-                    <th>{{goods_receipt.supplier}}</th>
-                    <th>{{goods_receipt.goods_name}}</th>
-                    <th>{{goods_receipt.quantity}}</th>
-                    <th>{{goods_receipt.method}}</th>
-                    <th>{{goods_receipt.date}}</th>
-                    <th>{{goods_receipt.note}}</th>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>Receipt Number</th>
+          <th>Supplier</th>
+          <th>Goods Name</th>
+          <th>Quantity</th>
+          <th>Delivery Method</th>
+          <th>Date</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hover">
+          <th>{{goods_receipt.receipt_number}}</th>
+          <th>{{goods_receipt.supplier}}</th>
+          <th>{{goods_receipt.goods_name}}</th>
+          <th>{{goods_receipt.quantity}}</th>
+          <th>{{goods_receipt.method}}</th>
+          <th>{{goods_receipt.date}}</th>
+          <th>{{goods_receipt.note}}</th>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="flex justify-center mt-10">
-    <div>
-        <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-    </div>
-    <div>
-        <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-primary">Delete</a>
-    </div>
+  <div>
+    <a
+      href="{% url 'goods_receipts:edit' goods_receipt.id %}"
+      class="btn btn-primary"
+      >Edit</a
+    >
+  </div>
+  <div>
+    <a
+      onclick="return confirm('Delete?')"
+      href="{% url 'goods_receipts:delete' goods_receipt.id %}"
+      class="btn btn-primary"
+      >Delete</a
+    >
+  </div>
 </div>
 
 {% endblock %}

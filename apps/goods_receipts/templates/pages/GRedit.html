@@ -1,13 +1,14 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %}
 
-{% block content %}
+<a
+  href="{% url 'goods_receipts:show' goods_receipt.id %}"
+  class="btn btn-primary"
+  >Back to Goods Receipts List</a
+>
 
-<a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}"class="btn btn-primary">Back to Goods Receipts List</a>
-
-<form action="{% url 'goods_receipts:GRshow' goods_receipt.id %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button class="btn btn-primary">Renew</button>
+<form action="{% url 'goods_receipts:show' goods_receipt.id %}" method="POST">
+  {% csrf_token %} {{form}}
+  <button class="btn btn-primary">Renew</button>
 </form>
 
 {% endblock %}

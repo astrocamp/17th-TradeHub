@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms.sales_order_form import SalesOrderForm
@@ -16,12 +17,16 @@ def index(request):
         sales_orders = SalesOrder.objects.filter(state=state)
     order_by_field = f"{'-' if is_desc else ''}{order_by}"
     sales_orders = sales_orders.order_by(order_by_field)
+    paginator = Paginator(sales_orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     content = {
-        "sales_orders": sales_orders,
+        "sales_orders": page_obj,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
+        "page_obj": page_obj,
     }
 
     return render(request, "pages/order_index.html", content)
