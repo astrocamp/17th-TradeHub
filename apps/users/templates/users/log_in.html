@@ -40,11 +40,19 @@
           class="flex flex-col items-center text-xs justify-center gap-2 text-sm"
         >
           <button class="log_in-btn w-[90px]">Log In</button>
-          <a
-            class="log_in-btn w-[150px]"
-            href="{% url 'social:begin' 'google-oauth2' %}"
-            >Google Log_in</a
-          >
+          <div class="flex gap-2">
+            <a
+              class="log_in-btn w-[150px]"
+              href="{% url 'social:begin' 'google-oauth2' %}"
+              >Google Log_in</a
+            >
+            <a
+              class="log_in-btn w-[150px]"
+              href="{% url 'social:begin' 'github' %}"
+            >
+              Use Github
+            </a>
+          </div>
           <span class="text-gray-500 text-sm">---------- OR ----------</span>
           <a class="log_in-btn w-[90px]" href="{% url 'users:register' %}">
             Sign Up
