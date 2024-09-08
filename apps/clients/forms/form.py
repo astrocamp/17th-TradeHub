@@ -63,7 +63,7 @@ class ClientForm(forms.ModelForm):
         if phone_number == "":
             self.add_error("phone_number", "Phone number is required.")
         elif not re.match(
-            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
             phone_number,
         ):
             self.add_error("phone_number", "Invalid phone number.")

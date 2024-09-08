@@ -40,6 +40,13 @@ class SalesOrderForm(forms.ModelForm):
                 }
             ),
         }
+        help_texts = {
+            "client": "Please select a client.",
+            "product": "Please select a product.",
+            "quantity": "Please enter the quantity.",
+            "stock": "Please select a stock.",
+            "price": "Please enter the price.",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -60,13 +67,17 @@ class SalesOrderForm(forms.ModelForm):
         if not product:
             self.add_error("product", "Product is required.")
 
-        if not quantity:
+        if quantity is None:
             self.add_error("quantity", "Quantity is required.")
+        elif quantity == 0:
+            self.add_error("quantity", "Quantity should not be zero.")
 
         if not stock:
             self.add_error("stock", "Stock is required.")
 
-        if not price:
+        if price is None:
             self.add_error("price", "Price is required.")
+        elif price == 0:
+            self.add_error("price", "Price should not be zero.")
 
         return cleaned_data

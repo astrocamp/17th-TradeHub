@@ -22,14 +22,13 @@ class GoodsReceiptForm(forms.ModelForm):
                     "placeholder": "Enter receipt number",
                 }
             ),
-            "supplier": forms.TextInput(
+            "supplier": forms.Select(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter supplier name",
                     "type": "select",
                 }
             ),
-            "goods_name": forms.TextInput(
+            "goods_name": forms.Select(
                 attrs={
                     "class": "form-control",
                     "placeholder": "Enter goods name",
@@ -56,7 +55,7 @@ class GoodsReceiptForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter note",
+                    "placeholder": "Any additional notes.",
                     "rows": 3,
                 }
             ),
@@ -66,9 +65,9 @@ class GoodsReceiptForm(forms.ModelForm):
             "supplier": "Enter the full name of the supplier.",
             "goods_name": "Enter the goods name.",
             "quantity": "Enter the quantity",
-            "method": "Enter the delivery method.",
+            "method": "Enter the delivery method (e.g., 'Express Delivery', 'Pick Up').",
             "date": "Enter the date.",
-            "note": "Enter the note.",
+            "note": "Enter any additional notes.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -94,8 +93,10 @@ class GoodsReceiptForm(forms.ModelForm):
         if not goods_name:
             self.add_error("goods_name", "Goods name is required.")
 
-        if not quantity:
+        if quantity is None:
             self.add_error("quantity", "Quantity is required.")
+        elif quantity == 0:
+            self.add_error("quantity", "Quantity should not be 0.")
 
         if not method:
             self.add_error("method", "Method is required.")

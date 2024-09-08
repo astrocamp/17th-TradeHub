@@ -30,6 +30,12 @@ class OrderForm(forms.ModelForm):
                 }
             ),
         }
+        help_texts = {
+            "code": "Please enter the order code.",
+            "client_fk": "Please select a client.",
+            "product_fk": "Please select a product.",
+            "note": "Please enter any additional notes.",
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,10 +49,12 @@ class OrderForm(forms.ModelForm):
         product_fk = cleaned_data.get("product_fk")
 
         if not code:
-            self.add_error("code", "Order code is required")
+            self.add_error("code", "Order code is required.")
 
         if not client_fk:
-            self.add_error("client_fk", "Client is required")
+            self.add_error("client_fk", "Client is required.")
 
         if not product_fk:
-            self.add_error("product_fk", "Product is required")
+            self.add_error("product_fk", "Product is required.")
+
+        return cleaned_data

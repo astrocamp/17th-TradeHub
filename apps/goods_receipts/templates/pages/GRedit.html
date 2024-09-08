@@ -6,6 +6,7 @@
 
 <form action="{% url 'goods_receipts:GRshow' goods_receipt.id %}" method="POST">
     {% csrf_token %}
+    {% for field in form %}
     <div class="flex flex-col gap-4 p-4 border rounded-lg shadow-sm bg-white ">
         <label for="{{ field.id_for_label }}" class="text-xl font-semibold text-gray-800">{{ field.label }}</label>
         {% if field.help_text %}

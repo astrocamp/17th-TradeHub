@@ -1,6 +1,8 @@
+import re
+
 from django import forms
 
-from ..models import PurchaseOrder  # Import the PurchaseOrder model
+from ..models import PurchaseOrder
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -31,28 +33,29 @@ class PurchaseOrderForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        order_number = cleaned_data.get("order_number")
+
         supplier = cleaned_data.get("supplier")
         supplier_tel = cleaned_data.get("supplier_tel")
         contact_person = cleaned_data.get("contact_person")
         supplier_email = cleaned_data.get("supplier_email")
-        notes = cleaned_data.get("notes")
         total_amount = cleaned_data.get("total_amount")
 
-        if not order_number:
-            self.add_error("order_number", "Order Number is required.")
         if not supplier:
             self.add_error("supplier", "Supplier is required.")
-        if not supplier_tel:
+        if supplier_tel == "":
             self.add_error("supplier_tel", "Supplier Tel is required.")
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            supplier_tel,
+        ):
+            self.add_error("supplier_tel", "Invalid phone number.")
         if not contact_person:
             self.add_error("contact_person", "Contact Person is required.")
-        if not supplier_email:
+        if supplier_email == "":
             self.add_error("supplier_email", "Supplier Email is required.")
-        if not total_amount:
+        if total_amount is None:
             self.add_error("total_amount", "Total Amount is required.")
-        else:
-            if total_amount <= 0:
-                self.add_error("total_amount", "Total Amount must be greater than 0.")
+        elif total_amount == 0:
+            self.add_error("total_amount", "Total Amount must be greater than 0.")
 
         return cleaned_data

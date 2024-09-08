@@ -8,9 +8,9 @@ from apps.suppliers.models import Supplier
 
 
 class GoodsReceipt(models.Model):
-    receipt_number = models.CharField(max_length=10)
+    receipt_number = models.CharField(unique=True, max_length=10)
     supplier = models.ForeignKey(
-        Supplier, on_delete=models.CASCADE, related_name="goods_receipts"
+        Supplier, on_delete=models.PROTECT, related_name="goods_receipts"
     )
     goods_name = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="goods_receipts"

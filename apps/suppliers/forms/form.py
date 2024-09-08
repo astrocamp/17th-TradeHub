@@ -95,7 +95,7 @@ class SupplierForm(forms.ModelForm):
         if telephone == "":
             self.add_error("telephone", "Telephone is required.")
         elif not re.match(
-            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
             telephone,
         ):
             self.add_error("telephone", "Invalid phone number.")
