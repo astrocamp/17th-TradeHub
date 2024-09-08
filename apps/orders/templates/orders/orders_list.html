@@ -14,6 +14,7 @@
           <th>Client</th>
           <th>Product</th>
           <th>Note</th>
+          <th>Operate</th>
         </tr>
       </thead>
       <tbody>
@@ -24,10 +25,8 @@
           <td>{{ order.client_fk }}</td>
           <td>{{ order.product_fk }}</td>
           <td>{{ order.note }}</td>
-          <td>
+          <td class="flex justify-center gap-2">
             <a href="{% url 'orders:edit' order.id %}">Edit</a>
-          </td>
-          <td>
             <form
               action="{% url 'orders:edit' order.id %}"
               method="post"
