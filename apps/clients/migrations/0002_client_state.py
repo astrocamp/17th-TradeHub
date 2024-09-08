@@ -7,13 +7,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0001_initial'),
+        ("clients", "0001_initial"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='client',
-            name='state',
-            field=django_fsm.FSMField(choices=[('often', '經常'), ('haply', '偶爾'), ('never', '從不')], default='never', max_length=50, protected=True),
+            model_name="client",
+            name="state",
+            field=django_fsm.FSMField(
+                choices=[("often", "經常"), ("haply", "偶爾"), ("never", "從不")],
+                default="never",
+                max_length=50,
+                protected=True,
+            ),
         ),
     ]

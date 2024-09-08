@@ -43,23 +43,27 @@
     </table>
     <div class="pagination join flex justify-center">
       <span class="step-links">
+        <a href="?page=1"><button class="join-item btn">Page 1</button></a>
         {% if page_obj.has_previous %}
-        <a href="?page=1"><button class="join-item btn">first</button></a>
         <a href="?page={{ page_obj.previous_page_number }}"
           ><button class="join-item btn">«</button></a
         >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
         {% endif %}
-        <button class="join-item btn">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-        </button>
+        <button class="join-item btn">Page {{ page_obj.number }}</button>
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}"
           ><button class="join-item btn">»</button></a
         >
-        <a href="?page={{ page_obj.paginator.num_pages }}"
-          ><button class="join-item btn">last</button></a
-        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
         {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+          ><button class="join-item btn">
+            Page {{ page_obj.paginator.num_pages }}
+          </button></a
+        >
       </span>
     </div>
   </div>

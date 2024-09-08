@@ -38,7 +38,7 @@ def new(request):
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("clients:list")
+            return redirect("clients:index")
         else:
             print(form.errors)
     form = ClientForm()
@@ -50,11 +50,11 @@ def client_update_and_delete(request, id):
     if request.method == "POST":
         if "delete" in request.POST:
             client.delete()
-            return redirect("clients:list")
+            return redirect("clients:index")
         else:
             form = ClientForm(request.POST, instance=client)
             if form.is_valid():
                 form.save()
-                return redirect("clients:list")
+                return redirect("clients:index")
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})

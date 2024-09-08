@@ -42,6 +42,7 @@
           <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Address{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=create_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Create At{% if order_by == 'create_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th>Operate</th>
         </tr>
       </thead>
@@ -86,25 +87,30 @@
     </table>
     <div class="pagination join flex justify-center">
       <span class="step-links">
-        {% if page_obj.has_previous %}
+
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">first</button></a
+          ><button class="join-item btn">Page 1</button></a
         >
+        {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">«</button></a
+          ><button class="join-item btn" >«</button></a
         >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
         {% endif %}
         <button class="join-item btn">
-          Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          Page {{ page_obj.number }}
         </button>
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">»</button></a
         >
-        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">last</button></a
-        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
         {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+        >
       </span>
     </div>
   </div>
