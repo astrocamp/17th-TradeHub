@@ -17,8 +17,8 @@ def index(request):
 
     if state in state_match:
         inventory = Inventory.objects.filter(state=state)
-        order_by_field = f"{'-' if is_desc else ''}{order_by}"
-        inventory = inventory.order_by(order_by_field)
+    order_by_field = order_by if is_desc else "-" + order_by
+    inventory = inventory.order_by(order_by_field)
 
     paginator = Paginator(inventory, 5)
     page_number = request.GET.get("page")
@@ -49,6 +49,7 @@ def edit(request, id):
     inventory = get_object_or_404(Inventory, id=id)
     if request.method == "POST":
         form = RestockForm(request.POST, instance=inventory)
+        print(form.errors)
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
