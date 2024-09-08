@@ -22,7 +22,7 @@
                 <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>Haply</option>
                 <option value="never" {% if selected_state == "never" %}selected{% endif %}>Never</option>
               </select>
-
+              <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
                 <svg
                   class="w-5 h-5"
@@ -36,12 +36,12 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'clients:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}">ID{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}">Client Name{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}">Phone Number{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}">Address{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">ID{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Client Name{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Phone Number{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Address{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th>Operate</th>
         </tr>
       </thead>
@@ -88,7 +88,7 @@
       <span class="step-links">
         {% if page_obj.has_previous %}
         <a href="?page=1"
-          ><button class="join-item btn">&laquo; first</button></a
+          ><button class="join-item btn">first</button></a
         >
         <a href="?page={{ page_obj.previous_page_number }}"
           ><button class="join-item btn">«</button></a
@@ -102,7 +102,7 @@
           ><button class="join-item btn">»</button></a
         >
         <a href="?page={{ page_obj.paginator.num_pages }}"
-          ><button class="join-item btn">last &raquo;</button></a
+          ><button class="join-item btn">last</button></a
         >
         {% endif %}
       </span>

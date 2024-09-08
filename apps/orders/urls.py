@@ -6,7 +6,7 @@ from . import views
 app_name = "orders"
 
 urlpatterns = [
-    path("", views.DataListView.as_view(), name="list"),
-    path("create", views.create, name="create"),
+    path("", views.index, name="index"),
+    path("create", views.new, name="create"),
     path("edit/<int:id>", views.order_update_and_delete, name="edit"),
 ]

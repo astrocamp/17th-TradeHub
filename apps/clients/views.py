@@ -1,47 +1,8 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.generic import ListView
 
 from .forms.clients_form import ClientForm
 from .models import Client
-
-
-class DataListView(ListView):
-    model = Client
-    template_name = "clients/list.html"
-    context_object_name = "clients"
-    paginate_by = 5
-
-
-def client_list(req):
-    clients = Client.objects.order_by("-id")
-    return render(req, "clients/list.html", {"clients": clients})
-
-
-def new(req):
-    if req.method == "POST":
-        form = ClientForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("clients:list")
-        else:
-            print(form.errors)
-    form = ClientForm()
-    return render(req, "clients/create.html", {"form": form})
-
-
-def client_update_and_delete(req, id):
-    client = get_object_or_404(Client, id=id)
-    if req.method == "POST":
-        if "delete" in req.POST:
-            client.delete()
-            return redirect("clients:list")
-        else:
-            form = ClientForm(req.POST, instance=client)
-            if form.is_valid():
-                form.save()
-                return redirect("clients:list")
-    form = ClientForm(instance=client)
-    return render(req, "clients/edit.html", {"client": client, "form": form})
 
 
 def index(request):
@@ -57,11 +18,43 @@ def index(request):
     order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
     clients = clients.order_by(order_by_field)
 
+    paginator = Paginator(clients, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     content = {
-        "clients": clients,
+        "clients": page_obj,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
+        "page_obj": page_obj,
     }
 
     return render(request, "clients/list.html", content)
+
+
+def new(request):
+    if request.method == "POST":
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("clients:list")
+        else:
+            print(form.errors)
+    form = ClientForm()
+    return render(request, "clients/create.html", {"form": form})
+
+
+def client_update_and_delete(request, id):
+    client = get_object_or_404(Client, id=id)
+    if request.method == "POST":
+        if "delete" in request.POST:
+            client.delete()
+            return redirect("clients:list")
+        else:
+            form = ClientForm(request.POST, instance=client)
+            if form.is_valid():
+                form.save()
+                return redirect("clients:list")
+    form = ClientForm(instance=client)
+    return render(request, "clients/edit.html", {"client": client, "form": form})
