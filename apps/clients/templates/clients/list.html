@@ -46,38 +46,38 @@
         </tr>
       </thead>
       <tbody>
-            {% for client in clients %}
-          <tr class="hover">
-            {% if client.state == "often" %}
-            <th>
-              <span class="btn btn-sm btn-success text-lg">{{ client.state }}</span>
-            </th>
-            {% elif client.state == "haply" %}
-            <th>
-              <span class="btn btn-sm btn-warning text-lg">{{ client.state }}</span>
-            </th>
-            {% elif client.state == "never" %}
-            <th>
-              <span class="btn btn-sm btn-error text-lg">{{ client.state }}</span>
-            </th>
-            {% endif %}
-          </tr>
-          <td></td>
+        {% for client in clients %}
+        <tr class="hover">
+          {% if client.state == "often" %}
+          <th>
+            <span class="btn btn-sm btn-success text-lg">{{ client.state }}</span>
+          </th>
+          {% elif client.state == "haply" %}
+          <th>
+            <span class="btn btn-sm btn-warning text-lg">{{ client.state }}</span>
+          </th>
+          {% else %}
+          <th>
+            <span class="btn btn-sm btn-error text-lg">{{ client.state }}</span>
+          </th>
+          {% endif %}
+          </th>
           <th>{{ client.id }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
           <td>{{ client.address }}</td>
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
-          <td class="flex justify-center">
-            <a href="{% url 'clients:edit' client.id %}" class="btn btn-sm btn-warning">Edit</a>
+          <td>{{ client.create_at|date:"Y-m-d H:i" }}</td>
+          <td class="flex justify-center gap-2">
+            <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">Edit</a>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
               {% csrf_token %}
-              <button name="delete" class="btn btn-sm btn-error">Delete</button>
+              <button class="btn btn-error" name="delete">Delete</button>
             </form>
           </td>
         </tr>
@@ -87,10 +87,10 @@
     <div class="pagination join flex justify-center">
       <span class="step-links">
         {% if page_obj.has_previous %}
-        <a href="?page=1"
+        <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">first</button></a
         >
-        <a href="?page={{ page_obj.previous_page_number }}"
+        <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">«</button></a
         >
         {% endif %}
@@ -98,10 +98,10 @@
           Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
         </button>
         {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}"
+        <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">»</button></a
         >
-        <a href="?page={{ page_obj.paginator.num_pages }}"
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">last</button></a
         >
         {% endif %}
