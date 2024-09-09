@@ -7,6 +7,7 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     initial = True
 
     dependencies = [
@@ -27,6 +28,18 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("order_number", models.CharField(max_length=20, unique=True)),
+                (
+                    "supplier_tel",
+                    models.CharField(blank=True, max_length=20, null=True),
+                ),
+                (
+                    "contact_person",
+                    models.CharField(blank=True, max_length=100, null=True),
+                ),
+                (
+                    "supplier_email",
+                    models.EmailField(blank=True, max_length=254, null=True),
+                ),
                 ("order_date", models.DateField(default=django.utils.timezone.now)),
                 ("total_amount", models.DecimalField(decimal_places=2, max_digits=10)),
                 ("notes", models.TextField(blank=True, null=True)),

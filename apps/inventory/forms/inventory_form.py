@@ -28,5 +28,4 @@ class RestockForm(forms.ModelForm):
             "note": forms.TextInput(
                 attrs={"class": "form-control input input-bordered w-full"}
             ),
-            "last_updated": forms.DateTimeInput(attrs={"class": "form-control"}),
         }

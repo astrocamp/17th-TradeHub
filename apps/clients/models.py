@@ -2,7 +2,6 @@ from django.db import models
 from django_fsm import FSMField, transition
 
 
-# Create your models here.
 class Client(models.Model):
     name = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=15)

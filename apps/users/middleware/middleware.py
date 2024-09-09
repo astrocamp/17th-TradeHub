@@ -13,6 +13,8 @@ class LoginRequiredMiddleware:
             reverse("users:log_in"),
             reverse("users:register"),
             reverse("users:forget_password"),
+            reverse("social:begin", args=["google-oauth2"]),
+            reverse("social:complete", args=["google-oauth2"]),
         ]
 
         # 檢查用戶是否登錄
