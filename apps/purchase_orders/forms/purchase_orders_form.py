@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import inlineformset_factory
 
-from ..models import PurchaseOrder, PurchaseOrderProduct
+from ..models import ProductItem, PurchaseOrder
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -26,17 +26,18 @@ class PurchaseOrderForm(forms.ModelForm):
         }
 
 
-class PurchaseOrderProductForm(forms.ModelForm):
+class ProductItemForm(forms.ModelForm):
     class Meta:
-        model = PurchaseOrderProduct
-        fields = ["product", "quantity"]
+        model = ProductItem
+        fields = ["product", "quantity", "price", "subtotal"]
+        widgets = {
+            "product": forms.Select(attrs={"class": "w-full"}),
+            "quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "price": forms.NumberInput(attrs={"class": "w-full"}),
+            "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
+        }
 
 
-# 管理主模型跟子模型(中介模型)的多對多關係
-PurchaseOrderProductFormSet = inlineformset_factory(
-    PurchaseOrder,
-    PurchaseOrderProduct,
-    form=PurchaseOrderProductForm,
-    extra=1,
-    can_delete=True,
+ProductItemFormSet = inlineformset_factory(
+    PurchaseOrder, ProductItem, form=ProductItemForm, extra=1, can_delete=True
 )

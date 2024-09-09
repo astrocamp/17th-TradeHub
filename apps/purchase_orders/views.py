@@ -5,30 +5,27 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import (PurchaseOrderForm,
-                                         PurchaseOrderProductFormSet)
-from .models import PurchaseOrder
+from .forms.purchase_orders_form import (ProductItemForm, ProductItemFormSet,
+                                         PurchaseOrderForm)
+from .models import ProductItem, PurchaseOrder
 
 
 def index(request):
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
-        formset = PurchaseOrderProductFormSet(request.POST, instance=form.instance)
+        formset = ProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
-            purchase_order = form.save()
-            formset.instance = purchase_order
+            order = form.save()
+            formset.instance = order
             formset.save()
             return redirect("purchase_orders:index")
         else:
-            form = PurchaseOrderForm()
-            formset = PurchaseOrderProductFormSet(instance=form.instance)
+            # 打印錯誤信息以幫助調試
+            print(form.errors)
+            print(formset.errors)
+            print(123)
             return render(
-                request,
-                "purchase_orders/new.html",
-                {
-                    "form": form,
-                    "formset": formset,
-                },
+                request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
 
     purchase_orders = PurchaseOrder.objects.order_by("id")
@@ -39,7 +36,11 @@ def index(request):
 
 def new(request):
     form = PurchaseOrderForm()
-    return render(request, "purchase_orders/new.html", {"form": form})
+    formset = ProductItemFormSet(instance=form.instance)
+
+    return render(
+        request, "purchase_orders/new.html", {"form": form, "formset": formset}
+    )
 
 
 def show(request, id):
@@ -70,7 +71,6 @@ def edit(request, id):
     )
 
 
-@require_POST
 def delete(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     purchase_order.delete()
