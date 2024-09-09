@@ -11,7 +11,7 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"finish", "unfinish"}
 
-    sales_orders = SalesOrder.objects.order_by(order_by)
+    sales_orders = SalesOrder.objects.all()
 
     if state in state_match:
         sales_orders = SalesOrder.objects.filter(state=state)
