@@ -8,16 +8,16 @@ from apps.products.models import Product
 
 class SalesOrder(models.Model):
     client = models.ForeignKey(
-        Client, on_delete=models.CASCADE, related_name="sales_orders"
+        Client, on_delete=models.PROTECT, related_name="sales_orders"
     )
     product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="sales_orders"
+        Product, on_delete=models.PROTECT, related_name="sales_orders"
     )
     quantity = models.PositiveIntegerField()
     stock = models.ForeignKey(
-        Inventory, on_delete=models.CASCADE, related_name="sales_orders"
+        Inventory, on_delete=models.PROTECT, related_name="sales_orders"
     )
-    price = models.DecimalField(max_digits=10, decimal_places=0)
+    price = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
 

@@ -1,6 +1,8 @@
+import re
+
 from django import forms
 
-from ..models import PurchaseOrder  # Import the PurchaseOrder model
+from ..models import PurchaseOrder
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -21,5 +23,47 @@ class PurchaseOrderForm(forms.ModelForm):
             "contact_person": forms.TextInput(attrs={"class": "w-full"}),
             "supplier_email": forms.TextInput(attrs={"class": "w-full"}),
             "total_amount": forms.NumberInput(attrs={"class": "w-full"}),
-            "notes": forms.Textarea(attrs={"rows": 2, "class": "w-full"}),
+            "notes": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
         }
+        labels = {
+            "supplier": "Supplier",
+            "supplier_tel": "Supplier Tel",
+            "contact_person": "Contact Person",
+            "supplier_email": "Supplier Email",
+            "notes": "Note",
+            "total_amount": "Total Amount",
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
+
+    def clean(self):
+        cleaned_data = super().clean()
+
+        supplier = cleaned_data.get("supplier")
+        supplier_tel = cleaned_data.get("supplier_tel")
+        contact_person = cleaned_data.get("contact_person")
+        supplier_email = cleaned_data.get("supplier_email")
+        total_amount = cleaned_data.get("total_amount")
+
+        if not supplier:
+            self.add_error("supplier", "Supplier is required.")
+        if supplier_tel == "":
+            self.add_error("supplier_tel", "Supplier Tel is required.")
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            supplier_tel,
+        ):
+            self.add_error("supplier_tel", "Invalid phone number.")
+        if not contact_person:
+            self.add_error("contact_person", "Contact Person is required.")
+        if supplier_email == "":
+            self.add_error("supplier_email", "Supplier Email is required.")
+        if total_amount is None:
+            self.add_error("total_amount", "Total Amount is required.")
+        elif total_amount == 0:
+            self.add_error("total_amount", "Total Amount must be greater than 0.")
+
+        return cleaned_data
