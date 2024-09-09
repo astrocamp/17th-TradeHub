@@ -17,7 +17,7 @@ def index(req):
 
         if form.is_valid():
             user = form.save()
-            user.backend = "django.contrib.auth.backends.ModelBackend"
+            user.backend = "django.contrib.auth.backends.ModelBackend"  # 指定後端
             login(req, user)
             messages.success(req, "Successfully registered.")
             return redirect("pages:home")
