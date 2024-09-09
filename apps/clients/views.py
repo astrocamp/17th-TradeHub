@@ -1,40 +1,14 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
+
 
 from .forms.form import ClientForm
 from .models import Client
 
 
-def client_list(req):
-    clients = Client.objects.order_by("-id")
-    if req.method == "POST":
-        form = ClientForm(req.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("clients:list")
-        return render(req, "clients/list.html", {"clients": clients, "form": form})
-    form = ClientForm()
-    return render(req, "clients/list.html", {"clients": clients, "form": form})
-
-
-def client_update_and_delete(req, id):
-    client = get_object_or_404(Client, id=id)
-    if req.method == "POST":
-        if "delete" in req.POST:
-            client.delete()
-            return redirect("clients:list")
-        else:
-            form = ClientForm(req.POST, instance=client)
-            if form.is_valid():
-                form.save()
-                return redirect("clients:list")
-            return render(req, "clients/edit.html", {"client": client, "form": form})
-    form = ClientForm(instance=client)
-    return render(req, "clients/edit.html", {"client": client, "form": form})
-
-
 def index(request):
     state = request.GET.get("select")
-    order_by = request.GET.get("sort", "id")
+    order_by = request.GET.get("sort")
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"often", "haply", "never"}
 
@@ -42,13 +16,46 @@ def index(request):
 
     if state in state_match:
         clients = Client.objects.filter(state=state)
-    order_by_field = order_by if is_desc else "-" + order_by
+    order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
     clients = clients.order_by(order_by_field)
 
+    paginator = Paginator(clients, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     content = {
-        "clients": clients,
+        "clients": page_obj,
         "selected_state": state,
-        "order_by": order_by,
         "is_desc": is_desc,
+        "order_by": order_by,
+        "page_obj": page_obj,
     }
-    return render(request, "list.html", content)
+
+    return render(request, "clients/list.html", content)
+
+
+def new(request):
+    if request.method == "POST":
+        form = ClientForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("clients:index")
+        else:
+            print(form.errors)
+    form = ClientForm()
+    return render(request, "clients/create.html", {"form": form})
+
+
+def client_update_and_delete(request, id):
+    client = get_object_or_404(Client, id=id)
+    if request.method == "POST":
+        if "delete" in request.POST:
+            client.delete()
+            return redirect("clients:index")
+        else:
+            form = ClientForm(request.POST, instance=client)
+            if form.is_valid():
+                form.save()
+                return redirect("clients:index")
+    form = ClientForm(instance=client)
+    return render(request, "clients/edit.html", {"client": client, "form": form})

@@ -1,6 +1,5 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %}
 
-{% block content %}
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
@@ -26,18 +25,17 @@
             <td>
               <button>Update</button>
             </td>
-
           </tr>
           <tr class="hover">
             <th></th>
             {% for field in form %}
             <td>
               {% if field.errors %}
-                <ul class="errorlist text-red-500 text-sm mt-2">
-                  {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}
-                </ul>
+              <ul class="errorlist text-red-500 text-sm mt-2">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
               {% endif %}
             </td>
             {% endfor %}
