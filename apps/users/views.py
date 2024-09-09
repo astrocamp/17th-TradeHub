@@ -16,8 +16,9 @@ def index(req):
         form = CustomUserCreationForm(req.POST)
 
         if form.is_valid():
-            form.save()
-            login(req, form.instance)
+            user = form.save()
+            user.backend = "django.contrib.auth.backends.ModelBackend"
+            login(req, user)
             messages.success(req, "Successfully registered.")
             return redirect("pages:home")
         else:
