@@ -1,4 +1,5 @@
 {% extends "layouts/base.html" %} {% block content %}
+
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
@@ -13,20 +14,34 @@
         </tr>
       </thead>
       <tbody>
-        <tr class="hover">
-          <form action="{% url 'clients:edit' client.id %}" method="post">
+        <form action="{% url 'clients:edit' client.id %}" method="post">
+          <tr class="hover">
             {% csrf_token %}
+
             <th>ID Auto gen</th>
-            <td>{{form.name}}</td>
-            <td>{{form.phone_number}}</td>
-            <td>{{form.address}}</td>
-            <td>{{form.email}}</td>
-            <td>{{form.note}}</td>
+            {% for field in form %}
+            <td>{{ field }}</td>
+            {% endfor %}
             <td>
               <button>Update</button>
             </td>
-          </form>
-        </tr>
+          </tr>
+          <tr class="hover">
+            <th></th>
+            {% for field in form %}
+            <td>
+              {% if field.errors %}
+              <ul class="errorlist text-red-500 text-sm mt-2">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </td>
+            {% endfor %}
+            <td></td>
+          </tr>
+        </form>
       </tbody>
     </table>
   </div>

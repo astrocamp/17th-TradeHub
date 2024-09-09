@@ -1,46 +1,20 @@
-{% extends "layouts/base.html" %} {% block content %} {% load static %}
+{% extends "layouts/base.html" %} {% block content %}
 
-<div class="divider text-3xl font-bold mt-32">Add Product</div>
+<a href="{% url 'products:index' %}" class="btn btn-primary"
+  >Back to Products List</a
+>
 
-<div class="flex justify-center mt-32">
-  <div class="overflow-x-auto w-full">
-    <table class="table table-xl text-center">
-      <thead>
-        <tr class="text-xl">
-          <th>Product ID</th>
-          <th>Product Name</th>
-          <th>Price</th>
-          <th>Supplier</th>
-          <th>Note</th>
-          <th>Operate</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="hover">
-          <form
-            class="text-center"
-            method="POST"
-            action="{% url 'products:new' %}"
-          >
-            {% csrf_token %}
-            <td>{{ form.product_id }}</td>
-            <td>{{ form.product_name }}</td>
-            <td>{{ form.price }}</td>
-            <td>{{ form.supplier }}</td>
-            <td>{{ form.note }}</td>
-            <td>
-              <div class="flex justify-center gap-4">
-                <button type="submit" class="btn bg-orange-600 text-white">
-                  Add
-                </button>
-                <a href="{% url 'products:index' %}" class="btn btn-warning">Cancel</a>
-              </div>
-            </td>
-          </form>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
+<form action="{% url 'products:new' %}" method="POST">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-control">{{ field.label_tag }}</div>
+    <div class="text-sm text-gray-500">{{field.help_text}}</div>
+    <div>{{ field }}</div>
+    {% if field.errors %}
+      <span class="text-red-500">{{ field.errors }}</span>
+    {% endif %}
+  {% endfor %}
+  <button class="btn btn-primary">Add</button>
+</form>
 
 {% endblock %}

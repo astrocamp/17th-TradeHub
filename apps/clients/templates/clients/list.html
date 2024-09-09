@@ -69,6 +69,7 @@
           <td>{{ client.address }}</td>
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
+
           <td>{{ client.create_at|date:"Y-m-d H:i" }}</td>
           <td class="flex justify-center gap-2">
             <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">Edit</a>
