@@ -1,10 +1,14 @@
 {% extends "layouts/base.html" %}
 
-{% block content %}
+{% block content %} {% load static %}
 
-<a href="{% url 'goods_receipts:GRindex' %}"class="btn btn-primary">Back to Goods Receipts List</a>
+<div class="divider text-3xl font-bold mt-32">Add Goods Receipt</div>
 
-<form action="{% url 'goods_receipts:GRindex' %}" method="POST">
+
+<form
+    action="{% url 'goods_receipts:GRindex' %}" method="POST"
+    class="text-lg m-4"
+>
     {% csrf_token %}
     {% for field in form %}
         <div class="flex flex-col gap-4 p-4 border rounded-lg shadow-sm bg-white ">
@@ -26,5 +30,6 @@
     {% endfor %}
     <button class="btn btn-primary">Add</button>
 </form>
+
 
 {% endblock %}
