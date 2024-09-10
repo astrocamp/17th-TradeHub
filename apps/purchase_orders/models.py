@@ -2,6 +2,7 @@ import re
 
 from django.db import models
 from django.utils import timezone
+from django_fsm import FSMField, transition
 
 from apps.suppliers.models import Supplier
 
@@ -36,7 +37,7 @@ class PurchaseOrder(models.Model):
         self.supplier_tel = self.format_supplier_tel(self.supplier_tel)
         super().save(*args, **kwargs)
 
-    def __str__(self):
+    def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"
 
     def format_supplier_tel(self, number):
@@ -50,3 +51,34 @@ class PurchaseOrder(models.Model):
             return f"{number[:2]}-{number[2:]}"
         else:
             return number
+
+    UNFINISH = "unfinish"
+    FINISHED = "finished"
+
+    AVAILABLE_STATES = UNFINISH, FINISHED
+
+    AVAILABLE_STATES_CHOICES = [
+        (UNFINISH, "未完成"),
+        (FINISHED, "完成"),
+    ]
+
+    state = FSMField(
+        default=UNFINISH,
+        choices=AVAILABLE_STATES_CHOICES,
+        protected=True,
+    )
+
+    def check_order_state(self):
+        if self.quantity < self.stock.quantity:
+            self.set_unfinish()
+        else:
+            self.set_finished()
+        self.save()
+
+    @transition(field=state, source="*", target=UNFINISH)
+    def set_unfinish(self):
+        pass
+
+    @transition(field=state, source="*", target=FINISHED)
+    def set_finished(self):
+        pass
