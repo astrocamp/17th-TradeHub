@@ -67,7 +67,7 @@
                     <th>{{goods_receipt.note}}</th>
                     <th>
                         <div class="flex justify-center">
-                            <div>
+                            <div class="flex gap-2">
                                 <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
                                 <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-error">Delete</a>
                             </div>
