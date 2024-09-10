@@ -11,9 +11,9 @@ def index(request):
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:index1")
+            return redirect("purchase_orders:index")
         else:
-            return render(request, "purchase_orders/new.html", {"form": form})
+            print(form.errors)
 
     purchase_orders = PurchaseOrder.objects.order_by("id")
     paginator = Paginator(purchase_orders, 5)
