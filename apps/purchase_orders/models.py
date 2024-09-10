@@ -26,9 +26,9 @@ class PurchaseOrder(models.Model):
 
     objects = PurchaseOrderManager()
 
-    def delete(self, *args, **kwargs):
+    def delete(self):
         self.deleted_at = timezone.now()
-        self.save(*args, **kwargs)
+        self.save()
 
     def save(self, *args, **kwargs):
         if not self.order_number:

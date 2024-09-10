@@ -39,7 +39,7 @@
         </tr>
         {% endfor %}
         <tr class="hover">
-          <form action="{% url 'orders:list' %}" method="post">
+          <form action="{% url 'orders:index' %}" method="post">
             {% csrf_token %}
             <th>ID Auto gen</th>
             <td>{{form.code}}</td>
