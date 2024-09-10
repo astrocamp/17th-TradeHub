@@ -32,71 +32,34 @@
                     <span class="flex-1 text-lg font-semibold text-gray-800">Quantity</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">Price</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">Subtotal</span>
-                    <button type="button" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
+                    <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
                         Add an item
                     </button>
                 </div>
-
+                <div id="formset-items">
                 <!-- 表單子項目 -->
                 {% for form in formset %}
-                <fieldset class="p-4 pb-2 rounded-lg border bg-gray-200 items-center">
-                    <div class="flex items-center gap-4">
-                        <!-- Product Field -->
-                        <div class="flex-1">
-                            {{ form.product }}
-                            {% if form.product.errors %}
-                            <p class="text-red-500 text-sm mt-1">{{ form.product.errors }}</p>
-                            {% endif %}
+                    <fieldset class="p-4 pb-2   bg-gray-100 items-center">
+                        <div class="flex items-center gap-4">
+                            <div class="flex-1">{{ form.product }}</div>
+                            <div class="flex-1">{{ form.quantity }}</div>
+                            <div class="flex-1">{{ form.price }}</div>
+                            <div class="flex-1">{{ form.subtotal }}</div>
+                            <div class="mx-4 text-center">
+                                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
+                                    Delete
+                                </button>
+                            </div>
                         </div>
-
-                        <!-- Quantity Field -->
-                        <div class="flex-1">
-                            {{ form.quantity }}
-                            {% if form.quantity.errors %}
-                            <p class="text-red-500 text-sm mt-1">{{ form.quantity.errors }}</p>
-                            {% endif %}
-                        </div>
-
-                        <!-- Price Field -->
-                        <div class="flex-1">
-                            {{ form.price }}
-                            {% if form.price.errors %}
-                            <p class="text-red-500 text-sm mt-1">{{ form.price.errors }}</p>
-                            {% endif %}
-                        </div>
-
-                        <!-- Subtotal Field -->
-                        <div class="flex-1">
-                            {{ form.subtotal }}
-                            {% if form.subtotal.errors %}
-                            <p class="text-red-500 text-sm mt-1">{{ form.subtotal.errors }}</p>
-                            {% endif %}
-                        </div>
-
-                        <!-- Delete Button -->
-                        <div class="mx-4 text-center">
-                            <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition">
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Display Non-field Errors -->
-                    <div class="mt-2 text-red-500">
-                        {{ form.non_field_errors }}
-                    </div>
-                </fieldset>
+                        <div class="mt-2 text-red-500">{{ form.non_field_errors }}</div>
+                    </fieldset>
                 {% endfor %}
+                </div>
             </div>
-
-
-
-
             <!-- 新增按鈕 -->
             <div class="col-span-full">
                 <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">Add</button>
             </div>
-
         </form>
     </div>
 
