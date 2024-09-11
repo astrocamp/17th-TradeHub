@@ -36,11 +36,18 @@ document.addEventListener('DOMContentLoaded', function() {
     addItemButton.addEventListener('click',() => {
         const newItem = document.querySelector('#formset-items fieldset').cloneNode(true);
         newItem.innerHTML = newItem.innerHTML.replace(/items-(\d+)-/g, `items-${formCount}-`);
-        newItem.querySelectorAll('input').forEach(input => input.value = '');
+        newItem.querySelectorAll('input,select').forEach(element => {
+            if (element.tagName === 'SELECT') {
+                element.selectedIndex = 0;
+            } else {
+                element.value = '';
+            }
+        });
         formsetItems.appendChild(newItem);
         formCount++;
         totalForms.value = formCount;
     })
+
     formsetItems.addEventListener('click', function (event) {
         if (event.target.classList.contains('delete-item') && totalForms.value != 1) {
             const fieldset = event.target.closest('fieldset');

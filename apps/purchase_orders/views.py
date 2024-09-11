@@ -1,3 +1,4 @@
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -20,10 +21,6 @@ def index(request):
             formset.save()
             return redirect("purchase_orders:index")
         else:
-            # 打印錯誤信息以幫助調試
-            print(form.errors)
-            print(formset.errors)
-            print(123)
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
@@ -37,37 +34,53 @@ def index(request):
 def new(request):
     form = PurchaseOrderForm()
     formset = ProductItemFormSet(instance=form.instance)
-
     return render(
         request, "purchase_orders/new.html", {"form": form, "formset": formset}
     )
 
 
 def show(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=purchase_order)
-        if form.is_valid():
+        formset = ProductItemFormSet(request.POST, instance=purchase_order)
+
+        if form.is_valid() and formset.is_valid():
             form.save()
+            formset.save()
             return redirect("purchase_orders:show", purchase_order.id)
         else:
             return render(
                 request,
                 "purchase_orders/edit.html",
-                {"purchase_order": purchase_order, "form": form},
+                {"form": form, "formset": formset, "purchase_order": purchase_order},
             )
+    product_items = ProductItem.objects.filter(purchase_order=purchase_order)
     return render(
-        request, "purchase_orders/show.html", {"purchase_order": purchase_order}
+        request,
+        "purchase_orders/show.html",
+        {"purchase_order": purchase_order, "product_items": product_items},
     )
 
 
 def edit(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
+    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     form = PurchaseOrderForm(instance=purchase_order)
+    formset = get_product_item_formset(0)(instance=purchase_order)
     return render(
         request,
         "purchase_orders/edit.html",
-        {"purchase_order": purchase_order, "form": form},
+        {"form": form, "formset": formset, "purchase_order": purchase_order},
+    )
+
+
+def get_product_item_formset(extra):
+    return inlineformset_factory(
+        PurchaseOrder,
+        ProductItem,
+        form=ProductItemForm,
+        extra=extra,
+        can_delete=True,
     )
 
 
