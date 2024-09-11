@@ -34,7 +34,7 @@ def index(req):
             form.save()
             return redirect("goods_receipts:index")
         return render(req, "pages/GRnew.html", {"form": form})
-    return render(req, "pages/index.html", content)
+    return render(req, "pages/GRindex.html", content)
 
 
 def new(request):

@@ -12,7 +12,7 @@
             <thead>
                 <tr class="text-xl">
                     <th>
-                        <form action="{% url 'goods_receipts:GRindex' %}" method="GET">
+                        <form action="{% url 'goods_receipts:index' %}" method="GET">
                             <select
                                 class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
                                 name="select"
@@ -36,19 +36,19 @@
                             </button>
                         </form>
                     </th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Receipt Number{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=goods_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Goods Name{% if order_by == 'goods_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Delivery Method{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=date&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Date{% if order_by == 'date' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:GRindex' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Receipt Number{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=goods_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Goods Name{% if order_by == 'goods_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Delivery Method{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=date&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Date{% if order_by == 'date' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th>Operate</th>
                 </tr>
             </thead>
             <tbody>
                 {% for goods_receipt in goods_receipts %}
-                <tr onclick="window.location.href='{% url 'goods_receipts:GRshow' goods_receipt.id %}'" class="hover">
+                <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover">
                   {% if goods_receipt.state == "finish" %}
                   <th>
                     <span class="btn btn-sm btn-success text-lg">{{ goods_receipt.state }}</span>
@@ -68,8 +68,8 @@
                     <th>
                         <div class="flex justify-center">
                             <div class="flex gap-2">
-                                <a href="{% url 'goods_receipts:GRedit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:GRdelete' goods_receipt.id %}" class="btn btn-error">Delete</a>
+                                <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
+                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">Delete</a>
                             </div>
                         </div>
                     </th>
