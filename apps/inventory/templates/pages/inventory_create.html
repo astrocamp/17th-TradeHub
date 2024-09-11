@@ -2,9 +2,6 @@
 
 <div class="flex justify-center mt-32">
   <div class="overflow-x-auto w-full">
-    {% for error in form.non_field_errors %}
-    <div class="text-red-500">{{ error }}</div>
-{% endfor %}
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
@@ -37,35 +34,6 @@
               </button>
             </td>
           </form>
-        </tr>
-        <tr class="hover">
-          <th class="text-xl"></th>
-          <td>
-            {% for error in form.product.errors %}
-              <span class="text-red-500">{{ error }}</span>
-            {% endfor %}
-          </td>
-          <td>
-            {% for error in form.supplier.errors %}
-              <span class="text-red-500">{{ error }}</span>
-            {% endfor %}
-          </td>
-          <td>
-            {% for error in form.quantity.errors %}
-              <span class="text-red-500">{{ error }}</span>
-            {% endfor %}
-          </td>
-          <td>
-            {% for error in form.safety_stock.errors %}
-              <span class="text-red-500">{{ error }}</span>
-            {% endfor %}
-          </td>
-          <td>
-            {% for error in form.note.errors %}
-              <span class="text-red-500">{{ error }}</span>
-            {% endfor %}
-          </td>
-          <td></td>
         </tr>
       </tbody>
     </table>

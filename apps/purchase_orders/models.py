@@ -1,5 +1,3 @@
-import re
-
 from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
@@ -8,14 +6,14 @@ from apps.suppliers.models import Supplier
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=10, unique=True)
+    order_number = models.CharField(max_length=20, unique=True, editable=False)
     supplier = models.ForeignKey(
-        Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
+        Supplier, on_delete=models.CASCADE, related_name="purchase_orders"
     )
-    supplier_tel = models.CharField(max_length=15)
-    contact_person = models.CharField(max_length=20)
-    supplier_email = models.EmailField(unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
+    supplier_tel = models.CharField(max_length=20, blank=True, null=True)
+    contact_person = models.CharField(max_length=100, blank=True, null=True)
+    supplier_email = models.EmailField(blank=True, null=True)
+    created_at = models.DateTimeField(default=timezone.now)
     total_amount = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
 
@@ -33,8 +31,6 @@ class PurchaseOrder(models.Model):
             else:
                 new_order_number = "001"
             self.order_number = f"{today}{new_order_number}"
-
-        self.supplier_tel = self.format_supplier_tel(self.supplier_tel)
         super().save(*args, **kwargs)
 
     def __repr__(self):

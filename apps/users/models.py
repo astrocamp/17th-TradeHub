@@ -13,6 +13,8 @@ class CustomUser(AbstractUser):
     title = models.CharField(max_length=100, blank=True, null=True)
     hire_date = models.DateTimeField(blank=True, null=True, default=timezone.now)
     note = models.TextField(blank=True, null=True)
+    password1 = models.CharField(max_length=100, blank=True, null=True)
+    password2 = models.CharField(max_length=100, blank=True, null=True)
 
     def __str__(self):
         return f"{self.username}"
