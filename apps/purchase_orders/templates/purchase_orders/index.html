@@ -1,32 +1,137 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %} {% block content %}
 
-{% block content %}
-    <div class="p-4 max-w-3xl mx-auto mt-8">
-        <!-- Delete selected purchase orders button -->
-        <form method="post" action="{% url 'purchase_orders:delete_selected' %}">
-            {% csrf_token %}
-            <!-- Add new purchase order button -->
-            <div class="flex space-x-4 mb-6 justify-between">
-                <a href="{% url 'purchase_orders:new' %}" class="inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105">
-                    Add a New Purchase Order
-                </a>
-                <button type="submit" class="inline-block rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                    Delete Selected Purchase Orders
-                </button>
-            </div>
-
-            <!-- Purchase orders list -->
-            <div class="space-y-4">
-                {% for purchase_order in purchase_orders %}
-                <div class="flex items-center justify-between p-6 bg-white shadow-lg rounded-xl hover:bg-gray-200 transition duration-300 ease-in-out">
-                    <input type="checkbox" name="selected_purchase_orders" value="{{ purchase_order.id }}" class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-
-                    <a href="{% url 'purchase_orders:show' purchase_order.id %}" class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out">
-                        PO {{ purchase_order.order_number }} - {{ purchase_order.supplier.name }}
-                    </a>
-                </div>
-                {% endfor %}
-            </div>
-        </form>
+{% comment %} <div class="p-4 max-w-3xl mx-auto mt-8">
+  <!-- Delete selected purchase orders button -->
+  <form method="post" action="{% url 'purchase_orders:delete_selected' %}">
+    {% csrf_token %}
+    <!-- Add new purchase order button -->
+    <div class="flex space-x-4 mb-6 justify-between">
+      <a
+        href="{% url 'purchase_orders:new' %}"
+        class="inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        Add a New Purchase Order
+      </a>
+      <button
+        type="submit"
+        class="inline-block rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        Delete Selected Purchase Orders
+      </button>
     </div>
+
+    <!-- Purchase orders list -->
+    <div class="space-y-4">
+      {% for purchase_order in purchase_orders %}
+      <div
+        class="flex items-center justify-between p-6 bg-white shadow-lg rounded-xl hover:bg-gray-200 transition duration-300 ease-in-out"
+      >
+        <input
+          type="checkbox"
+          name="selected_purchase_orders"
+          value="{{ purchase_order.id }}"
+          class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+        />
+        <a
+          href="{% url 'purchase_orders:show' purchase_order.id %}"
+          class="text-lg font-bold text-gray-900 hover:text-blue-600 transition duration-300 ease-in-out"
+        >
+          PO {{ purchase_order.order_number }} - {{ purchase_order.supplier.name
+          }}
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </form>
+</div> {% endcomment %}
+
+<div class="flex justify-end mt-20">
+  <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white"
+    >Add a New Purchase Order</a
+  >
+</div>
+<div class="divider text-3xl font-bold">Purchase Orders</div>
+
+<div class="flex justify-center mt-10">
+    <div class="overflow-x-auto">
+        <table class="table table-xl text-center">
+            <thead>
+                <tr class="text-xl">
+                    <th>
+                      <form action="{% url 'purchase_orders:index' %}" method="GET">
+                        <select
+                          class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                          name="select"
+                        >
+                          <option disabled>Select</option>
+                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
+                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>Finished</option>
+                          <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>Unfinish</option>
+                        </select>
+
+                        <button type="submit" class="btn btn-square btn-sm">
+                          <svg
+                            class="w-5 h-5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                            />
+                          </svg>
+                        </button>
+                      </form>
+                    </th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}">Number{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}">Supplier{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}">Supplier Tel{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}">Supplier Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=total_amount&select={{ selected_state }}&desc={{ is_desc }}">Total Amount{% if order_by == 'total_amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=notes&select={{ selected_state }}&desc={{ is_desc }}">Notes{% if order_by == 'notes' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th>Operate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for purchase_order in purchase_orders %}
+                <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'" class="hover">
+                    {% if purchase_order.state == "finished" %}
+                    <th>
+                      <span class="btn btn-sm btn-success text-lg">{{ purchase_order.state }}</span>
+                    </th>
+                    {% elif purchase_order.state == "unfinish" %}
+                    <th>
+                      <span class="btn btn-sm btn-error text-lg">{{ purchase_order.state }}</span>
+                    </th>
+                    {% endif %}
+                    {% comment %} <input
+                      type="checkbox"
+                      name="selected_purchase_orders"
+                      value="{{ purchase_order.id }}"
+                      class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    /> {% endcomment %}
+                    <th>{{ purchase_order.order_number }}</th>
+                    <th>{{ purchase_order.supplier.name }}</th>
+                    <th>{{ purchase_order.supplier_tel }}</th>
+                    <th>{{ purchase_order.supplier_email }}</th>
+                    <th>{{ purchase_order.total_amount }}</th>
+                    <th>{{ purchase_order.notes }}</th>
+                    <th>
+                        <div class="flex gap-3">
+                            <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                              Edit
+                            </a>
+                            <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST" class="inline-block">
+                                {% csrf_token %}
+                                <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                    </th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}

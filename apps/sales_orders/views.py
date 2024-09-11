@@ -9,13 +9,12 @@ def index(request):
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
-    state_match = {"finish", "unfinish"}
 
     sales_orders = SalesOrder.objects.all()
 
-    if state in state_match:
+    if state in SalesOrder.AVAILABLE_STATES:
         sales_orders = SalesOrder.objects.filter(state=state)
-    order_by_field = f"{'-' if is_desc else ''}{order_by}"
+    order_by_field = order_by if is_desc else "-" + order_by
     sales_orders = sales_orders.order_by(order_by_field)
     paginator = Paginator(sales_orders, 5)
     page_number = request.GET.get("page")
@@ -35,8 +34,6 @@ def index(request):
 def create(request):
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
-        print(form.is_valid())
-        print(form.errors)
         if form.is_valid():
             form.save()
             return redirect("sales_orders:index")

@@ -1,58 +1,103 @@
-{% extends 'layouts/base.html' %}
-
-{% block content %}
+{% extends 'layouts/base.html' %} {% block content %}
 <div class="flex space-x-4 mb-6 justify-between">
-    <a href="{% url 'suppliers:new' %}" class="inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105">
-        Add a new supplier
-    </a>
+  <a
+    href="{% url 'suppliers:new' %}"
+    class="inline-block rounded-lg bg-orange-500 text-white px-4 py-2 font-semibold shadow-lg hover:bg-orange-600 transition duration-300 ease-in-out transform hover:scale-105"
+  >
+    Add a new supplier
+  </a>
 </div>
 <div class="divider text-3xl font-bold">Suppliers</div>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th></th>
-                    <th>Supplier</th>
-                    <th>Phone</th>
-                    <th>Contact Person</th>
-                    <th>GUI Number</th>
-                    <th>Address</th>
-                    <th>Note</th>
-                    <th>Operate</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for supplier in suppliers %}
-                <tr class="hover">
-                    <th>
-                        <input type="checkbox" name="selected_suppliers" value="{{ supplier.id }}" class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    </th>
-                    <th><a href="{% url 'suppliers:show' supplier.id %}">{{ supplier.name }}</a></th>
-                    <th>{{ supplier.telephone }}</th>
-                    <th>{{ supplier.contact_person }}</th>
-                    <th>{{ supplier.gui_number }}</th>
-                    <th>{{ supplier.address }}</th>
-                    <th>{{ supplier.note }}</th>
-                    <th>
-                        <div class="flex gap-3">
-                            <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
-                                Edit
-                            </a>
-                            <form action="{% url 'suppliers:delete' supplier.id %}" method="POST" class="inline-block">
-                                {% csrf_token %}
-                                <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                                    Delete
-                                </button>
-                            </form>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th></th>
+          <th>Supplier</th>
+          <th>Phone</th>
+          <th>Contact Person</th>
+          <th>GUI Number</th>
+          <th>Address</th>
+          <th>Note</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for supplier in suppliers %}
+        <tr class="hover">
+          <th>
+            <input
+              type="checkbox"
+              name="selected_suppliers"
+              value="{{ supplier.id }}"
+              class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+            />
+          </th>
+          <th>
+            <a href="{% url 'suppliers:show' supplier.id %}"
+              >{{ supplier.name }}</a
+            >
+          </th>
+          <th>{{ supplier.telephone }}</th>
+          <th>{{ supplier.contact_person }}</th>
+          <th>{{ supplier.gui_number }}</th>
+          <th>{{ supplier.address }}</th>
+          <th>{{ supplier.note }}</th>
+          <th>
+            <div class="flex gap-3">
+              <a
+                href="{% url 'suppliers:edit' supplier.id %}"
+                class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+              >
+                Edit
+              </a>
+              <form
+                action="{% url 'suppliers:delete' supplier.id %}"
+                method="POST"
+                class="inline-block"
+              >
+                {% csrf_token %}
+                <button
+                  type="submit"
+                  class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+                >
+                  Delete
+                </button>
+              </form>
+            </div>
+          </th>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="pagination join flex justify-center">
+      <span class="step-links">
+        <a href="?page=1"><button class="join-item btn">Page 1</button></a>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+          ><button class="join-item btn">«</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
+        {% endif %}
+        <button class="join-item btn">Page {{ page_obj.number }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+          ><button class="join-item btn">»</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
+        {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+          ><button class="join-item btn">
+            Page {{ page_obj.paginator.num_pages }}
+          </button></a
+        >
+      </span>
     </div>
+  </div>
 </div>
 
 {% endblock %}
