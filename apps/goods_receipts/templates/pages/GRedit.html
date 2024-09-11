@@ -1,13 +1,31 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-{% block content %}
-
-<a href="{% url 'goods_receipts:GRshow' goods_receipt.id %}"class="btn btn-primary">Back to Goods Receipts List</a>
-
-<form action="{% url 'goods_receipts:GRshow' goods_receipt.id %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button class="btn btn-primary">Renew</button>
+<form
+  action="{% url 'goods_receipts:GRedit' goods_receipt.id %}"
+  method="POST"
+  class="text-lg m-f"
+>
+  {% csrf_token %} {% for field in form %}
+  <div class="flex flex-col gap-4 p-4 border rounded-lg shadow-sm bg-white">
+    <label
+      for="{{ field.id_for_label }}"
+      class="text-xl font-semibold text-gray-800"
+      >{{ field.label }}</label
+    >
+    {% if field.help_text %}
+    <p class="text-gray-600 text-sm mb-2">{{ field.help_text }}</p>
+    {% endif %}
+    <div>{{ field }}</div>
+    {% if field.errors %}
+    <ul class="errorlist text-red-500 text-sm mt-2">
+      {% for error in field.errors %}
+      <li>{{ error }}</li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  {% endfor %}
+  <button class="btn btn-primary">Renew</button>
 </form>
 
 {% endblock %}
