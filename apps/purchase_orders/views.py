@@ -21,12 +21,16 @@ def index(request):
         purchase_orders = purchase_orders.filter(state=state)
     order_by_field = order_by if is_desc else "-" + order_by
     purchase_orders = purchase_orders.order_by(order_by_field)
+    paginator = Paginator(purchase_orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
     content = {
-        "purchase_orders": purchase_orders,
+        "purchase_orders": page_obj,
         "selected_state": state,
         "order_by": order_by,
         "is_desc": is_desc,
+        "page_obj": page_obj,
     }
 
     if request.method == "POST":
@@ -37,15 +41,6 @@ def index(request):
         else:
             print(form.errors)
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    paginator = Paginator(purchase_orders, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
-    content = {
-        "purchase_orders": page_obj,
-        "page_obj": page_obj,
-    }
     return render(request, "purchase_orders/index.html", content)
 
 
