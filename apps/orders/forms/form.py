@@ -12,12 +12,12 @@ class OrderForm(forms.ModelForm):
             "code": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Order Code"}
             ),
-            "client_fk": forms.Select(
+            "client": forms.Select(
                 attrs={
                     "class": "form-control",
                 }
             ),
-            "product_fk": forms.Select(
+            "product": forms.Select(
                 attrs={
                     "class": "form-control",
                 }
@@ -32,15 +32,15 @@ class OrderForm(forms.ModelForm):
         }
         help_texts = {
             "code": "Please enter the order code.",
-            "client_fk": "Please select a client.",
-            "product_fk": "Please select a product.",
+            "client": "Please select a client.",
+            "product": "Please select a product.",
             "note": "Please enter any additional notes.",
         }
 
         labels = {
             "code": "Order Code",
-            "client_fk": "Client",
-            "product_fk": "Product",
+            "client": "Client",
+            "product": "Product",
             "note": "Note",
         }
 
@@ -52,16 +52,16 @@ class OrderForm(forms.ModelForm):
     def clean(self):
         cleaned_data = super().clean()
         code = cleaned_data.get("code")
-        client_fk = cleaned_data.get("client_fk")
-        product_fk = cleaned_data.get("product_fk")
+        client = cleaned_data.get("client")
+        product = cleaned_data.get("product")
 
         if not code:
             self.add_error("code", "Order code is required.")
 
-        if not client_fk:
-            self.add_error("client_fk", "Client is required.")
+        if not client:
+            self.add_error("client", "Client is required.")
 
-        if not product_fk:
-            self.add_error("product_fk", "Product is required.")
+        if not product:
+            self.add_error("product", "Product is required.")
 
         return cleaned_data

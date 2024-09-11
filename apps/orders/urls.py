@@ -7,6 +7,6 @@ app_name = "orders"
 
 urlpatterns = [
     path("", views.index, name="index"),
-    path("create", views.new, name="create"),
+    path("create", views.new, name="new"),
     path("edit/<int:id>", views.order_update_and_delete, name="edit"),
 ]
