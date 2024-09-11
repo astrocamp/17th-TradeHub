@@ -9,7 +9,7 @@ class Product(models.Model):
     product_name = models.CharField(max_length=20)
     price = models.PositiveIntegerField()
     supplier = models.ForeignKey(
-        Supplier, on_delete=models.CASCADE, related_name="products", default=0
+        Supplier, on_delete=models.PROTECT, related_name="products", default=0
     )
     note = models.TextField(blank=True, null=True)
 
