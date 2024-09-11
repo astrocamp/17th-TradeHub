@@ -5,14 +5,62 @@ from django.utils import timezone
 
 class CustomUser(AbstractUser):
 
-    # 名稱、電話、地址、email、帳號、密碼、職稱、入職時間、備註
+    DEPARTMENT_CHOICES = [
+        ("", "Select Department"),
+        ("Purchasing", "Purchasing"),
+        ("Inventory", "Inventory"),
+        ("HR", "Human Resources"),
+    ]
+
+    POSITION_CHOICES = [
+        ("", "Select Position"),
+        ("Intern", "Intern"),
+        ("Specialist", "Specialist"),
+        ("Manager", "Manager"),
+        ("BOSS", "BOSS"),
+    ]
+
+    email = models.EmailField(unique=True)
     birthday = models.DateField(blank=True, null=True)
-    department = models.CharField(max_length=100, blank=True, null=True)
-    phone = models.CharField(max_length=10, blank=True, null=True)
-    address = models.CharField(max_length=100, blank=True, null=True)
-    title = models.CharField(max_length=100, blank=True, null=True)
-    hire_date = models.DateTimeField(blank=True, null=True, default=timezone.now)
+    phone = models.CharField(max_length=15, blank=True, null=True)
+    address = models.CharField(max_length=100, blank=False, null=False, default="")
+    department = models.CharField(
+        choices=DEPARTMENT_CHOICES, max_length=20, default="", blank=False, null=False
+    )
+    position = models.CharField(
+        choices=POSITION_CHOICES, max_length=20, default="", blank=False, null=False
+    )
+    hire_date = models.DateTimeField(default=timezone.now)
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"{self.username}"
+
+    class Meta:
+
+        permissions = [
+            # 設置權限類別
+            ("can_edit_department", "Can edit department"),
+            ("can_edit_position", "Can edit position"),
+            ("can_edit_hire_date", "Can edit hire date"),
+        ]
+
+
+# from django.contrib.auth.models import AbstractUser
+# from django.db import models
+# from django.utils import timezone
+
+
+# class CustomUser(AbstractUser):
+
+#     # 名稱、電話、地址、email、帳號、密碼、職稱、入職時間、備註
+#     birthday = models.DateField(blank=True, null=True)
+#     department = models.CharField(max_length=100, blank=True, null=True)
+#     phone = models.CharField(max_length=10, blank=True, null=True)
+#     address = models.CharField(max_length=100, blank=True, null=True)
+#     position = models.CharField(max_length=100, blank=True, null=True)
+#     hire_date = models.DateTimeField(blank=True, null=True, default=timezone.now)
+#     note = models.TextField(blank=True, null=True)
+
+#     def __str__(self):
+#         return f"{self.username}"

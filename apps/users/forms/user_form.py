@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.forms import DateInput, TextInput
 from django.utils import timezone
 
@@ -7,71 +8,6 @@ from apps.users.models import CustomUser
 
 
 class CustomUserCreationForm(UserCreationForm):
-    first_name = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your name.",
-            }
-        ),
-        label="Name",
-    )
-    birthday = forms.DateField(
-        widget=forms.DateInput(
-            attrs={
-                "type": "date",
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your birth date.",
-            }
-        ),
-        label="Birthday",
-    )
-    email = forms.EmailField(
-        widget=forms.EmailInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your email.",
-            }
-        ),
-        label="Email",
-    )
-    phone = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your phone number.",
-            }
-        ),
-        label="Phone",
-    )
-    address = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your address.",
-            }
-        ),
-        label="Address",
-    )
-    title = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your title.",
-            }
-        ),
-        label="Title",
-    )
-
-    username = forms.CharField(
-        widget=forms.TextInput(
-            attrs={
-                "class": "form-control w-full input input-bordered",
-                "placeholder": "Please enter your username.",
-            }
-        ),
-        label="Username",
-    )
 
     password1 = forms.CharField(
         widget=forms.PasswordInput(
@@ -80,8 +16,17 @@ class CustomUserCreationForm(UserCreationForm):
                 "placeholder": "Please enter your password.",
             }
         ),
+        validators=[
+            MinLengthValidator(
+                8, message="Password must be at least 8 characters long."
+            ),
+            RegexValidator(
+                regex=r"^[A-Za-z0-9]+$",
+                message="Password must contain at least one number and one letter.",
+            ),
+        ],
         label="Password",
-        help_text="Password must be at least 8 characters long, and cannot be entirely numeric.",
+        help_text="Password must be at least 8 characters long, and cannot be entirely numeric or letters.",
     )
     password2 = forms.CharField(
         widget=forms.PasswordInput(
@@ -91,82 +36,87 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
         label="Confirm Password",
-        help_text="The passwords must match.",
+        help_text="The passwords must match, its for confirmation.",
     )
 
-    # 欄位拉出meta，才會顯示出必填
     class Meta(UserCreationForm.Meta):
         model = CustomUser
         fields = [
-            "first_name",
-            "birthday",
-            "email",
-            "phone",
-            "address",
-            "title",
-            "hire_date",
             "username",
             "password1",
             "password2",
+            "email",
         ]
         widgets = {
-            "hire_date": DateInput(
-                attrs={
-                    "class": "form-control w-full input input-bordered text-gray-300",
-                    "readonly": "readonly",
-                    "value": timezone.now().strftime("%Y-%m-%d"),
-                }
-            ),
-            "note": TextInput(
+            "username": forms.TextInput(
                 attrs={
                     "class": "form-control w-full input input-bordered",
-                    "placeholder": "Any additional information.",
+                    "placeholder": "Please enter your username.",
+                }
+            ),
+            "email": forms.EmailInput(
+                attrs={
+                    "class": "form-control w-full input input-bordered",
+                    "placeholder": "purchasing@tradehub.com",
                 }
             ),
         }
         labels = {
-            "hire_date": "Hire Date",
-            "note": "Note",
+            "username": "Username",
+            "email": "Email",
+        }
+        help_texts = {
+            "username": "Username must be at least 6 characters long.",
+            "password1": "Password must be at least 8 characters long, and cannot be entirely numeric.",
+            "password2": "The passwords must match.",
+            "email": "Must be in a valid email format.",
         }
 
-        # 初始化方法，用於在表單實例化時做初始設定
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
 
-        # ----------------這段目前看起來沒成功----------------------
-        # cleaned_data 方法可用來儲存經過驗證的數據，可以用來加強驗證邏輯
-        # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
-        def clean_password2(self):
-            password2 = self.cleaned_data.get("password2")
+    # cleaned_data 方法可用來儲存經過驗證的數據，可以用來加強驗證邏輯
+    # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
 
-            # 檢查密碼長度和內容
-            if len(password2) < 8:
-                raise forms.ValidationError(
-                    "Password must be at least 8 characters long."
-                )
-            if not any(char.isdigit() for char in password2):
-                raise forms.ValidationError(
-                    "Password must contain at least one number."
-                )
-            if not any(char.isalpha() for char in password2):
-                raise forms.ValidationError(
-                    "Password must contain at least one letter."
-                )
+    # raise ValidationError 會迅速終止驗證，避免不必要的驗證
+    def clean_username(self):
+        username = self.cleaned_data.get("username")
+        if username == "":
+            raise forms.ValidationError("Username is required.")
+        elif CustomUser.objects.filter(username=username).exists():
+            raise forms.ValidationError("Username already exists.")
+        elif len(username) < 6:
+            raise forms.ValidationError("Username must be at least 6 characters long.")
+        return username
 
-            return password2
+    def clean_password1(self):
+        password1 = self.cleaned_data.get("password1")
 
-        # 檢查 email 是否已存在
-        def clean_email(self):
-            email = self.cleaned_data.get("email")
-            if CustomUser.objects.filter(email=email).exists():
-                raise forms.ValidationError("Email already exists")
-            return email
+        if password1 == "":
+            raise forms.ValidationError("Password is required.")
+        elif len(password1) < 8:
+            raise forms.ValidationError("Password must be at least 8 characters long.")
+        elif password1.isdigit() or password1.isalpha():
+            raise forms.ValidationError(
+                "Password cannot be entirely numeric or letters."
+            )
 
-        # 檢查帳號長度，至少6個字符
-        def clean_username(self):
-            username = self.cleaned_data.get("username")
-            if len(username) < 6:
-                raise forms.ValidationError(
-                    "Username must be at least 6 characters long."
-                )
-            return username
+        return password1
+
+    def clean_password2(self):
+        password2 = self.cleaned_data.get("password2")
+
+        if password2 == "":
+            raise forms.ValidationError("Please confirm your password again.")
+
+        return password2
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+        if email == "":
+            raise forms.ValidationError("Email address is required.")
+        elif CustomUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("Email address already exists.")
+        return email
