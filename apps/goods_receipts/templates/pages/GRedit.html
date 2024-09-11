@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
 <form
-  action="{% url 'goods_receipts:GRedit' goods_receipt.id %}"
+  action="{% url 'goods_receipts:show' goods_receipt.id %}"
   method="POST"
   class="text-lg m-f"
 >

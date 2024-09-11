@@ -36,12 +36,12 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}">Client{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=products&select={{ selected_state }}&desc={{ is_desc }}">Products{% if order_by == 'products' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}">Stock{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">Price{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}">Last Updated{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Client{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Products{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Stock{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Price{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Last Updated{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th>Operate</th>
         </tr>
       </thead>
@@ -90,6 +90,31 @@
         </tr>
       </tfoot>
     </table>
+    <div class="pagination join flex justify-center">
+      <span class="step-links">
+        <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">Page 1</button></a>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">«</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
+        {% endif %}
+        <button class="join-item btn">Page {{ page_obj.number }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">»</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
+        {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">
+            Page {{ page_obj.paginator.num_pages }}
+          </button></a
+        >
+      </span>
+    </div>
   </div>
 </div>
 {% endblock %}

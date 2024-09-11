@@ -1,13 +1,12 @@
-{% extends "layouts/base.html" %}
+{% extends "layouts/base.html" %} {% block content %}
 
-{% block content %}
+<a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
+  >Back to Goods Receipts List</a
+>
 
-<a href="{% url 'goods_receipts:GRindex' %}"class="btn btn-primary">Back to Goods Receipts List</a>
-
-<form action="{% url 'goods_receipts:GRindex' %}" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <button class="btn btn-primary">Add</button>
+<form action="{% url 'goods_receipts:index' %}" method="POST">
+  {% csrf_token %} {{form}}
+  <button class="btn btn-primary">Add</button>
 </form>
 
 {% endblock %}
