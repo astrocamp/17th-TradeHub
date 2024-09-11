@@ -30,7 +30,7 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    return render(request, "clients/list.html", content)
+    return render(request, "clients/index.html", content)
 
 
 def new(request):
@@ -40,9 +40,9 @@ def new(request):
             form.save()
             return redirect("clients:index")
         else:
-            return render(request, "clients/create.html", {"form": form})
+            return render(request, "clients/index.html", {"form": form})
     form = ClientForm()
-    return render(request, "clients/create.html", {"form": form})
+    return render(request, "clients/new.html", {"form": form})
 
 
 def client_update_and_delete(request, id):
