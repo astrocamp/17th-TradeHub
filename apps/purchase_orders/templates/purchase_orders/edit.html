@@ -23,8 +23,15 @@
                 <div>
                     {{ field }}
                 </div>
+                {% if field.errors %}
+                <ul class="errorlist text-red-500 text-sm mt-2">
+                  {% for error in field.errors %}
+                    <li>{{ error }}</li>
+                  {% endfor %}
+                {% endif %}
             </div>
             {% endfor %}
+
 
             <!-- 子表單 -->
             {{ formset.management_form }}
@@ -67,6 +74,7 @@
             </div>
 
             <!-- 新增按鈕 -->
+
             <div class="col-span-full">
                 <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">Save Changes</button>
             </div>

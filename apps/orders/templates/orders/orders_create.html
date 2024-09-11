@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<div class="flex justify-center mt-32">
+  <div class="overflow-x-auto w-full">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>ID</th>
+          <th>Order Code</th>
+          <th>Client</th>
+          <th>Product</th>
+          <th>Note</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hover">
+          <form
+            class="text-center"
+            method="POST"
+            action="{% url 'orders:new' %}"
+          >
+            {% csrf_token %}
+            <th>ID Auto gen</th>
+            <td>{{form.code}}</td>
+            <td>{{form.client}}</td>
+            <td>{{form.product}}</td>
+            <td>{{form.note}}</td>
+            <td>
+              <button type="submit" class="btn bg-orange-600 text-white">
+                Add
+              </button>
+            </td>
+          </form>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

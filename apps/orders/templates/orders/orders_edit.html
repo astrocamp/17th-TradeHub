@@ -17,13 +17,27 @@
             {% csrf_token %}
             <th>ID Auto gen</th>
             <td>{{form.code}}</td>
-            <td>{{form.client_fk}}</td>
-            <td>{{form.product_fk}}</td>
+            <td>{{form.client}}</td>
+            <td>{{form.product}}</td>
             <td>{{form.note}}</td>
             <td>
               <button>Update</button>
             </td>
           </form>
+        </tr>
+        <tr class="hover">
+          <th></th>
+          {% for field in form %}
+          <td>
+            {% if field.errors %}
+              <ul class="errorlist text-red-500 text-sm mt-2">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+            {% endif %}
+          </td>
+          {% endfor %}
+          <td></td>
         </tr>
       </tbody>
     </table>
