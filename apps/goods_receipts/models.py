@@ -9,20 +9,20 @@ from apps.suppliers.models import Supplier
 
 
 class GoodsReceipt(models.Model):
-    receipt_number = models.CharField(max_length=10)
+    receipt_number = models.CharField(unique=True, max_length=10)
     supplier = models.ForeignKey(
-        Supplier, on_delete=models.CASCADE, related_name="goods_receipts"
+        Supplier, on_delete=models.PROTECT, related_name="goods_receipts"
     )
     goods_name = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="goods_receipts"
+        Product, on_delete=models.PROTECT, related_name="goods_receipts"
     )
-    quantity = models.IntegerField()
+    quantity = models.PositiveIntegerField()
     method = models.CharField(max_length=20)
     date = models.DateField(default=timezone.now)
     note = models.TextField()
 
     def __repr__(self):
-        return f"GR {self.receipt_number} - {self.supplier.name} - {self.goods_name}"
+        return f"{self.receipt_number} - {self.supplier.name} - {self.goods_name}"
 
     UNFINISH = "unfinish"
     FINISHED = "finished"

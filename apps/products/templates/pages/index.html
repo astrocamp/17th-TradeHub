@@ -22,7 +22,7 @@
                 <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>Haply</option>
                 <option value="never" {% if selected_state == "never" %}selected{% endif %}>Never</option>
               </select>
-
+              <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
                 <svg
                   class="w-5 h-5"
@@ -36,11 +36,11 @@
               </button>
             </form>
             </th>
-            <th><a href="{% url 'products:index' %}?sort=product_id&select={{ selected_state }}&desc={{ is_desc }}">ID{% if order_by == 'product_id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}">Name{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}">Price{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=product_id&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">ID{% if order_by == 'product_id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Name{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Price{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th>Operate</th>
           </tr>
         </thead>
@@ -84,7 +84,35 @@
           {% endfor %}
         </tbody>
       </table>
+      <div class="pagination join flex justify-center">
+        <span class="step-links">
+
+          <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+            ><button class="join-item btn">Page 1</button></a
+          >
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+            ><button class="join-item btn" >«</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">«</button>
+          {% endif %}
+          <button class="join-item btn">
+            Page {{ page_obj.number }}
+          </button>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+            ><button class="join-item btn">»</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">»</button>
+          {% endif %}
+          <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+            ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+          >
+        </span>
+      </div>
     </div>
   </div>
-  {% endblock %}
 </div>
+{% endblock %}
