@@ -1,3 +1,5 @@
+
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -5,8 +7,8 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
-from .models import PurchaseOrder  # Update import
+from .forms.purchase_orders_form import PurchaseOrderForm 
+from .models import PurchaseOrder 
 
 
 def index(request):
@@ -32,13 +34,20 @@ def index(request):
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:index")  # Update redirect URL
+            return redirect("purchase_orders:index")
         else:
-            return render(request, "purchase_orders/new.html", {"form": form})
+            print(form.errors)
+            
+    purchase_orders = PurchaseOrder.objects.order_by("id")
+    paginator = Paginator(purchase_orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
 
-    # purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
-    return render(request, "purchase_orders/index.html", content)  # Update context
-
+    content = {
+        "purchase_orders": page_obj,
+        "page_obj": page_obj,
+    }
+    return render(request, "purchase_orders/index.html", content)
 
 def new(request):
     form = PurchaseOrderForm()  # Update form
@@ -54,12 +63,14 @@ def show(req, id):
         if form.is_valid():
             form.save()
             return redirect("purchase_orders:index")
+          
         else:
             return render(
                 req,
                 "purchase_orders/edit.html",
                 {"purchase_order": purchase_order, "form": form},
             )
+          
     return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
 
 
