@@ -5,6 +5,11 @@ from ..clients.models import Client
 from ..products.models import Product
 
 
+class OrdersManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
+
+
 class Orders(models.Model):
     code = models.CharField(max_length=15)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -14,6 +19,8 @@ class Orders(models.Model):
     client_fk = models.ForeignKey(Client, on_delete=models.PROTECT)
     note = models.TextField(blank=True)
 
-    def soft_delete(self):
+    objects = OrdersManager()
+
+    def delete(self):
         self.deleted_at = timezone.now()
         self.save()

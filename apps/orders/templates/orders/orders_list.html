@@ -35,19 +35,6 @@
           </td>
         </tr>
         {% endfor %}
-        <tr class="hover">
-          <form action="{% url 'orders:list' %}" method="post">
-            {% csrf_token %}
-            <th>ID Auto gen</th>
-            <td>{{form.code}}</td>
-            <td>{{form.client_fk}}</td>
-            <td>{{form.product_fk}}</td>
-            <td>{{form.note}}</td>
-            <td>
-              <button>Create</button>
-            </td>
-          </form>
-        </tr>
       </tbody>
     </table>
   </div>
