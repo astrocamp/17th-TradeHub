@@ -10,6 +10,24 @@ from .models import PurchaseOrder  # Update import
 
 
 def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
+
+    purchase_orders = PurchaseOrder.objects.all()
+
+    if state in PurchaseOrder.AVAILABLE_STATES:
+        purchase_orders = purchase_orders.filter(state=state)
+    order_by_field = order_by if is_desc else "-" + order_by
+    purchase_orders = purchase_orders.order_by(order_by_field)
+
+    content = {
+        "purchase_orders": purchase_orders,
+        "selected_state": state,
+        "order_by": order_by,
+        "is_desc": is_desc,
+    }
+
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
@@ -18,10 +36,8 @@ def index(request):
         else:
             return render(request, "purchase_orders/new.html", {"form": form})
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )  # Update context
+    # purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
+    return render(request, "purchase_orders/index.html", content)  # Update context
 
 
 def new(request):
@@ -37,7 +53,7 @@ def show(req, id):
         form = PurchaseOrderForm(req.POST, instance=purchase_order)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:show", purchase_order.id)
+            return redirect("purchase_orders:index")
         else:
             return render(
                 req,
