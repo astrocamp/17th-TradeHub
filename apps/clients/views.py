@@ -134,28 +134,3 @@ def export_csv(request):
         )
 
     return response
-
-
-def export_excel(request):
-    response = HttpResponse(
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-    )
-    response["Content-Disposition"] = "attachment; filename=clients.xlsx"
-
-    clients = Client.objects.all().values(
-        "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
-    )
-
-    df = pd.DataFrame(clients)
-
-    # 转换时区感知的 datetime 对象为时区无关的 datetime 对象
-    for col in df.select_dtypes(include=["datetime64[ns]"]).columns:
-        df[col] = df[col].apply(
-            lambda x: (
-                x.replace(tzinfo=None) if pd.notna(x) and x.tzinfo is not None else x
-            )
-        )
-    with pd.ExcelWriter(response, engine="openpyxl") as writer:
-        df.to_excel(writer, index=False, sheet_name="Clients")
-
-    return response
