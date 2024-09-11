@@ -46,7 +46,7 @@ def new(request):
         return render(request, "pages/GRnew.html", {"form": form})
     form = GoodsReceiptForm()
     return render(request, "pages/GRnew.html", {"form": form})
-  
+
 
 def show(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)

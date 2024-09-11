@@ -1,4 +1,3 @@
-
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -7,8 +6,8 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import PurchaseOrderForm 
-from .models import PurchaseOrder 
+from .forms.purchase_orders_form import PurchaseOrderForm
+from .models import PurchaseOrder
 
 
 def index(request):
@@ -37,7 +36,7 @@ def index(request):
             return redirect("purchase_orders:index")
         else:
             print(form.errors)
-            
+
     purchase_orders = PurchaseOrder.objects.order_by("id")
     paginator = Paginator(purchase_orders, 5)
     page_number = request.GET.get("page")
@@ -48,6 +47,7 @@ def index(request):
         "page_obj": page_obj,
     }
     return render(request, "purchase_orders/index.html", content)
+
 
 def new(request):
     form = PurchaseOrderForm()  # Update form
@@ -63,14 +63,14 @@ def show(req, id):
         if form.is_valid():
             form.save()
             return redirect("purchase_orders:index")
-          
+
         else:
             return render(
                 req,
                 "purchase_orders/edit.html",
                 {"purchase_order": purchase_order, "form": form},
             )
-          
+
     return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
 
 
