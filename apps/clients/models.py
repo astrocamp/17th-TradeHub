@@ -1,17 +1,15 @@
-import re
-
 from django.db import models
 from django_fsm import FSMField, transition
 
 
 class Client(models.Model):
-    name = models.CharField(max_length=20)
+    name = models.CharField(max_length=30)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     create_at = models.DateTimeField(auto_now_add=True)
     delete_at = models.DateTimeField(auto_now=True)
-    note = models.TextField(blank=True, null=True, max_length=150)
+    note = models.TextField(null=True, max_length=150)
 
     def __str__(self):
         return self.name
@@ -52,19 +50,3 @@ class Client(models.Model):
     @transition(field=state, source="*", target=CLIENT_STATE_NEVER)
     def set_normal(self):
         pass
-
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_phone_number(self.phone_number)
-        super().save(*args, **kwargs)
-
-    def format_phone_number(self, number):
-        # 把所有非數字符號改為空字串(清除)
-        number = re.sub(r"\D", "", number)
-
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
-        if len(number) == 10 and number.startswith("09"):
-            return f"{number[:4]}-{number[4:]}"
-        elif len(number) == 9 and number.startswith("0"):
-            return f"{number[:2]}-{number[2:]}"
-        else:
-            return number

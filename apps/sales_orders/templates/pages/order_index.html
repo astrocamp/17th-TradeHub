@@ -1,12 +1,12 @@
 {% extends "layouts/base.html" %}
 {% block content %} {% load static %}
-<div class="flex justify-end mt-12">
+<div class="flex justify-end mt-20">
   <a href="{% url 'sales_orders:create' %}" class="btn bg-orange-600 text-white"
     >Create</a
   >
 </div>
 <div class="divider text-3xl font-bold">Sales Order</div>
-<div class="flex justify-center mt-5">
+<div class="flex justify-center mt-10">
   <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
       <thead>
@@ -19,7 +19,7 @@
               >
                 <option disabled>Select</option>
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
-                <option value="finish" {% if selected_state == "finish" %}selected{% endif %}>Finish</option>
+                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>Finished</option>
                 <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>Unfinish</option>
               </select>
 

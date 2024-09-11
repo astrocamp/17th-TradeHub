@@ -6,35 +6,16 @@ from .forms.form import SupplierForm
 from .models import Supplier
 
 
-def index(request):
-    state = request.GET.get("select")
-    order_by = request.GET.get("sort", "id")
-    is_desc = request.GET.get("desc", "True") == "False"
-    state_match = {"often", "haply", "never"}
-
-    suppliers = Supplier.objects.all()
-
-    if state in state_match:
-        suppliers = Supplier.objects.filter(state=state)
-    order_by_field = order_by if is_desc else "-" + order_by
-    suppliers = suppliers.order_by(order_by_field)
-
-    content = {
-        "suppliers": suppliers,
-        "selected_state": state,
-        "order_by": order_by,
-        "is_desc": is_desc,
-    }
-
-    if request.method == "POST":
-        form = SupplierForm(request.POST)
+def index(req):
+    if req.method == "POST":
+        form = SupplierForm(req.POST)
         if form.is_valid():
             form.save()
             return redirect("suppliers:index")
         else:
-            return render(request, "suppliers/new.html", {"form": form})
-    # suppliers = Supplier.objects.order_by("id")
-    return render(request, "suppliers/index.html", content)
+            return render(req, "suppliers/new.html", {"form": form})
+    suppliers = Supplier.objects.order_by("id")
+    return render(req, "suppliers/index.html", {"suppliers": suppliers})
 
 
 def new(req):
@@ -51,7 +32,7 @@ def show(req, id):
             return redirect("suppliers:show", supplier.id)
         else:
             return render(
-                req, "suppliers/edit.html", {"supplier": supplier, "form": form}
+                req, "supplier/edit.html", {"supplier": supplier, "form": form}
             )
     return render(req, "suppliers/show.html", {"supplier": supplier})
 

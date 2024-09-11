@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms.inventory_form import RestockForm
@@ -20,16 +19,11 @@ def index(request):
     order_by_field = order_by if is_desc else "-" + order_by
     inventory = inventory.order_by(order_by_field)
 
-    paginator = Paginator(inventory, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-
     content = {
-        "inventory": page_obj,
+        "inventory": inventory,
         "selected_state": state,
         "is_desc": is_desc,
         "order_by": order_by,
-        "page_obj": page_obj,
     }
 
     return render(request, "pages/inventory_index.html", content)
@@ -41,8 +35,6 @@ def create(request):
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
-        else:
-            return render(request, "pages/inventory_create.html", {"form": form})
     form = RestockForm()
     return render(request, "pages/inventory_create.html", {"form": form})
 
@@ -55,8 +47,6 @@ def edit(request, id):
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
-        else:
-            print(form.errors)
     else:
         form = RestockForm(instance=inventory)
 
