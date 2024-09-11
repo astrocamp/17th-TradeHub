@@ -44,12 +44,12 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}">Supplier{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}">Phone{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=contact_person&select={{ selected_state }}&desc={{ is_desc }}">Contact Person{% if order_by == 'contact_person' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}">GUI Number{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}">Address{% if order_by == 'address' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}">Note{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Phone{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=contact_person&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Contact Person{% if order_by == 'contact_person' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">GUI Number{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Address{% if order_by == 'address' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'suppliers:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th>Operate</th>
                 </tr>
             </thead>
@@ -95,6 +95,34 @@
                 {% endfor %}
             </tbody>
         </table>
+        <div class="pagination join flex justify-center">
+          <span class="step-links">
+    
+            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">Page 1</button></a
+            >
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn" >«</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">«</button>
+            {% endif %}
+            <button class="join-item btn">
+              Page {{ page_obj.number }}
+            </button>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">»</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">»</button>
+            {% endif %}
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+            >
+          </span>
+        </div>
     </div>
 </div>
 

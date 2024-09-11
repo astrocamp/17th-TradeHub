@@ -1,6 +1,7 @@
 # Create your views here.
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.core.paginator import Paginator
 
 from .forms.form import SupplierForm
 from .models import Supplier
@@ -19,11 +20,16 @@ def index(request):
     order_by_field = order_by if is_desc else "-" + order_by
     suppliers = suppliers.order_by(order_by_field)
 
+    paginator = Paginator(suppliers, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     content = {
-        "suppliers": suppliers,
+        "suppliers": page_obj,
         "selected_state": state,
         "order_by": order_by,
         "is_desc": is_desc,
+        "page_obj": page_obj,
     }
 
     if request.method == "POST":
