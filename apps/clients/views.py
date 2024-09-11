@@ -46,7 +46,7 @@ def new(request):
             form.save()
             return redirect("clients:index")
         else:
-            print(form.errors)
+            return render(request, "clients/create.html", {"form": form})
     form = ClientForm()
     return render(request, "clients/create.html", {"form": form})
 

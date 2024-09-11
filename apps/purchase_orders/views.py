@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -5,23 +6,42 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import PurchaseOrderForm  # Update import
-from .models import PurchaseOrder  # Update import
+from .forms.purchase_orders_form import PurchaseOrderForm
+from .models import PurchaseOrder
 
 
 def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
+
+    purchase_orders = PurchaseOrder.objects.all()
+
+    if state in PurchaseOrder.AVAILABLE_STATES:
+        purchase_orders = purchase_orders.filter(state=state)
+    order_by_field = order_by if is_desc else "-" + order_by
+    purchase_orders = purchase_orders.order_by(order_by_field)
+    paginator = Paginator(purchase_orders, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    content = {
+        "purchase_orders": page_obj,
+        "selected_state": state,
+        "order_by": order_by,
+        "is_desc": is_desc,
+        "page_obj": page_obj,
+    }
+
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:index")  # Update redirect URL
+            return redirect("purchase_orders:index")
         else:
-            return render(request, "purchase_orders/new.html", {"form": form})
+            print(form.errors)
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")  # Update model
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )  # Update context
+    return render(request, "purchase_orders/index.html", content)
 
 
 def new(request):
@@ -37,13 +57,15 @@ def show(req, id):
         form = PurchaseOrderForm(req.POST, instance=purchase_order)
         if form.is_valid():
             form.save()
-            return redirect("purchase_orders:show", purchase_order.id)
+            return redirect("purchase_orders:index")
+
         else:
             return render(
                 req,
                 "purchase_orders/edit.html",
                 {"purchase_order": purchase_order, "form": form},
             )
+
     return render(req, "purchase_orders/show.html", {"purchase_order": purchase_order})
 
 

@@ -83,6 +83,9 @@ MIDDLEWARE = [
 
 # 未登入時導向的頁面（登入頁面），如果後續用到login_required裝飾器，也會自動導向這個頁面
 LOGIN_URL = "/users/log_in/"
+LOGOUT_URL = "/users/log_out/"
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 if is_dev():
     MIDDLEWARE += [
@@ -102,6 +105,8 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "social_django.context_processors.backends",
+                "social_django.context_processors.login_redirect",
             ],
         },
     },
@@ -172,12 +177,16 @@ INTERNAL_IPS = [
 
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.github.GithubOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
 
 SOCIAL_AUTH_URL_NAMESPACE = "social"
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.getenv("GOOGLE_OAUTH2_KEY")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("GOOGLE_OAUTH2_SECRET")
+
+SOCIAL_AUTH_GITHUB_KEY = os.getenv("GITHUB_KEY")
+SOCIAL_AUTH_GITHUB_SECRET = os.getenv("GITHUB_SECRET")
 
 SOCIAL_AUTH_LOGIN_REDIRECT_URL = "/"
 SOCIAL_AUTH_LOGOUT_REDIRECT_URL = "/"

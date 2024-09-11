@@ -1,35 +1,14 @@
-{% extends "layouts/base.html" %}
-
-{% block content %} {% load static %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 
 <div class="divider text-3xl font-bold mt-32">Add Goods Receipt</div>
 
-
-<form
-    action="{% url 'goods_receipts:GRindex' %}" method="POST"
-    class="text-lg m-4"
+<a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
+  >Back to Goods Receipts List</a
 >
-    {% csrf_token %}
-    {% for field in form %}
-        <div class="flex flex-col gap-4 p-4 border rounded-lg shadow-sm bg-white ">
-            <label for="{{ field.id_for_label }}" class="text-xl font-semibold text-gray-800">{{ field.label }}</label>
-            {% if field.help_text %}
-                <p class="text-gray-600 text-sm mb-2">{{ field.help_text }}</p>
-            {% endif %}
-            <div>
-                {{ field }}
-            </div>
-            {% if field.errors %}
-                <ul class="errorlist text-red-500 text-sm mt-2">
-                    {% for error in field.errors %}
-                        <li class="text-red-500 text-sm mt-2">{{ error }}</li>
-                    {% endfor %}
-                </ul>
-            {% endif %}
-        </div>
-    {% endfor %}
-    <button class="btn btn-primary">Add</button>
-</form>
 
+<form action="{% url 'goods_receipts:index' %}" method="POST">
+  {% csrf_token %} {{form}}
+  <button class="btn btn-primary">Add</button>
+</form>
 
 {% endblock %}
