@@ -5,6 +5,10 @@ from django import forms
 from ..models import Client
 
 
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client

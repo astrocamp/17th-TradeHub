@@ -3,6 +3,11 @@
   <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white"
     >Create</a
   >
+  <a href="{% url 'clients:import_file' %}" class="btn bg-orange-600 text-white"
+    >Import file</a
+  >
+  <a href="{% url 'clients:export_csv' %}" class="btn bg-orange-600 text-white">Export as CSV</a>
+    <a href="{% url 'clients:export_excel' %}" class="btn bg-orange-600 text-white">Export as Excel</a>
 </div>
 <div class="divider text-3xl font-bold">Clients</div>
 <div class="flex justify-center mt-10">
