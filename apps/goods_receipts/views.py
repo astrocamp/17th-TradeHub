@@ -1,21 +1,40 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.goods_receipts.models import GoodsReceipt
 
 from .forms import GoodsReceiptForm
 
-# Create your views here.
-
 
 def index(req):
+    state = req.GET.get("select")
+    order_by = req.GET.get("sort", "id")
+    is_desc = req.GET.get("desc", "True") == "False"
+
+    goods_receipts = GoodsReceipt.objects.all()
+
+    if state in GoodsReceipt.AVAILABLE_STATES:
+        goods_receipts = GoodsReceipt.objects.filter(state=state)
+    order_by_field = order_by if is_desc else "-" + order_by
+    goods_receipts = goods_receipts.order_by(order_by_field)
+    paginator = Paginator(goods_receipts, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
+    content = {
+        "goods_receipts": page_obj,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
+        "page_obj": page_obj,
+    }
     if req.method == "POST":
         form = GoodsReceiptForm(req.POST)
         if form.is_valid():
             form.save()
-            return redirect("goods_receipts:GRindex")
+            return redirect("goods_receipts:index")
         return render(req, "pages/GRnew.html", {"form": form})
-    goods_receipts = GoodsReceipt.objects.order_by("-id")
-    return render(req, "pages/GRindex.html", {"goods_receipts": goods_receipts})
+    return render(req, "pages/GRindex.html", content)
 
 
 def new(request):
@@ -23,26 +42,23 @@ def new(request):
         form = GoodsReceiptForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect("goods_receipts:GRindex")
+            return redirect("goods_receipts:index")
         return render(request, "pages/GRnew.html", {"form": form})
     form = GoodsReceiptForm()
     return render(request, "pages/GRnew.html", {"form": form})
+  
 
-    # form = GoodsReceiptForm
-    # return render(req, "pages/GRnew.html", {"form": form})
-
-
-def show(req, id):
+def show(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
-    if req.method == "POST":
-        form = GoodsReceiptForm(req.POST, instance=goods_receipt)
+    if request.method == "POST":
+        form = GoodsReceiptForm(request.POST, instance=goods_receipt)
         if form.is_valid():
             form.save()
-            return redirect("goods_receipts:GRshow", id=id)
+            return redirect("goods_receipts:index")
         return render(
-            req, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+            request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
         )
-    return render(req, "pages/GRshow.html", {"goods_receipt": goods_receipt})
+    return render(request, "pages/GRshow.html", {"goods_receipt": goods_receipt})
 
 
 def edit(request, id):
@@ -62,7 +78,7 @@ def edit(request, id):
     )
 
 
-def delete(req, id):
+def delete(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     goods_receipt.delete()
-    return redirect("goods_receipts:GRindex")
+    return redirect("goods_receipts:index")
