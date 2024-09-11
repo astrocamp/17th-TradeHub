@@ -18,7 +18,7 @@ def index(req):
     order_by_field = order_by if is_desc else "-" + order_by
     goods_receipts = goods_receipts.order_by(order_by_field)
     paginator = Paginator(goods_receipts, 5)
-    page_number = request.GET.get("page")
+    page_number = req.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     content = {
@@ -46,7 +46,7 @@ def new(request):
         return render(request, "pages/GRnew.html", {"form": form})
     form = GoodsReceiptForm()
     return render(request, "pages/GRnew.html", {"form": form})
-  
+
 
 def show(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
@@ -67,7 +67,7 @@ def edit(request, id):
         form = GoodsReceiptForm(request.POST, instance=goods_receipt)
         if form.is_valid():
             form.save()
-            return redirect("goods_receipts:GRindex")
+            return redirect("goods_receipts:index")
         return render(
             request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
         )

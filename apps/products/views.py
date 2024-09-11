@@ -1,3 +1,4 @@
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms.product_form import ProductForm
@@ -17,11 +18,16 @@ def index(request):
     order_by_field = f"{'-' if is_desc else ''}{order_by}"
     products = products.order_by(order_by_field)
 
+    paginator = Paginator(products, 5)
+    page_number = request.GET.get("page")
+    page_obj = paginator.get_page(page_number)
+
     content = {
-        "products": products,
+        "products": page_obj,
         "selected_state": state,
         "order_by": order_by,
         "is_desc": is_desc,
+        "page_obj": page_obj,
     }
 
     return render(request, "pages/index.html", content)
@@ -38,27 +44,16 @@ def new(request):
     return render(request, "pages/new.html", {"form": form})
 
 
-# def show(request, id):
-#     product = get_object_or_404(Product, id=id)
-#     if request.method == "POST":
-#         form = ProductForm(request.POST, instance=product)
-#         if form.is_valid():
-#             form.save()
-#             return redirect("products:show", id=id)
-#         return render(request, "pages/edit.html", {"product": product, "form": form})
-#     return render(request, "pages/show.html", {"product": product})
-
-
 def edit(request, id):
+    product = get_object_or_404(Product, id=id)
     if request.method == "POST":
-        product = get_object_or_404(Product, id=id)
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
             return redirect("products:index")
-        return render(request, "pages/edit.html", {"product": product, "form": form})
-    product = get_object_or_404(Product, id=id)
-    form = ProductForm(instance=product)
+
+    else:
+        form = ProductForm(instance=product)
     return render(request, "pages/edit.html", {"product": product, "form": form})
 
 

@@ -1,4 +1,6 @@
-{% extends "layouts/base.html" %} {% block content %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<div class="divider text-3xl font-bold mt-32">Add Goods Receipt</div>
 
 <a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
   >Back to Goods Receipts List</a
