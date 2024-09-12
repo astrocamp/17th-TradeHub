@@ -12,7 +12,7 @@ class OrdersManager(models.Manager):
 
 
 class Orders(models.Model):
-    code = models.CharField(max_length=15)
+    code = models.CharField(max_length=15, unique=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT)
     product = models.ForeignKey(Product, on_delete=models.PROTECT)
     note = models.TextField(blank=True, null=True)

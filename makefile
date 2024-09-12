@@ -30,3 +30,6 @@ products:
 
 clients:
 	python manage.py loaddata fake_data/clients_data.json
+
+inventory:
+	python manage.py loaddata fake_data/inventory_data.json

@@ -46,7 +46,7 @@ def index(request):
         else:
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
-            )
+
 
     purchase_orders = PurchaseOrder.objects.order_by("id")
     return render(

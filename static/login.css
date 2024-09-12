@@ -80,7 +80,7 @@ input::placeholder{
     display: flex;
     align-items: center;
     gap: 10px;
-    margin: 8px 0;
+    /* margin: 4px 0; */
 }
 
 .log_in-form-item:nth-child(3){

@@ -15,7 +15,7 @@ class PurchaseOrder(models.Model):
     )
     supplier_tel = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
-    supplier_email = models.EmailField(unique=True)
+    supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     total_amount = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)

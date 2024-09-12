@@ -1,9 +1,13 @@
 {% extends "layouts/base.html" %}
 
 {% block content %}
-<div class="flex flex-col mt-10 bg-gray-300 p-4 rounded-lg shadow-md mx-auto w-1/2">
+<section class="max-w-sm border-2 border-double border-gray-400 shadow-sm card mt-10 mx-auto p-5">
     <div class="flex justify-between items-center">
-        <h2 class="text-2xl font-bolder">{{user.first_name}}</h2>
+        {% if user.first_name %}
+            <h2 class="text-2xl font-bolder">{{ user.first_name }}</h2>
+        {% else %}
+            <h2 class="text-2xl font-bolder">{{ user.username }}</h2>
+        {% endif %}
         {% if user == request.user %}
             <div class="flex justify-end">
                 <a href="{% url 'users:edit_profile' user.id %}" class="text-blue-500">Edit</a>
@@ -13,29 +17,29 @@
     <div class="flex flex-col gap-2 mt-4">
         <div class="text-xl font-bold">Basic Information</div>
 
-        <div class="flex items-center">
-            <p class="text-gray-500 w-1/3">{{ form.first_name.label }}:</p>
-            <p class="text-gray-500 w-2/3">{{ user.first_name }} {{ user.last_name }}</p>
+        <div class="flex items-center mb-2 mt-1">
+            <p class="w-1/3 font-semibold">{{ form.first_name.label }}:</p>
+            <p class="text-gray-700 w-2/3">{{ user.first_name }} {{ user.last_name }}</p>
+        </div>
+
+        <div class="flex items-center mb-2">
+            <p class="w-1/3 font-semibold">{{ form.department.label }}:</p>
+            <p class="text-gray-700 w-2/3">{{ user.department }}</p>
+        </div>
+
+        <div class="flex items-center mb-2">
+            <p class="w-1/3 font-semibold">{{ form.position.label }}:</p>
+            <p class="text-gray-700 w-2/3">{{ user.position }}</p>
         </div>
 
         <div class="flex items-center">
-            <p class="text-gray-500 w-1/3">{{ form.department.label }}:</p>
-            <p class="text-gray-500 w-2/3">{{ user.department }}</p>
+            <p class="w-1/3 font-semibold">{{ form.email.label }}:</p>
+            <p class="text-gray-700 w-2/3">{{ user.email }}</p>
         </div>
 
         <div class="flex items-center">
-            <p class="text-gray-500 w-1/3">{{ form.title.label }}:</p>
-            <p class="text-gray-500 w-2/3">{{ user.title }}</p>
-        </div>
-
-        <div class="flex items-center">
-            <p class="text-gray-500 w-1/3">{{ form.email.label }}:</p>
-            <p class="text-gray-500 w-2/3">{{ user.email }}</p>
-        </div>
-
-        <div class="flex items-center">
-            <p class="text-gray-500 w-1/3">{{ form.hire_date.label }}:</p>
-            <p class="text-gray-500 w-2/3">{{ user.hire_date|date:"Y-m-d" }}</p>
+            <p class="w-1/3 font-semibold">{{ form.hire_date.label }}:</p>
+            <p class="text-gray-700 w-2/3">{{ user.hire_date|date:"Y-m-d" }}</p>
         </div>
     </div>
 
@@ -44,30 +48,30 @@
             <div class="text-xl font-bold">Personal Information</div>
 
             <div class="flex items-center">
-                <p class="text-gray-500 w-1/3">{{ form.username.label }}:</p>
-                <p class="text-gray-500 w-2/3">{{ user.username }}</p>
+                <p class="w-1/3 font-semibold">{{ form.username.label }}:</p>
+                <p class="text-gray-700 w-2/3">{{ user.username }}</p>
             </div>
 
             <div class="flex items-center">
-                <p class="text-gray-500 w-1/3">{{ form.birthday.label }}:</p>
-                <p class="text-gray-500 w-2/3">{{ user.birthday|date:"Y-m-d" }}</p>
+                <p class="w-1/3 font-semibold">{{ form.birthday.label }}:</p>
+                <p class="text-gray-700 w-2/3">{{ user.birthday|date:"Y-m-d" }}</p>
             </div>
 
             <div class="flex items-center">
-                <p class="text-gray-500 w-1/3">{{ form.phone.label }}:</p>
-                <p class="text-gray-500 w-2/3">{{ user.phone }}</p>
+                <p class="w-1/3 font-semibold">{{ form.phone.label }}:</p>
+                <p class="text-gray-700 w-2/3">{{ user.phone }}</p>
             </div>
 
             <div class="flex items-center">
-                <p class="text-gray-500 w-1/3">{{ form.address.label }}:</p>
-                <p class="text-gray-500 w-2/3">{{ user.address }}</p>
+                <p class="w-1/3 font-semibold">{{ form.address.label }}:</p>
+                <p class="text-gray-700 w-2/3">{{ user.address }}</p>
             </div>
 
             <div class="flex items-center">
-                <p class="text-gray-500 w-1/3">{{ form.note.label }}:</p>
-                <p class="text-gray-500 w-2/3">{{ user.note }}</p>
+                <p class="w-1/3 font-semibold">{{ form.note.label }}:</p>
+                <p class="text-gray-700 w-2/3">{{ user.note }}</p>
             </div>
         {% endif %}
     </div>
-</div>
+</section>
 {% endblock %}
