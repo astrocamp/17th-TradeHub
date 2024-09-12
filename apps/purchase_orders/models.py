@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=10)
+    order_number = models.CharField(max_length=11)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -31,24 +31,6 @@ class PurchaseOrder(models.Model):
     def delete(self):
         self.deleted_at = timezone.now()
         self.save()
-
-    def save(self, *args, **kwargs):
-        if not self.order_number:
-            today = timezone.localtime().strftime("%Y%m%d")
-            last_order = (
-                PurchaseOrder.objects.filter(order_number__startswith=today)
-                .order_by("order_number")
-                .last()
-            )
-            if last_order:
-                last_order_number = int(last_order.order_number[-3:])
-                new_order_number = f"{last_order_number + 1:03d}"
-            else:
-                new_order_number = "001"
-            self.order_number = f"{today}{new_order_number}"
-
-        self.supplier_tel = self.format_supplier_tel(self.supplier_tel)
-        super().save(*args, **kwargs)
 
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"

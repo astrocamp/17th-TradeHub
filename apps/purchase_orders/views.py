@@ -60,7 +60,7 @@ from .models import PurchaseOrder
 
 
 def new(request):
-    today = timezone.now().strftime("%Y%m%d")
+    today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
         PurchaseOrder.objects.filter(order_number__startswith=today)
         .order_by("-order_number")
@@ -71,12 +71,13 @@ def new(request):
         new_order_number = f"{today}{last_order_number + 1:03d}"
     else:
         new_order_number = f"{today}001"
-    form = PurchaseOrderForm()
+
+    form = PurchaseOrderForm(initial={"order_number": new_order_number})
     formset = ProductItemFormSet(instance=form.instance)
     return render(
         request,
         "purchase_orders/new.html",
-        {"form": form, "formset": formset, "new_order_number": new_order_number},
+        {"form": form, "formset": formset},
     )
 
 

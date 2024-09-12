@@ -10,6 +10,7 @@ class PurchaseOrderForm(forms.ModelForm):
     class Meta:
         model = PurchaseOrder
         fields = [
+            "order_number",
             "supplier",
             "supplier_tel",
             "contact_person",
@@ -18,7 +19,6 @@ class PurchaseOrderForm(forms.ModelForm):
             "total_amount",
         ]
         widgets = {
-            "order_number": forms.TextInput(attrs={"readonly": "readonly"}),
             "supplier": forms.Select(attrs={"class": "w-full"}),
             "supplier_tel": forms.TextInput(attrs={"class": "w-full"}),
             "contact_person": forms.TextInput(attrs={"class": "w-full"}),
