@@ -21,29 +21,29 @@
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
-        <li>Client</li>
+        <li>Clients</li>
         <ul class="p-2">
           <li><a href="{% url 'clients:index' %}">Overview</a></li>
           <li><a href="{% url 'orders:index' %}">Orders</a></li>
         </ul>
-        <li>Product</li>
+        <li>Products</li>
         <ul class="p-2">
           <li><a href="{% url 'products:index' %}">Overview</a></li>
         </ul>
-        <li>Supplier</li>
+        <li>Suppliers</li>
         <ul class="p-2">
           <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
           <li>
-            <a href="{% url 'purchase_orders:index' %}">Purchase Order</a>
+            <a href="{% url 'purchase_orders:index' %}">Purchase Orders</a>
           </li>
         </ul>
         <li>Inventory</li>
         <ul class="p-2">
           <li><a href="{% url 'inventory:index' %}">Overview</a></li>
           <li>
-            <a href="{% url 'goods_receipts:index' %}">Warehouse Receipt</a>
+            <a href="{% url 'goods_receipts:index' %}">Goods Receipts</a>
           </li>
-          <li><a href="{% url 'sales_orders:index' %}">Outbound Order</a></li>
+          <li><a href="{% url 'sales_orders:index' %}">Sales Orders</a></li>
         </ul>
       </ul>
     </div>
@@ -53,7 +53,7 @@
     <ul class="menu menu-horizontal gap-4">
       <li>
         <details>
-          <summary>Client</summary>
+          <summary>Clients</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'clients:index' %}">Overview</a></li>
             <li><a href="{% url 'orders:index' %}">Orders</a></li>
@@ -62,7 +62,7 @@
       </li>
       <li>
         <details>
-          <summary>Product</summary>
+          <summary>Products</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'products:index' %}">Overview</a></li>
           </ul>
@@ -70,11 +70,11 @@
       </li>
       <li>
         <details>
-          <summary>Supplier</summary>
+          <summary>Suppliers</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
             <li>
-              <a href="{% url 'purchase_orders:index' %}">Purchase Order</a>
+              <a href="{% url 'purchase_orders:index' %}">Purchase Orders</a>
             </li>
           </ul>
         </details>
@@ -85,37 +85,37 @@
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'inventory:index' %}">Overview</a></li>
             <li>
-              <a href="{% url 'goods_receipts:index' %}">Warehouse Receipt</a>
+              <a href="{% url 'goods_receipts:index' %}">Goods Receipts</a>
             </li>
-            <li><a href="{% url 'sales_orders:index' %}">Outbound Order</a></li>
+            <li><a href="{% url 'sales_orders:index' %}">Sales Orders</a></li>
           </ul>
         </details>
       </li>
     </ul>
   </div>
   <!-- user status -->
-  <div class="navbar-end gap-2">
-    <div class="flex gap-2 w-[160px]">
+  <div class="navbar-end">
+    <div class="flex gap-6 w-[180px]">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[60px] flex justify-center"
+        class="w-[85px] flex justify-center"
         >{{ request.user.username }}</a
       >
       <form
         action="{% url 'users:log_out' %}"
         method="post"
-        class="w-[60px] flex justify-center"
+        class="w-[85px] flex justify-center"
       >
         {% csrf_token %}
         <button type="submit">Log Out</button>
       </form>
       {% else %}
-      <a href="{% url 'users:register' %}" class="w-[60px] flex justify-center"
+      <a href="{% url 'users:register' %}" class="w-[85px] flex justify-center"
         >Sign Up</a
       >
-      <a href="{% url 'users:log_in' %}" class="w-[60px] flex justify-center"
+      <a href="{% url 'users:log_in' %}" class="w-[85px] flex justify-center"
         >Log In</a
       >
       {% endif %}

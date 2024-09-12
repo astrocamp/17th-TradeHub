@@ -39,7 +39,11 @@ def index(request):
             form.save()
             return redirect("purchase_orders:index")
         else:
-            print(form.errors)
+            return render(
+                request,
+                "purchase_orders/new.html",
+                {"form": form},
+            )
 
     return render(request, "purchase_orders/index.html", content)
 
