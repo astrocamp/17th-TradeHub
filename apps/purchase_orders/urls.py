@@ -12,9 +12,4 @@ urlpatterns = [
     path("edit/<int:id>", views.edit, name="edit"),
     path("delete/<int:id>", views.delete, name="delete"),
     path("load-supplier-info/", views.load_supplier_info, name="load_supplier_info"),
-    path(
-        "generate-order-number/",
-        views.generate_order_number,
-        name="generate_order_number",
-    ),
 ]

@@ -5,7 +5,8 @@
         <div class="flex justify-between items-center p-4">
             <h2 class="text-2xl font-bold text-gray-800">Add New Purchase Order</h2>
             <div class="text-gray-700">
-                <strong>Order Number: </strong><span id="order-number"></span>
+                <strong>Order Number: {{ new_order_number }}</strong>
+                <input type="hidden" name="order_number" value="{{ new_order_number }}">
             </div>
         </div>
 
@@ -78,7 +79,6 @@
             contactPersonField: "{{ form.contact_person.id_for_label }}",
             supplierEmailField: "{{ form.supplier_email.id_for_label }}",
             loadSupplierInfoUrl: "{% url 'purchase_orders:load_supplier_info' %}",
-            generateOrderNumberUrl: "{% url 'purchase_orders:generate_order_number' %}"
         };
     </script>
     <script src="{% static 'purchase_orders/new.js' %}" defer></script>

@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=10, unique=True)
+    order_number = models.CharField(max_length=10)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )

@@ -54,11 +54,29 @@ def index(request):
     )
 
 
+from django.utils import timezone
+
+from .models import PurchaseOrder
+
+
 def new(request):
+    today = timezone.now().strftime("%Y%m%d")
+    last_order = (
+        PurchaseOrder.objects.filter(order_number__startswith=today)
+        .order_by("-order_number")
+        .first()
+    )
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{today}{last_order_number + 1:03d}"
+    else:
+        new_order_number = f"{today}001"
     form = PurchaseOrderForm()
     formset = ProductItemFormSet(instance=form.instance)
     return render(
-        request, "purchase_orders/new.html", {"form": form, "formset": formset}
+        request,
+        "purchase_orders/new.html",
+        {"form": form, "formset": formset, "new_order_number": new_order_number},
     )
 
 
@@ -131,21 +149,3 @@ def load_supplier_info(request):
         "supplier_email": supplier.email,
     }
     return JsonResponse(data)
-
-
-def generate_order_number(request):
-    today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        PurchaseOrder.objects.filter(order_number__startswith=today)
-        .order_by("order_number")
-        .last()
-    )
-
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{last_order_number + 1:03d}"
-    else:
-        new_order_number = "001"
-
-    order_number = f"{today}{new_order_number}"
-    return JsonResponse({"order_number": order_number})
