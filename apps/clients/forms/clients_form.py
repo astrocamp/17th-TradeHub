@@ -5,6 +5,10 @@ from django import forms
 from ..models import Client
 
 
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class ClientForm(forms.ModelForm):
     class Meta:
         model = Client
@@ -18,31 +22,50 @@ class ClientForm(forms.ModelForm):
 
         widgets = {
             "name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Client Name"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入客戶的全名",
+                }
             ),
             "phone_number": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Phone Number"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入客戶的電話號碼",
+                }
             ),
             "address": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Address"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入客戶的地址",
+                }
             ),
             "email": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Email Address"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入客戶的電子信箱",
+                }
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control",
-                    "placeholder": "Any additional notes",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100 text-sm",
+                    "placeholder": "如有其他備註事項，請填入",
                     "rows": 3,
                 }
             ),
         }
+        labels = {
+            "name": "客戶全名",
+            "phone_number": "電話號碼",
+            "address": "地址",
+            "email": "電子信箱",
+            "note": "備註",
+        }
         help_texts = {
-            "name": "Enter full name of client.",
-            "phone_number": "Enter phone number of client (e.g., 0912345678 or 02-28345678).",
-            "address": "Enter address of client.",
-            "email": "Enter email address of client.",
-            "note": "Enter any additional notes of client.",
+            "name": "例: 五倍貿易",
+            "phone_number": "例: 行動電話:0912345678 / 市話:02-28345678",
+            "address": "例: 台北市中正區衡陽路123號",
+            "email": "例: 5xcampus@gmail.com",
+            "note": "例: 備用電話 / 備註事項",
         }
 
     def __init__(self, *args, **kwargs):
@@ -58,20 +81,22 @@ class ClientForm(forms.ModelForm):
         email = cleaned_data.get("email")
 
         if not name:
-            self.add_error("name", "Client name is required.")
+            self.add_error("name", "請填入客戶全名")
 
         if phone_number == "":
-            self.add_error("phone_number", "Phone number is required.")
+            self.add_error("phone_number", "請填入電話號碼")
         elif not re.match(
             r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
             phone_number,
         ):
-            self.add_error("phone_number", "Invalid phone number.")
+            self.add_error("phone_number", "請填入正確的電話號碼")
 
         if email == "":
-            self.add_error("email", "Email address is required.")
+            self.add_error("email", "請填入電子信箱")
+        elif Client.objects.filter(email=email).exclude(id=self.instance.id).exists():
+            self.add_error("email", "此電子信箱已被使用")
 
         if not address:
-            self.add_error("address", "Address is required.")
+            self.add_error("address", "請填入地址")
 
         return cleaned_data

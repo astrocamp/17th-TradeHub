@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from pytz import tzinfo
 
-from .forms.form import ClientForm, FileUploadForm
+from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
 
 
