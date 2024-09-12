@@ -3,338 +3,208 @@
     "model": "clients.client",
     "pk": 1,
     "fields": {
-      "name": "Alice Johnson",
-      "phone_number": "+1-555-1234",
-      "address": "123 Maple Street, Springfield, IL",
-      "email": "alice.johnson@example.com",
+      "name": "陳小華",
+      "phone_number": "0912-123456",
+      "address": "台北市信義區松仁路123號",
+      "email": "xiaohua.chen@example.com",
       "create_at": "2024-09-01T12:34:56Z",
       "delete_at": "2024-09-01T12:34:56Z",
-      "note": "Regular customer"
+      "note": "經理電話: 0912-654321"
     }
   },
   {
     "model": "clients.client",
     "pk": 2,
     "fields": {
-      "name": "Bob Smith",
-      "phone_number": "+1-555-5678",
-      "address": "456 Oak Avenue, Springfield, IL",
-      "email": "bob.smith@example.com",
+      "name": "李大明",
+      "phone_number": "0912-567890",
+      "address": "台北市中正區仁愛路456號",
+      "email": "daming.li@example.com",
       "create_at": "2024-09-02T14:23:45Z",
       "delete_at": "2024-09-02T14:23:45Z",
-      "note": "Frequent buyer"
+      "note": "備用電話: 0912-987654"
     }
   },
   {
     "model": "clients.client",
     "pk": 3,
     "fields": {
-      "name": "Carol Davis",
-      "phone_number": "+1-555-8765",
-      "address": "789 Pine Road, Springfield, IL",
-      "email": "carol.davis@example.com",
+      "name": "林美麗",
+      "phone_number": "0912-876543",
+      "address": "台北市大安區和平東路789號",
+      "email": "meili.lin@example.com",
       "create_at": "2024-09-03T09:15:30Z",
       "delete_at": "2024-09-03T09:15:30Z",
-      "note": "Interested in promotions"
+      "note": "一次性大量購買"
     }
   },
   {
     "model": "clients.client",
     "pk": 4,
     "fields": {
-      "name": "David Wilson",
-      "phone_number": "+1-555-4321",
-      "address": "101 Birch Street, Springfield, IL",
-      "email": "david.wilson@example.com",
+      "name": "王志明",
+      "phone_number": "0912-432109",
+      "address": "台北市士林區中正路101號",
+      "email": "zhiming.wang@example.com",
       "create_at": "2024-09-04T11:05:22Z",
       "delete_at": "2024-09-04T11:05:22Z",
-      "note": "VIP customer"
+      "note": ""
     }
   },
   {
     "model": "clients.client",
     "pk": 5,
     "fields": {
-      "name": "Eva Martinez",
-      "phone_number": "+1-555-6789",
-      "address": "202 Cedar Lane, Springfield, IL",
-      "email": "eva.martinez@example.com",
+      "name": "黃小燕",
+      "phone_number": "0912-678901",
+      "address": "台北市文山區興隆路202號",
+      "email": "xiaoyan.huang@example.com",
       "create_at": "2024-09-05T13:20:10Z",
       "delete_at": "2024-09-05T13:20:10Z",
-      "note": "Regular customer"
+      "note": "需要快速配送"
     }
   },
   {
     "model": "clients.client",
     "pk": 6,
     "fields": {
-      "name": "Frank Garcia",
-      "phone_number": "+1-555-3456",
-      "address": "303 Elm Street, Springfield, IL",
-      "email": "frank.garcia@example.com",
+      "name": "張偉",
+      "phone_number": "0912-345678",
+      "address": "台北市南港區經貿二路303號",
+      "email": "wei.zhang@example.com",
       "create_at": "2024-09-06T15:35:25Z",
       "delete_at": "2024-09-06T15:35:25Z",
-      "note": "Loyal customer"
+      "note": "備用電話: 0912-765432"
     }
   },
   {
     "model": "clients.client",
     "pk": 7,
     "fields": {
-      "name": "Grace Lee",
-      "phone_number": "+1-555-7890",
-      "address": "404 Willow Drive, Springfield, IL",
-      "email": "grace.lee@example.com",
+      "name": "蔡依林",
+      "phone_number": "0912-789012",
+      "address": "台北市北投區中央北路404號",
+      "email": "yilin.tsai@example.com",
       "create_at": "2024-09-07T17:45:30Z",
       "delete_at": "2024-09-07T17:45:30Z",
-      "note": "New customer"
+      "note": "經理電話: 0912-890123"
     }
   },
   {
     "model": "clients.client",
     "pk": 8,
     "fields": {
-      "name": "Henry Rodriguez",
-      "phone_number": "+1-555-2345",
-      "address": "505 Maple Street, Springfield, IL",
-      "email": "henry.rodriguez@example.com",
+      "name": "許志豪",
+      "phone_number": "0912-234567",
+      "address": "台北市信義區光復南路505號",
+      "email": "zhihao.hsu@example.com",
       "create_at": "2024-09-08T19:55:40Z",
       "delete_at": "2024-09-08T19:55:40Z",
-      "note": "Frequent buyer"
+      "note": ""
     }
   },
   {
     "model": "clients.client",
     "pk": 9,
     "fields": {
-      "name": "Ivy Walker",
-      "phone_number": "+1-555-4567",
-      "address": "606 Oak Avenue, Springfield, IL",
-      "email": "ivy.walker@example.com",
+      "name": "鄭雅婷",
+      "phone_number": "0912-456789",
+      "address": "台北市中山區建國北路606號",
+      "email": "yating.cheng@example.com",
       "create_at": "2024-09-09T21:05:50Z",
       "delete_at": "2024-09-09T21:05:50Z",
-      "note": "Interested in promotions"
+      "note": ""
     }
   },
   {
     "model": "clients.client",
     "pk": 10,
     "fields": {
-      "name": "Jack Young",
-      "phone_number": "+1-555-6789",
-      "address": "707 Pine Road, Springfield, IL",
-      "email": "jack.young@example.com",
+      "name": "賴冠霖",
+      "phone_number": "0912-678901",
+      "address": "台北市大同區民生西路707號",
+      "email": "guanlin.lai@example.com",
       "create_at": "2024-09-10T22:15:00Z",
       "delete_at": "2024-09-10T22:15:00Z",
-      "note": "VIP customer"
+      "note": "備用電話: 0912-890123; 偏好：高端產品"
     }
   },
   {
     "model": "clients.client",
     "pk": 11,
     "fields": {
-      "name": "Kathy Hall",
-      "phone_number": "+1-555-8901",
-      "address": "808 Birch Street, Springfield, IL",
-      "email": "kathy.hall@example.com",
+      "name": "邱小蓮",
+      "phone_number": "0912-890123",
+      "address": "台北市松山區八德路808號",
+      "email": "xiaolian.qiu@example.com",
       "create_at": "2024-09-11T23:25:10Z",
       "delete_at": "2024-09-11T23:25:10Z",
-      "note": "Regular customer"
+      "note": "偏好：環保產品"
     }
   },
   {
     "model": "clients.client",
     "pk": 12,
     "fields": {
-      "name": "Leo Adams",
-      "phone_number": "+1-555-0123",
-      "address": "909 Cedar Lane, Springfield, IL",
-      "email": "leo.adams@example.com",
+      "name": "陳冠宇",
+      "phone_number": "0912-012345",
+      "address": "台北市信義區市府路909號",
+      "email": "guanyu.chen@example.com",
       "create_at": "2024-09-12T00:35:20Z",
       "delete_at": "2024-09-12T00:35:20Z",
-      "note": "Frequent buyer"
+      "note": "備用電話: 0912-234567; 偏好：促銷活動"
     }
   },
   {
     "model": "clients.client",
     "pk": 13,
     "fields": {
-      "name": "Mia Scott",
-      "phone_number": "+1-555-1234",
-      "address": "1010 Elm Street, Springfield, IL",
-      "email": "mia.scott@example.com",
+      "name": "謝明杰",
+      "phone_number": "0912-123456",
+      "address": "台北市萬華區西園路1010號",
+      "email": "mingjie.hsieh@example.com",
       "create_at": "2024-09-13T01:45:30Z",
       "delete_at": "2024-09-13T01:45:30Z",
-      "note": "Loyal customer"
+      "note": "經理電話: 0912-345678; 偏好：經常購買"
     }
   },
   {
     "model": "clients.client",
     "pk": 14,
     "fields": {
-      "name": "Nick Nelson",
-      "phone_number": "+1-555-2345",
-      "address": "1111 Willow Drive, Springfield, IL",
-      "email": "nick.nelson@example.com",
+      "name": "朱志偉",
+      "phone_number": "0912-234567",
+      "address": "台北市中正區和平西路1111號",
+      "email": "zhiwei.chu@example.com",
       "create_at": "2024-09-14T02:55:40Z",
       "delete_at": "2024-09-14T02:55:40Z",
-      "note": "New customer"
+      "note": "備用電話: 0912-678901; 偏好：產品試用"
     }
   },
   {
     "model": "clients.client",
     "pk": 15,
     "fields": {
-      "name": "Olivia Murphy",
-      "phone_number": "+1-555-3456",
-      "address": "1212 Maple Street, Springfield, IL",
-      "email": "olivia.murphy@example.com",
+      "name": "林怡君",
+      "phone_number": "0912-345678",
+      "address": "台北市南港區經貿路1212號",
+      "email": "yijun.lin@example.com",
       "create_at": "2024-09-15T04:05:50Z",
       "delete_at": "2024-09-15T04:05:50Z",
-      "note": "Interested in promotions"
+      "note": "組長電話: 0912-890123"
     }
   },
   {
     "model": "clients.client",
     "pk": 16,
     "fields": {
-      "name": "Paul Perez",
-      "phone_number": "+1-555-4567",
-      "address": "1313 Oak Avenue, Springfield, IL",
-      "email": "paul.perez@example.com",
+      "name": "林子豪",
+      "phone_number": "0912-456789",
+      "address": "台北市士林區中山北路1313號",
+      "email": "zihao.lin@example.com",
       "create_at": "2024-09-16T05:15:00Z",
       "delete_at": "2024-09-16T05:15:00Z",
-      "note": "VIP customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 17,
-    "fields": {
-      "name": "Quinn Carter",
-      "phone_number": "+1-555-5678",
-      "address": "1414 Pine Road, Springfield, IL",
-      "email": "quinn.carter@example.com",
-      "create_at": "2024-09-17T06:25:10Z",
-      "delete_at": "2024-09-17T06:25:10Z",
-      "note": "Regular customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 18,
-    "fields": {
-      "name": "Rachel Turner",
-      "phone_number": "+1-555-6789",
-      "address": "1515 Birch Street, Springfield, IL",
-      "email": "rachel.turner@example.com",
-      "create_at": "2024-09-18T07:35:20Z",
-      "delete_at": "2024-09-18T07:35:20Z",
-      "note": "Frequent buyer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 19,
-    "fields": {
-      "name": "Steve Parker",
-      "phone_number": "+1-555-7890",
-      "address": "1616 Cedar Lane, Springfield, IL",
-      "email": "steve.parker@example.com",
-      "create_at": "2024-09-19T08:45:30Z",
-      "delete_at": "2024-09-19T08:45:30Z",
-      "note": "Loyal customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 20,
-    "fields": {
-      "name": "Tina Evans",
-      "phone_number": "+1-555-8901",
-      "address": "1717 Elm Street, Springfield, IL",
-      "email": "tina.evans@example.com",
-      "create_at": "2024-09-20T09:55:40Z",
-      "delete_at": "2024-09-20T09:55:40Z",
-      "note": "New customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 21,
-    "fields": {
-      "name": "Ulysses Ramirez",
-      "phone_number": "+1-555-9012",
-      "address": "1818 Willow Drive, Springfield, IL",
-      "email": "ulysses.ramirez@example.com",
-      "create_at": "2024-09-21T11:05:50Z",
-      "delete_at": "2024-09-21T11:05:50Z",
-      "note": "Interested in promotions"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 22,
-    "fields": {
-      "name": "Vera Collins",
-      "phone_number": "+1-555-0123",
-      "address": "1919 Maple Street, Springfield, IL",
-      "email": "vera.collins@example.com",
-      "create_at": "2024-09-22T12:15:00Z",
-      "delete_at": "2024-09-22T12:15:00Z",
-      "note": "VIP customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 23,
-    "fields": {
-      "name": "Willie Johnson",
-      "phone_number": "+1-555-1234",
-      "address": "2020 Oak Avenue, Springfield, IL",
-      "email": "willie.johnson@example.com",
-      "create_at": "2024-09-23T13:25:10Z",
-      "delete_at": "2024-09-23T13:25:10Z",
-      "note": "Regular customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 24,
-    "fields": {
-      "name": "Xena Martinez",
-      "phone_number": "+1-555-2345",
-      "address": "2121 Pine Road, Springfield, IL",
-      "email": "xena.martinez@example.com",
-      "create_at": "2024-09-24T14:35:20Z",
-      "delete_at": "2024-09-24T14:35:20Z",
-      "note": "Frequent buyer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 25,
-    "fields": {
-      "name": "Yvonne Roberts",
-      "phone_number": "+1-555-3456",
-      "address": "2222 Birch Street, Springfield, IL",
-      "email": "yvonne.roberts@example.com",
-      "create_at": "2024-09-25T15:45:30Z",
-      "delete_at": "2024-09-25T15:45:30Z",
-      "note": "Loyal customer"
-    }
-  },
-  {
-    "model": "clients.client",
-    "pk": 26,
-    "fields": {
-      "name": "Zachary Evans",
-      "phone_number": "+1-555-4567",
-      "address": "2323 Cedar Lane, Springfield, IL",
-      "email": "zachary.evans@example.com",
-      "create_at": "2024-09-26T16:55:40Z",
-      "delete_at": "2024-09-26T16:55:40Z",
-      "note": "New customer"
+      "note": "備用電話: 0912-321098; 偏好：高端服務"
     }
   }
 ]
