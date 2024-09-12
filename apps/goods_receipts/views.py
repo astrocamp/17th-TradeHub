@@ -33,7 +33,7 @@ def index(req):
         if form.is_valid():
             form.save()
             return redirect("goods_receipts:index")
-        return render(req, "pages/GRnew.html", {"form": form})
+
     return render(req, "pages/GRindex.html", content)
 
 
@@ -43,7 +43,8 @@ def new(request):
         if form.is_valid():
             form.save()
             return redirect("goods_receipts:index")
-        return render(request, "pages/GRnew.html", {"form": form})
+        else:
+            return render(request, "pages/GRnew.html", {"form": form})
     form = GoodsReceiptForm()
     return render(request, "pages/GRnew.html", {"form": form})
 
