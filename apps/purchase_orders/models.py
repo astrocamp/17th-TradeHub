@@ -7,6 +7,11 @@ from django_fsm import FSMField, transition
 from apps.suppliers.models import Supplier
 
 
+class PurchaseOrderManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
+
+
 class PurchaseOrder(models.Model):
     order_number = models.CharField(max_length=10, unique=True)
     supplier = models.ForeignKey(
@@ -16,8 +21,15 @@ class PurchaseOrder(models.Model):
     contact_person = models.CharField(max_length=20)
     supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     total_amount = models.PositiveIntegerField()
     notes = models.TextField(blank=True, null=True)
+
+    objects = PurchaseOrderManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def save(self, *args, **kwargs):
         if not self.order_number:

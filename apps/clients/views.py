@@ -1,7 +1,13 @@
-from django.core.paginator import Paginator
-from django.shortcuts import get_object_or_404, redirect, render
+import csv
 
-from .forms.clients_form import ClientForm
+import pandas as pd
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from pytz import tzinfo
+
+from .forms.form import ClientForm, FileUploadForm
 from .models import Client
 
 
@@ -58,3 +64,73 @@ def client_update_and_delete(request, id):
                 return redirect("clients:index")
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})
+
+
+def import_file(request):
+    if request.method == "POST":
+        form = FileUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            file = request.FILES["file"]
+            if file.name.endswith(".csv"):
+
+                decoded_file = file.read().decode("utf-8").splitlines()
+                reader = csv.reader(decoded_file)
+                next(reader)  # Skip header row
+
+                for row in reader:
+                    Client.objects.create(
+                        name=row[0],
+                        phone_number=row[1],
+                        address=row[2],
+                        email=row[3],
+                        note=row[4],
+                    )
+                messages.success(request, "CSV file imported successfully")
+                return redirect("clients:index")
+
+            elif file.name.endswith(".xlsx"):
+                df = pd.read_excel(file)
+                for _, row in df.iterrows():
+                    Client.objects.create(
+                        name=str(row["name"]),
+                        phone_number=str(row["phone_number"]),
+                        address=str(row["address"]),
+                        email=str(row["email"]),
+                        note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                    )
+
+                messages.success(request, "Excel file imported successfully")
+                return redirect("clients:index")
+
+            else:
+                messages.error(request, "File is not CSV or Excel type")
+                return render(request, "clients/import.html", {"form": form})
+
+    form = FileUploadForm()
+    return render(request, "clients/import.html", {"form": form})
+
+
+def export_csv(request):
+    response = HttpResponse(content_type="text/csv")
+    response["Content-Disposition"] = 'attachment; filename="products.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(
+        ["name", "phone_number", "address,email", "create_at", "delete_at", "note"]
+    )
+
+    clients = Client.objects.all()
+    for client in clients:
+        writer.writerow(
+            [
+                client.name,
+                client.phone_number,
+                client.address,
+                client.email,
+                client.create_at,
+                client.delete_at,
+                client.note,
+            ]
+        )
+
+    return response

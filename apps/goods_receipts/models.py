@@ -5,7 +5,10 @@ from django_fsm import FSMField, transition
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
-# Create your models here.
+
+class GoodReceiptManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class GoodsReceipt(models.Model):
@@ -20,6 +23,13 @@ class GoodsReceipt(models.Model):
     method = models.CharField(max_length=20)
     date = models.DateField(default=timezone.now)
     note = models.TextField()
+    deleted_at = models.DateTimeField(null=True, blank=True)
+
+    objects = GoodReceiptManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __repr__(self):
         return f"{self.receipt_number} - {self.supplier.name} - {self.goods_name}"

@@ -3,6 +3,11 @@
   <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white"
     >Create</a
   >
+  <a href="#" class="btn bg-orange-600 text-white"
+>Import file</a
+>
+<a href="#" class="btn bg-orange-600 text-white">Export CSV</a>
+<a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
 </div>
 <div class="divider text-3xl font-bold">Orders</div>
 <div class="flex justify-center mt-10">
@@ -82,6 +87,31 @@
             </form>
           </td>
         </tr>
+        {% endfor %}
+        <tr class="hover">
+          <form action="{% url 'orders:index' %}" method="post">
+            {% csrf_token %}
+            <th>ID Auto gen</th>
+            <td>{{form.code}}</td>
+            <td>{{form.client_fk}}</td>
+            <td>{{form.product_fk}}</td>
+            <td>{{form.note}}</td>
+            <td>
+              <button>Create</button>
+            </td>
+          </form>
+        </tr>
+        <tr class="hover">
+          <th></th>
+          {% for field in form %}
+          <td>
+            {% if field.errors %}
+              <ul class="errorlist text-red-500 text-sm mt-2">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+            {% endif %}
+          </td>
           {% endfor %}
       </tbody>
     </table>
