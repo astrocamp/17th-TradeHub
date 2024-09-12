@@ -40,7 +40,7 @@ def new(request):
             form.save()
             return redirect("clients:index")
         else:
-            return render(request, "clients/index.html", {"form": form})
+            return render(request, "clients/new.html", {"form": form})
     form = ClientForm()
     return render(request, "clients/new.html", {"form": form})
 
