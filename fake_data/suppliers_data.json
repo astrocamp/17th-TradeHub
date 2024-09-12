@@ -4,7 +4,7 @@
         "pk": 1,
         "fields": {
             "name": "供應商A",
-            "telephone": "0912345678",
+            "telephone": "0912-345678",
             "contact_person": "王小明",
             "email": "wangxiaoming@example.com",
             "gui_number": "12345678",
@@ -18,7 +18,7 @@
         "pk": 2,
         "fields": {
             "name": "供應商B",
-            "telephone": "0987654321",
+            "telephone": "0987-654321",
             "contact_person": "李大華",
             "email": "lidahua@example.com",
             "gui_number": "87654321",
@@ -32,7 +32,7 @@
         "pk": 3,
         "fields": {
             "name": "供應商C",
-            "telephone": "0922334455",
+            "telephone": "0922-334455",
             "contact_person": "張美麗",
             "email": "zhangmeili@example.com",
             "gui_number": "23456789",
@@ -46,7 +46,7 @@
         "pk": 4,
         "fields": {
             "name": "供應商D",
-            "telephone": "0933445566",
+            "telephone": "0933-445566",
             "contact_person": "劉哲明",
             "email": "liuzheming@example.com",
             "gui_number": "34567890",
@@ -60,7 +60,7 @@
         "pk": 5,
         "fields": {
             "name": "供應商E",
-            "telephone": "0944556677",
+            "telephone": "0944-556677",
             "contact_person": "陳志明",
             "email": "chenzhiming@example.com",
             "gui_number": "45678901",
@@ -74,7 +74,7 @@
         "pk": 6,
         "fields": {
             "name": "供應商F",
-            "telephone": "0955667788",
+            "telephone": "0955-667788",
             "contact_person": "李小華",
             "email": "lixiaohua@example.com",
             "gui_number": "56789012",
@@ -88,7 +88,7 @@
         "pk": 7,
         "fields": {
             "name": "供應商G",
-            "telephone": "0966778899",
+            "telephone": "0966-778899",
             "contact_person": "黃美君",
             "email": "huangmeijun@example.com",
             "gui_number": "67890123",
@@ -102,7 +102,7 @@
         "pk": 8,
         "fields": {
             "name": "供應商H",
-            "telephone": "0977889900",
+            "telephone": "0977-889900",
             "contact_person": "吳志明",
             "email": "wuzhiming@example.com",
             "gui_number": "78901234",
@@ -116,7 +116,7 @@
         "pk": 9,
         "fields": {
             "name": "供應商I",
-            "telephone": "0988776655",
+            "telephone": "0988-776655",
             "contact_person": "蔡佳慧",
             "email": "caijiahui@example.com",
             "gui_number": "89012345",
@@ -130,7 +130,7 @@
         "pk": 10,
         "fields": {
             "name": "供應商J",
-            "telephone": "0933888777",
+            "telephone": "0933-888777",
             "contact_person": "林志偉",
             "email": "linzhiwei@example.com",
             "gui_number": "90123456",
