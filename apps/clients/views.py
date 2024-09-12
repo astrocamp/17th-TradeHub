@@ -62,6 +62,10 @@ def client_update_and_delete(request, id):
             if form.is_valid():
                 form.save()
                 return redirect("clients:index")
+            else:
+                return render(
+                    request, "clients/edit.html", {"client": client, "form": form}
+                )
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})
 
