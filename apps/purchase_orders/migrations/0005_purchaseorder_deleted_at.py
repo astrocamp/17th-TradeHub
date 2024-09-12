@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('purchase_orders', '0004_merge_20240912_1430'),
+        ("purchase_orders", "0004_merge_20240912_1430"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='purchaseorder',
-            name='deleted_at',
+            model_name="purchaseorder",
+            name="deleted_at",
             field=models.DateTimeField(blank=True, null=True),
         ),
     ]
