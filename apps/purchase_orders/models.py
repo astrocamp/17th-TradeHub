@@ -83,7 +83,8 @@ class PurchaseOrder(models.Model):
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
         pass
-      
+
+
 class ProductItem(models.Model):
     purchase_order = models.ForeignKey(
         "PurchaseOrder", on_delete=models.CASCADE, related_name="items"

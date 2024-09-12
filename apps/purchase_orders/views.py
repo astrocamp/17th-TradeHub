@@ -1,5 +1,5 @@
-from django.forms import inlineformset_factory
 from django.core.paginator import Paginator
+from django.forms import inlineformset_factory
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -7,11 +7,9 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-
 from .forms.purchase_orders_form import (ProductItemForm, ProductItemFormSet,
                                          PurchaseOrderForm)
 from .models import ProductItem, PurchaseOrder
-
 
 
 def index(request):
@@ -56,7 +54,6 @@ def index(request):
     )
 
 
-
 def new(request):
     form = PurchaseOrderForm()
     formset = ProductItemFormSet(instance=form.instance)
@@ -89,7 +86,6 @@ def show(request, id):
         "purchase_orders/show.html",
         {"purchase_order": purchase_order, "product_items": product_items},
     )
-
 
 
 def edit(request, id):

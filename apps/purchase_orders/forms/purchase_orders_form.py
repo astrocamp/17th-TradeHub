@@ -3,9 +3,7 @@ import re
 from django import forms
 from django.forms import inlineformset_factory
 
-
 from ..models import ProductItem, PurchaseOrder
-
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -71,6 +69,7 @@ class PurchaseOrderForm(forms.ModelForm):
 
         return cleaned_data
 
+
 class ProductItemForm(forms.ModelForm):
     class Meta:
         model = ProductItem
@@ -85,4 +84,4 @@ class ProductItemForm(forms.ModelForm):
 
 ProductItemFormSet = inlineformset_factory(
     PurchaseOrder, ProductItem, form=ProductItemForm, extra=1, can_delete=True
-  )
+)
