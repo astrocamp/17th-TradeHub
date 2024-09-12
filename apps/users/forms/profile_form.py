@@ -10,7 +10,7 @@ class ProfileForm(forms.ModelForm):
             "first_name",
             "last_name",
             "department",
-            "title",
+            "position",
             "email",
             "hire_date",
             "username",
@@ -32,10 +32,10 @@ class ProfileForm(forms.ModelForm):
                     "placeholder": "Last Name",
                 }
             ),
-            "department": forms.TextInput(
+            "department": forms.Select(
                 attrs={"class": "w-full form-control border px-2 py-1"}
             ),
-            "title": forms.TextInput(
+            "position": forms.Select(
                 attrs={"class": "w-full form-control border px-2 py-1"}
             ),
             "email": forms.EmailInput(
@@ -55,7 +55,6 @@ class ProfileForm(forms.ModelForm):
                 attrs={
                     "class": "w-full form-control border px-2 py-1",
                     "type": "date",
-                    "readonly": "readonly",
                 }
             ),
             "phone": forms.TextInput(
@@ -71,9 +70,17 @@ class ProfileForm(forms.ModelForm):
         labels = {
             "first_name": "Name",
             "department": "Department",
-            "title": "Title",
+            "position": "Position",
             "email": "Email",
             "hire_date": "Hire Date",
             "username": "Username",
             "birthday": "Birthday",
+            "phone": "Phone",
+            "address": "Address",
+            "note": "Note",
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = False
