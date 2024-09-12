@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
 
@@ -94,3 +95,16 @@ class PurchaseOrder(models.Model):
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
         pass
+
+
+class ProductItem(models.Model):
+    purchase_order = models.ForeignKey(
+        "PurchaseOrder", on_delete=models.CASCADE, related_name="items"
+    )
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField()
+    price = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product} - {self.quantity} @ {self.price}"

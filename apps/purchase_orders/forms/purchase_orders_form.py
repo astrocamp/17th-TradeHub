@@ -1,8 +1,9 @@
 import re
 
 from django import forms
+from django.forms import inlineformset_factory
 
-from ..models import PurchaseOrder
+from ..models import ProductItem, PurchaseOrder
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -67,3 +68,20 @@ class PurchaseOrderForm(forms.ModelForm):
             self.add_error("total_amount", "Total Amount must be greater than 0.")
 
         return cleaned_data
+
+
+class ProductItemForm(forms.ModelForm):
+    class Meta:
+        model = ProductItem
+        fields = ["product", "quantity", "price", "subtotal"]
+        widgets = {
+            "product": forms.Select(attrs={"class": "w-full"}),
+            "quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "price": forms.NumberInput(attrs={"class": "w-full"}),
+            "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
+        }
+
+
+ProductItemFormSet = inlineformset_factory(
+    PurchaseOrder, ProductItem, form=ProductItemForm, extra=1, can_delete=True
+)
