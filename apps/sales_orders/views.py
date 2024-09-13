@@ -28,10 +28,10 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    return render(request, "pages/order_index.html", content)
+    return render(request, "sales_orders/index.html", content)
 
 
-def create(request):
+def new(request):
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
         if form.is_valid():
@@ -39,7 +39,7 @@ def create(request):
             return redirect("sales_orders:index")
     else:
         form = SalesOrderForm()
-    return render(request, "pages/order_create.html", {"form": form})
+    return render(request, "sales_orders/new.html", {"form": form})
 
 
 def edit(request, id):
@@ -54,7 +54,7 @@ def edit(request, id):
 
     return render(
         request,
-        "pages/order_edit.html",
+        "sales_orders/edit.html",
         {"sales_orders": sales_orders, "form": form},
     )
 
