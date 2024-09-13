@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views
+from apps.purchase_orders import views
 
 app_name = "purchase_orders"
 
