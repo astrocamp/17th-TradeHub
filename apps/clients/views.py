@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from pytz import tzinfo
 
-from .forms.form import ClientForm, FileUploadForm
+from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
 
 
@@ -62,6 +62,10 @@ def client_update_and_delete(request, id):
             if form.is_valid():
                 form.save()
                 return redirect("clients:index")
+            else:
+                return render(
+                    request, "clients/edit.html", {"client": client, "form": form}
+                )
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})
 
