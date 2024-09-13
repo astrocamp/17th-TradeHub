@@ -11,10 +11,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 import os
+import warnings
 from pathlib import Path
 
 # 確認狀態為開發或部署。開發時專用的設定
 from lib.utils.env import is_dev
+
+warnings.filterwarnings("ignore", category=UserWarning, module="django_fsm")
 
 # 開發時才需要自己抓env variables
 if is_dev():
