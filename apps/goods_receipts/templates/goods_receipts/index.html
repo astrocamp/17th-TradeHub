@@ -73,7 +73,7 @@
                         <div class="flex justify-center">
                             <div class="flex gap-2">
                                 <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-                                <a onclick="return confirm('Delete?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">Delete</a>
+                                <a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">Delete</a>
                             </div>
                         </div>
                     </th>

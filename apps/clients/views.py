@@ -56,6 +56,7 @@ def client_update_and_delete(request, id):
     if request.method == "POST":
         if "delete" in request.POST:
             client.delete()
+            messages.success(request, "刪除完成!")
             return redirect("clients:index")
         else:
             form = ClientForm(request.POST, instance=client)

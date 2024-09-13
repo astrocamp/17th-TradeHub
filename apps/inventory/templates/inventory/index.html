@@ -80,7 +80,7 @@
             >
               Edit
             </a>
-            <a href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
+            <a onclick="return confirm('確認刪除?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
               >Delete</a
             >
           </td>

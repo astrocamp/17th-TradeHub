@@ -2,12 +2,12 @@
 
 ### 技術使用
 
-- 前端：Tailwindcss, DaisyUI, JavaScript, Alpine.js
+- 前端：Tailwindcss, DaisyUI, Alpine.js
 - 後端：Python, Django
 - 資料庫：PostgreSQL
 - 版本控制：Git
 - 圖片上傳：AWS S3
-- 電郵：
+- 電子信箱：tradehub.team@gmail.com
 - 部署：
 
 ### TradeHub Team
@@ -27,8 +27,6 @@ https://github.com/jaychen1007
 劉哲明
 https://github.com/Liu-Che-Ming
 
-## 以下給組員參考( 正式 Demo Day 前會刪除 )
-
 ### 安裝步驟
 
 1. `poetry shell` 建虛擬環境
@@ -38,7 +36,7 @@ https://github.com/Liu-Che-Ming
 
 ### 執行檔案
 
-1. `npm run dev` 執行 esbuild 和 tailwind 除屑
+1. `npm run dev` 執行 esbuild 和 tailwind
 2. Win: `python manage.py runserver` Mac: `make server` 開啟伺服器
 
 ### Git 上傳前操作
