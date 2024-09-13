@@ -7,8 +7,11 @@ from django.views.decorators.http import require_POST
 
 from apps.suppliers.models import Supplier
 
-from .forms.purchase_orders_form import (ProductItemForm, ProductItemFormSet,
-                                         PurchaseOrderForm)
+from .forms.purchase_orders_form import (
+    ProductItemForm,
+    ProductItemFormSet,
+    PurchaseOrderForm,
+)
 from .models import ProductItem, PurchaseOrder
 
 
