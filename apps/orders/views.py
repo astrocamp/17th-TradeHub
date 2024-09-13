@@ -28,7 +28,8 @@ def index(request):
         "orders": page_obj,
         "page_obj": page_obj,
     }
-    return render(request, "orders/orders_list.html", content)
+
+    return render(request, "orders/index.html", content)
 
 
 def new(request):
@@ -38,7 +39,7 @@ def new(request):
             form.save()
             return redirect("orders:index")
     form = OrderForm()
-    return render(request, "orders/orders_create.html", {"form": form})
+    return render(request, "orders/new.html", {"form": form})
 
 
 def order_update_and_delete(request, id):
@@ -53,4 +54,4 @@ def order_update_and_delete(request, id):
                 form.save()
                 return redirect("orders:index")
     form = OrderForm(instance=order)
-    return render(request, "orders/orders_edit.html", {"order": order, "form": form})
+    return render(request, "orders/edit.html", {"order": order, "form": form})
