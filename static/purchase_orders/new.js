@@ -1,16 +1,4 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // 自動產生流水編號
-    const generateOrderNumberUrl = window.djangoVariables.generateOrderNumberUrl;
-
-    fetch(generateOrderNumberUrl)
-        .then(response => response.json())
-        .then(data => {
-            const orderNumberElement = document.getElementById('order-number');
-            if (orderNumberElement) {
-                orderNumberElement.textContent = data.order_number;
-            }
-        })
-
     // 自動填入供應商資訊
     const supplierSelect = document.getElementById(window.djangoVariables.supplierIdField);
 
