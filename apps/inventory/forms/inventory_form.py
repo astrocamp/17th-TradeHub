@@ -17,43 +17,49 @@ class RestockForm(forms.ModelForm):
         widgets = {
             "product": forms.Select(
                 attrs={
-                    "class": "form-control w-full select select-bordered flex items-center justify-center",
+                    "class": "h-[24px] w-full rounded-md p-2 flex items-center justify-center bg-gray-100 focus:outline-none text-sm",
                     "readonly": "readonly",
                 }
             ),
             "supplier": forms.Select(
                 attrs={
-                    "class": "form-control w-full select select-bordered flex items-center justify-center",
+                    "class": "h-[24px] w-full rounded-md p-2 flex items-center justify-center bg-gray-100 focus:outline-none text-sm",
                     "readonly": "readonly",
                 }
             ),
             "quantity": forms.NumberInput(
-                attrs={"class": "form-control input input-bordered w-full"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入現有庫存數量",
+                }
             ),
             "safety_stock": forms.NumberInput(
-                attrs={"class": "form-control input input-bordered w-full"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入安全庫存數量",
+                }
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control input input-bordered w-full",
-                    "placeholder": "Any additional notes",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100 text-sm",
+                    "placeholder": "如有其他備註事項，請填入",
                     "rows": 3,
                 }
             ),
         }
         help_texts = {
-            "product": "Please select the product.",
-            "supplier": "Please select the supplier.",
-            "quantity": "Please enter the quantity of the product.",
-            "safety_stock": "Please enter the safety stock of the product.",
-            "note": "Please enter any additional notes about the product.",
+            "product": "請選擇產品",
+            "supplier": "請選擇供應商",
+            "quantity": "請填入數字即可",
+            "safety_stock": "請填入數字即可",
+            "note": "",
         }
         labels = {
-            "product": "Product",
-            "supplier": "Supplier",
-            "quantity": "Quantity",
-            "safety_stock": "Safety Stock",
-            "note": "Note",
+            "product": "產品名稱",
+            "supplier": "供應商名稱",
+            "quantity": "現有庫存數量",
+            "safety_stock": "安全庫存數量",
+            "note": "備註",
         }
 
     def __init__(self, *args, **kwargs):
@@ -69,15 +75,15 @@ class RestockForm(forms.ModelForm):
         safety_stock = cleaned_data.get("safety_stock")
 
         if not product:
-            self.add_error("product", "Product is required.")
+            self.add_error("product", "請選擇產品")
 
         if not supplier:
-            self.add_error("supplier", "Supplier is required.")
+            self.add_error("supplier", "請選擇供應商")
 
         if quantity is None:
-            self.add_error("quantity", "Quantity is required.")
+            self.add_error("quantity", "請輸入現有庫存數量")
 
         if safety_stock is None:
-            self.add_error("safety_stock", "Safety stock is required.")
+            self.add_error("safety_stock", "請輸入安全庫存數量")
 
         return cleaned_data
