@@ -54,7 +54,7 @@ class ClientForm(forms.ModelForm):
             ),
         }
         labels = {
-            "name": "客戶全名",
+            "name": "客戶名稱",
             "phone_number": "電話號碼",
             "address": "地址",
             "email": "電子信箱",
@@ -86,7 +86,7 @@ class ClientForm(forms.ModelForm):
         if phone_number == "":
             self.add_error("phone_number", "請填入電話號碼")
         elif not re.match(
-            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d{9}|0\d-\d{7}|0\d-\d{8}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3}|0\d-\d{4}-\d{4})$",
             phone_number,
         ):
             self.add_error("phone_number", "請填入正確的電話號碼")
