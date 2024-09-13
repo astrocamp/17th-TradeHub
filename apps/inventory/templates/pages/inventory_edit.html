@@ -1,23 +1,37 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-<div class="divider text-3xl font-bold mt-32">Edit Inventory</div>
-<form
-  method="POST"
-  action="{% url 'inventory:edit' inventory.id %}"
-  class="text-lg m-4"
->
-  {% csrf_token %}
-  <div class="container w-1/2 mx-auto flex flex-col gap-4">
-    {% for field in form %}
-      <div class="form-control w-1/2">{{ field.label_tag }}</div>
-      <div class="text-sm text-gray-500">{{field.help_text}}</div>
-      <div>{{ field }}</div>
-      {% if field.errors %}
-        <span class="text-red-500">{{ field.errors }}</span>
-      {% endif %}
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a href="{% url 'inventory:index' %}" class="btn btn-warning">Cancel</a>
-  </div>
-</form>
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">編輯庫存資料</h2>
+  <form action="{% url 'inventory:edit' inventory.id %}" method="POST" class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {% csrf_token %}
+
+      {% for field in form %}
+          <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+              <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">
+                {{ field.label }}
+                {% if field.name != "note" %}
+                  <span class="text-red-500 text-sm mt-2"> *</span>
+                {% endif %}
+              </label>
+              <div>
+                  {% if field.help_text %}
+                      <p class="text-gray-600 text-sm mb-2 px-1">{{ field.help_text }}</p>
+                  {% endif %}
+                  {{ field }}
+                  {% if field.errors %}
+                      <ul class="errorlist text-red-500 text-sm mt-2 px-1">
+                          {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                          {% endfor %}
+                      </ul>
+                  {% endif %}
+              </div>
+          </div>
+      {% endfor %}
+
+      <div class="col-span-full">
+          <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">新增</button>
+      </div>
+  </form>
+</div>
 {% endblock %}
