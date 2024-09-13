@@ -33,8 +33,8 @@ def index(req):
         if form.is_valid():
             form.save()
             return redirect("goods_receipts:index")
-
-    return render(req, "pages/GRindex.html", content)
+        return render(req, "goods_receipts/new.html", {"form": form})
+    return render(req, "goods_receipts/index.html", content)
 
 
 def new(request):
@@ -43,10 +43,9 @@ def new(request):
         if form.is_valid():
             form.save()
             return redirect("goods_receipts:index")
-        else:
-            return render(request, "pages/GRnew.html", {"form": form})
+        return render(request, "goods_receipts/new.html", {"form": form})
     form = GoodsReceiptForm()
-    return render(request, "pages/GRnew.html", {"form": form})
+    return render(request, "goods_receipts/new.html", {"form": form})
 
 
 def show(request, id):
@@ -57,9 +56,11 @@ def show(request, id):
             form.save()
             return redirect("goods_receipts:index")
         return render(
-            request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+            request,
+            "goods_receipts/edit.html",
+            {"goods_receipt": goods_receipt, "form": form},
         )
-    return render(request, "pages/GRshow.html", {"goods_receipt": goods_receipt})
+    return render(request, "goods_receipts/show.html", {"goods_receipt": goods_receipt})
 
 
 def edit(request, id):
@@ -70,12 +71,16 @@ def edit(request, id):
             form.save()
             return redirect("goods_receipts:index")
         return render(
-            request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+            request,
+            "goods_receipts/edit.html",
+            {"goods_receipt": goods_receipt, "form": form},
         )
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     form = GoodsReceiptForm(instance=goods_receipt)
     return render(
-        request, "pages/GRedit.html", {"goods_receipt": goods_receipt, "form": form}
+        request,
+        "goods_receipts/edit.html",
+        {"goods_receipt": goods_receipt, "form": form},
     )
 
 

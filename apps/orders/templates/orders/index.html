@@ -1,0 +1,84 @@
+{% extends "layouts/base.html" %} {% block content %}
+<div class="flex justify-end mt-12">
+  <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white"
+    >Create</a
+  >
+</div>
+<div class="flex justify-center mt-10">
+  <div class="overflow-x-auto">
+    <table class="table table-xl text-center">
+      <thead>
+        <tr class="text-xl">
+          <th>ID</th>
+          <th>Order Code</th>
+          <th>Client</th>
+          <th>Product</th>
+          <th>Note</th>
+          <th>Operate</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for order in orders %}
+        <tr class="hover">
+          <th>{{ order.id }}</th>
+          <td>{{ order.code }}</td>
+          <td>{{ order.client }}</td>
+          <td>{{ order.product }}</td>
+          <td>{{ order.note }}</td>
+          <td class="flex justify-center gap-2">
+            <a href="{% url 'orders:edit' order.id %}">Edit</a>
+            <form
+              action="{% url 'orders:edit' order.id %}"
+              method="post"
+              onsubmit="return confirm('Are you sure Delete it?')"
+            >
+              {% csrf_token %}
+              <button name="delete">Delete</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+        <tr class="hover">
+          <th></th>
+          {% for field in form %}
+          <td>
+            {% if field.errors %}
+              <ul class="errorlist text-red-500 text-sm mt-2">
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+            {% endif %}
+          </td>
+          {% endfor %}
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="pagination join flex justify-center">
+      <span class="step-links">
+        <a href="?page=1"><button class="join-item btn">Page 1</button></a>
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}"
+          ><button class="join-item btn">«</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">«</button>
+        {% endif %}
+        <button class="join-item btn">Page {{ page_obj.number }}</button>
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}"
+          ><button class="join-item btn">»</button></a
+        >
+        {% else %}
+        <button class="join-item btn" disabled="disabled">»</button>
+        {% endif %}
+        <a href="?page={{ page_obj.paginator.num_pages }}"
+          ><button class="join-item btn">
+            Page {{ page_obj.paginator.num_pages }}
+          </button></a
+        >
+      </span>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -32,19 +32,19 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    return render(request, "pages/inventory_index.html", content)
+    return render(request, "inventory/index.html", content)
 
 
-def create(request):
+def new(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
         if form.is_valid():
             form.save().update_state()
             return redirect("inventory:index")
         else:
-            return render(request, "pages/inventory_create.html", {"form": form})
+            return render(request, "inventory/new.html", {"form": form})
     form = RestockForm()
-    return render(request, "pages/inventory_create.html", {"form": form})
+    return render(request, "inventory/new.html", {"form": form})
 
 
 def edit(request, id):
@@ -61,7 +61,7 @@ def edit(request, id):
         form = RestockForm(instance=inventory)
 
     return render(
-        request, "pages/inventory_edit.html", {"inventory": inventory, "form": form}
+        request, "inventory/edit.html", {"inventory": inventory, "form": form}
     )
 
 

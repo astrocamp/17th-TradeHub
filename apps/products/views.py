@@ -30,7 +30,7 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    return render(request, "pages/index.html", content)
+    return render(request, "products/index.html", content)
 
 
 def new(request):
@@ -39,9 +39,9 @@ def new(request):
         if form.is_valid():
             form.save()
             return redirect("products:index")
-        return render(request, "pages/new.html", {"form": form})
+        return render(request, "products/new.html", {"form": form})
     form = ProductForm()
-    return render(request, "pages/new.html", {"form": form})
+    return render(request, "products/new.html", {"form": form})
 
 
 def edit(request, id):
@@ -54,7 +54,7 @@ def edit(request, id):
 
     else:
         form = ProductForm(instance=product)
-    return render(request, "pages/edit.html", {"product": product, "form": form})
+    return render(request, "products/edit.html", {"product": product, "form": form})
 
 
 def delete(request, id):
