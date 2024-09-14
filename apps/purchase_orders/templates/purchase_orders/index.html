@@ -40,7 +40,7 @@
                       </form>
                     </th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">單號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=total_amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'total_amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -110,7 +110,7 @@
             {% endif %}
             <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
               ><button class="join-item btn">
-                第 {{ page_obj.paginator.num_pages }} 頁
+                第{{ page_obj.paginator.num_pages }}頁
               </button></a
             >
           </span>

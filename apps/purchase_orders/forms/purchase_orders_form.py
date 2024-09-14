@@ -27,7 +27,7 @@ class PurchaseOrderForm(forms.ModelForm):
             "notes": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
         }
         labels = {
-            "supplier": "供應商",
+            "supplier": "供應商名稱",
             "supplier_tel": "供應商電話",
             "contact_person": "聯絡人",
             "supplier_email": "供應商Email",
