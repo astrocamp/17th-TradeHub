@@ -13,6 +13,15 @@ class SalesOrderForm(forms.ModelForm):
             "stock",
             "price",
         ]
+
+        labels = {
+            "client": "客戶名稱",
+            "product": "產品名稱",
+            "quantity": "數量",
+            "stock": "庫存",
+            "price": "價格",
+        }
+
         widgets = {
             "client": forms.Select(
                 attrs={

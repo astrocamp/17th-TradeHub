@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-<div class="divider text-3xl font-bold mt-32">Edit Order</div>
+<div class="divider text-3xl font-bold mt-32">編輯銷售單</div>
 <form
   method="POST"
   action="{% url 'sales_orders:edit' sales_orders.id %}"
@@ -9,15 +9,14 @@
   {% csrf_token %}
   <div class="container w-1/2 mx-auto flex flex-col gap-4">
     {% for field in form %}
-      <div class="form-control w-1/2">{{ field.label_tag }}</div>
-      <div class="text-sm text-gray-500">{{field.help_text}}</div>
-      <div>{{ field }}</div>
-      {% if field.errors %}
-        <span class="text-red-500">{{ field.errors }}</span>
-      {% endif %}
-    {% endfor %}
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a href="{% url 'sales_orders:index' %}" class="btn btn-warning">Cancel</a>
+    <div class="form-control w-1/2">{{ field.label_tag }}</div>
+    <div class="text-sm text-gray-500">{{field.help_text}}</div>
+    <div>{{ field }}</div>
+    {% if field.errors %}
+    <span class="text-red-500">{{ field.errors }}</span>
+    {% endif %} {% endfor %}
+    <button type="submit" class="btn btn-primary">送出</button>
+    <a href="{% url 'sales_orders:index' %}" class="btn btn-warning">取消</a>
   </div>
 </form>
 {% endblock %}
