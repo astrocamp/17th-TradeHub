@@ -65,10 +65,11 @@ from .models import PurchaseOrder
 def new(request):
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
-        PurchaseOrder.objects.filter(order_number__startswith=today)
+        PurchaseOrder.all_objects.filter(order_number__startswith=today)
         .order_by("-order_number")
         .first()
     )
+    print(last_order)
     if last_order:
         last_order_number = int(last_order.order_number[-3:])
         new_order_number = f"{today}{last_order_number + 1:03d}"

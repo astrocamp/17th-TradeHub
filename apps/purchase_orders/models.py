@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=11, unique=True)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -27,6 +27,7 @@ class PurchaseOrder(models.Model):
     notes = models.TextField(blank=True, null=True)
 
     objects = PurchaseOrderManager()
+    all_objects = models.Manager()
 
     def delete(self):
         self.deleted_at = timezone.now()
