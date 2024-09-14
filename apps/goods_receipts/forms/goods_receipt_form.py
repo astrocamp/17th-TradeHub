@@ -15,6 +15,17 @@ class GoodsReceiptForm(forms.ModelForm):
             "date",
             "note",
         ]
+
+        labels = {
+            "receipt_number": "進貨單號",
+            "supplier": "供應商名稱",
+            "goods_name": "貨品名稱",
+            "quantity": "數量",
+            "method": "運送方式",
+            "date": "日期",
+            "note": "備註",
+        }
+
         widgets = {
             "receipt_number": forms.TextInput(
                 attrs={

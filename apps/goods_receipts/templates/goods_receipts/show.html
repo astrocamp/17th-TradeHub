@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %} {% block content %}
 
 <a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
-  >Back to Goods Receipts List</a
+  >返回進貨單列表</a
 >
 
 <div class="flex justify-center mt-10">
@@ -9,13 +9,13 @@
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
-          <th>Receipt Number</th>
-          <th>Supplier</th>
-          <th>Goods Name</th>
-          <th>Quantity</th>
-          <th>Delivery Method</th>
-          <th>Date</th>
-          <th>Note</th>
+          <th>進貨單號</th>
+          <th>供應商</th>
+          <th>產品名稱</th>
+          <th>數量</th>
+          <th>運送方式</th>
+          <th>日期</th>
+          <th>備註</th>
         </tr>
       </thead>
       <tbody>
@@ -38,7 +38,7 @@
     <a
       href="{% url 'goods_receipts:edit' goods_receipt.id %}"
       class="btn btn-primary"
-      >Edit</a
+      >編輯</a
     >
   </div>
   <div>
@@ -46,7 +46,7 @@
       onclick="return confirm('Delete?')"
       href="{% url 'goods_receipts:delete' goods_receipt.id %}"
       class="btn btn-primary"
-      >Delete</a
+      >刪除</a
     >
   </div>
 </div>
