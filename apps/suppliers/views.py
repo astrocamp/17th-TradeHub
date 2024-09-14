@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
@@ -59,29 +60,30 @@ def new(request):
     return render(request, "suppliers/new.html", {"form": form})
 
 
-def show(req, id):
+def show(request, id):
     supplier = get_object_or_404(Supplier, pk=id)
-    if req.method == "POST":
-        form = SupplierForm(req.POST, instance=supplier)
+    if request.method == "POST":
+        form = SupplierForm(request.POST, instance=supplier)
         if form.is_valid():
             form.save()
             return redirect("suppliers:index")
         else:
             return render(
-                req, "suppliers/edit.html", {"supplier": supplier, "form": form}
+                request, "suppliers/edit.html", {"supplier": supplier, "form": form}
             )
-    return render(req, "suppliers/show.html", {"supplier": supplier})
+    return render(request, "suppliers/show.html", {"supplier": supplier})
 
 
-def edit(req, id):
+def edit(request, id):
     supplier = get_object_or_404(Supplier, pk=id)
     form = SupplierForm(instance=supplier)
-    return render(req, "suppliers/edit.html", {"supplier": supplier, "form": form})
+    return render(request, "suppliers/edit.html", {"supplier": supplier, "form": form})
 
 
-def delete(req, id):
+def delete(request, id):
     supplier = get_object_or_404(Supplier, pk=id)
     supplier.delete()
+    messages.success(request, "刪除完成!")
     return redirect("suppliers:index")
 
 
