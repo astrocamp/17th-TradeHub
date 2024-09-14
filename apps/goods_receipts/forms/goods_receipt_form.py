@@ -17,8 +17,8 @@ class GoodsReceiptForm(forms.ModelForm):
         ]
 
         labels = {
-            "receipt_number": "收貨單號",
-            "supplier": "供應商",
+            "receipt_number": "進貨單號",
+            "supplier": "供應商名稱",
             "goods_name": "貨品名稱",
             "quantity": "數量",
             "method": "運送方式",

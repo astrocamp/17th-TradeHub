@@ -9,7 +9,7 @@
   <a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
   <a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
-<div class="divider text-3xl font-bold">收貨單列表</div>
+<div class="divider text-3xl font-bold">進貨單列表</div>
 <div class="flex justify-center mt-10">
     <div class="overflow-x-auto">
         <table class="table table-xl text-center">
@@ -40,8 +40,8 @@
                             </button>
                         </form>
                     </th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">收貨單號{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單號{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=goods_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">貨品名稱{% if order_by == 'goods_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">運送方式{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>

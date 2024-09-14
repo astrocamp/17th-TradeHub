@@ -1,14 +1,14 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-<div class="divider text-3xl font-bold mt-32">Add Goods Receipt</div>
+<div class="divider text-3xl font-bold mt-32">新增進貨單</div>
 
 <a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
-  >Back to Goods Receipts List</a
+  >返回進貨單列表</a
 >
 
 <form action="{% url 'goods_receipts:index' %}" method="POST">
   {% csrf_token %} {{form}}
-  <button class="btn btn-primary">Add</button>
+  <button class="btn btn-primary">新增</button>
 </form>
 
 {% endblock %}
