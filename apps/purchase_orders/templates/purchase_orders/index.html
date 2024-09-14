@@ -1,13 +1,13 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="flex justify-end mt-20">
   <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white"
-    >Create</a
+    >新增</a
   >
-  <a href="#" class="btn bg-orange-600 text-white">Import file</a>
-  <a href="#" class="btn bg-orange-600 text-white">Export CSV</a>
-  <a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯入檔案</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
-<div class="divider text-3xl font-bold">Purchase Orders</div>
+<div class="divider text-3xl font-bold">採購單列表</div>
 
 <div class="flex justify-center mt-10">
     <div class="overflow-x-auto">
@@ -20,10 +20,10 @@
                           class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
                           name="select"
                         >
-                          <option disabled>Select</option>
-                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
-                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>Finished</option>
-                          <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>Unfinish</option>
+                          <option disabled>選擇</option>
+                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                          <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
                         </select>
 
                         <button type="submit" class="btn btn-square btn-sm">
@@ -39,13 +39,13 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Number{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier Tel{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=total_amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Total Amount{% if order_by == 'total_amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=notes&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Notes{% if order_by == 'notes' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th>Operate</th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">單號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=total_amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'total_amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=notes&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'notes' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -75,12 +75,12 @@
                     <th>
                         <div class="flex gap-3">
                             <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
-                              Edit
+                              編輯
                             </a>
                             <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST" class="inline-block">
                                 {% csrf_token %}
                                 <button type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                                    Delete
+                                    刪除
                                 </button>
                             </form>
                         </div>
@@ -89,9 +89,10 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if is_paginated %}
         <div class="pagination join flex justify-center">
           <span class="step-links">
-            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">Page 1</button></a>
+            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
             {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
               ><button class="join-item btn">«</button></a
@@ -99,7 +100,7 @@
             {% else %}
             <button class="join-item btn" disabled="disabled">«</button>
             {% endif %}
-            <button class="join-item btn">Page {{ page_obj.number }}</button>
+            <button class="join-item btn">第{{ page_obj.number }}頁</button>
             {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
               ><button class="join-item btn">»</button></a
@@ -109,11 +110,12 @@
             {% endif %}
             <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
               ><button class="join-item btn">
-                Page {{ page_obj.paginator.num_pages }}
+                第{{ page_obj.paginator.num_pages }}頁
               </button></a
             >
           </span>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
