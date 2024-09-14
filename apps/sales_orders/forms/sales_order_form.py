@@ -15,8 +15,8 @@ class SalesOrderForm(forms.ModelForm):
         ]
 
         labels = {
-            "client": "客戶",
-            "product": "產品",
+            "client": "客戶名稱",
+            "product": "產品名稱",
             "quantity": "數量",
             "stock": "庫存",
             "price": "價格",
