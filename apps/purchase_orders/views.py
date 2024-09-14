@@ -38,6 +38,13 @@ def index(request):
         "page_obj": page_obj,
     }
 
+    purchase_orders = PurchaseOrder.objects.order_by("id")
+    return render(
+        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
+    )
+
+
+def new(request):
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         formset = ProductItemFormSet(request.POST, instance=form.instance)
@@ -50,19 +57,6 @@ def index(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )
-
-
-from django.utils import timezone
-
-from .models import PurchaseOrder
-
-
-def new(request):
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
         PurchaseOrder.all_objects.filter(order_number__startswith=today)

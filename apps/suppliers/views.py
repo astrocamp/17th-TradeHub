@@ -16,11 +16,11 @@ def index(request):
 
     if state in state_match:
         suppliers = Supplier.objects.filter(state=state)
-    order_by_field = order_by if is_desc else "-" + order_by
-    suppliers = suppliers.order_by(order_by_field)
-    paginator = Paginator(suppliers, 5)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
+        order_by_field = order_by if is_desc else "-" + order_by
+        suppliers = suppliers.order_by(order_by_field)
+        paginator = Paginator(suppliers, 5)
+        page_number = request.GET.get("page")
+        page_obj = paginator.get_page(page_number)
 
     content = {
         "suppliers": page_obj,
@@ -29,13 +29,6 @@ def index(request):
         "is_desc": is_desc,
         "page_obj": page_obj,
     }
-    if request.method == "POST":
-        form = SupplierForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("suppliers:index")
-        else:
-            return render(request, "suppliers/new.html", {"form": form})
 
     # suppliers = Supplier.objects.order_by("id")
     paginator = Paginator(suppliers, 5)
@@ -55,6 +48,13 @@ def index(request):
 
 
 def new(request):
+    if request.method == "POST":
+        form = SupplierForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("suppliers:index")
+        else:
+            return render(request, "suppliers/new.html", {"form": form})
     form = SupplierForm()
     return render(request, "suppliers/new.html", {"form": form})
 
