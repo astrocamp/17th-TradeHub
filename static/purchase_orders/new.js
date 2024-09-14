@@ -8,19 +8,18 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch(window.djangoVariables.loadSupplierInfoUrl + '?supplier_id=' + supplierId)
             .then(response => response.json())
             .then(data => {
-                // Update supplier details
                 document.getElementById(window.djangoVariables.supplierTelField).value = data.supplier_tel;
                 document.getElementById(window.djangoVariables.contactPersonField).value = data.contact_person;
                 document.getElementById(window.djangoVariables.supplierEmailField).value = data.supplier_email;
             })
             .catch(error => console.error('Error fetching supplier info:', error));
     });
-
     // 子表單
     const addItemButton = document.getElementById('add-item')
     const formsetItems = document.getElementById('formset-items');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     let formCount = parseInt(totalForms.value);
+
     addItemButton.addEventListener('click',() => {
         const newItem = document.querySelector('#formset-items fieldset').cloneNode(true);
         newItem.innerHTML = newItem.innerHTML.replace(/items-(\d+)-/g, `items-${formCount}-`);
@@ -40,8 +39,8 @@ document.addEventListener('DOMContentLoaded', function() {
         if (event.target.classList.contains('delete-item') && totalForms.value != 1) {
             const fieldset = event.target.closest('fieldset');
             fieldset.remove();
-            console.log(fieldset)
             updateFormIndexes();
+            updateTotalAmount();
         }
     });
     function updateFormIndexes() {
@@ -62,5 +61,18 @@ document.addEventListener('DOMContentLoaded', function() {
         });
         totalForms.value = formsets.length;
     }
+    // 計算總價
+    function updateTotalAmount() {
+        const subtotalFields = document.querySelectorAll('[id$=subtotal]');
+        let totalAmount = 0;
+        subtotalFields.forEach(function(field) {
+            const subtotal = parseInt(field.value, 10) || 0;
+            totalAmount += subtotal;
+        });
+        document.getElementById('total-amount-display').textContent = totalAmount;
+        document.getElementById('total_amount').value = totalAmount;
+    }
+    document.getElementById('formset-items').addEventListener('input', updateTotalAmount);
+    updateTotalAmount();
 });
 

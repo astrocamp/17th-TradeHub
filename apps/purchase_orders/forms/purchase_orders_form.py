@@ -23,7 +23,6 @@ class PurchaseOrderForm(forms.ModelForm):
             "supplier_tel": forms.TextInput(attrs={"class": "w-full"}),
             "contact_person": forms.TextInput(attrs={"class": "w-full"}),
             "supplier_email": forms.TextInput(attrs={"class": "w-full"}),
-            "total_amount": forms.NumberInput(attrs={"class": "w-full"}),
             "notes": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
         }
         labels = {
@@ -64,8 +63,6 @@ class PurchaseOrderForm(forms.ModelForm):
             self.add_error("supplier_email", "Supplier Email is required.")
         if total_amount is None:
             self.add_error("total_amount", "Total Amount is required.")
-        elif total_amount == 0:
-            self.add_error("total_amount", "Total Amount must be greater than 0.")
 
         return cleaned_data
 

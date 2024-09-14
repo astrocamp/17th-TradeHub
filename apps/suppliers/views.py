@@ -22,14 +22,6 @@ def index(request):
         page_number = request.GET.get("page")
         page_obj = paginator.get_page(page_number)
 
-    content = {
-        "suppliers": page_obj,
-        "selected_state": state,
-        "order_by": order_by,
-        "is_desc": is_desc,
-        "page_obj": page_obj,
-    }
-
     # suppliers = Supplier.objects.order_by("id")
     paginator = Paginator(suppliers, 5)
     page_number = request.GET.get("page")
