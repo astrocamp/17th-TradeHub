@@ -3,6 +3,7 @@ from django_fsm import FSMField, transition
 
 from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
+from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
 
 
@@ -46,12 +47,14 @@ class Inventory(models.Model):
         ):  # 之後要改成待處理（pending）
             message = f"庫存於缺貨狀態，自動下單 {self.safety_stock} 個 {self.product}"
             purchase_order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
                 supplier=self.supplier,
                 supplier_tel="",
                 contact_person="",
                 supplier_email="",
                 total_amount=0,
                 notes=message,
+                state=PurchaseOrder.UNFINISH,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,
@@ -68,12 +71,14 @@ class Inventory(models.Model):
         ):  # 之後要改成待處理（pending）
             message = f"庫存低於安全庫存量，自動下單 {self.safety_stock - self.quantity} 個 {self.product}"
             purchase_order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
                 supplier=self.supplier,
                 supplier_tel="",
                 contact_person="",
                 supplier_email="",
                 total_amount=0,
                 notes=message,
+                state=PurchaseOrder.UNFINISH,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,
