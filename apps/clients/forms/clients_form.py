@@ -2,7 +2,7 @@ import re
 
 from django import forms
 
-from ..models import Client
+from apps.clients.models import Client
 
 
 class FileUploadForm(forms.Form):

@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from pytz import tzinfo
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
@@ -89,7 +88,7 @@ def import_file(request):
                         email=row[3],
                         note=row[4],
                     )
-                messages.success(request, "CSV file imported successfully")
+                messages.success(request, "成功匯入 CSV")
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
@@ -103,20 +102,20 @@ def import_file(request):
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
-                messages.success(request, "Excel file imported successfully")
+                messages.success(request, "成功匯入 Excel")
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "File is not CSV or Excel type")
-                return render(request, "clients/import.html", {"form": form})
+                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
-    return render(request, "clients/import.html", {"form": form})
+    return render(request, "layouts/import.html", {"form": form})
 
 
 def export_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="products.csv"'
+    response["Content-Disposition"] = 'attachment; filename="Clients.csv"'
 
     writer = csv.writer(response)
     writer.writerow(
