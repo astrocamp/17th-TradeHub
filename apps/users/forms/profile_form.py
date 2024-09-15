@@ -23,13 +23,13 @@ class ProfileForm(forms.ModelForm):
             "first_name": forms.TextInput(
                 attrs={
                     "class": "w-full form-control border px-2 py-1",
-                    "placeholder": "First Name",
+                    "placeholder": "名",
                 }
             ),
             "last_name": forms.TextInput(
                 attrs={
                     "class": "w-full form-control border px-2 py-1",
-                    "placeholder": "Last Name",
+                    "placeholder": "姓",
                 }
             ),
             "department": forms.Select(
@@ -68,16 +68,16 @@ class ProfileForm(forms.ModelForm):
             ),
         }
         labels = {
-            "first_name": "Name",
-            "department": "Department",
-            "position": "Position",
+            "first_name": "姓名",
+            "department": "部門",
+            "position": "職位",
             "email": "Email",
-            "hire_date": "Hire Date",
-            "username": "Username",
-            "birthday": "Birthday",
-            "phone": "Phone",
-            "address": "Address",
-            "note": "Note",
+            "hire_date": "入職日期",
+            "username": "帳號",
+            "birthday": "生日",
+            "phone": "電話",
+            "address": "地址",
+            "note": "備註",
         }
 
     def __init__(self, *args, **kwargs):

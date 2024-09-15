@@ -79,41 +79,28 @@ input::placeholder{
 .log_in-form-item{
     display: flex;
     align-items: center;
-    gap: 10px;
-    /* margin: 4px 0; */
+    /* gap: 6px; */
 }
 
-.log_in-form-item:nth-child(3){
-    margin-bottom: 20px;
-}
 
 .log_in-form-item label{
     font-size: 16px;
     font-weight: 600;
-    width: 80px;
+    width: 75px;
 }
 
 .log_in-form-item input{
-    border: dashed;
     border-radius: 5px;
     padding: 7px;
     width: 220px;
 }
 
-.log_in-form-item input:focus{
-    outline: none;
-}
-
 .log_in-btn{
     cursor: pointer;
-    border: none;
     border-radius: 5px;
     padding: 8px 12px;
     font-size: 16px;
     font-weight: 600;
-    color: #fff;
-    background: #000;
-    /* width: 90px; */
     height: 30px;
     display: flex;
     align-items: center;
