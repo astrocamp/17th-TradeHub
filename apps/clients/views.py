@@ -120,7 +120,7 @@ def export_csv(request):
 
     writer = csv.writer(response)
     writer.writerow(
-        ["name", "phone_number", "address,email", "create_at", "delete_at", "note"]
+        ["客戶名稱", "電話", "地址", "Email", "建立時間", "刪除時間", "備註"]
     )
 
     clients = Client.objects.all()
@@ -136,5 +136,37 @@ def export_csv(request):
                 client.note,
             ]
         )
+
+    return response
+
+
+def export_excel(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
+
+    clients = Client.objects.all().values(
+        "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
+    )
+
+    df = pd.DataFrame(clients)
+    for col in df.select_dtypes(include=["datetime64[ns, UTC]"]).columns:
+        df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    column_mapping = {
+        "name": "客戶名稱",
+        "phone_number": "電話",
+        "address": "地址",
+        "email": "Email",
+        "create_at": "建立時間",
+        "delete_at": "刪除時間",
+        "note": "備註",
+    }
+
+    df.rename(columns=column_mapping, inplace=True)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
