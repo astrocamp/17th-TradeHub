@@ -79,20 +79,18 @@ input::placeholder{
 .log_in-form-item{
     display: flex;
     align-items: center;
-    /* gap: 6px; */
 }
 
 
 .log_in-form-item label{
     font-size: 16px;
     font-weight: 600;
-    width: 75px;
 }
 
 .log_in-form-item input{
     border-radius: 5px;
     padding: 7px;
-    width: 220px;
+    width: 210px;
 }
 
 .log_in-btn{

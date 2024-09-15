@@ -17,7 +17,7 @@
     {% for field in login_form %}
     <div class="flex flex-col mb-4">
       <div class="log_in-form-item">
-        <label class="">{{field.label}}</label>
+        <label class="w-[75px]">{{field.label}}：</label>
         {{field}}
       </div>
       {% if field.errors %}
