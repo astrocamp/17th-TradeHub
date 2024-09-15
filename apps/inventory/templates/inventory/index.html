@@ -2,15 +2,13 @@
 {% block content %} {% load static %}
 <div class="flex justify-end mt-20">
   <a href="{% url 'inventory:new' %}" class="btn bg-orange-600 text-white"
-    >Create</a
+    >新增</a
   >
-  <a href="#" class="btn bg-orange-600 text-white"
->Import file</a
->
-<a href="#" class="btn bg-orange-600 text-white">Export CSV</a>
-<a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
+<a href="#" class="btn bg-orange-600 text-white">匯入檔案</a>
+<a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
+<a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
-<div class="divider text-3xl font-bold">Inventory</div>
+<div class="divider text-3xl font-bold">庫存列表</div>
 <div class="flex justify-center mt-5">
   <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
@@ -22,11 +20,11 @@
                 class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
                 name="select"
               >
-                <option disabled>Select</option>
-                <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
-                <option value="normal" {% if selected_state == "normal" %}selected{% endif %}>Normal</option>
-                <option value="low_stock" {% if selected_state == "low_stock" %}selected{% endif %}>Low Stock</option>
-                <option value="out_stock" {% if selected_state == "out_stock" %}selected{% endif %}>Out Stock</option>
+                <option disabled>請選擇</option>
+                <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                <option value="normal" {% if selected_state == "normal" %}selected{% endif %}>正常</option>
+                <option value="low_stock" {% if selected_state == "low_stock" %}selected{% endif %}>低庫存</option>
+                <option value="out_stock" {% if selected_state == "out_stock" %}selected{% endif %}>缺貨</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -42,13 +40,13 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Product{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'inventory:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'inventory:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'inventory:index' %}?sort=safety_stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Safety Stock{% if order_by == 'safety_stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th><a href="{% url 'inventory:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th><a href="{% url 'inventory:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Last Updated{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th>Operate</th>
+          <th><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">產品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">現有庫存數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=safety_stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">安全庫存數量{% if order_by == 'safety_stock' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th></th>
         </tr>
       </thead>
       {% for item in inventory %}
@@ -78,33 +76,22 @@
               href="{% url 'inventory:edit' item.id %}"
               class="btn btn-primary"
             >
-              Edit
+              編輯
             </a>
             <a href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
-              >Delete</a
+              >刪除</a
             >
           </td>
         </tr>
         {% endfor %}
       </tbody>
-      <tfoot>
-        <tr>
-          <th></th>
-          <th>product</th>
-          <th>supplier</th>
-          <th>quantity</th>
-          <th>safety_stock</th>
-          <th>note</th>
-          <th>last_updated</th>
-          <th>operate</th>
-        </tr>
-      </tfoot>
     </table>
     <div class="pagination join flex justify-center">
+      {% if page_obj.has_other_pages %}
       <span class="step-links">
 
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page 1</button></a
+          ><button class="join-item btn">第1頁</button></a
         >
         {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -114,7 +101,7 @@
         <button class="join-item btn" disabled="disabled">«</button>
         {% endif %}
         <button class="join-item btn">
-          Page {{ page_obj.number }}
+          第{{ page_obj.number }}頁
         </button>
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -124,9 +111,10 @@
         <button class="join-item btn" disabled="disabled">»</button>
         {% endif %}
         <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+          ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
         >
       </span>
+      {% endif %}
     </div>
   </div>
 </div>

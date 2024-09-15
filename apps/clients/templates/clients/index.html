@@ -1,15 +1,15 @@
 {% extends "layouts/base.html" %} {% block content %}
 <div class="flex justify-end mt-12">
   <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white"
-    >Create</a
+    >新增</a
   >
   <a href="{% url 'clients:import_file' %}" class="btn bg-orange-600 text-white"
-    >Import file</a
+    >匯入檔案</a
   >
-  <a href="{% url 'clients:export_csv' %}" class="btn bg-orange-600 text-white">Export CSV</a>
-  <a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
+  <a href="{% url 'clients:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
-<div class="divider text-3xl font-bold">Clients</div>
+<div class="divider text-3xl font-bold">客戶列表</div>
 <div class="flex justify-center mt-10">
   <div class="overflow-x-auto">
     <table class="table table-xl text-center">
@@ -21,11 +21,11 @@
                 class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
                 name="select"
               >
-                <option disabled>Select</option>
-                <option value="all" {% if selected_state == "all" %}selected{% endif %}>All</option>
-                <option value="often" {% if selected_state == "often" %}selected{% endif %}>Often</option>
-                <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>Haply</option>
-                <option value="never" {% if selected_state == "never" %}selected{% endif %}>Never</option>
+                <option disabled>請選擇</option>
+                <option value="all" {% if selected_state == "all" %}selected{% endif %}>全部</option>
+                <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
+                <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>還未購買</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -42,13 +42,13 @@
             </form>
           </th>
           <th><a href="{% url 'clients:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">ID{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Client Name{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Phone Number{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Address{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">地址{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=create_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Create At{% if order_by == 'create_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th>Operate</th>
+          <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=create_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">建立時間{% if order_by == 'create_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -77,14 +77,15 @@
 
           <td>{{ client.create_at|date:"Y-m-d H:i" }}</td>
           <td class="flex justify-center gap-2">
-            <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">Edit</a>
+            <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</a>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
-              onsubmit="return confirm('Are you sure Delete it?')"
+              onsubmit="return confirm('確定刪除嗎？')"
+              class="btn btn-error"
             >
               {% csrf_token %}
-              <button class="btn btn-error" name="delete">Delete</button>
+              <button name="delete">刪除</button>
             </form>
           </td>
         </tr>
@@ -92,6 +93,7 @@
       </tbody>
     </table>
     <div class="pagination join flex justify-center">
+      {% if page_obj.has_other_pages %}
       <span class="step-links">
 
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -118,6 +120,7 @@
           ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
         >
       </span>
+      {% endif %}
     </div>
   </div>
 </div>
