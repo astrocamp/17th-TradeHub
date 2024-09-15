@@ -120,7 +120,7 @@ def import_file(request):
                 messages.success(request, "成功匯入 CSV")
                 return redirect("suppliers:index")
             except:
-                messages.success(request, "失敗匯入(CSV裡格式有問題)")
+                messages.success(request, "匯入失敗(檔案不是 CSV 或 Excel)")
                 return redirect("suppliers:import_file")
 
         elif file.name.endswith(".xlsx"):
@@ -129,7 +129,7 @@ def import_file(request):
                 columns={
                     "供應商名稱": "name",
                     "電話": "telephone",
-                    "連絡人名稱": "contact_person",
+                    "連絡人": "contact_person",
                     "Email": "email",
                     "統一編號": "gui_number",
                     "地址": "address",
@@ -171,7 +171,7 @@ def export_csv(request):
         [
             "供應商名稱",
             "電話",
-            "連絡人名稱",
+            "連絡人",
             "Email",
             "統一編號",
             "地址",
@@ -222,7 +222,7 @@ def export_excel(request):
     column_mapping = {
         "name": "供應商名稱",
         "telephone": "電話",
-        "contact_person": "連絡人名稱",
+        "contact_person": "連絡人",
         "email": "Email",
         "gui_number": "統一編號",
         "address": "地址",
