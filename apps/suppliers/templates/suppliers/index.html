@@ -55,7 +55,7 @@
             </thead>
             <tbody>
                 {% for supplier in suppliers %}
-                <tr onclick="window.location.href='{% url 'suppliers:show' supplier.id %}'" class="hover">
+                <tr onclick="window.location.href='{% url 'suppliers:show' supplier.id %}'" class="hover cursor-pointer">
                     {% if supplier.state == "often" %}
                     <th>
                       <span class="btn btn-sm btn-success text-lg">{{ supplier.state }}</span>
@@ -69,9 +69,11 @@
                       <span class="btn btn-sm btn-error text-lg">{{ supplier.state }}</span>
                     </th>
                     {% endif %}
-                    {% comment %} <th>
+                    {% comment %}
+                    <th>
                         <input type="checkbox" name="selected_suppliers" value="{{ supplier.id }}" class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                    </th> {% endcomment %}
+                    </th>
+                    {% endcomment %}
                     <th>{{ supplier.name }}</th>
                     <th>{{ supplier.telephone }}</th>
                     <th>{{ supplier.contact_person }}</th>
