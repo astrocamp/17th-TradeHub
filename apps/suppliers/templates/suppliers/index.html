@@ -5,11 +5,11 @@
     <a href="{% url 'suppliers:new' %}" class="btn bg-orange-600 text-white"
     >Create</a
   >
-  <a href="#" class="btn bg-orange-600 text-white"
+  <a href="{% url 'suppliers:import_file' %}" class="btn bg-orange-600 text-white"
 >Import file</a
 >
-<a href="#" class="btn bg-orange-600 text-white">Export CSV</a>
-<a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
+<a href="{% url 'suppliers:export_csv' %}" class="btn bg-orange-600 text-white">Export CSV</a>
+<a href="{% url 'suppliers:export_excel' %}" class="btn bg-orange-600 text-white">Export Excel</a>
 </div>
 <div class="divider text-3xl font-bold">Suppliers</div>
 

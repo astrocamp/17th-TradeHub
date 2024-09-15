@@ -2,7 +2,11 @@ import re  # Import the re module for regular expressions
 
 from django import forms
 
-from ..models import Supplier
+from apps.suppliers.models import Supplier
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class SupplierForm(forms.ModelForm):
