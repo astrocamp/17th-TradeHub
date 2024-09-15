@@ -32,3 +32,6 @@ inventory:
 	python manage.py loaddata fake_data/inventory_data.json
 
 data: suppliers products clients inventory
+
+collectstatic:
+	python manage.py collectstatic

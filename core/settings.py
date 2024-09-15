@@ -39,7 +39,10 @@ SECRET_KEY = os.getenv("APP_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = is_dev()
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "13.112.74.19",  # 公共IP
+    "127.0.0.1",  # 本地IP
+]
 
 
 # Application definition
@@ -164,9 +167,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+
+# 開發時的靜態檔案路徑
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# 部署時的靜態檔案路徑，收集靜態檔案到這個路徑
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
