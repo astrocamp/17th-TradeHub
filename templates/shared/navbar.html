@@ -52,7 +52,7 @@
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal gap-4">
       <li>
-        <details>
+        <details name="dropdown">
           <summary>Clients</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'clients:index' %}">Overview</a></li>
@@ -61,7 +61,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>Products</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'products:index' %}">Overview</a></li>
@@ -69,7 +69,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>Suppliers</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
@@ -80,7 +80,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>Inventory</summary>
           <ul class="bg-base-100 rounded-t-none p-2">
             <li><a href="{% url 'inventory:index' %}">Overview</a></li>
