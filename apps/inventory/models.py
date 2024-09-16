@@ -49,9 +49,11 @@ class Inventory(models.Model):
             purchase_order = PurchaseOrder.objects.create(
                 order_number=generate_order_number(),
                 supplier=self.supplier,
-                supplier_tel="",
-                contact_person="",
-                supplier_email="",
+                supplier_tel=Supplier.objects.get(name=self.supplier.name).telephone,
+                contact_person=Supplier.objects.get(
+                    name=self.supplier.name
+                ).contact_person,
+                supplier_email=Supplier.objects.get(name=self.supplier.name).email,
                 total_amount=0,
                 notes=message,
                 state=PurchaseOrder.UNFINISH,
@@ -73,9 +75,11 @@ class Inventory(models.Model):
             purchase_order = PurchaseOrder.objects.create(
                 order_number=generate_order_number(),
                 supplier=self.supplier,
-                supplier_tel="",
-                contact_person="",
-                supplier_email="",
+                supplier_tel=Supplier.objects.get(name=self.supplier.name).telephone,
+                contact_person=Supplier.objects.get(
+                    name=self.supplier.name
+                ).contact_person,
+                supplier_email=Supplier.objects.get(name=self.supplier.name).email,
                 total_amount=0,
                 notes=message,
                 state=PurchaseOrder.UNFINISH,
