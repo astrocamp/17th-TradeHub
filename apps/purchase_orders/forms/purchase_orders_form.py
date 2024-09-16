@@ -61,8 +61,8 @@ class PurchaseOrderForm(forms.ModelForm):
             self.add_error("contact_person", "Contact Person is required.")
         if supplier_email == "":
             self.add_error("supplier_email", "Supplier Email is required.")
-        if total_amount is None:
-            self.add_error("total_amount", "Total Amount is required.")
+        if total_amount == 0:
+            self.add_error("total_amount", "請填寫下方採購單細項")
 
         return cleaned_data
 
@@ -70,11 +70,12 @@ class PurchaseOrderForm(forms.ModelForm):
 class ProductItemForm(forms.ModelForm):
     class Meta:
         model = ProductItem
-        fields = ["product", "quantity", "price", "subtotal"]
+        fields = ["product", "quantity", "cost_price", "sale_price", "subtotal"]
         widgets = {
             "product": forms.Select(attrs={"class": "w-full"}),
             "quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
-            "price": forms.NumberInput(attrs={"class": "w-full"}),
+            "cost_price": forms.NumberInput(attrs={"class": "w-full"}),
+            "sale_price": forms.NumberInput(attrs={"class": "w-full"}),
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
         }
 

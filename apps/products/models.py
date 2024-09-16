@@ -7,7 +7,8 @@ from apps.suppliers.models import Supplier
 class Product(models.Model):
     product_id = models.CharField(max_length=10, unique=True)
     product_name = models.CharField(max_length=20)
-    price = models.PositiveIntegerField()
+    cost_price = models.PositiveIntegerField()
+    sale_price = models.PositiveIntegerField()
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="products", default=0
     )

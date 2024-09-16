@@ -5,6 +5,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
+from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
 from .forms.purchase_orders_form import (
@@ -54,6 +55,9 @@ def new(request):
             formset.save()
             return redirect("purchase_orders:index")
         else:
+            print(form.errors)
+            print("---")
+            print(formset.errors)
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
@@ -142,9 +146,14 @@ def delete_selected_purchase_orders(request):
 def load_supplier_info(request):
     supplier_id = request.GET.get("supplier_id")
     supplier = Supplier.objects.get(id=supplier_id)
+    products = Product.objects.filter(supplier=supplier).values(
+        "id", "product_id", "product_name", "cost_price", "sale_price"
+    )
+    products_data = list(products)
     data = {
         "supplier_tel": supplier.telephone,
         "contact_person": supplier.contact_person,
         "supplier_email": supplier.email,
+        "products": products_data,
     }
     return JsonResponse(data)
