@@ -11,6 +11,6 @@ urlpatterns = [
     path("show/<int:id>", views.show, name="show"),
     path("edit/<int:id>", views.edit, name="edit"),
     path("delete/<int:id>", views.delete, name="delete"),
-    path("load-supplier-info/", views.load_supplier_info, name="load_supplier_info"),
-    path("get_product_info/", views.get_product_info, name="get_product_info"),
+    path("load_supplier_info/", views.load_supplier_info, name="load_supplier_info"),
+    path("load_product_info/", views.load_product_info, name="load_product_info"),
 ]

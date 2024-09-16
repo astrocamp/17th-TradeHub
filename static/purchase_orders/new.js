@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // 自動填入供應商資訊
     if (supplierSelect.value) fetchSupplierInfo(supplierSelect.value);
     supplierSelect.addEventListener('change', () => fetchSupplierInfo(supplierSelect.value));
+    handleProductChange();
 
     // 新增子表單項目
     addItemButton.addEventListener('click', () => {
@@ -20,6 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         formsetItems.appendChild(newItem);
         formCount++;
         totalForms.value = formCount;
+        handleProductChange();
     });
 
     // 刪除子表單項目
@@ -52,7 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
     })
 
     function fetchSupplierInfo(supplierId) {
-        fetch(`/purchase_orders/load-supplier-info/?supplier_id=${supplierId}`)
+        fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('id_supplier_tel').value = data.supplier_tel;
@@ -71,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 productSelect.appendChild(option);
             });
         });
-
     }
 
     function updateFormIndexes() {
@@ -93,5 +94,28 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('total_amount').value = totalAmount;
     }
 
+    function fetchCostPrice(productId, callback) {
+        fetch(`/purchase_orders/load-product-info/?product_id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                callback(data.cost_price); // 將抓取的 cost_price 傳遞給回調函數
+            });
+    }
+
+    function handleProductChange() {
+        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
+            productSelect.addEventListener('change', function() {
+                const productId = this.value;
+                const fieldset = this.closest('fieldset');
+                const costPriceInput = fieldset.querySelector('input[name$="-cost_price"]');
+                fetch(`/purchase_orders/load_product_info/?product_id=${productId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        costPriceInput.value = data.cost_price;
+                    });
+
+            });
+        });
+    }
     updateTotalAmount();
 });
