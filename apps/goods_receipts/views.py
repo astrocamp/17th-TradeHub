@@ -13,10 +13,10 @@ from apps.suppliers.models import Supplier
 from .forms.goods_receipt_form import FileUploadForm, GoodsReceiptForm
 
 
-def index(req):
-    state = req.GET.get("select")
-    order_by = req.GET.get("sort", "id")
-    is_desc = req.GET.get("desc", "True") == "False"
+def index(request):
+    state = request.GET.get("select")
+    order_by = request.GET.get("sort", "id")
+    is_desc = request.GET.get("desc", "True") == "False"
 
     goods_receipts = GoodsReceipt.objects.all()
 
@@ -25,7 +25,7 @@ def index(req):
     order_by_field = order_by if is_desc else "-" + order_by
     goods_receipts = goods_receipts.order_by(order_by_field)
     paginator = Paginator(goods_receipts, 5)
-    page_number = req.GET.get("page")
+    page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     content = {
@@ -35,13 +35,13 @@ def index(req):
         "order_by": order_by,
         "page_obj": page_obj,
     }
-    if req.method == "POST":
-        form = GoodsReceiptForm(req.POST)
+    if request.method == "POST":
+        form = GoodsReceiptForm(request.POST)
         if form.is_valid():
             form.save()
             return redirect("goods_receipts:index")
-        return render(req, "goods_receipts/new.html", {"form": form})
-    return render(req, "goods_receipts/index.html", content)
+        return render(request, "goods_receipts/new.html", {"form": form})
+    return render(request, "goods_receipts/index.html", content)
 
 
 def new(request):
@@ -94,6 +94,7 @@ def edit(request, id):
 def delete(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     goods_receipt.delete()
+    messages.success(request, "刪除完成!")
     return redirect("goods_receipts:index")
 
 

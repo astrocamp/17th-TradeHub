@@ -75,6 +75,7 @@ def edit(request, id):
 def delete(request, id):
     inventory = get_object_or_404(Inventory, id=id)
     inventory.delete()
+    messages.success(request, "刪除完成!")
     return redirect("inventory:index")
 
 
