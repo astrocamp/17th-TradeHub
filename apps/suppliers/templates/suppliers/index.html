@@ -87,7 +87,7 @@
                             </a>
                             <form action="{% url 'suppliers:delete' supplier.id %}" method="POST" class="inline-block rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
                                 {% csrf_token %}
-                                <button type="submit" class="">
+                                <button onclick="return confirm('確認刪除?')" type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
                                     刪除
                                 </button>
                             </form>

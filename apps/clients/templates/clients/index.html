@@ -81,8 +81,7 @@
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
-              onsubmit="return confirm('確定刪除嗎？')"
-              class="btn btn-error"
+              onsubmit="return confirm('確認刪除?')"
             >
               {% csrf_token %}
               <button name="delete">刪除</button>
