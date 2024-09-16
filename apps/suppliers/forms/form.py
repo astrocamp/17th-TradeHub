@@ -24,65 +24,65 @@ class SupplierForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(
                 attrs={
-                    "placeholder": "Supplier Name",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入供應商名稱",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "telephone": forms.TextInput(
                 attrs={
-                    "placeholder": "Telephone Number",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入供應商的電話號碼",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "contact_person": forms.TextInput(
                 attrs={
-                    "placeholder": "Contact Person",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入聯絡人名稱",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "email": forms.TextInput(
                 attrs={
-                    "placeholder": "Email Address",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入供應商的電子信箱",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "gui_number": forms.TextInput(
                 attrs={
-                    "placeholder": "GUI Number",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入統一編號",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "address": forms.TextInput(
                 attrs={
-                    "placeholder": "Address",
-                    "class": "w-full box-border",
+                    "placeholder": "請輸入供應商的地址",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
                 }
             ),
             "note": forms.Textarea(
                 attrs={
-                    "placeholder": "Additional Notes",
+                    "placeholder": "如有其他備註事項，請填入",
                     "rows": 3,
-                    "class": "w-full box-border",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100 text-sm",
                 }
             ),
         }
         labels = {
-            "name": "Supplier Name",
-            "telephone": "Telephone Number",
-            "contact_person": "Contact Person",
-            "email": "Email Address",
-            "gui_number": "GUI Number",
-            "address": "Address",
-            "note": "Additional Notes",
+            "name": "供應商名稱",
+            "telephone": "電話號碼",
+            "contact_person": "聯絡人",
+            "email": "電子信箱",
+            "gui_number": "統一編號",
+            "address": "地址",
+            "note": "備註",
         }
         help_texts = {
-            "name": "Enter the full name of the supplier",
-            "telephone": "Enter a phone number (e.g., 0912345678)",
-            "contact_person": "Enter the name of the primary contact person",
-            "email": "Enter a valid email (e.g., example@gmail.com)",
-            "gui_number": "Enter an 8-digit GUI number (e.g., 12345678)",
-            "address": "Enter the full address of the supplier",
-            "note": "Any additional notes or comments",
+            "name": "例: 五倍貿易(請填入公司全名)",
+            "telephone": "例: 行動電話:0912345678 / 市話:02-28345678",
+            "contact_person": "例: 王小明",
+            "email": "例: 5xcampus@gmail.com",
+            "gui_number": "例: 10458574(請填入正確的統一編號)",
+            "address": "例: 台北市中正區衡陽路123號",
+            "note": "例: 備用電話 / 備註事項",
         }
 
     def __init__(self, *args, **kwargs):
@@ -96,32 +96,61 @@ class SupplierForm(forms.ModelForm):
         telephone = cleaned_data.get("telephone")
         contact_person = cleaned_data.get("contact_person")
         email = cleaned_data.get("email")
-        gui_number = cleaned_data.get("gui_number")
         address = cleaned_data.get("address")
 
         if not name:
-            self.add_error("name", "Supplier Name is required.")
+            self.add_error("name", "請填入供應商名稱")
 
         if telephone == "":
-            self.add_error("telephone", "Telephone is required.")
+            self.add_error("telephone", "請填入電話號碼")
         elif not re.match(
-            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0(37|49)\d{7}|0(37|49)-\d{7}|0(37|49)-\d{3}-\d{4}|0(37|49)-\d{4}-\d{3}|0\d{8}|0\d{9}|0\d-\d{7}|0\d-\d{8}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3}|0\d-\d{4}-\d{4})$",
             telephone,
         ):
-            self.add_error("telephone", "Invalid phone number.")
+            self.add_error("telephone", "請填入正確的電話號碼")
 
         if not contact_person:
-            self.add_error("contact_person", "Contact Person is required.")
+            self.add_error("contact_person", "請填入聯絡人姓名")
 
         if email == "":
-            self.add_error("email", "Email address is required.")
-
-        if gui_number == "":
-            self.add_error("gui_number", "GUI Number is required.")
-        elif not re.match(r"^\d{8}$", gui_number):
-            self.add_error("gui_number", "Invalid GUI number.")
+            self.add_error("email", "請填入電子信箱")
+        elif Supplier.objects.filter(email=email).exclude(id=self.instance.id).exists():
+            self.add_error("email", "此電子信箱已被使用")
 
         if not address:
-            self.add_error("address", "Address is required.")
+            self.add_error("address", "請填入地址")
 
         return cleaned_data
+
+    def clean_gui_number(self):
+        gui_number = self.cleaned_data.get("gui_number")
+        if gui_number == "":
+            self.add_error("gui_number", "請填入統一編號")
+        else:
+            try:
+                # 驗證統一編號
+                validation_message = self.validate_gui_number(gui_number)
+                if validation_message != "統編驗證成功":
+                    self.add_error("gui_number", validation_message)
+            except ValueError as e:
+                self.add_error("gui_number", str(e))
+            except Exception:
+                self.add_error("gui_number", "統編驗證失敗")
+
+        return gui_number
+
+    def validate_gui_number(self, gui_number):
+        logic_multipliers = [1, 2, 1, 2, 1, 2, 4, 1]
+        logic_sum = 0
+
+        for i in range(8):
+            product = int(gui_number[i]) * logic_multipliers[i]
+            logic_sum += sum(int(digit) for digit in str(product))
+
+        if gui_number[6] == "7":
+            if logic_sum % 5 == 0 or (logic_sum + 1) % 5 == 0:
+                return "統編驗證成功"
+        else:
+            if logic_sum % 5 == 0:
+                return "統編驗證成功"
+        return "統編驗證失敗"

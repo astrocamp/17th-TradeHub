@@ -12,7 +12,11 @@ User = get_user_model()
 
 
 def index(request):
+    user_form = CustomUserCreationForm()
+    return render(request, "users/register.html", {"user_form": user_form})
 
+
+def register(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST)
         username = request.POST.get("username")
@@ -34,11 +38,6 @@ def index(request):
         else:
             return render(request, "users/register.html", {"user_form": user_form})
 
-    user_form = CustomUserCreationForm()
-    return render(request, "users/register.html", {"user_form": user_form})
-
-
-def register(request):
     user_form = CustomUserCreationForm()
     return render(request, "users/register.html", {"user_form": user_form})
 

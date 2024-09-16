@@ -30,7 +30,7 @@
             <form
               action="{% url 'orders:edit' order.id %}"
               method="post"
-              onsubmit="return confirm('Are you sure Delete it?')"
+              onsubmit="return confirm('確認刪除?')"
             >
               {% csrf_token %}
               <button name="delete">Delete</button>

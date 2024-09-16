@@ -140,6 +140,7 @@ def get_product_item_formset(extra):
 def delete(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     purchase_order.delete()
+    messages.success(request, "刪除完成!")
     return redirect("purchase_orders:index")
 
 

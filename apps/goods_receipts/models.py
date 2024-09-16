@@ -32,7 +32,7 @@ class GoodsReceipt(models.Model):
         self.save()
 
     def __repr__(self):
-        return f"{self.receipt_number} - {self.supplier.name} - {self.goods_name}"
+        return f"{self.receipt_number}-{self.supplier.name}-{self.goods_name}"
 
     UNFINISH = "unfinish"
     FINISHED = "finished"
