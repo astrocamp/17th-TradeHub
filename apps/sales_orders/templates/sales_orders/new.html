@@ -6,12 +6,12 @@
       <thead>
         <tr class="text-xl">
           <th></th>
-          <th>Client</th>
-          <th>Product</th>
-          <th>Quantity</th>
-          <th>Stock</th>
-          <th>Price</th>
-          <th>Operate</th>
+          <th>客戶名稱</th>
+          <th>產品名稱</th>
+          <th>數量</th>
+          <th>庫存</th>
+          <th>價格</th>
+          <th>操作</th>
         </tr>
       </thead>
       <tbody>
@@ -22,7 +22,7 @@
             action="{% url 'sales_orders:new' %}"
           >
             {% csrf_token %}
-            <th class="text-xl">Create<br />SalesOrder</th>
+            <th class="text-xl">新增</th>
             <td>{{ form.client }}</td>
             <td>{{ form.product }}</td>
             <td>{{ form.quantity }}</td>
@@ -30,7 +30,7 @@
             <td>{{ form.price }}</td>
             <td>
               <button type="submit" class="btn bg-orange-600 text-white">
-                Add
+                新增
               </button>
             </td>
           </form>

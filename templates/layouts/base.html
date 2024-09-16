@@ -10,10 +10,9 @@
     <script src="{% static 'scripts/app.js' %}" type="module" defer></script>
   </head>
   <body>
-    <div class="container mx-auto">
-      {% include "shared/navbar.html" %}
-      {% include "shared/flash.html" %}
-      {% block content %} {% endblock %}
+    <div class="container mx-auto pt-[70px]">
+      {% include "shared/navbar.html" %} {% include "shared/flash.html" %}
+      {%block content %} {% endblock %}
     </div>
   </body>
 </html>

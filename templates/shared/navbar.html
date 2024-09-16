@@ -1,4 +1,6 @@
-<div class="navbar bg-base-100 shadow-xl rounded-box z-50">
+<div
+  class="navbar bg-base-100 shadow-xl rounded-box z-50 fixed top-0 left-0 right-0"
+>
   <div class="navbar-start">
     <div class="dropdown">
       <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -21,73 +23,73 @@
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
       >
-        <li>Clients</li>
+        <li>客戶</li>
         <ul class="p-2">
-          <li><a href="{% url 'clients:index' %}">Overview</a></li>
-          <li><a href="{% url 'orders:index' %}">Orders</a></li>
+          <li><a href="{% url 'clients:index' %}">客戶列表</a></li>
+          <li><a href="{% url 'orders:index' %}">訂單</a></li>
         </ul>
-        <li>Products</li>
+        <li>商品</li>
         <ul class="p-2">
-          <li><a href="{% url 'products:index' %}">Overview</a></li>
+          <li><a href="{% url 'products:index' %}">商品列表</a></li>
         </ul>
-        <li>Suppliers</li>
+        <li>供應商</li>
         <ul class="p-2">
-          <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
+          <li><a href="{% url 'suppliers:index' %}">供應商列表</a></li>
           <li>
-            <a href="{% url 'purchase_orders:index' %}">Purchase Orders</a>
+            <a href="{% url 'purchase_orders:index' %}">採購單</a>
           </li>
         </ul>
-        <li>Inventory</li>
+        <li>庫存</li>
         <ul class="p-2">
-          <li><a href="{% url 'inventory:index' %}">Overview</a></li>
+          <li><a href="{% url 'inventory:index' %}">庫存列表</a></li>
           <li>
-            <a href="{% url 'goods_receipts:index' %}">Goods Receipts</a>
+            <a href="{% url 'goods_receipts:index' %}">進貨單</a>
           </li>
-          <li><a href="{% url 'sales_orders:index' %}">Sales Orders</a></li>
+          <li><a href="{% url 'sales_orders:index' %}">銷貨單</a></li>
         </ul>
       </ul>
     </div>
     <a href="/" class="btn btn-ghost text-2xl">TradeHub</a>
   </div>
   <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal gap-4">
+    <ul class="menu menu-horizontal gap-x-10 font-bold text-sm">
       <li>
         <details name="dropdown">
-          <summary>Clients</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a href="{% url 'clients:index' %}">Overview</a></li>
-            <li><a href="{% url 'orders:index' %}">Orders</a></li>
+          <summary>客戶</summary>
+          <ul class="bg-base-100 rounded-t-none w-[120px]">
+            <li><a href="{% url 'clients:index' %}">客戶列表</a></li>
+            <li><a href="{% url 'orders:index' %}">訂單</a></li>
           </ul>
         </details>
       </li>
       <li>
         <details name="dropdown">
-          <summary>Products</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a href="{% url 'products:index' %}">Overview</a></li>
+          <summary>商品</summary>
+          <ul class="bg-base-100 rounded-t-none w-[120px]">
+            <li><a href="{% url 'products:index' %}">商品列表</a></li>
           </ul>
         </details>
       </li>
       <li>
         <details name="dropdown">
-          <summary>Suppliers</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a href="{% url 'suppliers:index' %}">Overview</a></li>
+          <summary>供應商</summary>
+          <ul class="bg-base-100 rounded-t-none w-[120px]">
+            <li><a href="{% url 'suppliers:index' %}">供應商列表</a></li>
             <li>
-              <a href="{% url 'purchase_orders:index' %}">Purchase Orders</a>
+              <a href="{% url 'purchase_orders:index' %}">採購單</a>
             </li>
           </ul>
         </details>
       </li>
       <li>
         <details name="dropdown">
-          <summary>Inventory</summary>
-          <ul class="bg-base-100 rounded-t-none p-2">
-            <li><a href="{% url 'inventory:index' %}">Overview</a></li>
+          <summary>庫存</summary>
+          <ul class="bg-base-100 rounded-t-none w-[120px]">
+            <li><a href="{% url 'inventory:index' %}">庫存列表</a></li>
             <li>
-              <a href="{% url 'goods_receipts:index' %}">Goods Receipts</a>
+              <a href="{% url 'goods_receipts:index' %}">進貨單</a>
             </li>
-            <li><a href="{% url 'sales_orders:index' %}">Sales Orders</a></li>
+            <li><a href="{% url 'sales_orders:index' %}">銷貨單</a></li>
           </ul>
         </details>
       </li>
@@ -106,8 +108,8 @@
       {% else %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[85px] flex justify-center"
-        >{{ request.user.username }}</a
+        class="w-[100px] flex justify-center text-lg font-bold"
+        >{{ request.user.first_name }}</a
       >
       {% endif %}
       <form
@@ -116,14 +118,14 @@
         class="w-[85px] flex justify-center"
       >
         {% csrf_token %}
-        <button type="submit">Log Out</button>
+        <button type="submit">登出</button>
       </form>
       {% else %}
       <a href="{% url 'users:register' %}" class="w-[85px] flex justify-center"
-        >Sign Up</a
+        >註冊</a
       >
       <a href="{% url 'users:log_in' %}" class="w-[85px] flex justify-center"
-        >Log In</a
+        >登入</a
       >
       {% endif %}
     </div>

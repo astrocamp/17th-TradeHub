@@ -1,86 +1,102 @@
-{% extends 'layouts/base.html' %}
-{% load static %}
-{% block content %}
-    <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
-        <form action="{% url 'purchase_orders:index' %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {% csrf_token %}
-            {% for field in form %}
-                {% if field.name == 'order_number' %}
-                    <div class="col-span-full p-4 flex justify-between items-end">
-                        <h2 class="text-2xl font-bold text-gray-800">Add New Purchase Order</h2>
-                        <div class="text-gray-700">
-                            <strong>Order Number: {{ field.value }}</strong>
-                            <input type="hidden" name="order_number" value="{{ field.value }}">
-                        </div>
-                    </div>
-                {% else %}
-                    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
-                        <div>
-                            {{ field }}
-                        </div>
-                        {% if field.errors %}
-                            <ul class="errorlist text-red-500 text-sm mt-2">
-                                {% for error in field.errors %}
-                                    <li class="text-red-500 text-sm mt-2">{{ error }}</li>
-                                {% endfor %}
-                            </ul>
-                        {% endif %}
-                    </div>
-                {% endif %}
-            {% endfor %}
-
-            <!-- 子表單 -->
-            {{ formset.management_form }}
-            <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Product Items</h2>
-
-                <!-- 表頭 -->
-                <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Product</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Quantity</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Price</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Subtotal</span>
-                    <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
-                        Add an item
-                    </button>
-                </div>
-                <div id="formset-items">
-                <!-- 表單子項目 -->
-                {% for form in formset %}
-                    <fieldset class="p-4 pb-2   bg-gray-100 items-center">
-
-                        <div class="flex items-center gap-4">
-                            <div class="flex-1">{{ form.product }}</div>
-                            <div class="flex-1">{{ form.quantity }}</div>
-                            <div class="flex-1">{{ form.price }}</div>
-                            <div class="flex-1">{{ form.subtotal }}</div>
-                            <div class="mx-4 text-center">
-                                <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
-                        <div class="mt-2 text-red-500">{{ form.non_field_errors }}</div>
-                    </fieldset>
-                {% endfor %}
-                </div>
-            </div>
-            <!-- 新增按鈕 -->
-            <div class="col-span-full">
-                <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">Add</button>
-            </div>
-        </form>
+{% extends 'layouts/base.html' %} {% load static %} {% block content %}
+<div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <form
+    action="{% url 'purchase_orders:index' %}"
+    method="POST"
+    class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+  >
+    {% csrf_token %} {%for field in form %} {%if field.name == 'order_number' %}
+    <div class="col-span-full p-4 flex justify-between items-end">
+      <h2 class="text-2xl font-bold text-gray-800">新增採購單</h2>
+      <div class="text-gray-700">
+        <strong>訂單號碼: {{ field.value }}</strong>
+        <input type="hidden" name="order_number" value="{{ field.value }}" />
+      </div>
     </div>
+    {% else %}
+    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+      <label
+        for="{{ field.id_for_label }}"
+        class="text-lg font-semibold text-gray-800"
+        >{{ field.label }}</label
+      >
+      <div>{{ field }}</div>
+      {% if field.errors %}
+      <ul class="errorlist text-red-500 text-sm mt-2">
+        {% for error in field.errors %}
+        <li class="text-red-500 text-sm mt-2">{{ error }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </div>
+    {% endif %} {% endfor %}
 
-    <script>
-        window.djangoVariables = {
-            supplierIdField: "{{ form.supplier.id_for_label }}",
-            supplierTelField: "{{ form.supplier_tel.id_for_label }}",
-            contactPersonField: "{{ form.contact_person.id_for_label }}",
-            supplierEmailField: "{{ form.supplier_email.id_for_label }}",
-            loadSupplierInfoUrl: "{% url 'purchase_orders:load_supplier_info' %}",
-        };
-    </script>
-    <script src="{% static 'purchase_orders/new.js' %}" defer></script>
+    <!-- 子表單 -->
+    {{ formset.management_form }}
+    <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
+      <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">
+        產品項目
+      </h2>
+
+      <!-- 表頭 -->
+      <div
+        class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4"
+      >
+        <span class="flex-1 text-lg font-semibold text-gray-800">產品名稱</span>
+        <span class="flex-1 text-lg font-semibold text-gray-800">數量</span>
+        <span class="flex-1 text-lg font-semibold text-gray-800">單價</span>
+        <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
+        <button
+          type="button"
+          id="add-item"
+          class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition"
+        >
+          新增
+        </button>
+      </div>
+      <div id="formset-items">
+        <!-- 表單子項目 -->
+        {% for form in formset %}
+        <fieldset class="p-4 pb-2 bg-gray-100 items-center">
+          <div class="flex items-center gap-4">
+            <div class="flex-1">{{ form.product }}</div>
+            <div class="flex-1">{{ form.quantity }}</div>
+            <div class="flex-1">{{ form.price }}</div>
+            <div class="flex-1">{{ form.subtotal }}</div>
+            <div class="mx-4 text-center">
+              <button
+                type="button"
+                class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item"
+              >
+                刪除
+              </button>
+            </div>
+          </div>
+          <div class="mt-2 text-red-500">{{ form.non_field_errors }}</div>
+        </fieldset>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- 新增按鈕 -->
+    <div class="col-span-full">
+      <button
+        type="submit"
+        class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition"
+      >
+        新增
+      </button>
+    </div>
+  </form>
+</div>
+
+<script>
+  window.djangoVariables = {
+    supplierIdField: "{{ form.supplier.id_for_label }}",
+    supplierTelField: "{{ form.supplier_tel.id_for_label }}",
+    contactPersonField: "{{ form.contact_person.id_for_label }}",
+    supplierEmailField: "{{ form.supplier_email.id_for_label }}",
+    loadSupplierInfoUrl: "{% url 'purchase_orders:load_supplier_info' %}",
+  };
+</script>
+<script src="{% static 'purchase_orders/new.js' %}" defer></script>
 {% endblock %}

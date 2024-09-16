@@ -16,40 +16,49 @@ class ProductForm(ModelForm):
         ]
         widgets = {
             "product_id": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Product ID"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入產品編號",
+                }
             ),
             "product_name": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Product Name"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入產品名稱",
+                }
             ),
             "price": forms.NumberInput(
-                attrs={"class": "form-control", "placeholder": "Price"}
+                attrs={
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
+                    "placeholder": "請輸入產品價格",
+                }
             ),
             "supplier": forms.Select(
                 attrs={
-                    "class": "form-control w-full select select-bordered flex items-center justify-center"
+                    "class": "h-[24px] w-full rounded-md p-2 flex items-center justify-center bg-gray-100 focus:outline-none text-sm"
                 }
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control",
-                    "placeholder": "Any additional notes",
+                    "class": "form-control w-full rounded-md p-2 bg-gray-100 text-sm",
+                    "placeholder": "如有其他備註事項，請填入",
                     "rows": 3,
                 }
             ),
         }
         labels = {
-            "product_id": "Product ID",
-            "product_name": "Product Name",
-            "price": "Price",
-            "supplier": "Supplier",
-            "note": "Note",
+            "product_id": "產品編號",
+            "product_name": "產品名稱",
+            "price": "價格",
+            "supplier": "供應商",
+            "note": "備註",
         }
         help_texts = {
-            "product_id": "Please enter the product ID.",
-            "product_name": "Please enter the full name of the product.",
-            "price": "Please enter the product price.",
-            "supplier": "Please select the supplier from the list.",
-            "note": "You can enter any additional notes or comments here.",
+            "product_id": "例:P001",
+            "product_name": "例:小黑板",
+            "price": "請填入數字即可",
+            "supplier": "請選擇供應商",
+            "note": "",
         }
 
     def __init__(self, *args, **kwargs):
@@ -65,17 +74,23 @@ class ProductForm(ModelForm):
         supplier = cleaned_data.get("supplier")
 
         if not product_id:
-            self.add_error("product_id", "Product ID is required.")
+            self.add_error("product_id", "請填入產品編號")
+        elif (
+            Product.objects.filter(product_id=product_id)
+            .exclude(id=self.instance.id)
+            .exists()
+        ):
+            self.add_error("product_id", "此產品編號已存在")
 
         if not product_name:
-            self.add_error("product_name", "Product Name is required.")
+            self.add_error("product_name", "請填入產品名稱")
 
         if price is None:
-            self.add_error("price", "Price is required.")
+            self.add_error("price", "請填入產品價格")
         elif price == 0:
-            self.add_error("price", "Price should not be zero.")
+            self.add_error("price", "產品價格應該大於零")
 
         if not supplier:
-            self.add_error("supplier", "Supplier is required.")
+            self.add_error("supplier", "請選擇供應商")
 
         return cleaned_data
