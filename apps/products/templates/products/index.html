@@ -25,7 +25,7 @@
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
                 <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
                 <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
-                <option value="never" {% if selected_state == "never" %}selected{% endif %}>不常購買</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>未購買</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -54,15 +54,15 @@
           <tr class="hover">
             {% if product.state == "often" %}
             <th>
-              <span class="btn btn-sm btn-success text-lg">{{ product.state }}</span>
+              <span class="btn btn-sm btn-success text-lg">經常購買</span>
             </th>
             {% elif product.state == "haply" %}
             <th>
-              <span class="btn btn-sm btn-warning text-lg">{{ product.state }}</span>
+              <span class="btn btn-sm btn-warning text-lg">偶爾購買</span>
             </th>
             {% elif product.state == "never" %}
             <th>
-              <span class="btn btn-sm btn-error text-lg">{{ product.state }}</span>
+              <span class="btn btn-sm btn-error text-lg">未購買</span>
             </th>
             {% endif %}
             <th>{{product.product_id}}</th>
@@ -79,7 +79,7 @@
                   >
                     編輯
                   </a>
-                  <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error text-white"
+                  <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error"
                     >刪除</a
                   >
                 </div>

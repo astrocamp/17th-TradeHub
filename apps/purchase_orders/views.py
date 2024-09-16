@@ -161,8 +161,8 @@ def generate_order_number():
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
         PurchaseOrder.objects.filter(order_number__startswith=today)
-        .order_by("order_number")
-        .last()
+        .order_by("-order_number")
+        .first()
     )
 
     if last_order:

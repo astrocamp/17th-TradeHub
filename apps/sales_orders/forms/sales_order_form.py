@@ -50,11 +50,11 @@ class SalesOrderForm(forms.ModelForm):
             ),
         }
         help_texts = {
-            "client": "Please select a client.",
-            "product": "Please select a product.",
-            "quantity": "Please enter the quantity.",
-            "stock": "Please select a stock.",
-            "price": "Please enter the price.",
+            "client": "請選擇客戶。",
+            "product": "請選擇產品。",
+            "quantity": "請輸入數量。",
+            "stock": "請選擇庫存。",
+            "price": "請輸入價格。",
         }
 
     def __init__(self, *args, **kwargs):
@@ -71,22 +71,22 @@ class SalesOrderForm(forms.ModelForm):
         price = cleaned_data.get("price")
 
         if not client:
-            self.add_error("client", "Client is required.")
+            self.add_error("client", "請選擇客戶。")
 
         if not product:
-            self.add_error("product", "Product is required.")
+            self.add_error("product", "請選擇產品。")
 
         if quantity is None:
-            self.add_error("quantity", "Quantity is required.")
+            self.add_error("quantity", "請輸入數量。")
         elif quantity == 0:
-            self.add_error("quantity", "Quantity should not be zero.")
+            self.add_error("quantity", "數量不能為零。")
 
         if not stock:
-            self.add_error("stock", "Stock is required.")
+            self.add_error("stock", "請選擇庫存。")
 
         if price is None:
-            self.add_error("price", "Price is required.")
+            self.add_error("price", "請輸入價格。")
         elif price == 0:
-            self.add_error("price", "Price should not be zero.")
+            self.add_error("price", "價格不能為零。")
 
         return cleaned_data

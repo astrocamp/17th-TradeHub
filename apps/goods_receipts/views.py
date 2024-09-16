@@ -1,8 +1,12 @@
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models import F
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.goods_receipts.models import GoodsReceipt
+from apps.inventory.models import Inventory
 
 from .forms import GoodsReceiptForm
 
@@ -90,3 +94,12 @@ def delete(request, id):
     goods_receipt.delete()
     messages.success(request, "刪除完成!")
     return redirect("goods_receipts:index")
+
+
+@receiver(pre_save, sender=GoodsReceipt)
+def update_purchase_order_state(sender, instance, **kwargs):
+    if instance.state == "TO_BE_STOCKED":
+        Inventory.objects.filter(product=instance.goods_name).update(
+            quantity=F("quantity") + instance.quantity
+        )
+        instance.set_finished()

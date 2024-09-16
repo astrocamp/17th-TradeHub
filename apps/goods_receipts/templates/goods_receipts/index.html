@@ -17,17 +17,17 @@
                 <tr class="text-xl">
                     <th>
                         <form action="{% url 'goods_receipts:index' %}" method="GET">
-                            <select
-                                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
-                                name="select"
-                            >
-                                <option disabled>選擇</option>
-                                <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
-                                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
-                                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
-                            </select>
-
-                            <button type="submit" class="btn btn-square btn-sm">
+                          <select
+                            class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                            name="select"
+                          >
+                          <option disabled>選擇</option>
+                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                          <option value="to_be_restocked" {% if selected_state == "to_be_restocked" %}selected{% endif %}>待進貨</option>
+                          <option value="to_be_stocked" {% if selected_state == "to_be_stocked" %}selected{% endif %}>待入庫</option>
+                          </select>
+                          <button type="submit" class="btn btn-square btn-sm">
                               <svg
                                 class="w-5 h-5"
                                 xmlns="http://www.w3.org/2000/svg"
@@ -53,13 +53,17 @@
             <tbody>
                 {% for goods_receipt in goods_receipts %}
                 <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover">
-                  {% if goods_receipt.state == "finish" %}
+                  {% if goods_receipt.state == "finished" %}
                   <th>
-                    <span class="btn btn-sm btn-success text-lg">{{ goods_receipt.state }}</span>
+                    <span class="btn btn-sm btn-success text-lg">完成</span>
                   </th>
-                  {% elif goods_receipt.state == "unfinish" %}
+                  {% elif goods_receipt.state == "to_be_restocked" %}
                   <th>
-                    <span class="btn btn-sm btn-error text-lg">{{ goods_receipt.state }}</span>
+                    <span class="btn btn-sm btn-error text-lg">待進貨</span>
+                  </th>
+                  {% elif goods_receipt.state == "to_be_stocked" %}
+                  <th>
+                    <span class="btn btn-sm btn-warning text-lg">待入庫</span>
                   </th>
                   {% endif %}
                     <th>{{goods_receipt.receipt_number}}</th>
@@ -71,7 +75,7 @@
                     <th>{{goods_receipt.note}}</th>
                     <th>
                         <div class="flex justify-center">
-                            <div class="flex gap-2">
+                            <div class="flex gap-1">
                                 <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">編輯</a>
                                 <a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">刪除</a>
                             </div>
