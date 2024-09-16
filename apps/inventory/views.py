@@ -135,7 +135,7 @@ def import_file(request):
                         )
                     except (Product.DoesNotExist, Product.DoesNotExist) as e:
                         messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
-                        return redirect("orders:index")
+                        return redirect("inventory:index")
                 messages.success(request, "成功匯入 Excel")
                 return redirect("inventory:index")
 
