@@ -8,7 +8,6 @@ class LoginRequiredMiddleware:
 
     def __call__(self, request):
 
-        # 不用登入就能看到的頁面
         exempt_urls = [
             reverse("users:log_in"),
             reverse("users:register"),
@@ -20,7 +19,6 @@ class LoginRequiredMiddleware:
             reverse("users:log_out"),
         ]
 
-        # 檢查用戶是否登錄
         if not request.user.is_authenticated and request.path not in exempt_urls:
             if request.method == "POST":
                 # 檢查請求的路徑是否為特定的 URL，會先執行請求

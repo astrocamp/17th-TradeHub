@@ -71,6 +71,7 @@ def edit(request, id):
 def delete(request, id):
     sales_orders = get_object_or_404(SalesOrder, id=id)
     sales_orders.delete()
+    messages.success(request, "刪除完成!")
     return redirect("sales_orders:index")
 
 
