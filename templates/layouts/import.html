@@ -1,6 +1,6 @@
 {% extends "layouts/base.html" %} {% block content %}
 <div class="flex justify-end mt-12"></div>
-<div class="divider text-3xl font-bold mt-30">Import File</div>
+<div class="divider text-3xl font-bold mt-30">匯入檔案</div>
 <div class="flex justify-center text-center mt-6">
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
@@ -11,7 +11,7 @@
         type="submit"
         class="btn bg-orange-600 text-white justify-center text-center mt-20"
       >
-        Upload File
+        上傳檔案
       </button>
     </div>
   </form>

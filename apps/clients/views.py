@@ -55,6 +55,7 @@ def client_update_and_delete(request, id):
     if request.method == "POST":
         if "delete" in request.POST:
             client.delete()
+            messages.success(request, "刪除完成!")
             return redirect("clients:index")
         else:
             form = ClientForm(request.POST, instance=client)
@@ -88,7 +89,7 @@ def import_file(request):
                         email=row[3],
                         note=row[4],
                     )
-                messages.success(request, "成功匯入 CSV")
+                messages.success(request, "CSV檔案已成功匯入")
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):

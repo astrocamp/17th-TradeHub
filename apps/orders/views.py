@@ -55,6 +55,7 @@ def order_update_and_delete(request, id):
     if request.method == "POST":
         if "delete" in request.POST:
             order.delete()
+            messages.success(request, "刪除完成!")
             return redirect("orders:index")
         else:
             form = OrderForm(request.POST, instance=order)

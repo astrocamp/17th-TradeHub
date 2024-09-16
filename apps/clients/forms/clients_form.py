@@ -24,7 +24,7 @@ class ClientForm(forms.ModelForm):
             "name": forms.TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入客戶的全名",
+                    "placeholder": "請輸入客戶名稱",
                 }
             ),
             "phone_number": forms.TextInput(
@@ -61,7 +61,7 @@ class ClientForm(forms.ModelForm):
             "note": "備註",
         }
         help_texts = {
-            "name": "例: 五倍貿易",
+            "name": "例: 五倍貿易(請填入公司全名或聯絡人姓名)",
             "phone_number": "例: 行動電話:0912345678 / 市話:02-28345678",
             "address": "例: 台北市中正區衡陽路123號",
             "email": "例: 5xcampus@gmail.com",
