@@ -1,6 +1,10 @@
 from django import forms
 
-from ..models import Orders
+from apps.orders.models import Orders
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class OrderForm(forms.ModelForm):

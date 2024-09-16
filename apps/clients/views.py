@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from pytz import tzinfo
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
@@ -94,7 +93,7 @@ def import_file(request):
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
+                df = pd.read_excel(file, dtype={"phone_number": str})
                 for _, row in df.iterrows():
                     Client.objects.create(
                         name=str(row["name"]),
@@ -104,24 +103,24 @@ def import_file(request):
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
-                messages.success(request, "Excel檔案已成功匯入")
+                messages.success(request, "成功匯入 Excel")
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "檔案不是CSV或Excel格式")
-                return render(request, "clients/import.html", {"form": form})
+                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
-    return render(request, "clients/import.html", {"form": form})
+    return render(request, "layouts/import.html", {"form": form})
 
 
 def export_csv(request):
     response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="products.csv"'
+    response["Content-Disposition"] = 'attachment; filename="Clients.csv"'
 
     writer = csv.writer(response)
     writer.writerow(
-        ["name", "phone_number", "address,email", "create_at", "delete_at", "note"]
+        ["客戶名稱", "電話", "地址", "Email", "建立時間", "刪除時間", "備註"]
     )
 
     clients = Client.objects.all()
@@ -137,5 +136,37 @@ def export_csv(request):
                 client.note,
             ]
         )
+
+    return response
+
+
+def export_excel(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
+
+    clients = Client.objects.all().values(
+        "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
+    )
+
+    df = pd.DataFrame(clients)
+    for col in df.select_dtypes(include=["datetime64[ns, UTC]"]).columns:
+        df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+
+    column_mapping = {
+        "name": "客戶名稱",
+        "phone_number": "電話",
+        "address": "地址",
+        "email": "Email",
+        "create_at": "建立時間",
+        "delete_at": "刪除時間",
+        "note": "備註",
+    }
+
+    df.rename(columns=column_mapping, inplace=True)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
