@@ -44,16 +44,15 @@ class Inventory(models.Model):
     def set_out_stock(self):
         if not PurchaseOrder.objects.filter(
             supplier=self.supplier, state=PurchaseOrder.UNFINISH
-        ):  # 之後要改成待處理（pending）
+        ):
             message = f"庫存於缺貨狀態，自動下單 {self.safety_stock} 個 {self.product}"
+            supplier = Supplier.objects.get(name=self.supplier.name)
             purchase_order = PurchaseOrder.objects.create(
                 order_number=generate_order_number(),
                 supplier=self.supplier,
-                supplier_tel=Supplier.objects.get(name=self.supplier.name).telephone,
-                contact_person=Supplier.objects.get(
-                    name=self.supplier.name
-                ).contact_person,
-                supplier_email=Supplier.objects.get(name=self.supplier.name).email,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
                 total_amount=0,
                 notes=message,
                 state=PurchaseOrder.UNFINISH,
@@ -70,16 +69,15 @@ class Inventory(models.Model):
     def set_low_stock(self):
         if not PurchaseOrder.objects.filter(
             supplier=self.supplier, state=PurchaseOrder.UNFINISH
-        ):  # 之後要改成待處理（pending）
+        ):
             message = f"庫存低於安全庫存量，自動下單 {self.safety_stock - self.quantity} 個 {self.product}"
+            supplier = Supplier.objects.get(name=self.supplier.name)
             purchase_order = PurchaseOrder.objects.create(
                 order_number=generate_order_number(),
                 supplier=self.supplier,
-                supplier_tel=Supplier.objects.get(name=self.supplier.name).telephone,
-                contact_person=Supplier.objects.get(
-                    name=self.supplier.name
-                ).contact_person,
-                supplier_email=Supplier.objects.get(name=self.supplier.name).email,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
                 total_amount=0,
                 notes=message,
                 state=PurchaseOrder.UNFINISH,
