@@ -97,12 +97,19 @@
   <div class="navbar-end">
     <div class="flex gap-6 w-[180px]">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
-      {% if request.user.is_authenticated %}
+      {% if request.user.is_authenticated %} {% if request.user.first_name %}
+      <a
+        href="{% url 'users:profile' user.id %}"
+        class="w-[85px] flex justify-center"
+        >{{ request.user.first_name }}</a
+      >
+      {% else %}
       <a
         href="{% url 'users:profile' user.id %}"
         class="w-[85px] flex justify-center"
         >{{ request.user.username }}</a
       >
+      {% endif %}
       <form
         action="{% url 'users:log_out' %}"
         method="post"
