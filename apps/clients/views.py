@@ -92,7 +92,7 @@ def import_file(request):
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
+                df = pd.read_excel(file, dtype={"phone_number": str})
                 for _, row in df.iterrows():
                     Client.objects.create(
                         name=str(row["name"]),
