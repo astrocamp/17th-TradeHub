@@ -54,7 +54,7 @@
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal gap-x-10 font-bold text-sm">
       <li>
-        <details>
+        <details name="dropdown">
           <summary>客戶</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'clients:index' %}">客戶列表</a></li>
@@ -63,7 +63,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>商品</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'products:index' %}">商品列表</a></li>
@@ -71,7 +71,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>供應商</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'suppliers:index' %}">供應商列表</a></li>
@@ -82,7 +82,7 @@
         </details>
       </li>
       <li>
-        <details>
+        <details name="dropdown">
           <summary>庫存</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'inventory:index' %}">庫存列表</a></li>
@@ -98,12 +98,20 @@
   <!-- user status -->
   <div class="navbar-end">
     <div class="flex gap-6 w-[180px]">
-      {% if request.user.is_authenticated %}
+      <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
+      {% if request.user.is_authenticated %} {% if request.user.first_name %}
+      <a
+        href="{% url 'users:profile' user.id %}"
+        class="w-[85px] flex justify-center"
+        >{{ request.user.first_name }}</a
+      >
+      {% else %}
       <a
         href="{% url 'users:profile' user.id %}"
         class="w-[100px] flex justify-center text-lg font-bold"
         >{{ request.user.first_name }}</a
       >
+      {% endif %}
       <form
         action="{% url 'users:log_out' %}"
         method="post"

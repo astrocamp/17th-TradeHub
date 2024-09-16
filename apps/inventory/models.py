@@ -2,6 +2,8 @@ from django.db import models
 from django_fsm import FSMField, transition
 
 from apps.products.models import Product
+from apps.purchase_orders.models import ProductItem, PurchaseOrder
+from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
 
 
@@ -17,53 +19,77 @@ class Inventory(models.Model):
     last_updated = models.DateTimeField(auto_now=True)
     note = models.TextField(blank=True)
 
-    def __str__(self):
+    def __repr__(self):
         return f"{self.product} - {self.get_state_display()} ({self.quantity})"
 
-    STOCK_STATE_OUT = "out_stock"
-    STOCK_STATE_LOW = "low_stock"
-    STOCK_STATE_NORMAL = "normal"
+    OUT_STOCK = "out_stock"
+    LOW_STOCK = "low_stock"
+    NORMAL = "normal"
 
-    STOCK_STATE_CHOICES = [
-        (STOCK_STATE_OUT, "缺貨"),
-        (STOCK_STATE_LOW, "低於安全庫存量"),
-        (STOCK_STATE_NORMAL, "正常"),
+    AVAILABLE_STATES = OUT_STOCK, LOW_STOCK, NORMAL
+
+    AVAILABLE_STATES_CHOICES = [
+        (OUT_STOCK, "缺貨"),
+        (LOW_STOCK, "低於安全庫存量"),
+        (NORMAL, "正常"),
     ]
 
     state = FSMField(
-        default=STOCK_STATE_NORMAL,
-        choices=STOCK_STATE_CHOICES,
+        default=NORMAL,
+        choices=AVAILABLE_STATES_CHOICES,
         protected=True,
     )
 
-    def update_state(self):
-        if self.quantity <= 0:
-            self.set_out_stock()
-        elif self.quantity < self.safety_stock:
-            self.set_low_stock()
-        else:
-            self.set_normal()
-        self.save()
-
-    @transition(field=state, source="*", target=STOCK_STATE_OUT)
+    @transition(field=state, source="*", target=OUT_STOCK)
     def set_out_stock(self):
-        # 缺貨時的邏輯
-        pass
+        if not PurchaseOrder.objects.filter(
+            supplier=self.supplier, state=PurchaseOrder.UNFINISH
+        ):
+            message = f"庫存於缺貨狀態，自動下單 {self.safety_stock} 個 {self.product}"
+            supplier = Supplier.objects.get(name=self.supplier.name)
+            purchase_order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
+                supplier=self.supplier,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
+                total_amount=0,
+                notes=message,
+                state=PurchaseOrder.UNFINISH,
+            )
+            ProductItem.objects.create(
+                purchase_order=purchase_order,
+                product=self.product,
+                quantity=self.safety_stock,
+                price=0,
+                subtotal=0,
+            )
 
-    @transition(field=state, source="*", target=STOCK_STATE_LOW)
+    @transition(field=state, source="*", target=LOW_STOCK)
     def set_low_stock(self):
-        # 低於安全庫存量時的邏輯
-        pass
+        if not PurchaseOrder.objects.filter(
+            supplier=self.supplier, state=PurchaseOrder.UNFINISH
+        ):
+            message = f"庫存低於安全庫存量，自動下單 {self.safety_stock - self.quantity} 個 {self.product}"
+            supplier = Supplier.objects.get(name=self.supplier.name)
+            purchase_order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
+                supplier=self.supplier,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
+                total_amount=0,
+                notes=message,
+                state=PurchaseOrder.UNFINISH,
+            )
+            ProductItem.objects.create(
+                purchase_order=purchase_order,
+                product=self.product,
+                quantity=self.safety_stock - self.quantity,
+                price=0,
+                subtotal=0,
+            )
 
-    @transition(field=state, source="*", target=STOCK_STATE_NORMAL)
+    @transition(field=state, source="*", target=NORMAL)
     def set_normal(self):
-        # 庫存正常時的邏輯
         pass
-
-    def add_stock(self, amount):
-        self.quantity += amount
-        self.update_state()
-
-    def remove_stock(self, amount):
-        self.quantity = max(0, self.quantity - amount)
-        self.update_state()
