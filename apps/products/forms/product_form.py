@@ -4,6 +4,10 @@ from django.forms import ModelForm
 from apps.products.models import Product
 
 
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class ProductForm(ModelForm):
     class Meta:
         model = Product
