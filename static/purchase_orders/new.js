@@ -2,68 +2,52 @@ document.addEventListener('DOMContentLoaded', function() {
     // 自動填入供應商資訊
     const supplierSelect = document.getElementById('id_supplier');
 
+    // 檢查頁面載入時是否有選中的供應商
+    if (supplierSelect.value) {
+        fetchSupplierInfo(supplierSelect.value);
+    }
+
     supplierSelect.addEventListener('change', function() {
         const supplierId = supplierSelect.value;
+        fetchSupplierInfo(supplierId);
+    });
+
+    function fetchSupplierInfo(supplierId) {
         fetch('/purchase_orders/load-supplier-info/?supplier_id=' + supplierId)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('id_supplier_tel').value = data.supplier_tel;
                 document.getElementById('id_contact_person').value = data.contact_person;
                 document.getElementById('id_supplier_email').value = data.supplier_email;
-                // updateProductSelects(data.products);
-                // console.log(data.products);
-            })
-    });
-
-    function initializeProductSelects() {
-        const selectedSupplierId = supplierSelect.value;
-        if (selectedSupplierId) {
-            fetch(window.djangoVariables.loadSupplierInfoUrl + '?supplier_id=' + selectedSupplierId)
-                .then(response => response.json())
-                .then(data => {
-                    updateProductSelects(data.products);
-                })
-                .catch(error => console.error('Error fetching supplier info:', error));
-        }
+                updateProductOptions(data.products);
+            });
     }
 
-    function updateProductSelects(products) {
-        const productSelects = document.querySelectorAll('[id^="id_items-"][id$="-product"]');
-        const productPrices = {}; // 儲存商品 ID 和價格的映射
+    function updateProductOptions(products) {
+        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(function(productSelect) {
+            // 保存目前選擇的商品
+            const selectedProduct = productSelect.value;
 
-        // 建立商品 ID 到價格的映射
-        products.forEach(product => {
-            productPrices[product.id] = product.price;
-        });
+            productSelect.innerHTML = '';
+            const defaultOption = document.createElement('option');
+            defaultOption.value = '';
+            defaultOption.textContent = '---------';
+            productSelect.appendChild(defaultOption);
 
-        productSelects.forEach(select => {
-            // 清空選項並重新設置
-            select.innerHTML = '<option value="">---------</option>';
-
-            products.forEach(product => {
+            // 生成新的商品選項
+            products.forEach(function(product) {
                 const option = document.createElement('option');
                 option.value = product.id;
                 option.textContent = product.product_name;
-                select.appendChild(option);
+
+                // 保留已選擇的商品選項
+                if (product.id == selectedProduct) {
+                    option.selected = true;
+                }
+
+                productSelect.appendChild(option);
             });
-
-            // 綁定商品選擇事件監聽器
-            select.removeEventListener('change', handleProductChange);  // 先移除之前可能綁定的事件，避免重複
-            select.addEventListener('change', handleProductChange);     // 然後綁定新的事件監聽器
         });
-
-        function handleProductChange(event) {
-            const selectedProductId = event.target.value;
-            const priceFieldId = event.target.id.replace('-product', '-price');
-            const priceField = document.getElementById(priceFieldId);
-
-            if (selectedProductId) {
-                const price = productPrices[selectedProductId] || '';
-                priceField.value = price;
-            } else {
-                priceField.value = '';
-            }
-        }
     }
 
     // 子表單
