@@ -134,7 +134,7 @@ def import_file(request):
                             safety_stock=str(row["safety_stock"]),
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
-                    except (Product.DoesNotExist, Product.DoesNotExist) as e:
+                    except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
                         messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
                         return redirect("inventory:index")
                 messages.success(request, "成功匯入 Excel")
