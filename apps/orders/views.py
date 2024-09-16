@@ -37,7 +37,7 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    return render(request, "orders/orders_list.html", content)
+    return render(request, "orders/orders_index.html", content)
 
 
 def new(request):
