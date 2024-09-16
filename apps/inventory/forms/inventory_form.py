@@ -1,6 +1,10 @@
 from django import forms
 
-from ..models import Inventory
+from apps.inventory.models import Inventory
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class RestockForm(forms.ModelForm):
