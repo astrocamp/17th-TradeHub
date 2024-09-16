@@ -56,6 +56,7 @@ def client_update_and_delete(request, id):
     if request.method == "POST":
         if "delete" in request.POST:
             client.delete()
+            messages.success(request, "刪除完成!")
             return redirect("clients:index")
         else:
             form = ClientForm(request.POST, instance=client)
@@ -89,7 +90,7 @@ def import_file(request):
                         email=row[3],
                         note=row[4],
                     )
-                messages.success(request, "CSV file imported successfully")
+                messages.success(request, "CSV檔案已成功匯入")
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
@@ -103,11 +104,11 @@ def import_file(request):
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
-                messages.success(request, "Excel file imported successfully")
+                messages.success(request, "Excel檔案已成功匯入")
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "File is not CSV or Excel type")
+                messages.error(request, "檔案不是CSV或Excel格式")
                 return render(request, "clients/import.html", {"form": form})
 
     form = FileUploadForm()

@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -15,7 +16,7 @@ def index(request):
 
     if state in state_match:
         products = Product.objects.filter(state=state)
-    order_by_field = f"{'-' if is_desc else ''}{order_by}"
+    order_by_field = order_by if is_desc else "-" + order_by
     products = products.order_by(order_by_field)
 
     paginator = Paginator(products, 5)
@@ -60,4 +61,5 @@ def edit(request, id):
 def delete(request, id):
     product = get_object_or_404(Product, id=id)
     product.delete()
+    messages.success(request, "刪除完成!")
     return redirect("products:index")

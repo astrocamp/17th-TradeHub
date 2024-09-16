@@ -87,8 +87,7 @@ class ProductItem(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     cost_price = models.PositiveIntegerField()
-    sale_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"{self.product} - {self.quantity} @ {self.price}"
+        return f"{self.product} - {self.quantity} @ {self.cost_price}"

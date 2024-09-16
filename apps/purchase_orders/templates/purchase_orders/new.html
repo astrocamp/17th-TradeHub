@@ -7,15 +7,15 @@
             {% for field in form %}
                 {% if field.name == 'order_number' %}
                     <div class="col-span-full p-4 flex justify-between items-end">
-                        <h2 class="text-2xl font-bold text-gray-800">Add New Purchase Order</h2>
+                        <h2 class="text-2xl font-bold text-gray-800">新增採購單</h2>
                         <div class="text-gray-700">
-                            <strong>Order Number: {{ field.value }}</strong>
+                            <strong>訂單號碼: {{ field.value }}</strong>
                             <input type="hidden" name="order_number" value="{{ field.value }}">
                         </div>
                     </div>
                 {% elif field.name == 'total_amount' %}
                 <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                    <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">Total Amount: </label>
+                    <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">總金額: </label>
                     <div>
                         <span id="total-amount-display">{{ form.total_amount.value|default:"0" }}</span>
                     </div>
@@ -48,16 +48,16 @@
             <!-- 子表單 -->
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">Product Items</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">採購單細項</h2>
 
                 <!-- 表頭 -->
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Product</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Quantity</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Price</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">Subtotal</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品數量</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品進價</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
                     <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
-                        Add an item
+                        新增
                     </button>
                 </div>
                 <div id="formset-items">
@@ -68,13 +68,13 @@
                         <div class="flex items-center gap-4">
                             <div class="flex-1">{{ form.product }}</div>
                             <div class="flex-1">{{ form.quantity }}</div>
-                            <div class="flex-1">{{ form.price }}</div>
+                            <div class="flex-1">{{ form.cost_price }}</div>
                             <div class="flex-1">
                                 {{ form.subtotal }}
                             </div>
                             <div class="mx-4 text-center">
                                 <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
-                                    Delete
+                                    刪除
                                 </button>
                             </div>
                         </div>

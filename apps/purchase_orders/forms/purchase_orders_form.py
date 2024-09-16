@@ -26,12 +26,12 @@ class PurchaseOrderForm(forms.ModelForm):
             "notes": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
         }
         labels = {
-            "supplier": "Supplier",
-            "supplier_tel": "Supplier Tel",
-            "contact_person": "Contact Person",
-            "supplier_email": "Supplier Email",
-            "notes": "Note",
-            "total_amount": "Total Amount",
+            "supplier": "供應商名稱",
+            "supplier_tel": "供應商電話",
+            "contact_person": "聯絡人",
+            "supplier_email": "供應商Email",
+            "notes": "備註",
+            "total_amount": "總金額",
         }
 
     def __init__(self, *args, **kwargs):
@@ -70,12 +70,11 @@ class PurchaseOrderForm(forms.ModelForm):
 class ProductItemForm(forms.ModelForm):
     class Meta:
         model = ProductItem
-        fields = ["product", "quantity", "cost_price", "sale_price", "subtotal"]
+        fields = ["product", "quantity", "cost_price", "subtotal"]
         widgets = {
             "product": forms.Select(attrs={"class": "w-full"}),
             "quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "cost_price": forms.NumberInput(attrs={"class": "w-full"}),
-            "sale_price": forms.NumberInput(attrs={"class": "w-full"}),
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
         }
 

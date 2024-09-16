@@ -1,88 +1,113 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %} {% block content %}
+<!-- Purchase Order Information -->
+<div
+  class="max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8"
+>
+  <!-- Header Section with Order Number and Back to List Button -->
+  <div
+    class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
+  >
+    <h1 class="text-2xl font-extrabold text-gray-900">
+      訂單編號: {{ purchase_order.order_number }}
+    </h1>
+    <a
+      href="{% url 'purchase_orders:index' %}"
+      class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+    >
+      返回列表
+    </a>
+  </div>
 
-{% block content %}
-    <!-- Purchase Order Information -->
-    <div class="max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8">
-        <!-- Header Section with Order Number and Back to List Button -->
-        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h1 class="text-2xl font-extrabold text-gray-900">Purchase Order: {{ purchase_order.order_number }}</h1>
-            <a href="{% url 'purchase_orders:index' %}" class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
-                Back to List
-            </a>
-        </div>
-
-        <!-- Display Order Information -->
-        <div class="space-y-6">
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Supplier:</label>
-                    <span class="text-xl text-gray-600">{{ purchase_order.supplier.name }}</span>
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Supplier Tel:</label>
-                    <p class="text-lg text-gray-600">{{ purchase_order.supplier_tel }}</p>
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Contact Person:</label>
-                    <p class="text-lg text-gray-600">{{ purchase_order.contact_person }}</p>
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Supplier Email:</label>
-                    <p class="text-lg text-gray-600">{{ purchase_order.supplier_email }}</p>
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Created At:</label>
-                    <p class="text-lg text-gray-600">{{ purchase_order.created_at|date:"M d, Y H:i" }}</p>
-                </div>
-                <div class="flex flex-col">
-                    <label class="text-lg font-semibold text-gray-800">Notes:</label>
-                    <p class="text-lg text-gray-600">{{ purchase_order.notes }}</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Product Items Section -->
-        <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
-            <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">Product Items</h2>
-            <div class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800">
-                <div class="flex-1 text-center">Product</div>
-                <div class="flex-1 text-center">Quantity</div>
-                <div class="flex-1 text-center">Price</div>
-                <div class="flex-1 text-center">Subtotal</div>
-            </div>
-            <div class="space-y-4">
-                {% for item in product_items %}
-                <div class="flex justify-between items-center border-b border-gray-200 py-2">
-                    <div class="flex-1 text-center">{{ item.product }}</div>
-                    <div class="flex-1 text-center">{{ item.quantity }}</div>
-                    <div class="flex-1 text-center">${{ item.price }}</div>
-                    <div class="flex-1 text-center">${{ item.subtotal }}</div>
-                </div>
-                {% empty %}
-                <p class="text-center text-gray-600">No products found.</p>
-                {% endfor %}
-            </div>
-            <div class="flex items-center border-gray-200 pt-4 ">
-                <div class="flex-1 text-center font-semibold text-gray-800">Total Amount:</div>
-                <div class="flex-1"></div>
-                <div class="flex-1"></div>
-                <div class="flex-1 text-center font-semibold text-gray-800">${{ purchase_order.total_amount }}</div>
-            </div>
-        </div>
-
-
-
-        <!-- Edit and Delete Buttons -->
-        <div class="flex justify-center gap-4 mt-6">
-            <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
-                Edit
-            </a>
-            <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST" class="inline-block">
-                {% csrf_token %}
-                <button type="submit" class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                    Delete
-                </button>
-            </form>
-        </div>
+  <!-- Display Order Information -->
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
+        <span class="text-xl text-gray-600"
+          >{{ purchase_order.supplier.name }}</span
+        >
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商電話:</label>
+        <p class="text-lg text-gray-600">{{ purchase_order.supplier_tel }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
+        <p class="text-lg text-gray-600">{{ purchase_order.contact_person }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商Email:</label>
+        <p class="text-lg text-gray-600">{{ purchase_order.supplier_email }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">建立時間:</label>
+        <p class="text-lg text-gray-600">
+          {{ purchase_order.created_at|date:"M d, Y H:i" }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">備註:</label>
+        <p class="text-lg text-gray-600">{{ purchase_order.notes }}</p>
+      </div>
     </div>
+  </div>
+
+  <!-- Product Items Section -->
+  <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">產品項目</h2>
+    <div
+      class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800"
+    >
+      <div class="flex-1 text-center">產品名稱</div>
+      <div class="flex-1 text-center">數量</div>
+      <div class="flex-1 text-center">價格</div>
+      <div class="flex-1 text-center">小計</div>
+    </div>
+    <div class="space-y-4">
+      {% for item in product_items %}
+      <div
+        class="flex justify-between items-center border-b border-gray-200 py-2"
+      >
+        <div class="flex-1 text-center">{{ item.product }}</div>
+        <div class="flex-1 text-center">{{ item.quantity }}</div>
+        <div class="flex-1 text-center">${{ item.cost_price }}</div>
+        <div class="flex-1 text-center">${{ item.subtotal }}</div>
+      </div>
+      {% empty %}
+      <p class="text-center text-gray-600">沒有產品。</p>
+      {% endfor %}
+    </div>
+    <div class="flex items-center border-gray-200 pt-4">
+      <div class="flex-1 text-center font-semibold text-gray-800">總金額:</div>
+      <div class="flex-1"></div>
+      <div class="flex-1"></div>
+      <div class="flex-1 text-center font-semibold text-gray-800">
+        ${{ purchase_order.total_amount }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit and Delete Buttons -->
+  <div class="flex justify-center gap-4 mt-6">
+    <a
+      href="{% url 'purchase_orders:edit' purchase_order.id %}"
+      class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+    >
+      編輯
+    </a>
+    <form
+      action="{% url 'purchase_orders:delete' purchase_order.id %}"
+      method="POST"
+      class="inline-block"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        刪除
+      </button>
+    </form>
+  </div>
+</div>
 {% endblock %}
