@@ -1,6 +1,3 @@
-all: server, migrate, migration, shell, routes, lint, commit
-.PHONY: all
-
 server:
 	poetry run python manage.py runserver
 
@@ -33,3 +30,5 @@ clients:
 
 inventory:
 	python manage.py loaddata fake_data/inventory_data.json
+
+data: suppliers products clients inventory

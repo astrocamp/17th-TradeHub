@@ -3,13 +3,13 @@
   <a
     href="{% url 'goods_receipts:new' %}"
     class="btn bg-orange-600 text-white"
-    >Add</a
+    >新增</a
   >
-  <a href="#" class="btn bg-orange-600 text-white">Import file</a>
-  <a href="#" class="btn bg-orange-600 text-white">Export CSV</a>
-  <a href="#" class="btn bg-orange-600 text-white">Export Excel</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯入檔案</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
+  <a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
-<div class="divider text-3xl font-bold">Goods Receipts</div>
+<div class="divider text-3xl font-bold">進貨單列表</div>
 <div class="flex justify-center mt-10">
     <div class="overflow-x-auto">
         <table class="table table-xl text-center">
@@ -21,10 +21,10 @@
                                 class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
                                 name="select"
                             >
-                                <option disabled>Select</option>
-                                <option value="All" {% if selected_state == "All" %}selected{% endif %}>All</option>
-                                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>Finished</option>
-                                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>Unfinish</option>
+                                <option disabled>選擇</option>
+                                <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
                             </select>
 
                             <button type="submit" class="btn btn-square btn-sm">
@@ -40,14 +40,14 @@
                             </button>
                         </form>
                     </th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Receipt Number{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Supplier{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=goods_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Goods Name{% if order_by == 'goods_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Quantity{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Delivery Method{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=date&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Date{% if order_by == 'date' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Note{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th>Operate</th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=receipt_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單號{% if order_by == 'receipt_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=goods_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">貨品名稱{% if order_by == 'goods_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">運送方式{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=date&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">日期{% if order_by == 'date' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th>操作</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,8 +72,8 @@
                     <th>
                         <div class="flex justify-center">
                             <div class="flex gap-2">
-                                <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">Edit</a>
-                                <a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">Delete</a>
+                                <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">編輯</a>
+                                <a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">刪除</a>
                             </div>
                         </div>
                     </th>
@@ -81,32 +81,33 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% if is_paginated %}
         <div class="pagination join flex justify-center">
           <span class="step-links">
-            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">Page 1</button></a>
+            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
             {% if page_obj.has_previous %}
             <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}">
             <button class="join-item btn">«</button></a>
             {% else %}
             <button class="join-item btn" disabled="disabled">«</button>
             {% endif %}
-            <button class="join-item btn">Page {{ page_obj.number }}</button>
+            <button class="join-item btn">{{ page_obj.number }}</button>
             {% if page_obj.has_next %}
             <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
             ><button class="join-item btn">»</button></a
             >
             {% else %}
             <button class="join-item btn" disabled="disabled">»</button>
-           {% endif %}
+            {% endif %}
             <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
             ><button class="join-item btn">
-            Page {{ page_obj.paginator.num_pages }}
+            第{{ page_obj.paginator.num_pages }}頁
             </button></a
             >
-          </span>
-       </div>
+        </span>
+      </div>
+      {% endif %}
     </div>
   </div>
 </div>
-
 {% endblock %}

@@ -1,49 +1,38 @@
-{% extends "layouts/base.html" %} {% block content %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 
-<div class="flex justify-center mt-10">
-  <div class="overflow-x-auto">
-    <table class="table table-xl text-center">
-      <thead>
-        <tr class="text-xl">
-          <th>ID</th>
-          <th>Client Name</th>
-          <th>Phone Number</th>
-          <th>Address</th>
-          <th>Email</th>
-          <th>Note</th>
-        </tr>
-      </thead>
-      <tbody>
-        <form action="{% url 'clients:edit' client.id %}" method="post">
-          <tr class="hover">
-            {% csrf_token %}
+<div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+  <h2 class="text-2xl font-bold mb-6 text-gray-800">編輯客戶資料</h2>
+  <form action="{% url 'clients:edit' client.id %}" method="POST" class="grid grid-cols-1 gap-6 md:grid-cols-2">
+      {% csrf_token %}
 
-            <th>ID Auto gen</th>
-            {% for field in form %}
-            <td>{{ field }}</td>
-            {% endfor %}
-            <td>
-              <button>Update</button>
-            </td>
-          </tr>
-          <tr class="hover">
-            <th></th>
-            {% for field in form %}
-            <td>
-              {% if field.errors %}
-              <ul class="errorlist text-red-500 text-sm mt-2">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-              </ul>
-              {% endif %}
-            </td>
-            {% endfor %}
-            <td></td>
-          </tr>
-        </form>
-      </tbody>
-    </table>
-  </div>
+      {% for field in form %}
+          <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+              <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">
+                {{ field.label }}
+                {% if field.name != "note" %}
+                  <span class="text-red-500 text-sm mt-2"> *</span>
+                {% endif %}
+              </label>
+              <div>
+                  {% if field.help_text %}
+                      <p class="text-gray-600 text-sm mb-2 px-1">{{ field.help_text }}</p>
+                  {% endif %}
+                  {{ field }}
+                  {% if field.errors %}
+                      <ul class="errorlist text-red-500 text-sm mt-2 px-1">
+                          {% for error in field.errors %}
+                              <li>{{ error }}</li>
+                          {% endfor %}
+                      </ul>
+                  {% endif %}
+              </div>
+          </div>
+      {% endfor %}
+
+      <div class="col-span-full flex justify-center gap-4">
+          <button type="submit" class="w-1/2 bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold">確認更新</button>
+          <a href="{% url 'clients:index' %}" class="w-1/2 bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold">取消更新</a>
+      </div>
+  </form>
 </div>
 {% endblock %}

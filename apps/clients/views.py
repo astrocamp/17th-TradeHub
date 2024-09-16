@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from pytz import tzinfo
 
-from .forms.form import ClientForm, FileUploadForm
+from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
 
 
@@ -63,6 +63,10 @@ def client_update_and_delete(request, id):
             if form.is_valid():
                 form.save()
                 return redirect("clients:index")
+            else:
+                return render(
+                    request, "clients/edit.html", {"client": client, "form": form}
+                )
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})
 
@@ -86,7 +90,7 @@ def import_file(request):
                         email=row[3],
                         note=row[4],
                     )
-                messages.success(request, "CSV file imported successfully")
+                messages.success(request, "CSV檔案已成功匯入")
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
@@ -100,11 +104,11 @@ def import_file(request):
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
-                messages.success(request, "Excel file imported successfully")
+                messages.success(request, "Excel檔案已成功匯入")
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "File is not CSV or Excel type")
+                messages.error(request, "檔案不是CSV或Excel格式")
                 return render(request, "clients/import.html", {"form": form})
 
     form = FileUploadForm()
