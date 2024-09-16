@@ -173,7 +173,7 @@ def import_file(request):
 
             for row in reader:
                 if len(row) < 11:
-                    messages.error(request, f"CSV 数据不完整，跳过该行: {row}")
+                    # messages.error(request, f"CSV 数据不完整，跳过该行: {row}")
                     continue
 
                 try:
