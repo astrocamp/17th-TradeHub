@@ -1,8 +1,8 @@
-from django.dispatch import receiver
 from django.db.models.signals import pre_save
+from django.dispatch import receiver
 
-from .models import Inventory
 from ..goods_receipts.models import GoodsReceipt
+from .models import Inventory
 
 
 @receiver(pre_save, sender=Inventory)
