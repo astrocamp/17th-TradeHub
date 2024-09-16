@@ -159,3 +159,15 @@ def load_supplier_info(request):
         "products": products_data,
     }
     return JsonResponse(data)
+
+
+def get_product_info(request):
+    product_id = request.GET.get("product_id")
+    product = get_object_or_404(Product, id=product_id)
+    product_info = {
+        "id": product.id,
+        "product_name": product.product_name,
+        "cost_price": product.cost_price,
+        "note": product.note,
+    }
+    return JsonResponse(product_info)

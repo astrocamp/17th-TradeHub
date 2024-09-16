@@ -1,19 +1,58 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // 自動填入供應商資訊
+document.addEventListener('DOMContentLoaded', () => {
     const supplierSelect = document.getElementById('id_supplier');
+    const formsetItems = document.getElementById('formset-items');
+    const addItemButton = document.getElementById('add-item');
+    const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+    let formCount = parseInt(totalForms.value, 10);
 
-    // 檢查頁面載入時是否有選中的供應商
-    if (supplierSelect.value) {
-        fetchSupplierInfo(supplierSelect.value);
-    }
+    // 自動填入供應商資訊
+    if (supplierSelect.value) fetchSupplierInfo(supplierSelect.value);
+    supplierSelect.addEventListener('change', () => fetchSupplierInfo(supplierSelect.value));
 
-    supplierSelect.addEventListener('change', function() {
-        const supplierId = supplierSelect.value;
-        fetchSupplierInfo(supplierId);
+    // 新增子表單項目
+    addItemButton.addEventListener('click', () => {
+        const newItem = document.querySelector('#formset-items fieldset').cloneNode(true);
+        newItem.innerHTML = newItem.innerHTML.replace(/items-(\d+)-/g, `items-${formCount}-`);
+        newItem.querySelectorAll('input, select').forEach(element => {
+            element.value = '';
+            if (element.tagName === 'SELECT') element.selectedIndex = 0;
+        });
+        formsetItems.appendChild(newItem);
+        formCount++;
+        totalForms.value = formCount;
     });
 
+    // 刪除子表單項目
+    formsetItems.addEventListener('click', (event) => {
+        if (event.target.classList.contains('delete-item') && formCount > 1) {
+            event.target.closest('fieldset').remove();
+            updateFormIndexes();
+            updateTotalAmount();
+        }
+    });
+
+    // 計算金額
+    formsetItems.addEventListener('input', (event) => {
+        if (event.target.matches('input[name$="-quantity"], input[name$="-cost_price"]')) {
+            const row = event.target.closest('fieldset');
+            const quantityInput = row.querySelector('input[name$="-quantity"]');
+            const costPriceInput = row.querySelector('input[name$="-cost_price"]');
+            const subtotalInput = row.querySelector('input[name$="-subtotal"]');
+            if (quantityInput && costPriceInput && subtotalInput) {
+                const quantity = parseFloat(quantityInput.value) || 0;
+                const costPrice = parseFloat(costPriceInput.value) || 0;
+                subtotalInput.value = Math.round(quantity * costPrice);
+                updateTotalAmount();
+            }
+        }
+    });
+
+    formsetItems.addEventListener('change',() => {
+
+    })
+
     function fetchSupplierInfo(supplierId) {
-        fetch('/purchase_orders/load-supplier-info/?supplier_id=' + supplierId)
+        fetch(`/purchase_orders/load-supplier-info/?supplier_id=${supplierId}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('id_supplier_tel').value = data.supplier_tel;
@@ -24,91 +63,35 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateProductOptions(products) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(function(productSelect) {
-            // 保存目前選擇的商品
+        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
             const selectedProduct = productSelect.value;
-
-            productSelect.innerHTML = '';
-            const defaultOption = document.createElement('option');
-            defaultOption.value = '';
-            defaultOption.textContent = '---------';
-            productSelect.appendChild(defaultOption);
-
-            // 生成新的商品選項
-            products.forEach(function(product) {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = product.product_name;
-
-                // 保留已選擇的商品選項
-                if (product.id == selectedProduct) {
-                    option.selected = true;
-                }
-
+            productSelect.innerHTML = '<option value="">---------</option>';
+            products.forEach(product => {
+                const option = new Option(product.product_name, product.id, false, product.id == selectedProduct);
                 productSelect.appendChild(option);
             });
         });
+
     }
 
-    // 子表單
-    const addItemButton = document.getElementById('add-item')
-    const formsetItems = document.getElementById('formset-items');
-    const totalForms = document.getElementById('id_items-TOTAL_FORMS');
-    let formCount = parseInt(totalForms.value);
-
-    addItemButton.addEventListener('click',() => {
-        const newItem = document.querySelector('#formset-items fieldset').cloneNode(true);
-        newItem.innerHTML = newItem.innerHTML.replace(/items-(\d+)-/g, `items-${formCount}-`);
-        newItem.querySelectorAll('input,select').forEach(element => {
-            if (element.tagName === 'SELECT') {
-                element.selectedIndex = 0;
-            } else {
-                element.value = '';
-            }
-        });
-        formsetItems.appendChild(newItem);
-        formCount++;
-        totalForms.value = formCount;
-    })
-
-    formsetItems.addEventListener('click', function (event) {
-        if (event.target.classList.contains('delete-item') && totalForms.value != 1) {
-            const fieldset = event.target.closest('fieldset');
-            fieldset.remove();
-            updateFormIndexes();
-            updateTotalAmount();
-        }
-    });
     function updateFormIndexes() {
-        const formsets = formsetItems.querySelectorAll('fieldset');
-        formsets.forEach((formset, index) => {
-            formset.querySelectorAll('input, select').forEach((element) => {
+        formsetItems.querySelectorAll('fieldset').forEach((fieldset, index) => {
+            fieldset.querySelectorAll('input, select').forEach(element => {
                 const name = element.getAttribute('name');
                 const id = element.getAttribute('id');
-                if (name) {
-                    const newName = name.replace(/items-\d+-/, `items-${index}-`);
-                    element.setAttribute('name', newName);
-                }
-                if (id) {
-                    const newId = id.replace(/id_items-\d+-/, `id_items-${index}-`);
-                    element.setAttribute('id', newId);
-                }
+                if (name) element.setAttribute('name', name.replace(/items-\d+-/, `items-${index}-`));
+                if (id) element.setAttribute('id', id.replace(/id_items-\d+-/, `id_items-${index}-`));
             });
         });
-        totalForms.value = formsets.length;
+        totalForms.value = formsetItems.querySelectorAll('fieldset').length;
     }
-    // 計算總價
+
     function updateTotalAmount() {
-        const subtotalFields = document.querySelectorAll('[id$=subtotal]');
-        let totalAmount = 0;
-        subtotalFields.forEach(function(field) {
-            const subtotal = parseInt(field.value, 10) || 0;
-            totalAmount += subtotal;
-        });
+        const totalAmount = Array.from(document.querySelectorAll('[id$="-subtotal"]'))
+            .reduce((sum, field) => sum + (parseInt(field.value, 10) || 0), 0);
         document.getElementById('total-amount-display').textContent = totalAmount;
         document.getElementById('total_amount').value = totalAmount;
     }
-    document.getElementById('formset-items').addEventListener('input', updateTotalAmount);
+
     updateTotalAmount();
 });
-
