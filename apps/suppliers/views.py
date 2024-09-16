@@ -107,7 +107,12 @@ def import_file(request):
             reader = csv.reader(decoded_file)
             next(reader)  # Skip header row
             try:
+
                 for row in reader:
+                    if len(row) < 7:
+                        # messages.error(request, f"CSV 数据不完整，跳过该行: {row}") 很奇怪?
+                        # IndexError: list index out of range
+                        continue
                     Supplier.objects.create(
                         name=row[0],
                         telephone=row[1],
@@ -120,7 +125,7 @@ def import_file(request):
                 messages.success(request, "成功匯入 CSV")
                 return redirect("suppliers:index")
             except:
-                messages.success(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗(CSV 裡格式或名稱有問題)")
                 return redirect("suppliers:import_file")
 
         elif file.name.endswith(".xlsx"):
