@@ -46,7 +46,7 @@
           <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th>操作</th>
+          <th></th>
         </tr>
       </thead>
       {% for item in sales_orders %}

@@ -60,9 +60,6 @@ def new(request):
             formset.save()
             return redirect("purchase_orders:index")
         else:
-            print(form.errors)
-            print("---")
-            print(formset.errors)
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
@@ -72,7 +69,6 @@ def new(request):
         .order_by("-order_number")
         .first()
     )
-    print(last_order)
     if last_order:
         last_order_number = int(last_order.order_number[-3:])
         new_order_number = f"{today}{last_order_number + 1:03d}"

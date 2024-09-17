@@ -47,7 +47,7 @@
             <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th>Operate</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>

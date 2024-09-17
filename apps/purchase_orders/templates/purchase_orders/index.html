@@ -45,7 +45,7 @@
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th>操作</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
