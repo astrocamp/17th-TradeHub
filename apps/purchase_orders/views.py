@@ -164,7 +164,6 @@ def generate_order_number():
     last_order = (
         PurchaseOrder.all_objects.filter(order_number__startswith=today)
         .order_by("-order_number")
-        .filter(deleted_at__isnull=True)
         .first()
     )
 
