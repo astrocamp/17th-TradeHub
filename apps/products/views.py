@@ -80,12 +80,10 @@ def import_file(request):
 
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
+                next(reader)
 
                 for row in reader:
-                    if len(row) < 5:
-                        # messages.error(request, f"CSV 数据不完整，跳过该行: {row}") 很奇怪?
-                        # IndexError: list index out of range
+                    if len(row) < 1:
                         continue
                     try:
                         supplier = Supplier.objects.get(id=row[3])
