@@ -94,21 +94,13 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('total_amount').value = totalAmount;
     }
 
-    function fetchCostPrice(productId, callback) {
-        fetch(`/purchase_orders/load-product-info/?product_id=${productId}`)
-            .then(response => response.json())
-            .then(data => {
-                callback(data.cost_price); // 將抓取的 cost_price 傳遞給回調函數
-            });
-    }
-
     function handleProductChange() {
         document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
             productSelect.addEventListener('change', function() {
                 const productId = this.value;
                 const fieldset = this.closest('fieldset');
                 const costPriceInput = fieldset.querySelector('input[name$="-cost_price"]');
-                fetch(`/purchase_orders/load_product_info/?product_id=${productId}`)
+                fetch(`/purchase_orders/load_product_info/?id=${productId}`)
                     .then(response => response.json())
                     .then(data => {
                         costPriceInput.value = data.cost_price;

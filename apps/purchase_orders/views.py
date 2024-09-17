@@ -153,7 +153,7 @@ def load_supplier_info(request):
     supplier_id = request.GET.get("supplier_id")
     supplier = Supplier.objects.get(id=supplier_id)
     products = Product.objects.filter(supplier=supplier).values(
-        "id", "product_id", "product_name", "cost_price", "sale_price"
+        "id", "product_number", "product_name", "cost_price", "sale_price"
     )
     products_data = list(products)
     data = {
@@ -166,7 +166,7 @@ def load_supplier_info(request):
 
 
 def load_product_info(request):
-    product_id = request.GET.get("product_id")
+    product_id = request.GET.get("id")
     product = Product.objects.get(id=product_id)
     return JsonResponse({"cost_price": product.cost_price})
 
@@ -220,7 +220,7 @@ def import_file(request):
                         purchase_order=purchase_order,
                         product=product,
                         quantity=row[6],
-                        price=row[7],
+                        cost_price=row[7],
                         subtotal=row[8],
                     )
 
@@ -238,14 +238,14 @@ def import_file(request):
             df = pd.read_excel(file)
             df.rename(
                 columns={
-                    "序號": "order_number",
+                    "採購單編號": "order_number",
                     "供應商名稱": "supplier",
-                    "電話": "supplier_tel",
-                    "連絡人": "contact_person",
-                    "Email": "supplier_email",
-                    "產品": "product",
-                    "數量": "quantity",
-                    "價格": "price",
+                    "供應商電話": "supplier_tel",
+                    "供應商連絡人": "contact_person",
+                    "供應商Email": "supplier_email",
+                    "產品名稱": "product",
+                    "產品數量": "quantity",
+                    "產品進價": "cost_price",
                     "小計": "subtotal",
                     "總價": "total_amount",
                     "備註": "notes",
@@ -272,7 +272,7 @@ def import_file(request):
                         purchase_order=purchase_order,
                         product=product,
                         quantity=int(row["quantity"]),
-                        price=int(row["price"]),
+                        cost_price=int(row["cost_price"]),
                         subtotal=int(row["subtotal"]),
                     )
 
@@ -334,7 +334,7 @@ def export_csv(request):
                     purchase_order.deleted_at,
                     product_item.product,
                     product_item.quantity,
-                    product_item.price,
+                    product_item.cost_price,
                     product_item.subtotal,
                     purchase_order.total_amount,
                     purchase_order.notes,
@@ -364,7 +364,7 @@ def export_excel(request):
             "deleted_at",
             "items__product__product_name",
             "items__quantity",
-            "items__price",
+            "items__cost_price",
             "items__subtotal",
             "total_amount",
             "notes",
@@ -386,7 +386,7 @@ def export_excel(request):
         "deleted_at": "刪除時間",
         "items__product__product_name": "產品",
         "items__quantity": "數量",
-        "items__price": "價格",
+        "items__cost_price": "價格",
         "items__subtotal": "小計",
         "total_amount": "總價",
         "notes": "備註",

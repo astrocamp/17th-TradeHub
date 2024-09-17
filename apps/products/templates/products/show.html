@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %} {% block content %}
 
 <a href="{% url 'products:index' %}" class="btn btn-primary"
-  >Back to Products List</a
+  >返回列表</a
 >
 
 <div class="flex justify-center mt-10">
@@ -9,17 +9,17 @@
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
-          <th>Product ID</th>
-          <th>Product Name</th>
-          <th>成本價</th>
+          <th>商品編號</th>
+          <th>商品名稱</th>
+          <th>進價</th>
           <th>售價</th>
-          <th>Supplier</th>
-          <th>Note</th>
+          <th>供應商名稱</th>
+          <th>備註</th>
         </tr>
       </thead>
       <tbody>
         <tr class="hover">
-          <th>{{product.product_id}}</th>
+          <th>{{product.product_number}}</th>
           <th>{{product.product_name}}</th>
           <th>{{product.cost_price}}</th>
           <th>{{product.sale_price}}</th>
@@ -34,7 +34,7 @@
 <div class="flex justify-center mt-10">
   <div>
     <a href="{% url 'products:edit' product.id %}" class="btn btn-primary"
-      >Edit</a
+      >編輯</a
     >
   </div>
 
@@ -43,7 +43,7 @@
       onclick="return confirm('DELETE?')"
       href="{% url 'products:delete' product.id %}"
       class="btn btn-primary"
-      >Delete</a
+      >刪除</a
     >
   </div>
 </div>

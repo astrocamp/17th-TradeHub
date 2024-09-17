@@ -3,7 +3,7 @@
         "model": "products.product",
         "pk": 1,
         "fields": {
-            "product_id": "P001",
+            "product_number": "P001",
             "product_name": "米",
             "cost_price": 80,
             "sale_price": 100,
@@ -15,7 +15,7 @@
         "model": "products.product",
         "pk": 2,
         "fields": {
-            "product_id": "P002",
+            "product_number": "P002",
             "product_name": "面粉",
             "cost_price": 40,
             "sale_price": 50,
@@ -27,7 +27,7 @@
         "model": "products.product",
         "pk": 3,
         "fields": {
-            "product_id": "P003",
+            "product_number": "P003",
             "product_name": "食用油",
             "cost_price": 120,
             "sale_price": 150,
@@ -39,7 +39,7 @@
         "model": "products.product",
         "pk": 4,
         "fields": {
-            "product_id": "P004",
+            "product_number": "P004",
             "product_name": "生菜",
             "cost_price": 20,
             "sale_price": 30,
@@ -51,7 +51,7 @@
         "model": "products.product",
         "pk": 5,
         "fields": {
-            "product_id": "P005",
+            "product_number": "P005",
             "product_name": "番茄",
             "cost_price": 30,
             "sale_price": 40,
@@ -63,7 +63,7 @@
         "model": "products.product",
         "pk": 6,
         "fields": {
-            "product_id": "P006",
+            "product_number": "P006",
             "product_name": "黃瓜",
             "cost_price": 25,
             "sale_price": 35,
@@ -75,7 +75,7 @@
         "model": "products.product",
         "pk": 7,
         "fields": {
-            "product_id": "P007",
+            "product_number": "P007",
             "product_name": "鮭魚",
             "cost_price": 400,
             "sale_price": 500,
@@ -87,7 +87,7 @@
         "model": "products.product",
         "pk": 8,
         "fields": {
-            "product_id": "P008",
+            "product_number": "P008",
             "product_name": "蝦仁",
             "cost_price": 240,
             "sale_price": 300,
@@ -99,7 +99,7 @@
         "model": "products.product",
         "pk": 9,
         "fields": {
-            "product_id": "P009",
+            "product_number": "P009",
             "product_name": "螃蟹",
             "cost_price": 350,
             "sale_price": 450,
@@ -111,7 +111,7 @@
         "model": "products.product",
         "pk": 10,
         "fields": {
-            "product_id": "P010",
+            "product_number": "P010",
             "product_name": "清潔劑",
             "cost_price": 60,
             "sale_price": 80,
@@ -123,7 +123,7 @@
         "model": "products.product",
         "pk": 11,
         "fields": {
-            "product_id": "P011",
+            "product_number": "P011",
             "product_name": "洗碗液",
             "cost_price": 45,
             "sale_price": 60,
@@ -135,7 +135,7 @@
         "model": "products.product",
         "pk": 12,
         "fields": {
-            "product_id": "P012",
+            "product_number": "P012",
             "product_name": "垃圾袋",
             "cost_price": 20,
             "sale_price": 25,
@@ -147,7 +147,7 @@
         "model": "products.product",
         "pk": 13,
         "fields": {
-            "product_id": "P013",
+            "product_number": "P013",
             "product_name": "包裝紙",
             "cost_price": 15,
             "sale_price": 20,
@@ -159,7 +159,7 @@
         "model": "products.product",
         "pk": 14,
         "fields": {
-            "product_id": "P014",
+            "product_number": "P014",
             "product_name": "塑膠袋",
             "cost_price": 10,
             "sale_price": 15,
@@ -171,7 +171,7 @@
         "model": "products.product",
         "pk": 15,
         "fields": {
-            "product_id": "P015",
+            "product_number": "P015",
             "product_name": "透明膠帶",
             "cost_price": 8,
             "sale_price": 10,
@@ -183,7 +183,7 @@
         "model": "products.product",
         "pk": 16,
         "fields": {
-            "product_id": "P016",
+            "product_number": "P016",
             "product_name": "冷凍雞胸肉",
             "cost_price": 200,
             "sale_price": 250,
@@ -195,7 +195,7 @@
         "model": "products.product",
         "pk": 17,
         "fields": {
-            "product_id": "P017",
+            "product_number": "P017",
             "product_name": "冷凍豬排",
             "cost_price": 250,
             "sale_price": 300,
@@ -207,7 +207,7 @@
         "model": "products.product",
         "pk": 18,
         "fields": {
-            "product_id": "P018",
+            "product_number": "P018",
             "product_name": "冷凍魚片",
             "cost_price": 150,
             "sale_price": 200,
@@ -219,7 +219,7 @@
         "model": "products.product",
         "pk": 19,
         "fields": {
-            "product_id": "P019",
+            "product_number": "P019",
             "product_name": "蘋果",
             "cost_price": 60,
             "sale_price": 80,
@@ -231,7 +231,7 @@
         "model": "products.product",
         "pk": 20,
         "fields": {
-            "product_id": "P020",
+            "product_number": "P020",
             "product_name": "香蕉",
             "cost_price": 40,
             "sale_price": 50,
@@ -243,7 +243,7 @@
         "model": "products.product",
         "pk": 21,
         "fields": {
-            "product_id": "P021",
+            "product_number": "P021",
             "product_name": "葡萄",
             "cost_price": 100,
             "sale_price": 120,
@@ -255,7 +255,7 @@
         "model": "products.product",
         "pk": 22,
         "fields": {
-            "product_id": "P022",
+            "product_number": "P022",
             "product_name": "啤酒",
             "cost_price": 120,
             "sale_price": 150,
@@ -267,7 +267,7 @@
         "model": "products.product",
         "pk": 23,
         "fields": {
-            "product_id": "P023",
+            "product_number": "P023",
             "product_name": "紅酒",
             "cost_price": 350,
             "sale_price": 400,
@@ -279,7 +279,7 @@
         "model": "products.product",
         "pk": 24,
         "fields": {
-            "product_id": "P024",
+            "product_number": "P024",
             "product_name": "白酒",
             "cost_price": 450,
             "sale_price": 500,
@@ -291,7 +291,7 @@
         "model": "products.product",
         "pk": 25,
         "fields": {
-            "product_id": "P025",
+            "product_number": "P025",
             "product_name": "鹽",
             "cost_price": 15,
             "sale_price": 20,
@@ -303,7 +303,7 @@
         "model": "products.product",
         "pk": 26,
         "fields": {
-            "product_id": "P026",
+            "product_number": "P026",
             "product_name": "糖",
             "cost_price": 30,
             "sale_price": 40,
@@ -315,7 +315,7 @@
         "model": "products.product",
         "pk": 27,
         "fields": {
-            "product_id": "P027",
+            "product_number": "P027",
             "product_name": "胡椒粉",
             "cost_price": 25,
             "sale_price": 30,
@@ -327,7 +327,7 @@
         "model": "products.product",
         "pk": 28,
         "fields": {
-            "product_id": "P028",
+            "product_number": "P028",
             "product_name": "豬肉",
             "cost_price": 300,
             "sale_price": 350,
@@ -339,7 +339,7 @@
         "model": "products.product",
         "pk": 29,
         "fields": {
-            "product_id": "P029",
+            "product_number": "P029",
             "product_name": "牛肉",
             "cost_price": 400,
             "sale_price": 450,
@@ -351,7 +351,7 @@
         "model": "products.product",
         "pk": 30,
         "fields": {
-            "product_id": "P030",
+            "product_number": "P030",
             "product_name": "雞腿",
             "cost_price": 150,
             "sale_price": 200,

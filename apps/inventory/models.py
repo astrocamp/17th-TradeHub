@@ -61,7 +61,7 @@ class Inventory(models.Model):
                 purchase_order=purchase_order,
                 product=self.product,
                 quantity=self.safety_stock,
-                price=0,
+                cost_price=0,
                 subtotal=0,
             )
 
@@ -86,7 +86,7 @@ class Inventory(models.Model):
                 purchase_order=purchase_order,
                 product=self.product,
                 quantity=self.safety_stock - self.quantity,
-                price=0,
+                cost_price=0,
                 subtotal=0,
             )
 
