@@ -1,3 +1,8 @@
+from django.contrib import messages
+from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 import csv
 from datetime import datetime
 
@@ -5,8 +10,8 @@ import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
+
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_http_methods
 
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
@@ -74,6 +79,16 @@ def delete(request, id):
     messages.success(request, "刪除完成!")
     return redirect("inventory:index")
 
+
+
+@receiver(pre_save, sender=Inventory)
+def update_state(sender, instance, **kwargs):
+    if instance.quantity <= 0:
+        instance.set_out_stock()
+    elif instance.quantity < instance.safety_stock:
+        instance.set_low_stock()
+    else:
+        instance.set_normal()
 
 def import_file(request):
     if request.method == "POST":
@@ -208,3 +223,4 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Inventory")
     return response
+

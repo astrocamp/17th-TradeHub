@@ -23,7 +23,8 @@
                 <option disabled>選擇</option>
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
                 <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>完成</option>
-                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
+                <option value="pending" {% if selected_state == "pending" %}selected{% endif %}>待處理</option>
+                <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
               </select>
 
               <button type="submit" class="btn btn-square btn-sm">
@@ -51,13 +52,17 @@
       {% for item in sales_orders %}
       <tbody>
         <tr class="hover">
-          {% if item.state == "normal" %}
+          {% if item.state == "pending" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">待處理</span>
           </th>
-          {% else %}
+          {% elif item.state == "progress" %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">進行中</span>
+          </th>
+          {% elif item.state == "finished" %}
+          <th>
+            <span class="btn btn-sm btn-error text-lg">已完成</span>
           </th>
           {% endif %}
           <td>{{ item.client }}</td>

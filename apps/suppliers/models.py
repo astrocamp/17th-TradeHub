@@ -17,41 +17,32 @@ class Supplier(models.Model):
     def __str__(self):
         return f"{self.name} ({self.gui_number})"
 
-    SUPPLIER_STATE_OFTEN = "often"
-    SUPPLIER_STATE_HAPLY = "haply"
-    SUPPLIER_STATE_NEVER = "never"
+    OFTEN = "often"
+    HAPLY = "haply"
+    NEVER = "never"
 
-    SUPPLIER_STATE_CHOICES = [
-        (SUPPLIER_STATE_OFTEN, "經常"),
-        (SUPPLIER_STATE_HAPLY, "偶爾"),
-        (SUPPLIER_STATE_NEVER, "從不"),
+    STATE_CHOICES = [
+        (OFTEN, "經常購買"),
+        (HAPLY, "偶爾購買"),
+        (NEVER, "未購買"),
     ]
 
     state = FSMField(
-        default=SUPPLIER_STATE_NEVER,
-        choices=SUPPLIER_STATE_CHOICES,
+        default=NEVER,
+        choices=STATE_CHOICES,
         protected=True,
     )
 
-    def update_state(self):
-        if self.quantity <= 0:
-            self.set_out_stock()
-        elif self.quantity < self.safety_stock:
-            self.set_low_stock()
-        else:
-            self.set_normal()
-        self.save()
-
-    @transition(field=state, source="*", target=SUPPLIER_STATE_OFTEN)
-    def set_out_stock(self):
+    @transition(field=state, source="*", target=OFTEN)
+    def set_often(self):
         pass
 
-    @transition(field=state, source="*", target=SUPPLIER_STATE_HAPLY)
-    def set_low_stock(self):
+    @transition(field=state, source="*", target=HAPLY)
+    def set_haply(self):
         pass
 
-    @transition(field=state, source="*", target=SUPPLIER_STATE_NEVER)
-    def set_normal(self):
+    @transition(field=state, source="*", target=NEVER)
+    def set_never(self):
         pass
 
     def save(self, *args, **kwargs):
