@@ -107,11 +107,10 @@ def import_file(request):
 
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
+                next(reader)
 
                 for row in reader:
-                    if len(row) < 6:
-                        messages.error(request, f"CSV 数据不完整，跳过该行: {row}")
+                    if len(row) < 1:
                         continue
                     try:
                         supplier = Supplier.objects.get(id=row[1])
@@ -125,7 +124,7 @@ def import_file(request):
                             note=row[5],
                         )
                     except (Supplier.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到廠商或產品: {e}")
                         return redirect("goods_receipts:index")
 
                 messages.success(request, "成功匯入 CSV")
@@ -157,7 +156,7 @@ def import_file(request):
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
                     except (Supplier.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到廠商或產品: {e}")
                         return redirect("goods_receipts:index")
                 messages.success(request, "成功匯入 Excel")
                 return redirect("goods_receipts:index")

@@ -87,9 +87,7 @@ def import_file(request):
                 next(reader)  # Skip header row
 
                 for row in reader:
-                    if len(row) < 5:
-                        # messages.error(request, f"CSV 数据不完整，跳过该行: {row}") 很奇怪?
-                        # IndexError: list index out of range
+                    if len(row) < 1:
                         continue
                     try:
                         product = Product.objects.get(id=row[0])
