@@ -86,13 +86,14 @@ def import_file(request):
                     if len(row) < 1:
                         continue
                     try:
-                        supplier = Supplier.objects.get(id=row[3])
+                        supplier = Supplier.objects.get(id=row[4])
                         Product.objects.create(
-                            product_id=row[0],
+                            product_number=row[0],
                             product_name=row[1],
-                            price=row[2],
+                            cost_price=row[2],
+                            sale_price=row[3],
                             supplier=supplier,
-                            note=row[4],
+                            note=row[5],
                         )
                     except Supplier.DoesNotExist as e:
                         messages.error(request, f"匯入失敗，找不到供應商: {e}")
@@ -105,10 +106,11 @@ def import_file(request):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
-                        "序號": "product_id",
-                        "產品": "product_name",
-                        "價位": "price",
-                        "供應商": "supplier",
+                        "產品編號": "product_number",
+                        "產品名稱": "product_name",
+                        "商品進價": "cost_price",
+                        "商品售價": "sale_price",
+                        "供應商名稱": "supplier",
                         "備註": "note",
                     },
                     inplace=True,
@@ -117,9 +119,10 @@ def import_file(request):
                     try:
                         supplier = Supplier.objects.get(id=int(row["supplier"]))
                         Product.objects.create(
-                            product_id=str(row["product_id"]),
+                            product_number=str(row["product_number"]),
                             product_name=str(row["product_name"]),
-                            price=str(row["price"]),
+                            cost_price=str(row["cost_price"]),
+                            sale_price=str(row["sale_price"]),
                             supplier=supplier,
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
@@ -156,7 +159,7 @@ def export_csv(request):
     for product in products:
         writer.writerow(
             [
-                product.product_id,
+                product.product_number,
                 product.product_name,
                 product.price,
                 product.supplier,
@@ -174,9 +177,10 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Products.xlsx"
 
     products = Product.objects.select_related("product", "supplier").values(
-        "product_id",
+        "product_number",
         "product_name",
-        "price",
+        "cost_price",
+        "sale_price",
         "supplier__name",
         "note",
     )
@@ -186,10 +190,11 @@ def export_excel(request):
         df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     column_mapping = {
-        "product_id": "序號",
-        "product_name": "產品",
-        "price": "價位",
-        "supplier__name": "供應商",
+        "product_number": "商品編號",
+        "product_name": "商品名稱",
+        "cost_price": "商品進價",
+        "sale_price": "商品售價",
+        "supplier__name": "供應商名稱",
         "note": "備註",
     }
 

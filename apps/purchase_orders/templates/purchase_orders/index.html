@@ -43,9 +43,9 @@
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=total_amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'total_amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=notes&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'notes' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th>操作</th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -74,8 +74,8 @@
                     <th>{{ purchase_order.supplier.name }}</th>
                     <th>{{ purchase_order.supplier_tel }}</th>
                     <th>{{ purchase_order.supplier_email }}</th>
-                    <th>{{ purchase_order.total_amount }}</th>
-                    <th>{{ purchase_order.notes }}</th>
+                    <th>{{ purchase_order.amount }}</th>
+                    <th>{{ purchase_order.note }}</th>
                     <th>
                         <div class="flex justify-center gap-1">
                             <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary">

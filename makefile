@@ -32,3 +32,8 @@ inventory:
 	python manage.py loaddata fake_data/inventory_data.json
 
 data: suppliers products clients inventory
+
+mg: migration migrate
+
+all: mg data server
+	@echo "Migration, data loading, and server start complete."

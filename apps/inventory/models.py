@@ -53,15 +53,15 @@ class Inventory(models.Model):
                 supplier_tel=supplier.telephone,
                 contact_person=supplier.contact_person,
                 supplier_email=supplier.email,
-                total_amount=0,
-                notes=message,
-                state=PurchaseOrder.PROGRESS,
+                amount=0,
+                note=message,
+                state=PurchaseOrder.UNFINISH,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,
                 product=self.product,
                 quantity=self.safety_stock,
-                price=0,
+                cost_price=0,
                 subtotal=0,
             )
 
@@ -80,13 +80,13 @@ class Inventory(models.Model):
                 supplier_email=supplier.email,
                 total_amount=0,
                 notes=message,
-                state=PurchaseOrder.PENDING,
+                state=PurchaseOrder.UNFINISH,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,
                 product=self.product,
                 quantity=self.safety_stock - self.quantity,
-                price=0,
+                cost_price=0,
                 subtotal=0,
             )
 

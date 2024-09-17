@@ -44,6 +44,13 @@ def index(request):
         "page_obj": page_obj,
     }
 
+    purchase_orders = PurchaseOrder.objects.order_by("id")
+    return render(
+        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
+    )
+
+
+def new(request):
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         formset = ProductItemFormSet(request.POST, instance=form.instance)
@@ -56,22 +63,9 @@ def index(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )
-
-
-from django.utils import timezone
-
-from .models import PurchaseOrder
-
-
-def new(request):
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
-        PurchaseOrder.objects.filter(order_number__startswith=today)
+        PurchaseOrder.all_objects.filter(order_number__startswith=today)
         .order_by("-order_number")
         .first()
     )
@@ -154,12 +148,23 @@ def delete_selected_purchase_orders(request):
 def load_supplier_info(request):
     supplier_id = request.GET.get("supplier_id")
     supplier = Supplier.objects.get(id=supplier_id)
+    products = Product.objects.filter(supplier=supplier).values(
+        "id", "product_number", "product_name", "cost_price", "sale_price"
+    )
+    products_data = list(products)
     data = {
         "supplier_tel": supplier.telephone,
         "contact_person": supplier.contact_person,
         "supplier_email": supplier.email,
+        "products": products_data,
     }
     return JsonResponse(data)
+
+
+def load_product_info(request):
+    product_id = request.GET.get("id")
+    product = Product.objects.get(id=product_id)
+    return JsonResponse({"cost_price": product.cost_price})
 
 
 def generate_order_number():
@@ -202,8 +207,8 @@ def import_file(request):
                         supplier_tel=row[2],
                         contact_person=row[3],
                         supplier_email=row[4],
-                        total_amount=row[9],
-                        notes=row[10],
+                        amount=row[9],
+                        note=row[10],
                     )
 
                     product = Product.objects.get(id=row[5])
@@ -211,7 +216,7 @@ def import_file(request):
                         purchase_order=purchase_order,
                         product=product,
                         quantity=row[6],
-                        price=row[7],
+                        cost_price=row[7],
                         subtotal=row[8],
                     )
 
@@ -229,17 +234,17 @@ def import_file(request):
             df = pd.read_excel(file)
             df.rename(
                 columns={
-                    "序號": "order_number",
+                    "採購單編號": "order_number",
                     "供應商名稱": "supplier",
-                    "電話": "supplier_tel",
-                    "連絡人": "contact_person",
-                    "Email": "supplier_email",
-                    "產品": "product",
-                    "數量": "quantity",
-                    "價格": "price",
+                    "供應商電話": "supplier_tel",
+                    "供應商連絡人": "contact_person",
+                    "供應商Email": "supplier_email",
+                    "產品名稱": "product",
+                    "產品數量": "quantity",
+                    "產品進價": "cost_price",
                     "小計": "subtotal",
-                    "總價": "total_amount",
-                    "備註": "notes",
+                    "總金額": "amount",
+                    "備註": "note",
                 },
                 inplace=True,
             )
@@ -255,15 +260,15 @@ def import_file(request):
                         supplier_tel=str(row["supplier_tel"]),
                         contact_person=str(row["contact_person"]),
                         supplier_email=str(row["supplier_email"]),
-                        total_amount=str(row["total_amount"]),
-                        notes=str(row["notes"]) if not pd.isna(row["notes"]) else "",
+                        amount=str(row["amount"]),
+                        note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
                     ProductItem.objects.create(
                         purchase_order=purchase_order,
                         product=product,
                         quantity=int(row["quantity"]),
-                        price=int(row["price"]),
+                        cost_price=int(row["cost_price"]),
                         subtotal=int(row["subtotal"]),
                     )
 
@@ -302,7 +307,7 @@ def export_csv(request):
             "數量",
             "價格",
             "小計",
-            "總價",
+            "總金額",
             "備註",
         ]
     )
@@ -325,10 +330,10 @@ def export_csv(request):
                     purchase_order.deleted_at,
                     product_item.product,
                     product_item.quantity,
-                    product_item.price,
+                    product_item.cost_price,
                     product_item.subtotal,
-                    purchase_order.total_amount,
-                    purchase_order.notes,
+                    purchase_order.amount,
+                    purchase_order.note,
                 ]
             )
 
@@ -355,10 +360,10 @@ def export_excel(request):
             "deleted_at",
             "items__product__product_name",
             "items__quantity",
-            "items__price",
+            "items__cost_price",
             "items__subtotal",
-            "total_amount",
-            "notes",
+            "amount",
+            "note",
         )
     )
 
@@ -377,10 +382,10 @@ def export_excel(request):
         "deleted_at": "刪除時間",
         "items__product__product_name": "產品",
         "items__quantity": "數量",
-        "items__price": "價格",
+        "items__cost_price": "價格",
         "items__subtotal": "小計",
-        "total_amount": "總價",
-        "notes": "備註",
+        "amount": "總金額",
+        "note": "備註",
     }
 
     df.rename(columns=column_mapping, inplace=True)

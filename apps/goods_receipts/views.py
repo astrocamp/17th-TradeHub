@@ -97,6 +97,7 @@ def delete(request, id):
     messages.success(request, "刪除完成!")
     return redirect("goods_receipts:index")
 
+
 def import_file(request):
     if request.method == "POST":
         form = FileUploadForm(request.POST, request.FILES)
