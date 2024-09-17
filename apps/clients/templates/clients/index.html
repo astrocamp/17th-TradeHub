@@ -1,13 +1,11 @@
 {% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-12">
-  <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white"
+<div class="flex justify-end mt-20 gap-2">
+  <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <a href="{% url 'clients:import_file' %}" class="btn bg-orange-600 text-white"
-    >匯入檔案</a
-  >
-  <a href="{% url 'clients:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
-  <a href="{% url 'clients:export_excel' %}" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">客戶列表</div>
 <div class="flex justify-center mt-10">
@@ -122,4 +120,5 @@
     </div>
   </div>
 </div>
+{% include "shared/import_export.html" %}
 {% endblock %}
