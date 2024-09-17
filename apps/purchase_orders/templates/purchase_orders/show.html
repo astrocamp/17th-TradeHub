@@ -32,7 +32,7 @@
         <p class="text-lg text-gray-600">{{ purchase_order.supplier_tel }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
+        <label class="text-lg font-semibold text-gray-800">供應商聯絡人:</label>
         <p class="text-lg text-gray-600">{{ purchase_order.contact_person }}</p>
       </div>
       <div class="flex flex-col">
@@ -47,7 +47,7 @@
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
-        <p class="text-lg text-gray-600">{{ purchase_order.notes }}</p>
+        <p class="text-lg text-gray-600">{{ purchase_order.note }}</p>
       </div>
     </div>
   </div>
@@ -59,8 +59,8 @@
       class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800"
     >
       <div class="flex-1 text-center">產品名稱</div>
-      <div class="flex-1 text-center">數量</div>
-      <div class="flex-1 text-center">價格</div>
+      <div class="flex-1 text-center">產品數量</div>
+      <div class="flex-1 text-center">產品進價</div>
       <div class="flex-1 text-center">小計</div>
     </div>
     <div class="space-y-4">
@@ -82,7 +82,7 @@
       <div class="flex-1"></div>
       <div class="flex-1"></div>
       <div class="flex-1 text-center font-semibold text-gray-800">
-        ${{ purchase_order.total_amount }}
+        ${{ purchase_order.amount }}
       </div>
     </div>
   </div>

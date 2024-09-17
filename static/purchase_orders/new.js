@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formsetItems = document.getElementById('formset-items');
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
-    let formCount = parseInt(totalForms.value, 10);
+    let formCount = parseInt(totalForms.value);
 
     // 自動填入供應商資訊
     if (supplierSelect.value) fetchSupplierInfo(supplierSelect.value);
@@ -49,10 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    formsetItems.addEventListener('change',() => {
-
-    })
-
     function fetchSupplierInfo(supplierId) {
         fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)
             .then(response => response.json())
@@ -91,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const totalAmount = Array.from(document.querySelectorAll('[id$="-subtotal"]'))
             .reduce((sum, field) => sum + (parseInt(field.value, 10) || 0), 0);
         document.getElementById('total-amount-display').textContent = totalAmount;
-        document.getElementById('total_amount').value = totalAmount;
+        document.getElementById('amount').value = totalAmount;
     }
 
     function handleProductChange() {

@@ -19,23 +19,23 @@ class PurchaseOrderForm(forms.ModelForm):
             "supplier_tel",
             "contact_person",
             "supplier_email",
-            "notes",
-            "total_amount",
+            "note",
+            "amount",
         ]
         widgets = {
             "supplier": forms.Select(attrs={"class": "w-full"}),
             "supplier_tel": forms.TextInput(attrs={"class": "w-full"}),
             "contact_person": forms.TextInput(attrs={"class": "w-full"}),
             "supplier_email": forms.TextInput(attrs={"class": "w-full"}),
-            "notes": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
+            "note": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
         }
         labels = {
             "supplier": "供應商名稱",
             "supplier_tel": "供應商電話",
             "contact_person": "聯絡人",
             "supplier_email": "供應商Email",
-            "notes": "備註",
-            "total_amount": "總金額",
+            "note": "備註",
+            "amount": "總金額",
         }
 
     def __init__(self, *args, **kwargs):
@@ -50,7 +50,7 @@ class PurchaseOrderForm(forms.ModelForm):
         supplier_tel = cleaned_data.get("supplier_tel")
         contact_person = cleaned_data.get("contact_person")
         supplier_email = cleaned_data.get("supplier_email")
-        total_amount = cleaned_data.get("total_amount")
+        amount = cleaned_data.get("amount")
 
         if not supplier:
             self.add_error("supplier", "Supplier is required.")
@@ -65,8 +65,8 @@ class PurchaseOrderForm(forms.ModelForm):
             self.add_error("contact_person", "Contact Person is required.")
         if supplier_email == "":
             self.add_error("supplier_email", "Supplier Email is required.")
-        if total_amount == 0:
-            self.add_error("total_amount", "請填寫下方採購單細項")
+        if amount == 0:
+            self.add_error("amount", "請填寫下方採購單細項")
 
         return cleaned_data
 

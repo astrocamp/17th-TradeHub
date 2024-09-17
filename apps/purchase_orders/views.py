@@ -211,8 +211,8 @@ def import_file(request):
                         supplier_tel=row[2],
                         contact_person=row[3],
                         supplier_email=row[4],
-                        total_amount=row[9],
-                        notes=row[10],
+                        amount=row[9],
+                        note=row[10],
                     )
 
                     product = Product.objects.get(id=row[5])
@@ -247,8 +247,8 @@ def import_file(request):
                     "產品數量": "quantity",
                     "產品進價": "cost_price",
                     "小計": "subtotal",
-                    "總價": "total_amount",
-                    "備註": "notes",
+                    "總金額": "amount",
+                    "備註": "note",
                 },
                 inplace=True,
             )
@@ -264,8 +264,8 @@ def import_file(request):
                         supplier_tel=str(row["supplier_tel"]),
                         contact_person=str(row["contact_person"]),
                         supplier_email=str(row["supplier_email"]),
-                        total_amount=str(row["total_amount"]),
-                        notes=str(row["notes"]) if not pd.isna(row["notes"]) else "",
+                        amount=str(row["amount"]),
+                        note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
 
                     ProductItem.objects.create(
@@ -311,7 +311,7 @@ def export_csv(request):
             "數量",
             "價格",
             "小計",
-            "總價",
+            "總金額",
             "備註",
         ]
     )
@@ -336,8 +336,8 @@ def export_csv(request):
                     product_item.quantity,
                     product_item.cost_price,
                     product_item.subtotal,
-                    purchase_order.total_amount,
-                    purchase_order.notes,
+                    purchase_order.amount,
+                    purchase_order.note,
                 ]
             )
 
@@ -366,8 +366,8 @@ def export_excel(request):
             "items__quantity",
             "items__cost_price",
             "items__subtotal",
-            "total_amount",
-            "notes",
+            "amount",
+            "note",
         )
     )
 
@@ -388,8 +388,8 @@ def export_excel(request):
         "items__quantity": "數量",
         "items__cost_price": "價格",
         "items__subtotal": "小計",
-        "total_amount": "總價",
-        "notes": "備註",
+        "amount": "總金額",
+        "note": "備註",
     }
 
     df.rename(columns=column_mapping, inplace=True)

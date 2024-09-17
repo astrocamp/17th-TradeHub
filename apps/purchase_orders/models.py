@@ -23,8 +23,8 @@ class PurchaseOrder(models.Model):
     supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    total_amount = models.PositiveIntegerField()
-    notes = models.TextField(blank=True, null=True)
+    amount = models.PositiveIntegerField()
+    note = models.TextField(blank=True, null=True)
 
     objects = PurchaseOrderManager()
     all_objects = models.Manager()

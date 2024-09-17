@@ -38,7 +38,7 @@ class ProductForm(ModelForm):
                     "placeholder": "請輸入產品進價",
                 }
             ),
-            "prcie_price": forms.NumberInput(
+            "sale_price": forms.NumberInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
                     "placeholder": "請輸入產品售價",
