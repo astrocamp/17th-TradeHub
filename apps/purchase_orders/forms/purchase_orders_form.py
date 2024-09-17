@@ -3,7 +3,11 @@ import re
 from django import forms
 from django.forms import inlineformset_factory
 
-from ..models import ProductItem, PurchaseOrder
+from apps.purchase_orders.models import ProductItem, PurchaseOrder
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class PurchaseOrderForm(forms.ModelForm):
