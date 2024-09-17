@@ -1,13 +1,11 @@
 {% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-20">
-  <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white"
+<div class="flex justify-end mt-20 gap-2">
+  <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <a href="{% url 'orders:import_file' %}" class="btn bg-orange-600 text-white"
->匯入檔案</a
->
-<a href="{% url 'orders:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
-<a href="{% url 'orders:export_excel' %}" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">訂單列表</div>
 <div class="flex justify-center mt-10">
@@ -18,15 +16,15 @@
           <th>
             <form action="{% url 'orders:index' %}" method="GET">
               <select
-                  class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
-                  name="select"
+                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                name="select"
               >
                 <option disabled>選擇</option>
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
-                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>完成</option>
-                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
+                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                <option value="pending" {% if selected_state == "pending" %}selected{% endif %}>待處理</option>
+                <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
               </select>
-
               <button type="submit" class="btn btn-square btn-sm">
                 <svg
                   class="w-5 h-5"
@@ -63,11 +61,15 @@
           <tr class="hover">
           {% if order.state == "finished" %}
           <td>
-            <span class="btn btn-sm btn-success text-lg">{{ order.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">完成</span>
           </td>
-          {% else %}
+          {% elif order.state == "pending" %}
           <td>
-            <span class="btn btn-sm btn-error text-lg">{{ order.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">待處理</span>
+          </td>
+          {% elif order.state == "progress" %}
+          <td>
+            <span class="btn btn-sm btn-warning text-lg">進行中</span>
           </td>
           {% endif %}
           <td>{{ order.id }}</td>
@@ -75,15 +77,15 @@
           <td>{{ order.client }}</td>
           <td>{{ order.product }}</td>
           <td>{{ order.note }}</td>
-          <td class="flex justify-center gap-2">
-            <a class="btn btn-sm btn-warning" href="{% url 'orders:edit' order.id %}">編輯</a>
+          <td class="flex justify-center gap-1">
+            <a class="btn btn-primary" href="{% url 'orders:edit' order.id %}">編輯</a>
             <form
               action="{% url 'orders:edit' order.id %}"
               method="post"
               onsubmit="return confirm('Are you sure Delete it?')"
             >
               {% csrf_token %}
-              <button class="btn btn-sm btn-error" name="delete">刪除</button>
+              <button class="btn btn-error" name="delete">刪除</button>
             </form>
           </td>
         </tr>
@@ -117,4 +119,5 @@
     </div>
   </div>
 </div>
+{% include "shared/import_export.html" %}
 {% endblock %}

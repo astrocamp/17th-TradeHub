@@ -1,11 +1,11 @@
 {% extends 'layouts/base.html' %} {% block content %}
-<div class="flex justify-end mt-20">
-  <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white"
+<div class="flex justify-end mt-20 gap-2">
+  <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <a href="{% url 'purchase_orders:import_file' %}" class="btn bg-orange-600 text-white">匯入檔案</a>
-  <a href="{% url 'purchase_orders:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
-  <a href="{% url 'purchase_orders:export_excel' %}" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">採購單列表</div>
 
@@ -23,9 +23,9 @@
                           <option disabled>選擇</option>
                           <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
                           <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
-                          <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
+                          <option value="pending" {% if selected_state == "pending" %}selected{% endif %}>待處理</option>
+                          <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
                         </select>
-
                         <button type="submit" class="btn btn-square btn-sm">
                           <svg
                             class="w-5 h-5"
@@ -53,11 +53,15 @@
                 <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'" class="hover">
                     {% if purchase_order.state == "finished" %}
                     <th>
-                      <span class="btn btn-sm btn-success text-lg">{{ purchase_order.state }}</span>
+                      <span class="btn btn-sm btn-success text-lg">完成</span>
                     </th>
-                    {% elif purchase_order.state == "unfinish" %}
+                    {% elif purchase_order.state == "pending" %}
                     <th>
-                      <span class="btn btn-sm btn-error text-lg">{{ purchase_order.state }}</span>
+                      <span class="btn btn-sm btn-error text-lg">待處理</span>
+                    </th>
+                    {% elif purchase_order.state == "progress" %}
+                    <th>
+                      <span class="btn btn-sm btn-warning text-lg">進行中</span>
                     </th>
                     {% endif %}
                     {% comment %} <input
@@ -73,13 +77,13 @@
                     <th>{{ purchase_order.amount }}</th>
                     <th>{{ purchase_order.note }}</th>
                     <th>
-                        <div class="flex gap-3">
-                            <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="rounded-lg bg-green-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
+                        <div class="flex justify-center gap-1">
+                            <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary">
                               編輯
                             </a>
-                            <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST" class="inline-block">
+                            <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST">
                                 {% csrf_token %}
-                                <button onclick="return confirm('確認刪除?')" type="submit" class="rounded-lg bg-red-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
+                                <button onclick="return confirm('確認刪除?')" type="submit" class="btn btn-error">
                                     刪除
                                 </button>
                             </form>
@@ -118,4 +122,5 @@
         {% endif %}
     </div>
 </div>
+{% include "shared/import_export.html" %}
 {% endblock %}

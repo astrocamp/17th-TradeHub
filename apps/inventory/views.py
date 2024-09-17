@@ -4,6 +4,8 @@ from datetime import datetime
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -72,6 +74,16 @@ def delete(request, id):
     inventory.delete()
     messages.success(request, "刪除完成!")
     return redirect("inventory:index")
+
+
+@receiver(pre_save, sender=Inventory)
+def update_state(sender, instance, **kwargs):
+    if instance.quantity <= 0:
+        instance.set_out_stock()
+    elif instance.quantity < instance.safety_stock:
+        instance.set_low_stock()
+    else:
+        instance.set_normal()
 
 
 def import_file(request):

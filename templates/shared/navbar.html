@@ -1,3 +1,4 @@
+{% load static %}
 <div
   class="navbar bg-base-100 shadow-xl rounded-box z-50 fixed top-0 left-0 right-0"
 >
@@ -52,7 +53,7 @@
     <a href="/" class="btn btn-ghost text-2xl">TradeHub</a>
   </div>
   <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal gap-x-10 font-bold text-sm">
+    <ul class="menu menu-horizontal gap-x-5 font-bold text-sm">
       <li>
         <details name="dropdown">
           <summary>客戶</summary>
@@ -95,9 +96,32 @@
       </li>
     </ul>
   </div>
-  <!-- user status -->
-  <div class="navbar-end">
-    <div class="flex gap-6 w-[180px]">
+  <div x-data="{ focusSearch: false }" class="navbar-end">
+    <div class="hidden lg:flex join">
+      <select class="select select-bordered max-w-xs join-item">
+        <option disabled selected>分類</option>
+        <option>客戶</option>
+        <option>商品</option>
+        <option>供應商</option>
+        <option>庫存</option>
+      </select>
+      <label
+        @keydown.window="if (($event.ctrlKey || $event.metaKey) && $event.key === 'k'){ $event.preventDefault();$refs.searchInput.focus(); }"
+        class="input input-bordered flex items-center join-item"
+      >
+        <input
+          type="text"
+          x-ref="searchInput"
+          class="grow"
+          name="search"
+          placeholder="Search"
+        />
+        <kbd class="kbd kbd-sm">⌘</kbd>
+        <kbd class="kbd kbd-sm">K</kbd>
+      </label>
+    </div>
+    <!-- user status -->
+    <div class="flex">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
       {% if request.user.is_authenticated %} {% if request.user.first_name %}
       <a

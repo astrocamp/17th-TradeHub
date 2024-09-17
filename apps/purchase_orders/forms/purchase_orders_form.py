@@ -53,16 +53,16 @@ class PurchaseOrderForm(forms.ModelForm):
         amount = cleaned_data.get("amount")
 
         if not supplier:
-            self.add_error("supplier", "Supplier is required.")
+            self.add_error("supplier", "供應商為必填項")
         if supplier_tel == "":
-            self.add_error("supplier_tel", "Supplier Tel is required.")
+            self.add_error("supplier_tel", "供應商電話為必填項")
         elif not re.match(
             r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
             supplier_tel,
         ):
-            self.add_error("supplier_tel", "Invalid phone number.")
+            self.add_error("supplier_tel", "無效的電話號碼")
         if not contact_person:
-            self.add_error("contact_person", "Contact Person is required.")
+            self.add_error("contact_person", "聯絡人為必填項")
         if supplier_email == "":
             self.add_error("supplier_email", "Supplier Email is required.")
         if amount == 0:
