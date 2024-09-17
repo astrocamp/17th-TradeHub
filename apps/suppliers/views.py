@@ -106,13 +106,11 @@ def import_file(request):
 
             decoded_file = file.read().decode("utf-8").splitlines()
             reader = csv.reader(decoded_file)
-            next(reader)  # Skip header row
+            next(reader)
             try:
 
                 for row in reader:
                     if len(row) < 7:
-                        # messages.error(request, f"CSV 数据不完整，跳过该行: {row}") 很奇怪?
-                        # IndexError: list index out of range
                         continue
                     Supplier.objects.create(
                         name=row[0],
@@ -169,7 +167,7 @@ def import_file(request):
 
 
 def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
+    response = HttpResponse(content_type="csv")
     response["Content-Disposition"] = 'attachment; filename="Suppliers.csv"'
 
     writer = csv.writer(response)

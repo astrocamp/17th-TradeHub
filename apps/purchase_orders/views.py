@@ -187,11 +187,10 @@ def import_file(request):
 
             decoded_file = file.read().decode("utf-8").splitlines()
             reader = csv.reader(decoded_file)
-            next(reader)  # Skip header row
+            next(reader)
 
             for row in reader:
                 if len(row) < 11:
-                    # messages.error(request, f"CSV 数据不完整，跳过该行: {row}")
                     continue
 
                 try:
@@ -286,7 +285,7 @@ def import_file(request):
 
 
 def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
+    response = HttpResponse(content_type="csv")
     response["Content-Disposition"] = 'attachment; filename="Purchase_Orders.csv"'
 
     writer = csv.writer(response)
