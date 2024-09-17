@@ -4,9 +4,11 @@
   <a href="{% url 'inventory:new' %}" class="btn bg-orange-600 text-white"
     >新增</a
   >
-<a href="#" class="btn bg-orange-600 text-white">匯入檔案</a>
-<a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
-<a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <a href="{% url 'inventory:import_file' %}" class="btn bg-orange-600 text-white"
+>匯入檔案</a
+>
+<a href="{% url 'inventory:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
+<a href="{% url 'inventory:export_excel' %}" class="btn bg-orange-600 text-white">匯出Excel</a>
 </div>
 <div class="divider text-3xl font-bold">庫存列表</div>
 <div class="flex justify-center mt-5">
