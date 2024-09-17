@@ -51,11 +51,15 @@ def index(request):
 
 
 def new(request):
+    new_order_number = generate_order_number()
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         formset = ProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            order.order_number = new_order_number
+            order.username = request.user.username
+            order.save()
             formset.instance = order
             formset.save()
             return redirect("purchase_orders:index")
@@ -63,18 +67,6 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-    today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        PurchaseOrder.all_objects.filter(order_number__startswith=today)
-        .order_by("-order_number")
-        .first()
-    )
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{today}{last_order_number + 1:03d}"
-    else:
-        new_order_number = f"{today}001"
-
     form = PurchaseOrderForm(initial={"order_number": new_order_number})
     formset = ProductItemFormSet(instance=form.instance)
     return render(
@@ -170,8 +162,9 @@ def load_product_info(request):
 def generate_order_number():
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
-        PurchaseOrder.objects.filter(order_number__startswith=today)
+        PurchaseOrder.all_objects.filter(order_number__startswith=today)
         .order_by("-order_number")
+        .filter(deleted_at__isnull=True)
         .first()
     )
 

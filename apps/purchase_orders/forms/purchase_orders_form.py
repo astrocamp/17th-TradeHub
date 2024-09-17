@@ -14,7 +14,6 @@ class PurchaseOrderForm(forms.ModelForm):
     class Meta:
         model = PurchaseOrder
         fields = [
-            "order_number",
             "supplier",
             "supplier_tel",
             "contact_person",
