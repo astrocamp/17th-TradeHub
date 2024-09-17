@@ -25,7 +25,7 @@
                 <option value="all" {% if selected_state == "all" %}selected{% endif %}>全部</option>
                 <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
                 <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
-                <option value="never" {% if selected_state == "never" %}selected{% endif %}>還未購買</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>未購買</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -56,18 +56,17 @@
         <tr class="hover">
           {% if client.state == "often" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">經常購買</span>
           </th>
           {% elif client.state == "haply" %}
           <th>
-            <span class="btn btn-sm btn-warning text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">偶爾購買</span>
           </th>
-          {% else %}
+          {% elif client.state == "never" %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-error text-lg">未購買</span>
           </th>
           {% endif %}
-          </th>
           <th>{{ client.id }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
@@ -76,15 +75,15 @@
           <td>{{ client.note }}</td>
 
           <td>{{ client.create_at|date:"Y-m-d H:i" }}</td>
-          <td class="flex justify-center gap-2">
-            <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</a>
+          <td class="flex justify-center gap-1">
+            <button class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</button>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
               onsubmit="return confirm('確認刪除?')"
             >
               {% csrf_token %}
-              <button name="delete">刪除</button>
+              <button class="btn btn-error" name="delete">刪除</button>
             </form>
           </td>
         </tr>

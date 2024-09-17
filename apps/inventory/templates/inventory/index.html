@@ -56,15 +56,15 @@
         <tr class="hover">
           {% if item.state == "normal" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">正常</span>
           </th>
           {% elif item.state == "low_stock" %}
           <th>
-            <span class="btn btn-sm btn-warning text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">低庫存</span>
           </th>
           {% else %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-error text-lg">缺貨</span>
           </th>
           {% endif %}
           <td>{{ item.product }}</td>

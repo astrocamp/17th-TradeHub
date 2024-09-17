@@ -79,7 +79,7 @@ def import_file(request):
 
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
+                next(reader)
 
                 for row in reader:
                     Client.objects.create(

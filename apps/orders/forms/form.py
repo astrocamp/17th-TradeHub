@@ -14,7 +14,7 @@ class OrderForm(forms.ModelForm):
 
         widgets = {
             "code": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Order Code"}
+                attrs={"class": "form-control", "placeholder": "請輸入訂單編號"}
             ),
             "client": forms.Select(
                 attrs={
@@ -29,23 +29,23 @@ class OrderForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Any additional notes",
+                    "placeholder": "請輸入備註",
                     "rows": 3,
                 }
             ),
         }
         help_texts = {
-            "code": "Please enter the order code.",
-            "client": "Please select a client.",
-            "product": "Please select a product.",
-            "note": "Please enter any additional notes.",
+            "code": "請輸入訂單編號",
+            "client": "請選擇客戶",
+            "product": "請選擇產品",
+            "note": "請輸入備註",
         }
 
         labels = {
-            "code": "Order Code",
-            "client": "Client",
-            "product": "Product",
-            "note": "Note",
+            "code": "訂單編號",
+            "client": "客戶",
+            "product": "產品",
+            "note": "備註",
         }
 
     def __init__(self, *args, **kwargs):
@@ -60,12 +60,12 @@ class OrderForm(forms.ModelForm):
         product = cleaned_data.get("product")
 
         if not code:
-            self.add_error("code", "Order code is required.")
+            self.add_error("code", "訂單編號是必填的")
 
         if not client:
-            self.add_error("client", "Client is required.")
+            self.add_error("client", "客戶是必填的")
 
         if not product:
-            self.add_error("product", "Product is required.")
+            self.add_error("product", "產品是必填的")
 
         return cleaned_data
