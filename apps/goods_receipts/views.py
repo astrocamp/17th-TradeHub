@@ -250,21 +250,14 @@ def export_excel(request):
 
 @receiver(pre_save, sender=GoodsReceipt)
 def update_state(sender, instance, **kwargs):
-    print(instance.is_finished)
-    if instance.purchase_quantity < instance.order_quantity:
+    if instance.purchase_quantity > instance.order_quantity:
         instance.set_to_be_restocked()
-    if instance.purchase_quantity >= instance.order_quantity:
+    if instance.purchase_quantity <= instance.order_quantity:
         instance.set_to_be_stocked()
         if instance.is_finished:
-            print(instance.is_finished)
             if Inventory.objects.filter(
                 product=instance.goods_name, supplier=instance.supplier
             ).exists():
-                print(
-                    Inventory.objects.filter(
-                        product=instance.goods_name, supplier=instance.supplier
-                    ).exists()
-                )
                 inventory = Inventory.objects.get(
                     product=instance.goods_name, supplier=instance.supplier
                 )
