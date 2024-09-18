@@ -7,7 +7,7 @@
   >
   <div class="dropdown dropdown-bottom dropdown-end">
     <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
+    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
       <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
       <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
     </ul>
@@ -52,7 +52,7 @@
                     <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">運送方式{% if order_by == 'method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=date&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">日期{% if order_by == 'date' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th>操作</th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -78,10 +78,10 @@
                     <th>{{goods_receipt.purchase_quantity}}</th>
                     <th>{{goods_receipt.method}}</th>
                     <th>{{goods_receipt.date|date:"Y-m-d"}}</th>
-                    <th>{{goods_receipt.note}}</th>
+                    <th>{{goods_receipt.note|truncatechars:15}}</th>
                     <th>
                         <div class="flex justify-center">
-                            <div class="dropdown dropdown-bottom">
+                            <div class="dropdown dropdown-left">
                                 <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
                                 <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
                                     <li><a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">編輯</a></li>
@@ -95,7 +95,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% if is_paginated %}
+        {% if page_obj.paginator.num_pages > 1 %}
         <div class="pagination join flex justify-center">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>

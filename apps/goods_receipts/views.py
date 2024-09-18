@@ -251,11 +251,11 @@ def export_excel(request):
 
 @receiver(pre_save, sender=GoodsReceipt)
 def update_state(sender, instance, **kwargs):
-    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y-%m-%d %H:%M:%S")
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.purchase_quantity < instance.order_quantity:
         if instance.is_finished:
             instance.order_quantity -= instance.purchase_quantity
-            instance.note += f"{time_now} 自動入庫{instance.purchase_quantity} 個：{instance.goods_name}，剩餘{instance.order_quantity} 個"
+            instance.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}，剩餘{instance.order_quantity}個"
             if Inventory.objects.filter(
                 product=instance.goods_name, supplier=instance.supplier
             ).exists():
@@ -264,7 +264,7 @@ def update_state(sender, instance, **kwargs):
                 )
                 inventory.quantity += instance.purchase_quantity
                 inventory.last_updated = time_now
-                inventory.note += f"{time_now} 自動入庫{instance.purchase_quantity} 個：{instance.goods_name}"
+                inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
                 inventory.save()
             else:
                 Inventory.objects.create(
@@ -272,7 +272,7 @@ def update_state(sender, instance, **kwargs):
                     supplier=instance.supplier,
                     quantity=instance.purchase_quantity,
                     safety_stock=0,
-                    note=f"{time_now} 新進貨物{instance.goods_name}： {instance.purchase_quantity} 個，供應商： {instance.supplier}，收據號碼： {instance.receipt_number}",
+                    note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
                     last_updated=time_now,
                 )
             instance.purchase_quantity = 0
@@ -289,7 +289,7 @@ def update_state(sender, instance, **kwargs):
                 )
                 inventory.quantity += instance.purchase_quantity
                 inventory.last_updated = time_now
-                inventory.note += f"{time_now} 自動入庫{instance.purchase_quantity} 個：{instance.goods_name}"
+                inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
                 inventory.save()
             else:
                 Inventory.objects.create(
@@ -297,10 +297,12 @@ def update_state(sender, instance, **kwargs):
                     supplier=instance.supplier,
                     quantity=instance.purchase_quantity,
                     safety_stock=0,
-                    note=f"{time_now} 新進貨物{instance.goods_name}： {instance.purchase_quantity} 個，供應商： {instance.supplier}，收據號碼： {instance.receipt_number}",
+                    note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
                     last_updated=time_now,
                 )
-            instance.note += f"{time_now} 自動入庫{instance.purchase_quantity} 個：{instance.goods_name}"
+            instance.note += (
+                f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
+            )
             instance.order_quantity -= instance.purchase_quantity
             instance.purchase_quantity = 0
             instance.set_finished()
