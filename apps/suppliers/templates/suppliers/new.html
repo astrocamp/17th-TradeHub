@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-    <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
+    <div class="max-w-3xl mx-auto p-6 bg-white shadow-md border rounded-lg mt-8">
         <h2 class="text-2xl font-bold mb-6 text-gray-800">新增供應商資料</h2>
         <form action="{% url 'suppliers:index' %}" method="POST" class="grid grid-cols-1 gap-6 md:grid-cols-2">
             {% csrf_token %}

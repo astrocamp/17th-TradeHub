@@ -3,28 +3,46 @@
 {% block content %}
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
         <div class="flex justify-between items-center p-4">
-            <h2 class="text-2xl font-bold text-gray-800">採購單編號:{{ form.instance.order_number }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800" for="id_order_number">採購單編號:{{ form.instance.order_number }}</h2>
             <div class="text-gray-700">
-                <strong>採購人:{{ form.instance.username }}</strong><span id="order-number"></span>
+                <strong>採購人:{{ form.instance.username }}</strong>
             </div>
         </div>
 
-        <form action="{% url 'purchase_orders:show' purchase_order.id %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <form action="{% url 'purchase_orders:edit' purchase_order.id %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {% csrf_token %}
 
             {% for field in form %}
-            <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
-                <div>
-                    {{ field }}
-                </div>
-                {% if field.errors %}
-                <ul class="errorlist text-red-500 text-sm mt-2">
-                  {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}
+                {% if field.name == 'amount' %}
+                    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+                        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">總金額: </label>
+                        <div>
+                            <span id="total-amount-display">{{ form.amount.value|default:"0" }}</span>
+                        </div>
+                        <input type="hidden" id="amount" name="amount" value='{{ form.amount.value|default:"0" }}'>
+                        {% if field.errors %}
+                            <ul class="errorlist text-red-500 text-sm mt-2">
+                                {% for error in field.errors %}
+                                    <li class="text-red-500 text-sm mt-2">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+                        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
+                        <div>
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <ul class="errorlist text-red-500 text-sm mt-2">
+                                {% for error in field.errors %}
+                                    <li class="text-red-500 text-sm mt-2">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
             {% endfor %}
 
 

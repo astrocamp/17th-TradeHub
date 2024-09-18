@@ -5,14 +5,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     const costPriceInput = document.querySelector('input[name$="-cost_price"]');
     const quantityInput = document.querySelector('input[name$="-quantity"]');
-    const subtotalInput = document.querySelector('input[name$="-subtotal"]');
     const quantityInputs = document.querySelectorAll('input[name$="-quantity"]');
+    const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
     let formCount = parseInt(totalForms.value);
 
     quantityInputs.forEach(input => {
-        input.setAttribute('type', 'number'); // 確保 type 為 number
-        input.setAttribute('min', '1');        // 設置最小值為 1
+        input.setAttribute('min', '1');
     });
+    subtotalInputs.forEach(input =>{
+        input.readOnly = true;
+    })
     // 禁用或啟用子表單的產品選擇
     function toggleFormItems(disabled) {
         document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
@@ -20,8 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         costPriceInput.readOnly = disabled;
         quantityInput.readOnly = disabled;
-        subtotalInput.readOnly = disabled;
-        addItemButton.disabled = disabled; // 禁用新增按鈕
+        addItemButton.disabled = disabled;
     }
 
     // 自動填入供應商資訊
@@ -35,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     supplierSelect.addEventListener('change', () => {
         if (supplierSelect.value) {
             fetchSupplierInfo(supplierSelect.value);
-            toggleFormItems(false); // 啟用子表單選擇
+            toggleFormItems(false);
         } else {
-            toggleFormItems(true); // 禁用子表單選擇
+            toggleFormItems(true);
         }
     });
     handleProductChange();

@@ -3,16 +3,22 @@ document.addEventListener('DOMContentLoaded', () => {
     const formsetItems = document.getElementById('formset-items');
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
-    const costPriceInputs = document.querySelector('input[name$="-cost_price"]');
-    const quantityInput = document.querySelector('input[name$="-quantity"]');
-    const subtotalInput = document.querySelector('input[name$="-subtotal"]');
+    const quantityInputs = document.querySelectorAll('input[name$="-quantity"]');
+    const supplierInput = document.querySelector('select[name="supplier"]');
+    const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
     let formCount = parseInt(totalForms.value);
 
-    // 自動填入供應商資訊
-    if (supplierSelect.value) fetchSupplierInfo(supplierSelect.value);
-    supplierSelect.addEventListener('change', () => fetchSupplierInfo(supplierSelect.value));
+    supplierInput.addEventListener('mousedown', (e) => {
+        e.preventDefault();
+      });
+    quantityInputs.forEach(input => {
+        input.setAttribute('min', '1');
+    });
+    subtotalInputs.forEach(input =>{
+        input.readOnly = true;
+    })
     handleProductChange();
-
+    fetchSupplierInfo(supplierSelect.value)
     // 新增子表單項目
     addItemButton.addEventListener('click', () => {
         const newItem = document.querySelector('#formset-items fieldset').cloneNode(true);
@@ -30,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // 刪除子表單項目
     formsetItems.addEventListener('click', (event) => {
         if (event.target.classList.contains('delete-item') && formCount > 1) {
+            formCount--;
+            console.log(formCount)
             event.target.closest('fieldset').remove();
             updateFormIndexes();
             updateTotalAmount();
@@ -54,13 +62,9 @@ document.addEventListener('DOMContentLoaded', () => {
         fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)
             .then(response => response.json())
             .then(data => {
-                document.getElementById('id_supplier_tel').value = data.supplier_tel;
-                document.getElementById('id_contact_person').value = data.contact_person;
-                document.getElementById('id_supplier_email').value = data.supplier_email;
                 updateProductOptions(data.products);
             });
     }
-
     function updateProductOptions(products) {
         document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
             const selectedProduct = productSelect.value;

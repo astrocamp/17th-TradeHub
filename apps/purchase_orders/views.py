@@ -75,6 +75,16 @@ def new(request):
 
 def show(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, id=id)
+    product_items = ProductItem.objects.filter(purchase_order=purchase_order)
+    return render(
+        request,
+        "purchase_orders/show.html",
+        {"purchase_order": purchase_order, "product_items": product_items},
+    )
+
+
+def edit(request, id):
+    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=purchase_order)
         formset = ProductItemFormSet(request.POST, instance=purchase_order)
@@ -90,17 +100,6 @@ def show(request, id):
                 "purchase_orders/edit.html",
                 {"form": form, "formset": formset, "purchase_order": purchase_order},
             )
-
-    product_items = ProductItem.objects.filter(purchase_order=purchase_order)
-    return render(
-        request,
-        "purchase_orders/show.html",
-        {"purchase_order": purchase_order, "product_items": product_items},
-    )
-
-
-def edit(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     form = PurchaseOrderForm(instance=purchase_order)
     formset = get_product_item_formset(0)(instance=purchase_order)
     return render(
