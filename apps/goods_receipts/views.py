@@ -8,8 +8,8 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.db import transaction
 from datetime import timedelta, datetime, timezone
-
 from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
 from apps.products.models import Product
@@ -277,7 +277,7 @@ def update_state(sender, instance, **kwargs):
                 )
             instance.purchase_quantity = 0
             instance.is_finished = False
-            instance.set_to_be_restocked()
+    instance.set_to_be_restocked()
     if instance.purchase_quantity >= instance.order_quantity:
         instance.set_to_be_stocked()
         if instance.is_finished:

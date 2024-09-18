@@ -57,10 +57,7 @@ def index(request):
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )
+    return render(request, "purchase_orders/index.html", content)
 
 
 from django.utils import timezone
