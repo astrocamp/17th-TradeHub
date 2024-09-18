@@ -61,7 +61,6 @@ document.addEventListener('DOMContentLoaded', () => {
     formsetItems.addEventListener('click', (event) => {
         if (event.target.classList.contains('delete-item') && formCount > 1) {
             formCount--;
-            console.log(formCount)
             event.target.closest('fieldset').remove();
             updateFormIndexes();
             updateTotalAmount();

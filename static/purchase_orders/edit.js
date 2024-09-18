@@ -36,9 +36,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // 刪除子表單項目
     formsetItems.addEventListener('click', (event) => {
         if (event.target.classList.contains('delete-item') && formCount > 1) {
+            const fieldset = event.target.closest('fieldset');
+            const deleteField = fieldset.querySelector('input[type="checkbox"][name$="-DELETE"]');
+            if (deleteField) {
+                deleteField.checked = true;
+            }
+            fieldset.style.display = 'none';
             formCount--;
-            console.log(formCount)
-            event.target.closest('fieldset').remove();
             updateFormIndexes();
             updateTotalAmount();
         }
@@ -89,8 +93,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateTotalAmount() {
-        const totalAmount = Array.from(document.querySelectorAll('[id$="-subtotal"]'))
-            .reduce((sum, field) => sum + (parseInt(field.value, 10) || 0), 0);
+        const totalAmount = Array.from(document.querySelectorAll('#formset-items fieldset'))
+            .filter(fieldset => fieldset.style.display !== 'none') // Exclude hidden fieldsets
+            .reduce((sum, fieldset) => {
+                const subtotalInput = fieldset.querySelector('input[name$="-subtotal"]');
+                return sum + (parseInt(subtotalInput.value, 10) || 0);
+            }, 0);
+
         document.getElementById('total-amount-display').textContent = totalAmount;
         document.getElementById('amount').value = totalAmount;
     }

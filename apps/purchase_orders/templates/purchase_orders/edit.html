@@ -74,9 +74,8 @@
                             <div class="flex-1">{{ form.cost_price }}</div>
                             <div class="flex-1">{{ form.subtotal }}</div>
                             <div class="mx-4 text-center">
-                                <span class="hidden">{{ form.DELETE }}</span>
                                 <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
-                                    刪除
+                                    刪除<span style="display:none">{{ form.DELETE }}</span>
                                 </button>
                             </div>
                         </div>
