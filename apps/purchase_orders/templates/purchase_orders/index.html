@@ -50,7 +50,7 @@
             </thead>
             <tbody>
                 {% for purchase_order in purchase_orders %}
-                <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'" class="hover">
+                <tr onclick=`window.location.href="{% url 'purchase_orders:show' purchase_order.id %}"` class="hover">
                     {% if purchase_order.state == "finished" %}
                     <th>
                       <span class="btn btn-sm btn-success text-lg">完成</span>
@@ -93,7 +93,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% if is_paginated %}
+        {% if page_obj.has_other_pages %}
         <div class="pagination join flex justify-center">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>

@@ -44,10 +44,7 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )
+    return render(request, "purchase_orders/index.html", content)
 
 
 def new(request):
