@@ -50,7 +50,7 @@
             </thead>
             <tbody>
                 {% for purchase_order in purchase_orders %}
-                <tr onclick=`window.location.href="{% url 'purchase_orders:show' purchase_order.id %}"` class="hover">
+                <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'"      class="hover">
                     {% if purchase_order.state == "finished" %}
                     <th>
                       <span class="btn btn-sm btn-success text-lg">完成</span>

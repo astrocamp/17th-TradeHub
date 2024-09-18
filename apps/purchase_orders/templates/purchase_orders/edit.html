@@ -1,16 +1,11 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
         <div class="flex justify-between items-center p-4">
-            <h2 class="text-2xl font-bold text-gray-800">編輯採購單</h2>
+            <h2 class="text-2xl font-bold text-gray-800">採購單編號:{{ form.instance.order_number }}</h2>
             <div class="text-gray-700">
-                <strong>訂單號碼: </strong><span id="order-number">{{ form.instance.order_number }}</span>
+                <strong>採購人:{{ form.instance.username }}</strong><span id="order-number"></span>
             </div>
         </div>
 
@@ -75,8 +70,9 @@
 
             <!-- 新增按鈕 -->
 
-            <div class="col-span-full">
-                <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">儲存變更</button>
+            <div class="col-span-full flex justify-center gap-4">
+                <button type="submit" class="w-1/2 bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold">確認更新</button>
+                <a href="{% url 'purchase_orders:index' %}" class="w-1/2 bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold">取消更新</a>
             </div>
         </form>
     </div>
