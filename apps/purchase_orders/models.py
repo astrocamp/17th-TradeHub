@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=11, unique=True)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -23,10 +23,11 @@ class PurchaseOrder(models.Model):
     supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    total_amount = models.PositiveIntegerField()
-    notes = models.TextField(blank=True, null=True)
+    amount = models.PositiveIntegerField()
+    note = models.TextField(blank=True, null=True)
 
     objects = PurchaseOrderManager()
+    all_objects = models.Manager()
 
     def delete(self):
         self.deleted_at = timezone.now()
@@ -86,8 +87,8 @@ class ProductItem(models.Model):
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-    price = models.PositiveIntegerField()
+    cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"{self.product} - {self.quantity} @ {self.price}"
+        return f"{self.product} - {self.quantity} @ {self.cost_price}"
