@@ -7,7 +7,7 @@
 
   <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
-<div class="divider text-3xl font-bold">產品列表</div>
+<div class="divider text-3xl font-bold">商品列表</div>
 <div class="flex justify-center mt-10">
     <div class="overflow-x-auto">
       <table class="table table-xl text-center">
@@ -39,10 +39,10 @@
               </button>
             </form>
             </th>
-            <th><a href="{% url 'products:index' %}?sort=product_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">產品編號{% if order_by == 'product_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">產品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=product_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品編號{% if order_by == 'product_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th></th>

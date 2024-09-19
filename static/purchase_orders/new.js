@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
-    // 禁用或啟用子表單的產品選擇
+    // 禁用或啟用子表單的商品選擇
     function toggleFormItems(disabled) {
         document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
             productSelect.disabled = disabled;

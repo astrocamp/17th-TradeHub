@@ -133,7 +133,7 @@
       <a
         href="{% url 'users:profile' user.id %}"
         class="w-[100px] flex justify-center text-lg font-bold"
-        >{{ request.user.first_name }}</a
+        >{{ request.user.username }}</a
       >
       {% endif %}
       <form

@@ -212,7 +212,7 @@ def import_file(request):
                     messages.error(request, f"匯入失敗，找不到供應商: {e}")
                     return redirect("purchase_orders:import_file")
                 except Product.DoesNotExist as e:
-                    messages.error(request, f"匯入失敗，找不到產品: {e}")
+                    messages.error(request, f"匯入失敗，找不到商品: {e}")
                     return redirect("purchase_orders:import_file")
 
             messages.success(request, "成功匯入 CSV")
@@ -227,9 +227,9 @@ def import_file(request):
                     "供應商電話": "supplier_tel",
                     "供應商連絡人": "contact_person",
                     "供應商Email": "supplier_email",
-                    "產品名稱": "product",
-                    "產品數量": "quantity",
-                    "產品進價": "cost_price",
+                    "商品名稱": "product",
+                    "商品數量": "quantity",
+                    "商品進價": "cost_price",
                     "小計": "subtotal",
                     "總金額": "amount",
                     "備註": "note",
@@ -264,7 +264,7 @@ def import_file(request):
                     messages.error(request, f"匯入失敗，找不到供應商: {e}")
                     continue  # Skip to the next row
                 except Product.DoesNotExist as e:
-                    messages.error(request, f"匯入失敗，找不到產品: {e}")
+                    messages.error(request, f"匯入失敗，找不到商品: {e}")
                     continue  # Skip to the next row
 
             messages.success(request, "成功匯入 Excel")
@@ -291,7 +291,7 @@ def export_csv(request):
             "Email",
             "建立時間",
             "刪除時間",
-            "產品",
+            "商品",
             "數量",
             "價格",
             "小計",
@@ -368,7 +368,7 @@ def export_excel(request):
         "supplier_email": "Email",
         "created_at": "建立時間",
         "deleted_at": "刪除時間",
-        "items__product__product_name": "產品",
+        "items__product__product_name": "商品",
         "items__quantity": "數量",
         "items__cost_price": "價格",
         "items__subtotal": "小計",
