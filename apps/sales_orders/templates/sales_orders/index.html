@@ -1,13 +1,12 @@
 {% extends "layouts/base.html" %}
 {% block content %} {% load static %}
-<div class="flex justify-end mt-20">
-  <a href="{% url 'sales_orders:new' %}" class="btn bg-orange-600 text-white"
+<div class="flex justify-end mt-20 gap-2">
+  <a href="{% url 'sales_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <a href="#" class="btn bg-orange-600 text-white">匯入檔案</a
->
-<a href="#" class="btn bg-orange-600 text-white">匯出CSV</a>
-<a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">銷售單列表</div>
 <div class="flex justify-center mt-10">
@@ -24,7 +23,8 @@
                 <option disabled>選擇</option>
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
                 <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>完成</option>
-                <option value="unfinish" {% if selected_state == "unfinish" %}selected{% endif %}>未完成</option>
+                <option value="pending" {% if selected_state == "pending" %}selected{% endif %}>待處理</option>
+                <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
               </select>
 
               <button type="submit" class="btn btn-square btn-sm">
@@ -41,24 +41,28 @@
             </form>
           </th>
           <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'sales_orders:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">產品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th>操作</th>
+          <th></th>
         </tr>
       </thead>
       {% for item in sales_orders %}
       <tbody>
         <tr class="hover">
-          {% if item.state == "normal" %}
+          {% if item.state == "pending" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">待處理</span>
           </th>
-          {% else %}
+          {% elif item.state == "progress" %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">{{ item.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">進行中</span>
+          </th>
+          {% elif item.state == "finished" %}
+          <th>
+            <span class="btn btn-sm btn-error text-lg">已完成</span>
           </th>
           {% endif %}
           <td>{{ item.client }}</td>
@@ -74,7 +78,7 @@
             >
               編輯
             </a>
-            <a href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error"
+            <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error"
               >刪除</a
             >
           </td>
@@ -111,4 +115,5 @@
     {% endif %}
   </div>
 </div>
+{% include "shared/import_export.html" %}
 {% endblock %}

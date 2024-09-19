@@ -1,0 +1,57 @@
+<dialog id="my_modal_1" class="modal">
+  <div class="modal-box w-11/12 max-w-lg">
+    <h3 class="text-lg font-bold">Import</h3>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        ✕
+      </button>
+    </form>
+    <div class="modal-action">
+      <form
+        class="flex flex-col justify-center w-full gap-4"
+        method="POST"
+        action="{% url 'clients:import_file' %}"
+        enctype="multipart/form-data"
+      >
+        {% csrf_token %}
+        <label for="file">選擇匯入的檔案</label>
+        <input
+          type="file"
+          class="file-input file-input-bordered w-full"
+          name="file"
+        />
+        <button class="btn btn-success text-lg text-white">確認</button>
+      </form>
+    </div>
+  </div>
+</dialog>
+
+<dialog id="my_modal_2" class="modal">
+  <div class="modal-box w-11/12 max-w-lg">
+    <h3 class="text-lg font-bold">Export</h3>
+    <form method="dialog">
+      <button class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+        ✕
+      </button>
+    </form>
+    <p class="py-4">選擇輸出格式</p>
+    <div class="modal-action">
+      <form
+        class="flex justify-center w-full"
+        method="POST"
+        action="{% url 'clients:export_csv' %}"
+      >
+        {% csrf_token %}
+        <button class="btn btn-info text-lg text-white w-full">CSV</button>
+      </form>
+      <form
+        class="flex justify-center w-full"
+        method="POST"
+        action="{% url 'clients:export_excel' %}"
+      >
+        {% csrf_token %}
+        <button class="btn btn-success text-lg text-white w-full">Excel</button>
+      </form>
+    </div>
+  </div>
+</dialog>

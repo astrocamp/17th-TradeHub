@@ -5,9 +5,10 @@ from apps.suppliers.models import Supplier
 
 
 class Product(models.Model):
-    product_id = models.CharField(max_length=10, unique=True)
+    product_number = models.CharField(max_length=10, unique=True)
     product_name = models.CharField(max_length=20)
-    price = models.PositiveIntegerField()
+    cost_price = models.PositiveIntegerField()
+    sale_price = models.PositiveIntegerField()
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="products", default=0
     )
@@ -16,39 +17,30 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-    PRODUCT_STATE_OFTEN = "often"
-    PRODUCT_STATE_HAPLY = "haply"
-    PRODUCT_STATE_NEVER = "never"
+    OFTEN = "often"
+    HAPLY = "haply"
+    NEVER = "never"
 
-    PRODUCT_STATE_CHOICES = [
-        (PRODUCT_STATE_OFTEN, "經常"),
-        (PRODUCT_STATE_HAPLY, "偶爾"),
-        (PRODUCT_STATE_NEVER, "從不"),
+    STATE_CHOICES = [
+        (OFTEN, "經常購買"),
+        (HAPLY, "偶爾購買"),
+        (NEVER, "未購買"),
     ]
 
     state = FSMField(
-        default=PRODUCT_STATE_OFTEN,
-        choices=PRODUCT_STATE_CHOICES,
+        default=NEVER,
+        choices=STATE_CHOICES,
         protected=True,
     )
 
-    def update_state(self):
-        pass
-
-    @transition(field=state, source="*", target=PRODUCT_STATE_NEVER)
+    @transition(field=state, source="*", target=NEVER)
     def set_never(self):
         pass
 
-    @transition(field=state, source="*", target=PRODUCT_STATE_HAPLY)
+    @transition(field=state, source="*", target=HAPLY)
     def set_haply(self):
         pass
 
-    @transition(field=state, source="*", target=PRODUCT_STATE_OFTEN)
+    @transition(field=state, source="*", target=OFTEN)
     def set_often(self):
-        pass
-
-    def add_state(self):
-        pass
-
-    def remove_state(self):
         pass

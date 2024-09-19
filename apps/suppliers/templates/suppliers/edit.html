@@ -2,13 +2,21 @@
 
 {% block content %}
     <div class="max-w-3xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Edit the Supplier</h2>
+        <h2 class="text-2xl font-bold mb-6 text-gray-800">編輯供應商資料</h2>
         <form action="{% url 'suppliers:show' supplier.id %}" method="POST" class="grid grid-cols-1 gap-6 md:grid-cols-2">
             {% csrf_token %}
             {% for field in form %}
             <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
+                <label for="{{ field.id_for_label }}" class="text-xl font-semibold text-gray-800">
+                    {{ field.label }}
+                    {% if field.name != "note" %}
+                      <span class="text-red-500 text-sm mt-2"> *</span>
+                    {% endif %}
+                </label>
                 <div>
+                    {% if field.help_text %}
+                        <p class="text-gray-600 text-sm mb-2">{{ field.help_text }}</p>
+                    {% endif %}
                     {{ field }}
                 </div>
                 {% if field.errors %}
@@ -20,9 +28,9 @@
                 {% endif %}
             </div>
             {% endfor %}
-            <!-- 保持提交按鈕全寬 -->
-            <div class="col-span-full">
-                <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">Edit</button>
+            <div class="col-span-full flex justify-center gap-4">
+                <button type="submit" class="w-1/2 bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold">確認更新</button>
+                <a href="{% url 'suppliers:index' %}" class="w-1/2 bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold">取消更新</a>
             </div>
         </form>
     </div>

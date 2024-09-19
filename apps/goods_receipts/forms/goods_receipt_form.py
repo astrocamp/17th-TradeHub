@@ -3,6 +3,10 @@ from django import forms
 from apps.goods_receipts.models import GoodsReceipt
 
 
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
 class GoodsReceiptForm(forms.ModelForm):
     class Meta:
         model = GoodsReceipt
@@ -30,7 +34,7 @@ class GoodsReceiptForm(forms.ModelForm):
             "receipt_number": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter receipt number",
+                    "placeholder": "請輸入進貨單號",
                 }
             ),
             "supplier": forms.Select(
@@ -42,19 +46,19 @@ class GoodsReceiptForm(forms.ModelForm):
             "goods_name": forms.Select(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter goods name",
+                    "placeholder": "請輸入貨品名稱",
                 }
             ),
             "quantity": forms.NumberInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter quantity",
+                    "placeholder": "請輸入數量",
                 }
             ),
             "method": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter method",
+                    "placeholder": "請輸入運送方式",
                 }
             ),
             "date": forms.DateInput(
@@ -66,19 +70,19 @@ class GoodsReceiptForm(forms.ModelForm):
             "note": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Any additional notes.",
+                    "placeholder": "請輸入備註",
                     "rows": 3,
                 }
             ),
         }
         help_texts = {
-            "receipt_number": "Enter the receipt number.",
-            "supplier": "Enter the full name of the supplier.",
-            "goods_name": "Enter the goods name.",
-            "quantity": "Enter the quantity",
-            "method": "Enter the delivery method (e.g., 'Express Delivery', 'Pick Up').",
-            "date": "Enter the date.",
-            "note": "Enter any additional notes.",
+            "receipt_number": "請輸入進貨單號.",
+            "supplier": "請輸入供應商名稱.",
+            "goods_name": "請輸入貨品名稱.",
+            "quantity": "請輸入數量.",
+            "method": "請輸入運送方式 (e.g., 'Express Delivery', 'Pick Up').",
+            "date": "請輸入日期.",
+            "note": "請輸入備註.",
         }
 
     def __init__(self, *args, **kwargs):
@@ -96,23 +100,23 @@ class GoodsReceiptForm(forms.ModelForm):
         date = cleaned_data.get("date")
 
         if not receipt_number:
-            self.add_error("receipt_number", "Receipt number is required.")
+            self.add_error("receipt_number", "請輸入進貨單號")
 
         if not supplier:
-            self.add_error("supplier", "Supplier is required.")
+            self.add_error("supplier", "請輸入供應商名稱")
 
         if not goods_name:
-            self.add_error("goods_name", "Goods name is required.")
+            self.add_error("goods_name", "請輸入貨品名稱")
 
         if quantity is None:
-            self.add_error("quantity", "Quantity is required.")
+            self.add_error("quantity", "請輸入數量")
         elif quantity == 0:
-            self.add_error("quantity", "Quantity should not be 0.")
+            self.add_error("quantity", "數量不能為0")
 
         if not method:
-            self.add_error("method", "Method is required.")
+            self.add_error("method", "請輸入運送方式")
 
         if not date:
-            self.add_error("date", "Date is required.")
+            self.add_error("date", "請輸入日期")
 
         return cleaned_data

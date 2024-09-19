@@ -1,6 +1,10 @@
 from django import forms
 
-from ..models import Inventory
+from apps.inventory.models import Inventory
+
+
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
 
 
 class RestockForm(forms.ModelForm):
@@ -48,14 +52,14 @@ class RestockForm(forms.ModelForm):
             ),
         }
         help_texts = {
-            "product": "請選擇產品",
+            "product": "請選擇商品",
             "supplier": "請選擇供應商",
             "quantity": "請填入數字即可",
             "safety_stock": "請填入數字即可",
             "note": "",
         }
         labels = {
-            "product": "產品名稱",
+            "product": "商品名稱",
             "supplier": "供應商名稱",
             "quantity": "現有庫存數量",
             "safety_stock": "安全庫存數量",
@@ -75,7 +79,7 @@ class RestockForm(forms.ModelForm):
         safety_stock = cleaned_data.get("safety_stock")
 
         if not product:
-            self.add_error("product", "請選擇產品")
+            self.add_error("product", "請選擇商品")
 
         if not supplier:
             self.add_error("supplier", "請選擇供應商")

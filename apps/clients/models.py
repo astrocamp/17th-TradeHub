@@ -16,19 +16,19 @@ class Client(models.Model):
     def __str__(self):
         return self.name
 
-    CLIENT_STATE_OFTEN = "often"
-    CLIENT_STATE_HAPLY = "haply"
-    CLIENT_STATE_NEVER = "never"
+    OFTEN = "often"
+    HAPLY = "haply"
+    NEVER = "never"
 
-    CLIENT_STATE_CHOICES = [
-        (CLIENT_STATE_OFTEN, "經常"),
-        (CLIENT_STATE_HAPLY, "偶爾"),
-        (CLIENT_STATE_NEVER, "從不"),
+    STATE_CHOICES = [
+        (OFTEN, "經常購買"),
+        (HAPLY, "偶爾購買"),
+        (NEVER, "未購買"),
     ]
 
     state = FSMField(
-        default=CLIENT_STATE_NEVER,
-        choices=CLIENT_STATE_CHOICES,
+        default=NEVER,
+        choices=STATE_CHOICES,
         protected=True,
     )
 
@@ -41,15 +41,15 @@ class Client(models.Model):
             self.set_normal()
         self.save()
 
-    @transition(field=state, source="*", target=CLIENT_STATE_OFTEN)
+    @transition(field=state, source="*", target=OFTEN)
     def set_out_stock(self):
         pass
 
-    @transition(field=state, source="*", target=CLIENT_STATE_HAPLY)
+    @transition(field=state, source="*", target=HAPLY)
     def set_low_stock(self):
         pass
 
-    @transition(field=state, source="*", target=CLIENT_STATE_NEVER)
+    @transition(field=state, source="*", target=NEVER)
     def set_normal(self):
         pass
 

@@ -1,46 +1,59 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-    <style>
-        .hidden {
-            display: none;
-        }
-    </style>
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
         <div class="flex justify-between items-center p-4">
-            <h2 class="text-2xl font-bold text-gray-800">編輯採購單</h2>
+            <h2 class="text-2xl font-bold text-gray-800" for="id_order_number">採購單編號:{{ form.instance.order_number }}</h2>
             <div class="text-gray-700">
-                <strong>訂單號碼: </strong><span id="order-number">{{ form.instance.order_number }}</span>
+                <strong>採購人:{{ form.instance.username }}</strong>
             </div>
         </div>
 
-        <form action="{% url 'purchase_orders:show' purchase_order.id %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <form action="{% url 'purchase_orders:edit' purchase_order.id %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {% csrf_token %}
 
             {% for field in form %}
-            <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
-                <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
-                <div>
-                    {{ field }}
-                </div>
-                {% if field.errors %}
-                <ul class="errorlist text-red-500 text-sm mt-2">
-                  {% for error in field.errors %}
-                    <li>{{ error }}</li>
-                  {% endfor %}
+                {% if field.name == 'amount' %}
+                    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+                        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">總金額: </label>
+                        <div>
+                            <span id="total-amount-display">{{ form.amount.value|default:"0" }}</span>
+                        </div>
+                        <input type="hidden" id="amount" name="amount" value='{{ form.amount.value|default:"0" }}'>
+                        {% if field.errors %}
+                            <ul class="errorlist text-red-500 text-sm mt-2">
+                                {% for error in field.errors %}
+                                    <li class="text-red-500 text-sm mt-2">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
+                {% else %}
+                    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+                        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">{{ field.label }}</label>
+                        <div>
+                            {{ field }}
+                        </div>
+                        {% if field.errors %}
+                            <ul class="errorlist text-red-500 text-sm mt-2">
+                                {% for error in field.errors %}
+                                    <li class="text-red-500 text-sm mt-2">{{ error }}</li>
+                                {% endfor %}
+                            </ul>
+                        {% endif %}
+                    </div>
                 {% endif %}
-            </div>
             {% endfor %}
 
 
             <!-- 子表單 -->
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">產品項目</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">商品項目</h2>
 
                 <!-- 表頭 -->
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
-                    <span class="flex-1 text-lg font-semibold text-gray-800">產品名稱</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">數量</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">價格</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
@@ -58,12 +71,11 @@
                             {{ form.id }} <!-- 隱藏的 ID 欄位 -->
                             <div class="flex-1">{{ form.product }}</div>
                             <div class="flex-1">{{ form.quantity }}</div>
-                            <div class="flex-1">{{ form.price }}</div>
+                            <div class="flex-1">{{ form.cost_price }}</div>
                             <div class="flex-1">{{ form.subtotal }}</div>
                             <div class="mx-4 text-center">
-                                <span class="hidden">{{ form.DELETE }}</span>
                                 <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
-                                    刪除
+                                    刪除<span style="display:none">{{ form.DELETE }}</span>
                                 </button>
                             </div>
                         </div>
@@ -75,8 +87,9 @@
 
             <!-- 新增按鈕 -->
 
-            <div class="col-span-full">
-                <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">儲存變更</button>
+            <div class="col-span-full flex justify-center gap-4">
+                <button type="submit" class="w-1/2 bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold">確認更新</button>
+                <a href="{% url 'purchase_orders:index' %}" class="w-1/2 bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold">取消更新</a>
             </div>
         </form>
     </div>

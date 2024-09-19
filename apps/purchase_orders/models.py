@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=11, unique=True)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -23,10 +23,12 @@ class PurchaseOrder(models.Model):
     supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
-    total_amount = models.PositiveIntegerField()
-    notes = models.TextField(blank=True, null=True)
+    amount = models.PositiveIntegerField()
+    note = models.TextField(blank=True, null=True)
+    username = models.CharField(max_length=150, default="admin")
 
     objects = PurchaseOrderManager()
+    all_objects = models.Manager()
 
     def delete(self):
         self.deleted_at = timezone.now()
@@ -47,31 +49,30 @@ class PurchaseOrder(models.Model):
         else:
             return number
 
-    UNFINISH = "unfinish"
+    PENDING = "pending"
+    PROGRESS = "progress"
     FINISHED = "finished"
 
-    AVAILABLE_STATES = UNFINISH, FINISHED
+    AVAILABLE_STATES = PENDING, PROGRESS, FINISHED
 
-    AVAILABLE_STATES_CHOICES = [
-        (UNFINISH, "未完成"),
-        (FINISHED, "完成"),
+    STATES_CHOICES = [
+        (PENDING, "待處理"),
+        (PROGRESS, "進行中"),
+        (FINISHED, "已完成"),
     ]
 
     state = FSMField(
-        default=UNFINISH,
-        choices=AVAILABLE_STATES_CHOICES,
+        default=PROGRESS,
+        choices=STATES_CHOICES,
         protected=True,
     )
 
-    def check_order_state(self):
-        if self.quantity < self.stock.quantity:
-            self.set_unfinish()
-        else:
-            self.set_finished()
-        self.save()
+    @transition(field=state, source="*", target=PENDING)
+    def set_pending(self):
+        pass
 
-    @transition(field=state, source="*", target=UNFINISH)
-    def set_unfinish(self):
+    @transition(field=state, source="*", target=PROGRESS)
+    def set_progress(self):
         pass
 
     @transition(field=state, source="*", target=FINISHED)
@@ -85,8 +86,8 @@ class ProductItem(models.Model):
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
-    price = models.PositiveIntegerField()
+    cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 
     def __str__(self):
-        return f"{self.product} - {self.quantity} @ {self.price}"
+        return f"{self.product} - {self.quantity} @ {self.cost_price}"

@@ -37,31 +37,30 @@ class SalesOrder(models.Model):
     def __repr__(self):
         return f"訂單 #{self.id} - 客戶: {self.client.name} ({self.created_at.date()})"
 
-    UNFINISH = "unfinish"
+    PENDING = "pending"
+    PROGRESS = "progress"
     FINISHED = "finished"
 
-    AVAILABLE_STATES = UNFINISH, FINISHED
+    AVAILABLE_STATES = PENDING, PROGRESS, FINISHED
 
-    AVAILABLE_STATES_CHOICES = [
-        (UNFINISH, "未完成"),
-        (FINISHED, "完成"),
+    STATES_CHOICES = [
+        (PENDING, "待處理"),
+        (PROGRESS, "進行中"),
+        (FINISHED, "已完成"),
     ]
 
     state = FSMField(
-        default=UNFINISH,
-        choices=AVAILABLE_STATES_CHOICES,
+        default=PROGRESS,
+        choices=STATES_CHOICES,
         protected=True,
     )
 
-    def check_order_state(self):
-        if self.quantity < self.stock.quantity:
-            self.set_unfinish()
-        else:
-            self.set_finished()
-        self.save()
+    @transition(field=state, source="*", target=PENDING)
+    def set_pending(self):
+        pass
 
-    @transition(field=state, source="*", target=UNFINISH)
-    def set_unfinish(self):
+    @transition(field=state, source="*", target=PROGRESS)
+    def set_progress(self):
         pass
 
     @transition(field=state, source="*", target=FINISHED)

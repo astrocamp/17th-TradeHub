@@ -32,33 +32,32 @@ class GoodsReceipt(models.Model):
         self.save()
 
     def __repr__(self):
-        return f"{self.receipt_number} - {self.supplier.name} - {self.goods_name}"
+        return f"{self.receipt_number}-{self.supplier.name}-{self.goods_name}"
 
-    UNFINISH = "unfinish"
+    TO_BE_RESTOCKED = "to_be_restocked"
+    TO_BE_STOCKED = "to_be_stocked"
     FINISHED = "finished"
 
-    AVAILABLE_STATES = UNFINISH, FINISHED
+    AVAILABLE_STATES = TO_BE_RESTOCKED, TO_BE_STOCKED, FINISHED
 
-    AVAILABLE_STATES_CHOICES = [
-        (UNFINISH, "未完成"),
+    STATES_CHOICES = [
+        (TO_BE_RESTOCKED, "待進貨"),
+        (TO_BE_STOCKED, "待入庫"),
         (FINISHED, "完成"),
     ]
 
     state = FSMField(
-        default=UNFINISH,
-        choices=AVAILABLE_STATES_CHOICES,
+        default=TO_BE_RESTOCKED,
+        choices=STATES_CHOICES,
         protected=True,
     )
 
-    def check_receipt_state(self):
-        if self.quantity < self.stock.quantity:
-            self.set_unfinish()
-        else:
-            self.set_finished()
-        self.save()
+    @transition(field=state, source="*", target=TO_BE_RESTOCKED)
+    def set_to_be_restocked(self):
+        pass
 
-    @transition(field=state, source="*", target=UNFINISH)
-    def set_unfinish(self):
+    @transition(field=state, source="*", target=TO_BE_STOCKED)
+    def set_to_be_stocked(self):
         pass
 
     @transition(field=state, source="*", target=FINISHED)

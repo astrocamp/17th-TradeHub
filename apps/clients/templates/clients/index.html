@@ -1,13 +1,11 @@
 {% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-12">
-  <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white"
+<div class="flex justify-end mt-20 gap-2">
+  <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <a href="{% url 'clients:import_file' %}" class="btn bg-orange-600 text-white"
-    >匯入檔案</a
-  >
-  <a href="{% url 'clients:export_csv' %}" class="btn bg-orange-600 text-white">匯出CSV</a>
-  <a href="#" class="btn bg-orange-600 text-white">匯出Excel</a>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">客戶列表</div>
 <div class="flex justify-center mt-10">
@@ -25,7 +23,7 @@
                 <option value="all" {% if selected_state == "all" %}selected{% endif %}>全部</option>
                 <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
                 <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
-                <option value="never" {% if selected_state == "never" %}selected{% endif %}>還未購買</option>
+                <option value="never" {% if selected_state == "never" %}selected{% endif %}>未購買</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -56,18 +54,17 @@
         <tr class="hover">
           {% if client.state == "often" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-success text-lg">經常購買</span>
           </th>
           {% elif client.state == "haply" %}
           <th>
-            <span class="btn btn-sm btn-warning text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-warning text-lg">偶爾購買</span>
           </th>
-          {% else %}
+          {% elif client.state == "never" %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">{{ client.state }}</span>
+            <span class="btn btn-sm btn-error text-lg">未購買</span>
           </th>
           {% endif %}
-          </th>
           <th>{{ client.id }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
@@ -76,16 +73,15 @@
           <td>{{ client.note }}</td>
 
           <td>{{ client.create_at|date:"Y-m-d H:i" }}</td>
-          <td class="flex justify-center gap-2">
-            <a class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</a>
+          <td class="flex justify-center gap-1">
+            <button class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</button>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
-              onsubmit="return confirm('確定刪除嗎？')"
-              class="btn btn-error"
+              onsubmit="return confirm('確認刪除?')"
             >
               {% csrf_token %}
-              <button name="delete">刪除</button>
+              <button class="btn btn-error" name="delete">刪除</button>
             </form>
           </td>
         </tr>
@@ -97,7 +93,7 @@
       <span class="step-links">
 
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page 1</button></a
+          ><button class="join-item btn">第1頁</button></a
         >
         {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -107,7 +103,7 @@
         <button class="join-item btn" disabled="disabled">«</button>
         {% endif %}
         <button class="join-item btn">
-          Page {{ page_obj.number }}
+          第{{ page_obj.number }}頁
         </button>
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -117,11 +113,12 @@
         <button class="join-item btn" disabled="disabled">»</button>
         {% endif %}
         <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+          ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
         >
       </span>
       {% endif %}
     </div>
   </div>
 </div>
+{% include "shared/import_export.html" %}
 {% endblock %}
