@@ -21,7 +21,7 @@ class GoodsReceipt(models.Model):
     supplier_tel = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
     supplier_email = models.EmailField(unique=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(default=timezone.now)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
     note = models.TextField(blank=True, null=True)
@@ -78,13 +78,13 @@ class GoodsReceipt(models.Model):
         pass
 
 
-class ProductItem(models.Model):
+class GoodsReceiptProductItem(models.Model):
     goord_receipt = models.ForeignKey(
         "GoodsReceipt", on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    received_quantity = models.PositiveIntegerField()
     ordered_quantity = models.PositiveIntegerField()
+    received_quantity = models.PositiveIntegerField()
     cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 

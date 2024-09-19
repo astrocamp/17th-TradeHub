@@ -21,13 +21,6 @@ class PurchaseOrderForm(forms.ModelForm):
             "note",
             "amount",
         ]
-        widgets = {
-            "supplier": forms.Select(attrs={"class": "w-full"}),
-            "supplier_tel": forms.TextInput(attrs={"class": "w-full"}),
-            "contact_person": forms.TextInput(attrs={"class": "w-full"}),
-            "supplier_email": forms.TextInput(attrs={"class": "w-full"}),
-            "note": forms.Textarea(attrs={"rows": 3, "class": "w-full"}),
-        }
         labels = {
             "supplier": "供應商名稱",
             "supplier_tel": "供應商電話",
@@ -36,6 +29,34 @@ class PurchaseOrderForm(forms.ModelForm):
             "note": "備註",
             "amount": "總金額",
         }
+        widgets = {
+            "supplier": forms.Select(
+                attrs={"class": "w-full", "placeholder": "請選擇供應商名稱"}
+            ),
+            "supplier_tel": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入供應商電話"}
+            ),
+            "contact_person": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入聯絡人"}
+            ),
+            "supplier_email": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入供應商Email"}
+            ),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "w-full",
+                    "rows": 3,
+                    "placeholder": "請輸入備註",
+                }
+            ),
+        }
+        # help_texts = {
+        #     "supplier": "請輸入供應商名稱。",
+        #     "supplier_tel":"請輸入供應商電話。",
+        #     "contact_person":"請輸入聯絡人。",
+        #     "supplier_email":"請輸入供應商Email。",
+        #     "note": "請輸入備註。",
+        # }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,7 +65,6 @@ class PurchaseOrderForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-
         supplier = cleaned_data.get("supplier")
         supplier_tel = cleaned_data.get("supplier_tel")
         contact_person = cleaned_data.get("contact_person")

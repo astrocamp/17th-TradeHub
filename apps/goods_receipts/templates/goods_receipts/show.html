@@ -1,54 +1,112 @@
-{% extends "layouts/base.html" %} {% block content %}
-
-<a href="{% url 'goods_receipts:index' %}" class="btn btn-primary"
-  >返回進貨單列表</a
->
-
-<div class="flex justify-center mt-10">
-  <div class="overflow-x-auto">
-    <table class="table table-xl text-center">
-      <thead>
-        <tr class="text-xl">
-          <th>進貨單號</th>
-          <th>供應商</th>
-          <th>商品名稱</th>
-          <th>數量</th>
-          <th>運送方式</th>
-          <th>日期</th>
-          <th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="hover">
-          <th>{{goods_receipt.receipt_number}}</th>
-          <th>{{goods_receipt.supplier}}</th>
-          <th>{{goods_receipt.goods_name}}</th>
-          <th>{{goods_receipt.quantity}}</th>
-          <th>{{goods_receipt.method}}</th>
-          <th>{{goods_receipt.date}}</th>
-          <th>{{goods_receipt.note}}</th>
-        </tr>
-      </tbody>
-    </table>
+{% extends 'layouts/base.html' %} {% block content %}
+<div class="max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8">
+  <div class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6">
+    <h1 class="text-2xl font-extrabold text-gray-900">
+      進貨單編號: {{ goods_receipt.order_number }}
+    </h1>
+    <h2 class="text-gray-600">
+      進貨人：{{ goods_receipt.username }}
+    </h2>
+    <a
+      href="{% url 'goods_receipts:index' %}"
+      class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 Dtransition duration-300 ease-in-out transform hover:scale-105"
+    >
+      返回列表
+    </a>
   </div>
-</div>
 
-<div class="flex justify-center mt-10">
-  <div>
+  <!-- Display Order Information -->
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
+        <span class="text-xl text-gray-600"
+          >{{ goods_receipt.supplier.name }}</span
+        >
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商電話:</label>
+        <p class="text-lg text-gray-600">{{ goods_receipt.supplier_tel }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商聯絡人:</label>
+        <p class="text-lg text-gray-600">{{ goods_receipt.contact_person }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商Email:</label>
+        <p class="text-lg text-gray-600">{{ goods_receipt.supplier_email }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">建立時間:</label>
+        <p class="text-lg text-gray-600">
+          {{ goods_receipt.created_at|date:"M d, Y H:i" }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">備註:</label>
+        <p class="text-lg text-gray-600">{{ goods_receipt.note }}</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Product Items Section -->
+  <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
+    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">商品項目</h2>
+    <div
+      class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800"
+    >
+      <div class="flex-1 text-center">商品名稱</div>
+      <div class="flex-1 text-center">訂購數量</div>
+      <div class="flex-1 text-center">進貨數量</div>
+      <div class="flex-1 text-center">商品進價</div>
+      <div class="flex-1 text-center">小計</div>
+    </div>
+    <div class="space-y-4">
+      {% for item in product_items %}
+      <div
+        class="flex justify-between items-center border-b border-gray-200 py-2"
+      >
+        <div class="flex-1 text-center">{{ item.product }}</div>
+        <div class="flex-1 text-center">{{ item.ordered_quantity }}</div>
+        <div class="flex-1 text-center">{{ item.received_quantity }}</div>
+        <div class="flex-1 text-center">${{ item.cost_price }}</div>
+        <div class="flex-1 text-center">${{ item.subtotal }}</div>
+      </div>
+      {% empty %}
+      <p class="text-center text-gray-600">沒有商品。</p>
+      {% endfor %}
+    </div>
+    <div class="flex items-center border-gray-200 pt-4">
+      <div class="flex-1 text-center font-semibold text-gray-800">總金額:</div>
+      <div class="flex-1"></div>
+      <div class="flex-1"></div>
+      <div class="flex-1 text-center font-semibold text-gray-800">
+        ${{ goods_receipt.amount }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit and Delete Buttons -->
+  <div class="flex justify-center gap-4 mt-6">
     <a
       href="{% url 'goods_receipts:edit' goods_receipt.id %}"
-      class="btn btn-primary"
-      >編輯</a
+      class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
-  </div>
-  <div>
-    <a
-      onclick="return confirm('Delete?')"
-      href="{% url 'goods_receipts:delete' goods_receipt.id %}"
-      class="btn btn-primary"
-      >刪除</a
+      編輯
+    </a>
+    <form
+      action="{% url 'goods_receipts:delete' goods_receipt.id %}"
+      method="POST"
+      class="inline-block"
     >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        刪除
+      </button>
+    </form>
   </div>
 </div>
-
 {% endblock %}

@@ -1,6 +1,9 @@
-from django import forms
+import re
 
-from apps.goods_receipts.models import GoodsReceipt
+from django import forms
+from django.forms import inlineformset_factory
+
+from apps.goods_receipts.models import GoodsReceipt, GoodsReceiptProductItem
 
 
 class FileUploadForm(forms.Form):
@@ -11,79 +14,59 @@ class GoodsReceiptForm(forms.ModelForm):
     class Meta:
         model = GoodsReceipt
         fields = [
-            "receipt_number",
             "supplier",
-            "goods_name",
-            "quantity",
-            "method",
-            "date",
+            "supplier_tel",
+            "contact_person",
+            "supplier_email",
             "note",
+            "amount",
+            "receiving_method",
         ]
-
         labels = {
-            "receipt_number": "進貨單號",
             "supplier": "供應商名稱",
-            "goods_name": "貨品名稱",
-            "quantity": "數量",
-            "method": "運送方式",
-            "date": "日期",
+            "supplier_tel": "供應商電話",
+            "contact_person": "聯絡人",
+            "supplier_email": "供應商Email",
             "note": "備註",
+            "amount": "總金額",
+            "receiving_method": "運送方式",
         }
-
         widgets = {
-            "receipt_number": forms.TextInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "請輸入進貨單號",
-                }
-            ),
             "supplier": forms.Select(
+                attrs={"class": "w-full", "placeholder": "請選擇供應商名稱"}
+            ),
+            "supplier_tel": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入供應商電話"}
+            ),
+            "contact_person": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入聯絡人"}
+            ),
+            "supplier_email": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入供應商Email"}
+            ),
+            "note": forms.Textarea(
                 attrs={
-                    "class": "form-control",
-                    "type": "select",
+                    "class": "w-full",
+                    "rows": 3,
+                    "placeholder": "請輸入備註",
                 }
             ),
-            "goods_name": forms.Select(
+            "receiving_method": forms.TextInput(
                 attrs={
-                    "class": "form-control",
-                    "placeholder": "請輸入貨品名稱",
-                }
-            ),
-            "quantity": forms.NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "請輸入數量",
-                }
-            ),
-            "method": forms.TextInput(
-                attrs={
+                    "class": "w-full",
                     "class": "form-control",
                     "placeholder": "請輸入運送方式",
                 }
             ),
-            "date": forms.DateInput(
-                attrs={
-                    "class": "form-control",
-                    "type": "date",
-                }
-            ),
-            "note": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "請輸入備註",
-                    "rows": 3,
-                }
-            ),
         }
-        help_texts = {
-            "receipt_number": "請輸入進貨單號.",
-            "supplier": "請輸入供應商名稱.",
-            "goods_name": "請輸入貨品名稱.",
-            "quantity": "請輸入數量.",
-            "method": "請輸入運送方式 (e.g., 'Express Delivery', 'Pick Up').",
-            "date": "請輸入日期.",
-            "note": "請輸入備註.",
-        }
+        # help_texts = {
+        #     "supplier": "請輸入供應商名稱。",
+        #     "supplier_tel":"請輸入供應商電話。",
+        #     "contact_person":"請輸入聯絡人。",
+        #     "supplier_email":"請輸入供應商Email。",
+        #     "note": "請輸入備註。",
+        #     "receiving_method":"自取，貨運。",
+        # }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -92,31 +75,54 @@ class GoodsReceiptForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        receipt_number = cleaned_data.get("receipt_number")
         supplier = cleaned_data.get("supplier")
-        goods_name = cleaned_data.get("goods_name")
-        quantity = cleaned_data.get("quantity")
-        method = cleaned_data.get("method")
-        date = cleaned_data.get("date")
-
-        if not receipt_number:
-            self.add_error("receipt_number", "請輸入進貨單號")
+        supplier_tel = cleaned_data.get("supplier_tel")
+        contact_person = cleaned_data.get("contact_person")
+        supplier_email = cleaned_data.get("supplier_email")
+        amount = cleaned_data.get("amount")
 
         if not supplier:
-            self.add_error("supplier", "請輸入供應商名稱")
-
-        if not goods_name:
-            self.add_error("goods_name", "請輸入貨品名稱")
-
-        if quantity is None:
-            self.add_error("quantity", "請輸入數量")
-        elif quantity == 0:
-            self.add_error("quantity", "數量不能為0")
-
-        if not method:
-            self.add_error("method", "請輸入運送方式")
-
-        if not date:
-            self.add_error("date", "請輸入日期")
+            self.add_error("supplier", "供應商名稱為必填")
+        if supplier_tel == "":
+            self.add_error("supplier_tel", "供應商電話為必填")
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            supplier_tel,
+        ):
+            self.add_error("supplier_tel", "無效的電話號碼")
+        if not contact_person:
+            self.add_error("contact_person", "聯絡人為必填")
+        if supplier_email == "":
+            self.add_error("supplier_email", "供應商Email為必填")
+        if amount == 0:
+            self.add_error("amount", "請填寫下方進貨單細項")
 
         return cleaned_data
+
+
+class GoodsReceiptProductItemForm(forms.ModelForm):
+    class Meta:
+        model = GoodsReceiptProductItem
+        fields = [
+            "product",
+            "ordered_quantity",
+            "received_quantity",
+            "cost_price",
+            "subtotal",
+        ]
+        widgets = {
+            "product": forms.Select(attrs={"class": "w-full"}),
+            "ordered_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "received_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "cost_price": forms.NumberInput(attrs={"class": "w-full"}),
+            "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
+        }
+
+
+ProductItemFormSet = inlineformset_factory(
+    GoodsReceipt,
+    GoodsReceiptProductItem,
+    form=GoodsReceiptProductItemForm,
+    extra=1,
+    can_delete=True,
+)

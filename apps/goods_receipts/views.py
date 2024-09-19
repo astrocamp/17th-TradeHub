@@ -15,10 +15,10 @@ from apps.suppliers.models import Supplier
 from .forms.goods_receipts_form import (
     FileUploadForm,
     GoodsReceiptForm,
-    ProductItemForm,
+    GoodsReceiptProductItemForm,
     ProductItemFormSet,
 )
-from .models import GoodsReceipt, ProductItem
+from .models import GoodsReceipt, GoodsReceiptProductItem
 
 
 def index(request):
@@ -124,8 +124,8 @@ def delete_selected_goods_receipts(request):
 def get_product_item_formset(extra):
     return inlineformset_factory(
         GoodsReceipt,
-        ProductItem,
-        form=ProductItemForm,
+        GoodsReceiptProductItem,
+        form=GoodsReceiptProductItemForm,
         extra=extra,
         can_delete=True,
     )
