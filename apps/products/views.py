@@ -106,8 +106,8 @@ def import_file(request):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
-                        "產品編號": "product_number",
-                        "產品名稱": "product_name",
+                        "商品編號": "product_number",
+                        "商品名稱": "product_name",
                         "商品進價": "cost_price",
                         "商品售價": "sale_price",
                         "供應商名稱": "supplier",
@@ -148,7 +148,7 @@ def export_csv(request):
     writer.writerow(
         [
             "序號",
-            "產品",
+            "商品",
             "價位",
             "供應商",
             "備註",

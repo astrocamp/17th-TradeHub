@@ -109,7 +109,7 @@ def import_file(request):
                 df.rename(
                     columns={
                         "客戶": "client",
-                        "產品": "product",
+                        "商品": "product",
                         "數量": "quantity",
                         "庫存": "stock",
                         "價位": "price",
@@ -148,7 +148,7 @@ def export_csv(request):
     writer.writerow(
         [
             "客戶",
-            "產品",
+            "商品",
             "數量",
             "庫存",
             "價位",
@@ -201,7 +201,7 @@ def export_excel(request):
 
     column_mapping = {
         "client__name": "客戶",
-        "product__product_name": "產品",
+        "product__product_name": "商品",
         "quantity": "數量",
         "stock__state": "庫存",
         "price": "價位",

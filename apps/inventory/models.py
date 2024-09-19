@@ -55,7 +55,7 @@ class Inventory(models.Model):
                 supplier_email=supplier.email,
                 amount=0,
                 note=message,
-                state=PurchaseOrder.UNFINISH,
+                state=PurchaseOrder.PROGRESS,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,
@@ -78,9 +78,9 @@ class Inventory(models.Model):
                 supplier_tel=supplier.telephone,
                 contact_person=supplier.contact_person,
                 supplier_email=supplier.email,
-                total_amount=0,
-                notes=message,
-                state=PurchaseOrder.UNFINISH,
+                amount=0,
+                note=message,
+                state=PurchaseOrder.PENDING,
             )
             ProductItem.objects.create(
                 purchase_order=purchase_order,

@@ -111,7 +111,7 @@ def import_file(request):
                             note=row[4],
                         )
                     except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
                         return redirect("inventory:index")
 
                 messages.success(request, "成功匯入 CSV")
@@ -121,7 +121,7 @@ def import_file(request):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
-                        "產品": "product",
+                        "商品": "product",
                         "供應商": "supplier",
                         "數量": "quantity",
                         "安全水位": "safety_stock",
@@ -141,7 +141,7 @@ def import_file(request):
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
                     except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
                         return redirect("inventory:index")
                 messages.success(request, "成功匯入 Excel")
                 return redirect("inventory:index")
@@ -161,7 +161,7 @@ def export_csv(request):
     writer = csv.writer(response)
     writer.writerow(
         [
-            "產品",
+            "商品",
             "供應商",
             "數量",
             "安全水位",
@@ -206,7 +206,7 @@ def export_excel(request):
         df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     column_mapping = {
-        "product__product_name": "產品",
+        "product__product_name": "商品",
         "supplier__name": "供應商",
         "quantity": "數量",
         "safety_stock": "安全水位",

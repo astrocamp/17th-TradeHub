@@ -1,5 +1,5 @@
 {% extends 'layouts/base.html' %} {% block content %}
-<div class="flex justify-end mt-20 gap-2">
+<div class="flex justify-end mt-10 gap-2">
   <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
@@ -10,7 +10,7 @@
 <div class="divider text-3xl font-bold">採購單列表</div>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto w-full">
         <table class="table table-xl text-center">
             <thead>
                 <tr class="text-xl">
@@ -39,18 +39,17 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">單號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
                 {% for purchase_order in purchase_orders %}
-                <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'" class="hover">
+                <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'"      class="hover">
                     {% if purchase_order.state == "finished" %}
                     <th>
                       <span class="btn btn-sm btn-success text-lg">完成</span>
@@ -93,7 +92,7 @@
                 {% endfor %}
             </tbody>
         </table>
-        {% if is_paginated %}
+        {% if page_obj.has_other_pages %}
         <div class="pagination join flex justify-center">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
