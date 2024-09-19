@@ -42,6 +42,7 @@ DEBUG = is_dev()
 ALLOWED_HOSTS = [
     "13.112.74.19",  # 公共IP
     "127.0.0.1",  # 本地IP
+    "www.tradehub17th.com",
 ]
 
 
@@ -87,7 +88,7 @@ MIDDLEWARE = [
     "apps.users.middleware.middleware.LoginRequiredMiddleware",
 ]
 
-# 未登入時導向的頁面（登入頁面），如果後續用到login_required裝飾器，也會自動導向這個頁面
+# 未登入時導向的頁面（登入頁面）
 LOGIN_URL = "/users/log_in/"
 LOGOUT_URL = "/users/log_out/"
 LOGIN_REDIRECT_URL = "/"
