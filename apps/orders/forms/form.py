@@ -37,14 +37,14 @@ class OrderForm(forms.ModelForm):
         help_texts = {
             "code": "請輸入訂單編號",
             "client": "請選擇客戶",
-            "product": "請選擇產品",
+            "product": "請選擇商品",
             "note": "請輸入備註",
         }
 
         labels = {
             "code": "訂單編號",
             "client": "客戶",
-            "product": "產品",
+            "product": "商品",
             "note": "備註",
         }
 
@@ -66,6 +66,6 @@ class OrderForm(forms.ModelForm):
             self.add_error("client", "客戶是必填的")
 
         if not product:
-            self.add_error("product", "產品是必填的")
+            self.add_error("product", "商品是必填的")
 
         return cleaned_data

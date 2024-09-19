@@ -44,7 +44,7 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">產品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'inventory:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'inventory:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">現有庫存數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'inventory:index' %}?sort=safety_stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">安全庫存數量{% if order_by == 'safety_stock' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>

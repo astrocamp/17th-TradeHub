@@ -93,7 +93,7 @@
       <span class="step-links">
 
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page 1</button></a
+          ><button class="join-item btn">第1頁</button></a
         >
         {% if page_obj.has_previous %}
         <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -103,7 +103,7 @@
         <button class="join-item btn" disabled="disabled">«</button>
         {% endif %}
         <button class="join-item btn">
-          Page {{ page_obj.number }}
+          第{{ page_obj.number }}頁
         </button>
         {% if page_obj.has_next %}
         <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
@@ -113,7 +113,7 @@
         <button class="join-item btn" disabled="disabled">»</button>
         {% endif %}
         <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-          ><button class="join-item btn">Page {{ page_obj.paginator.num_pages }}</button></a
+          ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
         >
       </span>
       {% endif %}

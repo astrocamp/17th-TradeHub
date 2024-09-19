@@ -49,18 +49,19 @@ def index(request):
         "page_obj": page_obj,
     }
 
-    purchase_orders = PurchaseOrder.objects.order_by("id")
-    return render(
-        request, "purchase_orders/index.html", {"purchase_orders": purchase_orders}
-    )
+    return render(request, "purchase_orders/index.html", content)
 
 
 def new(request):
+    new_order_number = generate_order_number()
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         formset = ProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            order.order_number = new_order_number
+            order.username = request.user.username
+            order.save()
             formset.instance = order
             formset.save()
             return redirect("purchase_orders:index")
@@ -68,7 +69,6 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-
     return render(request, "purchase_orders/index.html", content)
 
 
@@ -101,6 +101,16 @@ def new(request):
 
 def show(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, id=id)
+    product_items = ProductItem.objects.filter(purchase_order=purchase_order)
+    return render(
+        request,
+        "purchase_orders/show.html",
+        {"purchase_order": purchase_order, "product_items": product_items},
+    )
+
+
+def edit(request, id):
+    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=purchase_order)
         formset = ProductItemFormSet(request.POST, instance=purchase_order)
@@ -116,17 +126,6 @@ def show(request, id):
                 "purchase_orders/edit.html",
                 {"form": form, "formset": formset, "purchase_order": purchase_order},
             )
-
-    product_items = ProductItem.objects.filter(purchase_order=purchase_order)
-    return render(
-        request,
-        "purchase_orders/show.html",
-        {"purchase_order": purchase_order, "product_items": product_items},
-    )
-
-
-def edit(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, id=id)
     form = PurchaseOrderForm(instance=purchase_order)
     formset = get_product_item_formset(0)(instance=purchase_order)
     return render(
@@ -185,7 +184,7 @@ def load_product_info(request):
 def generate_order_number():
     today = timezone.localtime().strftime("%Y%m%d")
     last_order = (
-        PurchaseOrder.objects.filter(order_number__startswith=today)
+        PurchaseOrder.all_objects.filter(order_number__startswith=today)
         .order_by("-order_number")
         .first()
     )
@@ -239,7 +238,7 @@ def import_file(request):
                     messages.error(request, f"匯入失敗，找不到供應商: {e}")
                     return redirect("purchase_orders:import_file")
                 except Product.DoesNotExist as e:
-                    messages.error(request, f"匯入失敗，找不到產品: {e}")
+                    messages.error(request, f"匯入失敗，找不到商品: {e}")
                     return redirect("purchase_orders:import_file")
 
             messages.success(request, "成功匯入 CSV")
@@ -254,9 +253,9 @@ def import_file(request):
                     "供應商電話": "supplier_tel",
                     "供應商連絡人": "contact_person",
                     "供應商Email": "supplier_email",
-                    "產品名稱": "product",
-                    "產品數量": "quantity",
-                    "產品進價": "cost_price",
+                    "商品名稱": "product",
+                    "商品數量": "quantity",
+                    "商品進價": "cost_price",
                     "小計": "subtotal",
                     "總金額": "amount",
                     "備註": "note",
@@ -291,7 +290,7 @@ def import_file(request):
                     messages.error(request, f"匯入失敗，找不到供應商: {e}")
                     continue  # Skip to the next row
                 except Product.DoesNotExist as e:
-                    messages.error(request, f"匯入失敗，找不到產品: {e}")
+                    messages.error(request, f"匯入失敗，找不到商品: {e}")
                     continue  # Skip to the next row
 
             messages.success(request, "成功匯入 Excel")
@@ -318,7 +317,7 @@ def export_csv(request):
             "Email",
             "建立時間",
             "刪除時間",
-            "產品",
+            "商品",
             "數量",
             "價格",
             "小計",
@@ -395,7 +394,7 @@ def export_excel(request):
         "supplier_email": "Email",
         "created_at": "建立時間",
         "deleted_at": "刪除時間",
-        "items__product__product_name": "產品",
+        "items__product__product_name": "商品",
         "items__quantity": "數量",
         "items__cost_price": "價格",
         "items__subtotal": "小計",

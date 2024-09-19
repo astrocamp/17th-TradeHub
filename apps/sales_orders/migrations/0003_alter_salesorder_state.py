@@ -5,6 +5,7 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
         ("sales_orders", "0002_salesorder_deleted_at_alter_salesorder_state"),
     ]

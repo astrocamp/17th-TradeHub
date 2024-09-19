@@ -89,7 +89,7 @@ def import_file(request):
                             note=row[3],
                         )
                     except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
                         return redirect("orders:index")
 
                 messages.success(request, "成功匯入 CSV")
@@ -101,7 +101,7 @@ def import_file(request):
                     columns={
                         "序號": "code",
                         "客戶名稱": "client",
-                        "產品名稱": "product",
+                        "商品名稱": "product",
                         "備註": "note",
                     },
                     inplace=True,
@@ -118,7 +118,7 @@ def import_file(request):
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
                     except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
                         return redirect("orders:index")
 
                 messages.success(request, "成功匯入 Excel")
@@ -138,7 +138,7 @@ def export_csv(request):
 
     writer = csv.writer(response)
     writer.writerow(
-        ["序號", "客戶名稱", "產品名稱", "備註", "建立時間", "更新時間", "刪除時間"]
+        ["序號", "客戶名稱", "商品名稱", "備註", "建立時間", "更新時間", "刪除時間"]
     )
 
     orders = Orders.objects.all()
@@ -180,7 +180,7 @@ def export_excel(request):
     column_mapping = {
         "code": "序號",
         "client__name": "客戶名稱",
-        "product__product_name": "產品名稱",
+        "product__product_name": "商品名稱",
         "note": "備註",
         "created_at": "建立時間",
         "updated_at": "更新時間",

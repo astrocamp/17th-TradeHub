@@ -20,7 +20,7 @@ class SalesOrderForm(forms.ModelForm):
 
         labels = {
             "client": "客戶名稱",
-            "product": "產品名稱",
+            "product": "商品名稱",
             "quantity": "數量",
             "stock": "庫存",
             "price": "價格",
@@ -55,7 +55,7 @@ class SalesOrderForm(forms.ModelForm):
         }
         help_texts = {
             "client": "請選擇客戶。",
-            "product": "請選擇產品。",
+            "product": "請選擇商品。",
             "quantity": "請輸入數量。",
             "stock": "請選擇庫存。",
             "price": "請輸入價格。",
@@ -78,7 +78,7 @@ class SalesOrderForm(forms.ModelForm):
             self.add_error("client", "請選擇客戶。")
 
         if not product:
-            self.add_error("product", "請選擇產品。")
+            self.add_error("product", "請選擇商品。")
 
         if quantity is None:
             self.add_error("quantity", "請輸入數量。")

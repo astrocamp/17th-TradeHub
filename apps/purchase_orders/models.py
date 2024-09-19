@@ -25,6 +25,7 @@ class PurchaseOrder(models.Model):
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
     note = models.TextField(blank=True, null=True)
+    username = models.CharField(max_length=150, default="admin")
 
     objects = PurchaseOrderManager()
     all_objects = models.Manager()
