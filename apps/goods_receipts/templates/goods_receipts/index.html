@@ -80,17 +80,17 @@
                     <th>{{ goods_receipt.receiving_method }}</th>
                     <th>{{ goods_receipt.note }}</th>
                     <th>
-                      <div class="flex justify-center gap-1">
-                        <a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary">
-                          編輯
-                        </a>
-                        <form action="{% url 'purchase_orders:delete' purchase_order.id %}" method="POST">
-                            {% csrf_token %}
-                            <button onclick="return confirm('確認刪除?')" type="submit" class="btn btn-error">
-                                刪除
-                            </button>
-                        </form>
-                    </div>
+                        <div class="flex justify-center gap-1">
+                            <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">
+                              編輯
+                            </a>
+                            <form action="{% url 'goods_receipts:delete' goods_receipt.id %}" method="POST">
+                                {% csrf_token %}
+                                <button onclick="return confirm('確認刪除?')" type="submit" class="btn btn-error">
+                                    刪除
+                                </button>
+                            </form>
+                        </div>
                     </th>
                 </tr>
                 {% endfor %}

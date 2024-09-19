@@ -76,7 +76,7 @@ def new(request):
 
 def show(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, pk=id)
-    product_items = GoodsReceiptForm.objects.filter(goods_receipt=goods_receipt)
+    product_items = GoodsReceiptProductItem.objects.filter(goods_receipt=goods_receipt)
     return render(
         request,
         "goods_receipts/show.html",

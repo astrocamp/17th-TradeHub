@@ -48,12 +48,13 @@
 
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">商品項目</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">進貨單細項</h2>
 
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">數量</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">價格</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">訂購數量</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">進貨數量</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品進價</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
                     <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
                         新增
@@ -67,7 +68,8 @@
                         <div class="flex items-center gap-4">
                             {{ form.id }}
                             <div class="flex-1">{{ form.product }}</div>
-                            <div class="flex-1">{{ form.quantity }}</div>
+                            <div class="flex-1">{{ form.ordered_quantity }}</div>
+                            <div class="flex-1">{{ form.received_quantity }}</div>
                             <div class="flex-1">{{ form.cost_price }}</div>
                             <div class="flex-1">{{ form.subtotal }}</div>
                             <div class="mx-4 text-center">

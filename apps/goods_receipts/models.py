@@ -79,7 +79,7 @@ class GoodsReceipt(models.Model):
 
 
 class GoodsReceiptProductItem(models.Model):
-    goord_receipt = models.ForeignKey(
+    goods_receipt = models.ForeignKey(
         "GoodsReceipt", on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
