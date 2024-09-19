@@ -124,7 +124,7 @@ def import_file(request):
                             note=row[5],
                         )
                     except (Supplier.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到廠商或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到廠商或商品: {e}")
                         return redirect("goods_receipts:index")
 
                 messages.success(request, "成功匯入 CSV")
@@ -136,7 +136,7 @@ def import_file(request):
                     columns={
                         "收據號碼": "receipt_number",
                         "供應商": "supplier",
-                        "產品": "goods_name",
+                        "商品": "goods_name",
                         "數量": "quantity",
                         "傳送方式": "method",
                         "備註": "note",
@@ -156,7 +156,7 @@ def import_file(request):
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
                     except (Supplier.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到廠商或產品: {e}")
+                        messages.error(request, f"匯入失敗，找不到廠商或商品: {e}")
                         return redirect("goods_receipts:index")
                 messages.success(request, "成功匯入 Excel")
                 return redirect("goods_receipts:index")
@@ -178,7 +178,7 @@ def export_csv(request):
         [
             "收據號碼",
             "供應商",
-            "產品",
+            "商品",
             "數量",
             "傳送方式",
             "建立時間",
@@ -229,7 +229,7 @@ def export_excel(request):
     column_mapping = {
         "receipt_number": "收據號碼",
         "supplier__name": "供應商",
-        "goods_name__product_name": "產品",
+        "goods_name__product_name": "商品",
         "quantity": "數量",
         "method": "傳送方式",
         "date": "建立時間",

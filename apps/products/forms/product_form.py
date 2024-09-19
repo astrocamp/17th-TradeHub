@@ -23,25 +23,25 @@ class ProductForm(ModelForm):
             "product_number": forms.TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入產品編號",
+                    "placeholder": "請輸入商品編號",
                 }
             ),
             "product_name": forms.TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入產品名稱",
+                    "placeholder": "請輸入商品名稱",
                 }
             ),
             "cost_price": forms.NumberInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入產品進價",
+                    "placeholder": "請輸入商品進價",
                 }
             ),
             "sale_price": forms.NumberInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入產品售價",
+                    "placeholder": "請輸入商品售價",
                 }
             ),
             "supplier": forms.Select(
@@ -58,8 +58,8 @@ class ProductForm(ModelForm):
             ),
         }
         labels = {
-            "product_number": "產品編號",
-            "product_name": "產品名稱",
+            "product_number": "商品編號",
+            "product_name": "商品名稱",
             "cost_price": "進價",
             "sale_price": "售價",
             "supplier": "供應商",
@@ -94,7 +94,7 @@ class ProductForm(ModelForm):
             .exclude(id=self.instance.id)
             .exists()
         ):
-            self.add_error("product_number", "此產品編號已存在")
+            self.add_error("product_number", "此商品編號已存在")
 
         if not product_name:
             self.add_error("product_name", "請填入商品名稱")
@@ -102,12 +102,12 @@ class ProductForm(ModelForm):
         if cost_price is None:
             self.add_error("cost_price", "請填入商品進價")
         elif cost_price == 0:
-            self.add_error("cost_price", "產品價格應該大於零")
+            self.add_error("cost_price", "商品價格應該大於零")
 
         if sale_price is None:
             self.add_error("sale_price", "請填入商品售價")
         elif sale_price == 0:
-            self.add_error("sale_price", "產品價格應該大於零")
+            self.add_error("sale_price", "商品價格應該大於零")
 
         if not supplier:
             self.add_error("supplier", "請選擇供應商名稱")
