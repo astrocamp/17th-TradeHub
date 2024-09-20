@@ -1,14 +1,19 @@
 import csv
+from datetime import datetime, timedelta
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.utils.timezone import timezone as tz
 from django.views.decorators.http import require_POST
 
+from apps.goods_receipts.models import GoodsReceipt
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -64,6 +69,27 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
+    return render(request, "purchase_orders/index.html", content)
+
+
+from django.utils import timezone
+
+from .models import PurchaseOrder
+
+
+def new(request):
+    today = timezone.localtime().strftime("%Y%m%d")
+    last_order = (
+        PurchaseOrder.all_objects.filter(order_number__startswith=today)
+        .order_by("-order_number")
+        .first()
+    )
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{today}{last_order_number + 1:03d}"
+    else:
+        new_order_number = f"{today}001"
+
     form = PurchaseOrderForm(initial={"order_number": new_order_number})
     formset = ProductItemFormSet(instance=form.instance)
     return render(
@@ -381,3 +407,30 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Purchase_Orders")
     return response
+
+
+@receiver(pre_save, sender=PurchaseOrder)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if instance.state == PurchaseOrder.PROGRESS:
+        if instance.is_finished:
+            items = ProductItem.objects.get(purchase_order=instance)
+            GoodsReceipt.objects.create(
+                receipt_number=instance.order_number,
+                supplier=instance.supplier,
+                goods_name=items.product,
+                order_quantity=items.quantity,
+                purchase_quantity=0,
+                method="採購單",
+                note=f"{time_now} 採購單 -> 進貨單，訂單編號{instance.order_number}",
+            )
+            instance.set_finished()
+            instance.is_finished = False
+
+
+def transform_goods_receipt(request, id):
+    purchase_order = get_object_or_404(PurchaseOrder, id=id)
+    purchase_order.is_finished = True
+    purchase_order.save()
+    messages.success(request, "轉進貨單完成!")
+    return redirect("purchase_orders:index")

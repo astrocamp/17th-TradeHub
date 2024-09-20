@@ -14,7 +14,8 @@ class GoodsReceiptForm(forms.ModelForm):
             "receipt_number",
             "supplier",
             "goods_name",
-            "quantity",
+            "order_quantity",
+            "purchase_quantity",
             "method",
             "date",
             "note",
@@ -24,7 +25,8 @@ class GoodsReceiptForm(forms.ModelForm):
             "receipt_number": "進貨單號",
             "supplier": "供應商名稱",
             "goods_name": "貨品名稱",
-            "quantity": "數量",
+            "order_quantity": "訂購數量",
+            "purchase_quantity": "進貨數量",
             "method": "運送方式",
             "date": "日期",
             "note": "備註",
@@ -49,7 +51,13 @@ class GoodsReceiptForm(forms.ModelForm):
                     "placeholder": "請輸入貨品名稱",
                 }
             ),
-            "quantity": forms.NumberInput(
+            "order_quantity": forms.NumberInput(
+                attrs={
+                    "class": "form-control",
+                    "placeholder": "請輸入數量",
+                }
+            ),
+            "purchase_quantity": forms.NumberInput(
                 attrs={
                     "class": "form-control",
                     "placeholder": "請輸入數量",
@@ -79,7 +87,8 @@ class GoodsReceiptForm(forms.ModelForm):
             "receipt_number": "請輸入進貨單號.",
             "supplier": "請輸入供應商名稱.",
             "goods_name": "請輸入貨品名稱.",
-            "quantity": "請輸入數量.",
+            "order_quantity": "請輸入訂購數量.",
+            "purchase_quantity": "請輸入進貨數量.",
             "method": "請輸入運送方式 (e.g., 'Express Delivery', 'Pick Up').",
             "date": "請輸入日期.",
             "note": "請輸入備註.",
@@ -95,7 +104,8 @@ class GoodsReceiptForm(forms.ModelForm):
         receipt_number = cleaned_data.get("receipt_number")
         supplier = cleaned_data.get("supplier")
         goods_name = cleaned_data.get("goods_name")
-        quantity = cleaned_data.get("quantity")
+        order_quantity = cleaned_data.get("order_quantity")
+        purchase_quantity = cleaned_data.get("purchase_quantity")
         method = cleaned_data.get("method")
         date = cleaned_data.get("date")
 
@@ -108,10 +118,15 @@ class GoodsReceiptForm(forms.ModelForm):
         if not goods_name:
             self.add_error("goods_name", "請輸入貨品名稱")
 
-        if quantity is None:
-            self.add_error("quantity", "請輸入數量")
-        elif quantity == 0:
-            self.add_error("quantity", "數量不能為0")
+        if order_quantity is None:
+            self.add_error("order_quantity", "請輸入訂購數量")
+        elif order_quantity == 0:
+            self.add_error("order_quantity", "訂購數量不能為0")
+
+        if purchase_quantity is None:
+            self.add_error("purchase_quantity", "請輸入進貨數量")
+        elif purchase_quantity == 0:
+            self.add_error("purchase_quantity", "進貨數量不能為0")
 
         if not method:
             self.add_error("method", "請輸入運送方式")
