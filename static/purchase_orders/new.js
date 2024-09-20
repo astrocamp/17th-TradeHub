@@ -15,15 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
-    // 禁用或啟用子表單的商品選擇
-    function toggleFormItems(disabled) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
-            productSelect.disabled = disabled;
-        });
-        costPriceInput.readOnly = disabled;
-        quantityInput.readOnly = disabled;
-        addItemButton.disabled = disabled;
-    }
 
     // 自動填入供應商資訊
     if (supplierSelect.value) {
@@ -80,6 +71,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
     });
+
+    // 禁用或啟用子表單的商品選擇
+    function toggleFormItems(disabled) {
+        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
+            productSelect.disabled = disabled;
+        });
+        costPriceInput.readOnly = disabled;
+        quantityInput.readOnly = disabled;
+        addItemButton.disabled = disabled;
+    }
 
     function fetchSupplierInfo(supplierId) {
         fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)

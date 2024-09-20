@@ -54,11 +54,11 @@
                     <th>
                       <span class="btn btn-sm btn-success text-lg">完成</span>
                     </th>
-                    {% elif purchase_order.state == "pending" %}
+                    {% elif order.state == "pending" %}
                     <th>
                       <span class="btn btn-sm btn-error text-lg">待處理</span>
                     </th>
-                    {% elif purchase_order.state == "progress" %}
+                    {% elif order.state == "progress" %}
                     <th>
                       <span class="btn btn-sm btn-warning text-lg">進行中</span>
                     </th>
