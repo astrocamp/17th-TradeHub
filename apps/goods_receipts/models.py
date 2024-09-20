@@ -70,6 +70,8 @@ class GoodsReceipt(models.Model):
         protected=True,
     )
 
+    is_finished = models.BooleanField(default=False)
+
     @transition(field=state, source="*", target=TO_BE_RESTOCKED)
     def set_to_be_restocked(self):
         pass
@@ -80,7 +82,7 @@ class GoodsReceipt(models.Model):
 
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
-        pass
+        self.is_finished = False
 
 
 class GoodsReceiptProductItem(models.Model):
