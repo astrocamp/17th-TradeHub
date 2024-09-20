@@ -67,6 +67,8 @@ class PurchaseOrder(models.Model):
         protected=True,
     )
 
+    is_finished = models.BooleanField(default=False)
+
     @transition(field=state, source="*", target=PENDING)
     def set_pending(self):
         pass

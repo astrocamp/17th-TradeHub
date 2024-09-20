@@ -19,7 +19,8 @@ class GoodsReceipt(models.Model):
     goods_name = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="goods_receipts"
     )
-    quantity = models.PositiveIntegerField()
+    order_quantity = models.PositiveIntegerField()
+    purchase_quantity = models.PositiveIntegerField(null=True)
     method = models.CharField(max_length=20)
     date = models.DateField(default=timezone.now)
     note = models.TextField()
@@ -52,6 +53,8 @@ class GoodsReceipt(models.Model):
         protected=True,
     )
 
+    is_finished = models.BooleanField(default=False)
+
     @transition(field=state, source="*", target=TO_BE_RESTOCKED)
     def set_to_be_restocked(self):
         pass
@@ -62,4 +65,4 @@ class GoodsReceipt(models.Model):
 
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
-        pass
+        self.is_finished = False
