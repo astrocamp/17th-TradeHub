@@ -3,7 +3,7 @@
 {% if bokeh_css %}
 <link rel="stylesheet" href="{{ bokeh_css }}" />
 {% endif %}
-<div class="mt-20">
+<div class="mt-30">
   <div class="mt-10 flex justify-center">
     <div class="stats shadow">
       <a href="{% url 'clients:index' %}">
@@ -217,42 +217,58 @@
   </div>
   <div class="mt-10">
     <div class="grid grid-cols-3 gap-4 place-items-center">
-      <!-- 渲染第一个图表，占 3 分之 2 -->
       <div class="col-span-2">
         <div class="flex">
           <div>{{ div1 | safe }}</div>
         </div>
       </div>
-      <!-- 渲染第二个图表，占 3 分之 1 -->
       <div class="col-span-1 space-y-4">
         <div class="stats shadow">
-          <div class="stat place-items-center">
-            <div class="stat-title">訂單</div>
-            <div class="stat-value">{{orders_num}}件</div>
-            <div class="stat-desc">進行中 46 | 待處理 12</div>
-          </div>
-
-          <div class="stat place-items-center">
-            <div class="stat-title">銷貨單</div>
-            <div class="stat-value text-secondary">{{sales_orders_num}}件</div>
-            <div class="stat-desc text-secondary">進行中 36 | 待處理 24</div>
-          </div>
-        </div>
-
-        <div class="stats shadow">
-          <div class="stat place-items-center">
-            <div class="stat-title">採購單</div>
-            <div class="stat-value">{{purchase_orders_num}}件</div>
-            <div class="stat-desc">進行中 21 | 待處理 24</div>
-          </div>
-
-          <div class="stat place-items-center">
-            <div class="stat-title">進貨單</div>
-            <div class="stat-value text-secondary">
-              {{goods_receipts_num}}件
+          <a href="{% url 'orders:index'%}">
+            <div class="stat place-items-center">
+              <div class="stat-title">訂單</div>
+              <div class="stat-value">{{orders_num}}件</div>
+              <div class="stat-desc">
+                進行中 {{orders_progress_num}} | 待處理 {{orders_pending_num}}
+              </div>
             </div>
-            <div class="stat-desc text-secondary">進行中 16 | 待處理 17</div>
-          </div>
+          </a>
+          <a href="{% url 'sales_orders:index'%}">
+            <div class="stat place-items-center">
+              <div class="stat-title">銷貨單</div>
+              <div class="stat-value text-secondary">
+                {{sales_orders_num}}件
+              </div>
+              <div class="stat-desc text-secondary">
+                進行中 {{sales_orders_progress_num}} | 待處理
+                {{sales_orders_pending_num}}
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="stats shadow">
+          <a href="{% url 'purchase_orders:index'%}">
+            <div class="stat place-items-center">
+              <div class="stat-title">採購單</div>
+              <div class="stat-value">{{purchase_orders_num}}件</div>
+              <div class="stat-desc">
+                進行中 {{purchase_orders_progress_num}} | 待處理
+                {{purchase_orders_pending_num}}
+              </div>
+            </div>
+          </a>
+          <a href="{% url 'goods_receipts:index'%}">
+            <div class="stat place-items-center">
+              <div class="stat-title">進貨單</div>
+              <div class="stat-value text-secondary">
+                {{goods_receipts_num}}件
+              </div>
+              <div class="stat-desc text-secondary">
+                進行中 {{goods_receipts_progress_num}} | 待處理
+                {{goods_receipts_pending_num}}
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </div>

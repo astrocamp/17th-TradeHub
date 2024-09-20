@@ -1,8 +1,8 @@
-from math import cos, pi, sin
+from math import pi
 
 import pandas as pd
 from bokeh.embed import components
-from bokeh.models import ColumnDataSource, LabelSet
+from bokeh.models import ColumnDataSource
 from bokeh.palettes import Category20c
 from bokeh.plotting import figure
 from bokeh.resources import CDN
@@ -19,27 +19,60 @@ from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.models import SalesOrder
 
 
-def home(req):
-    return render(req, "pages/home.html")
-
-
-def about(req):
-    return render(req, "pages/about.html")
-
-
 def sales_chart(request):
 
     sales_orders = SalesOrder.objects.all()
     orders_num = len(Orders.objects.values("deleted_at").filter(deleted_at=None))
+    orders_progress_num = len(
+        Orders.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="progress"
+        )
+    )
+    orders_pending_num = len(
+        Orders.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="pending"
+        )
+    )
     sales_orders_num = len(
         SalesOrder.objects.values("deleted_at").filter(deleted_at=None)
+    )
+    sales_orders_progress_num = len(
+        SalesOrder.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="progress"
+        )
+    )
+    sales_orders_pending_num = len(
+        SalesOrder.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="pending"
+        )
     )
     purchase_orders_num = len(
         PurchaseOrder.objects.values("deleted_at").filter(deleted_at=None)
     )
+    purchase_orders_progress_num = len(
+        PurchaseOrder.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="progress"
+        )
+    )
+    purchase_orders_pending_num = len(
+        PurchaseOrder.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="pending"
+        )
+    )
     goods_receipts_num = len(
         GoodsReceipt.objects.values("deleted_at").filter(deleted_at=None)
     )
+    goods_receipts_progress_num = len(
+        GoodsReceipt.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="progress"
+        )
+    )
+    goods_receipts_pending_num = len(
+        GoodsReceipt.objects.values("deleted_at", "state").filter(
+            deleted_at=None, state="pending"
+        )
+    )
+
     clients_num = len(Client.objects.values("name"))
     products_num = len(Product.objects.values("product_number"))
     suppliers_num = len(Supplier.objects.values("name"))
@@ -107,6 +140,14 @@ def sales_chart(request):
         "div1": div1,
         "bokeh_js": bokeh_js,
         "bokeh_css": bokeh_css,
+        "orders_progress_num": orders_progress_num,
+        "orders_pending_num": orders_pending_num,
+        "sales_orders_progress_num": sales_orders_progress_num,
+        "sales_orders_pending_num": sales_orders_pending_num,
+        "purchase_orders_progress_num": purchase_orders_progress_num,
+        "purchase_orders_pending_num": purchase_orders_pending_num,
+        "goods_receipts_progress_num": goods_receipts_progress_num,
+        "goods_receipts_pending_num": goods_receipts_pending_num,
     }
 
     return render(request, "pages/sales_chart.html", content)
