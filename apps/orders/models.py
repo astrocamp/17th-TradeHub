@@ -78,7 +78,7 @@ class Order(models.Model):
 class OrderProductItem(models.Model):
     order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
+    ordered_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
 

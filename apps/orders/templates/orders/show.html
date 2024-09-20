@@ -2,13 +2,13 @@
 <div class="max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8">
   <div class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6">
     <h1 class="text-2xl font-extrabold text-gray-900">
-      採購單編號: {{ purchase_order.order_number }}
+      訂購單編號: {{ order.order_number }}
     </h1>
     <h2 class="text-gray-600">
-      採購人：{{ purchase_order.username }}
+      訂購人：{{ order.username }}
     </h2>
     <a
-      href="{% url 'purchase_orders:index' %}"
+      href="{% url 'orders:index' %}"
       class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
       返回列表
@@ -18,32 +18,32 @@
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
+        <label class="text-lg font-semibold text-gray-800">客戶名稱:</label>
         <span class="text-xl text-gray-600"
-          >{{ purchase_order.supplier.name }}</span
+          >{{ order.client.name }}</span
         >
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商電話:</label>
-        <p class="text-lg text-gray-600">{{ purchase_order.supplier_tel }}</p>
+        <label class="text-lg font-semibold text-gray-800">客戶電話:</label>
+        <p class="text-lg text-gray-600">{{ order.client_tel }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商聯絡人:</label>
-        <p class="text-lg text-gray-600">{{ purchase_order.contact_person }}</p>
+        <label class="text-lg font-semibold text-gray-800">客戶地址:</label>
+        <p class="text-lg text-gray-600">{{ order.client_address }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商Email:</label>
-        <p class="text-lg text-gray-600">{{ purchase_order.supplier_email }}</p>
+        <label class="text-lg font-semibold text-gray-800">客戶Email:</label>
+        <p class="text-lg text-gray-600">{{ order.client_email }}</p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">建立時間:</label>
         <p class="text-lg text-gray-600">
-          {{ purchase_order.created_at|date:"M d, Y H:i" }}
+          {{ order.created_at|date:"M d, Y H:i" }}
         </p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
-        <p class="text-lg text-gray-600">{{ purchase_order.note }}</p>
+        <p class="text-lg text-gray-600">{{ order.note }}</p>
       </div>
     </div>
   </div>
@@ -54,8 +54,8 @@
       class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800"
     >
       <div class="flex-1 text-center">商品名稱</div>
-      <div class="flex-1 text-center">採購數量</div>
-      <div class="flex-1 text-center">商品進價</div>
+      <div class="flex-1 text-center">訂購數量</div>
+      <div class="flex-1 text-center">商品售價</div>
       <div class="flex-1 text-center">小計</div>
     </div>
     <div class="space-y-4">
@@ -64,8 +64,8 @@
         class="flex justify-between items-center border-b border-gray-200 py-2"
       >
         <div class="flex-1 text-center">{{ item.product }}</div>
-        <div class="flex-1 text-center">{{ item.quantity }}</div>
-        <div class="flex-1 text-center">${{ item.cost_price }}</div>
+        <div class="flex-1 text-center">{{ item.ordered_quantity }}</div>
+        <div class="flex-1 text-center">${{ item.sale_price }}</div>
         <div class="flex-1 text-center">${{ item.subtotal }}</div>
       </div>
       {% empty %}
@@ -77,20 +77,20 @@
       <div class="flex-1"></div>
       <div class="flex-1"></div>
       <div class="flex-1 text-center font-semibold text-gray-800">
-        ${{ purchase_order.amount }}
+        ${{ order.amount }}
       </div>
     </div>
   </div>
 
   <div class="flex justify-center gap-4 mt-6">
     <a
-      href="{% url 'purchase_orders:edit' purchase_order.id %}"
+      href="{% url 'orders:edit' order.id %}"
       class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
       編輯
     </a>
     <form
-      action="{% url 'purchase_orders:delete' purchase_order.id %}"
+      action="{% url 'orders:delete' order.id %}"
       method="POST"
       class="inline-block"
     >

@@ -84,7 +84,7 @@ def show(request, id):
 
 
 def order_update_and_delete(request, id):
-    order = get_object_or_404(Orders, id=id)
+    order = get_object_or_404(Order, id=id)
     if request.method == "POST":
         if "delete" in request.POST:
             order.delete()

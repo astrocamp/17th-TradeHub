@@ -1,6 +1,9 @@
-from django import forms
+import re
 
-from apps.orders.models import Orders
+from django import forms
+from django.forms import inlineformset_factory
+
+from apps.orders.models import Order, OrderProductItem
 
 
 class FileUploadForm(forms.Form):
@@ -9,44 +12,51 @@ class FileUploadForm(forms.Form):
 
 class OrderForm(forms.ModelForm):
     class Meta:
-        model = Orders
-        fields = "__all__"
-
+        model = Order
+        fields = [
+            "client",
+            "client_tel",
+            "client_address",
+            "client_email",
+            "note",
+            "amount",
+        ]
+        labels = {
+            "client": "客戶名稱",
+            "client_tel": "客戶電話",
+            "client_address": "客戶地址",
+            "client_email": "客戶Email",
+            "note": "備註",
+            "amount": "總金額",
+        }
         widgets = {
-            "code": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "請輸入訂單編號"}
-            ),
             "client": forms.Select(
-                attrs={
-                    "class": "form-control",
-                }
+                attrs={"class": "w-full", "placeholder": "請選擇客戶名稱"}
             ),
-            "product": forms.Select(
-                attrs={
-                    "class": "form-control",
-                }
+            "client_tel": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入客戶電話"}
+            ),
+            "client_address": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入客戶地址"}
+            ),
+            "client_email": forms.TextInput(
+                attrs={"class": "w-full", "placeholder": "請輸入客戶Email"}
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control",
-                    "placeholder": "請輸入備註",
+                    "class": "w-full",
                     "rows": 3,
+                    "placeholder": "請輸入備註",
                 }
             ),
         }
-        help_texts = {
-            "code": "請輸入訂單編號",
-            "client": "請選擇客戶",
-            "product": "請選擇商品",
-            "note": "請輸入備註",
-        }
-
-        labels = {
-            "code": "訂單編號",
-            "client": "客戶",
-            "product": "商品",
-            "note": "備註",
-        }
+        # help_texts = {
+        #     "client": "請輸入客戶名稱。",
+        #     "client_tel",
+        #     "client_address",
+        #     "client_email",
+        #     "note",
+        # }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -55,17 +65,43 @@ class OrderForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        code = cleaned_data.get("code")
         client = cleaned_data.get("client")
-        product = cleaned_data.get("product")
-
-        if not code:
-            self.add_error("code", "訂單編號是必填的")
+        client_tel = cleaned_data.get("client_tel")
+        client_address = cleaned_data.get("client_address")
+        client_email = cleaned_data.get("client_email")
+        amount = cleaned_data.get("amount")
 
         if not client:
-            self.add_error("client", "客戶是必填的")
-
-        if not product:
-            self.add_error("product", "商品是必填的")
+            self.add_error("client", "客戶名稱為必填")
+        if client_tel == "":
+            self.add_error("client_tel", "客戶電話為必填")
+        elif not re.match(
+            r"^(09\d{2}-\d{3}-\d{3}|09\d{8}|09\d{2}-\d{6}|0\d{8}|0\d-\d{7}|0\d-\d{3}-\d{4}|0\d-\d{4}-\d{3})$",
+            client_tel,
+        ):
+            self.add_error("client_tel", "無效的電話號碼")
+        if not client_address:
+            self.add_error("client_address", "客戶地址為必填")
+        if client_email == "":
+            self.add_error("client_email", "客戶Email為必填")
+        if amount == 0:
+            self.add_error("amount", "請填寫下方訂購單細項")
 
         return cleaned_data
+
+
+class OrderProductItemForm(forms.ModelForm):
+    class Meta:
+        model = OrderProductItem
+        fields = ["product", "ordered_quantity", "sale_price", "subtotal"]
+        widgets = {
+            "product": forms.Select(attrs={"class": "w-full"}),
+            "ordered_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "sale_price": forms.NumberInput(attrs={"class": "w-full"}),
+            "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
+        }
+
+
+OrderProductItemFormSet = inlineformset_factory(
+    Order, OrderProductItem, form=OrderProductItemForm, extra=1, can_delete=True
+)
