@@ -1,8 +1,12 @@
+from math import cos, pi, sin
+
 import pandas as pd
 from bokeh.embed import components
-from bokeh.models import ColumnDataSource
+from bokeh.models import ColumnDataSource, LabelSet
+from bokeh.palettes import Category20c
 from bokeh.plotting import figure
 from bokeh.resources import CDN
+from bokeh.transform import cumsum
 from django.db.models import Sum
 from django.shortcuts import render
 
@@ -24,7 +28,7 @@ def about(req):
 
 
 def sales_chart(request):
-    # 获取所有销售订单
+
     sales_orders = SalesOrder.objects.all()
     orders_num = len(Orders.objects.values("deleted_at").filter(deleted_at=None))
     sales_orders_num = len(
@@ -41,52 +45,51 @@ def sales_chart(request):
     suppliers_num = len(Supplier.objects.values("name"))
     inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
 
-    # 按产品汇总数量
+    clients_name = len(Client.objects.values("name"))
+
     sales_data = (
         sales_orders.values("product__product_name")
         .annotate(total_quantity=Sum("quantity"))
         .order_by("-total_quantity")
     )
 
-    # 转换为 DataFrame
     data = {
         "product": [item["product__product_name"] for item in sales_data],
         "quantity": [item["total_quantity"] for item in sales_data],
     }
     df = pd.DataFrame(data)
-
-    # 为每个图表创建单独的数据源
+    df["angle"] = df["quantity"] / df["quantity"].sum() * 2 * pi
+    num_products = len(df)
+    palette = Category20c[num_products] if num_products <= 20 else Category20c[20]
+    df["color"] = palette[:num_products]
     source1 = ColumnDataSource(df)
-    source3 = ColumnDataSource(df)
 
-    # 创建第一个图表
     p1 = figure(
-        x_range=df["product"],
-        title="Top Selling Products (Bar)",
+        title="熱銷商品",
         width=600,
         height=300,
         tools="pan,wheel_zoom,box_zoom,reset",
         toolbar_location="above",
     )
-    p1.vbar(x="product", top="quantity", width=0.8, source=source1, color="blue")
-    p1.xgrid.grid_line_color = None
-    p1.y_range.start = 0
-    p1.xaxis.major_label_orientation = "vertical"
 
-    # 创建第三个图表 (折线图)
-    p3 = figure(
-        x_range=df["product"],
-        title="Top Selling Products (Line)",
-        sizing_mode="scale_width",
-        height=500,
-        tools="pan,wheel_zoom,box_zoom,reset",
-        toolbar_location="above",
+    p1.wedge(
+        x=0,
+        y=1,
+        radius=0.4,
+        start_angle=cumsum("angle", include_zero=True),
+        end_angle=cumsum("angle"),
+        line_color="white",
+        fill_color="color",
+        legend_field="product",
+        source=source1,
     )
-    p3.line(x="product", y="quantity", line_width=2, source=source3, color="red")
 
-    # 获取 Bokeh 图表组件和资源
+    p1.grid.grid_line_color = None
+    p1.axis.visible = False
+    p1.legend.location = "top_left"
+    p1.legend.label_text_font_size = "10pt"
+
     script1, div1 = components(p1)
-    script3, div3 = components(p3)
 
     bokeh_js = CDN.js_files[0]
     bokeh_css = CDN.css_files[0] if CDN.css_files else None
@@ -102,11 +105,8 @@ def sales_chart(request):
         "goods_receipts_num": goods_receipts_num,
         "script1": script1,
         "div1": div1,
-        "script3": script3,
-        "div3": div3,
         "bokeh_js": bokeh_js,
         "bokeh_css": bokeh_css,
     }
 
-    # 将所有图表的组件和资源传递给模板
     return render(request, "pages/sales_chart.html", content)
