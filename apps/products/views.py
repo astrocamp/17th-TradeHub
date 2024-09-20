@@ -5,11 +5,16 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from datetime import datetime, timedelta, timezone
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.inventory.models import Inventory
 
 from .forms.product_form import FileUploadForm, ProductForm
-from .models import Product
 
 
 def index(request):
@@ -203,3 +208,16 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Products")
     return response
+
+
+@receiver(post_save, sender=Product)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+
+    Inventory.objects.create(
+        product=instance,
+        supplier=instance.supplier,
+        quantity=0,
+        safety_stock=1,
+        note=f"{time_now} 新建商品，預建庫存",
+    )
