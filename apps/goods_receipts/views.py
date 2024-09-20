@@ -33,6 +33,7 @@ def index(request):
     paginator = Paginator(goods_receipts, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    has_import = False
 
     content = {
         "goods_receipts": page_obj,
@@ -40,6 +41,7 @@ def index(request):
         "is_desc": is_desc,
         "order_by": order_by,
         "page_obj": page_obj,
+        "has_import": has_import,
     }
     if request.method == "POST":
         form = GoodsReceiptForm(request.POST)

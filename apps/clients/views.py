@@ -170,3 +170,27 @@ def export_excel(request):
         df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
+
+
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=ClientsSample.xlsx"
+
+    data = {
+        "name": ["陳小明"],
+        "phone_number": [914408235],
+        "address": [
+            "台北市中正區XX路XX號",
+        ],
+        "email": ["alice@example.com"],
+        "note": ["這是另一個備註"],
+    }
+
+    df = pd.DataFrame(data)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Clients")
+
+    return response

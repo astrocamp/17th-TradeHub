@@ -28,6 +28,7 @@ def index(request):
     paginator = Paginator(sales_orders, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
+    has_import = False
 
     content = {
         "sales_orders": page_obj,
@@ -35,6 +36,7 @@ def index(request):
         "is_desc": is_desc,
         "order_by": order_by,
         "page_obj": page_obj,
+        "has_import": has_import,
     }
 
     return render(request, "sales_orders/index.html", content)
