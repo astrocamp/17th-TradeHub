@@ -46,7 +46,7 @@
           <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
         </tr>
       </thead>
       {% for item in sales_orders %}
@@ -71,6 +71,7 @@
           <td>{{ item.stock }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
+          <td>{{ item.note|truncatechars:15 }}</td>
           <td>
             <a
               href="{% url 'sales_orders:edit' item.id %}"

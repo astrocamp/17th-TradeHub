@@ -9,7 +9,7 @@
 </div>
 <div class="divider text-3xl font-bold">訂單列表</div>
 <div class="flex justify-center mt-10">
-  <div class="overflow-x-auto">
+  <div class="overflow">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
@@ -22,7 +22,7 @@
                 <option disabled>選擇</option>
                 <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
                 <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
-                <option value="pending" {% if selected_state == "pending" %}selected{% endif %}>待處理</option>
+                <option value="to_be_confirmed" {% if selected_state == "to_be_confirmed" %}selected{% endif %}>待確認</option>
                 <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
               </select>
               <button type="submit" class="btn btn-square btn-sm">
@@ -51,6 +51,15 @@
             <a href="{% url 'orders:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
           </th>
           <th>
+            <a href="{% url 'orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
+          </th>
+          <th>
+            <a href="{% url 'orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
+          </th>
+          <th>
+            <a href="{% url 'orders:index' %}?sort=stock_quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock_quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
+          </th>
+          <th>
             <a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
           </th>
           <th></th>
@@ -63,9 +72,9 @@
           <td>
             <span class="btn btn-sm btn-success text-lg">完成</span>
           </td>
-          {% elif order.state == "pending" %}
+          {% elif order.state == "to_be_confirmed" %}
           <td>
-            <span class="btn btn-sm btn-warning text-lg">待處理</span>
+            <span class="btn btn-sm btn-error text-lg">待確認</span>
           </td>
           {% elif order.state == "progress" %}
           <td>
@@ -76,16 +85,27 @@
           <td>{{ order.code }}</td>
           <td>{{ order.client }}</td>
           <td>{{ order.product }}</td>
+          <td>{{ order.price }}</td>
+          <td>{{ order.quantity }}</td>
+          <td>{{ order.stock_quantity }}</td>
           <td>{{ order.note }}</td>
-          <td class="flex justify-center gap-1">
-            <a class="btn btn-primary" href="{% url 'orders:edit' order.id %}">編輯</a>
-            <form
-              action="{% url 'orders:edit' order.id %}"
-              method="post"
-              onsubmit="return confirm('Are you sure Delete it?')"
-            >
+          <td>
+            <form action="{% url 'orders:edit' order.id %}" method="POST">
               {% csrf_token %}
-              <button class="btn btn-error" name="delete">刪除</button>
+              <div class="dropdown dropdown-left">
+                <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary">編輯</a></li>
+                <li>
+                    <button type="submit" class="btn btn-error" name="delete">
+                      刪除
+                    </button>
+                </li>
+                {% if order.state == "progress" %}
+                <li><a onclick="return confirm('確認轉銷貨單?')" href="{% url 'orders:transform' order.id %}" class="btn btn-info">轉銷貨單</a></li>
+                {% endif %}
+                </ul>
+              </div>
             </form>
           </td>
         </tr>

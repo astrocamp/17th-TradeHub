@@ -1,13 +1,17 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.clients.models import Client
 from apps.products.models import Product
+from apps.sales_orders.models import SalesOrder
 
 from .forms.form import FileUploadForm, OrderForm
 from .models import Orders
@@ -193,3 +197,32 @@ def export_excel(request):
         df.to_excel(writer, index=False, sheet_name="Orders")
 
     return response
+
+
+@receiver(pre_save, sender=Orders)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if instance.quantity > instance.stock_quantity.quantity:
+        instance.set_to_be_confirmed()
+    elif instance.quantity <= instance.stock_quantity.quantity:
+        instance.set_progress()
+        if instance.is_finished:
+            SalesOrder.objects.create(
+                client=instance.client,
+                product=instance.product,
+                quantity=instance.quantity,
+                stock=instance.stock_quantity,
+                price=instance.price,
+                note=f"{time_now}轉銷貨單",
+            )
+            instance.note = f"{time_now}已轉銷貨單"
+            instance.set_finished()
+            instance.is_finished = False
+
+
+def transform_sales_order(request, id):
+    order = get_object_or_404(Orders, id=id)
+    order.is_finished = True
+    order.save()
+    messages.success(request, "轉銷貨單完成!")
+    return redirect("orders:index")
