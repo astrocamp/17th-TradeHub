@@ -40,9 +40,10 @@ SECRET_KEY = os.getenv("APP_SECRET_KEY")
 DEBUG = is_dev()
 
 ALLOWED_HOSTS = [
-    "13.112.74.19",  # 公共IP
+    "18.183.80.89",  # 公共IP
     "127.0.0.1",  # 本地IP
     "www.tradehub17th.com",
+    "tradehub17th.com",
 ]
 
 
@@ -78,6 +79,7 @@ if is_dev():
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
