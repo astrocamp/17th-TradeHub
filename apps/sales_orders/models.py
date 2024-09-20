@@ -31,6 +31,8 @@ class SalesOrder(models.Model):
 
     objects = SalesOrderManager()
 
+    is_finished = models.BooleanField(default=False)
+
     def delete(self):
         self.deleted_at = timezone.now()
         self.save()
