@@ -1,5 +1,7 @@
 from django.db import models
+
 from apps.users.models import CustomUser
+
 
 class Company(models.Model):
     company_id = models.CharField(max_length=20)

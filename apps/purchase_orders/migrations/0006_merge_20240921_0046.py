@@ -6,9 +6,8 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('purchase_orders', '0004_purchaseorder_is_finished'),
-        ('purchase_orders', '0005_purchaseorder_username'),
+        ("purchase_orders", "0004_purchaseorder_is_finished"),
+        ("purchase_orders", "0005_purchaseorder_username"),
     ]
 
-    operations = [
-    ]
+    operations = []
