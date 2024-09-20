@@ -43,6 +43,18 @@
         </p>
       </div>
       <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">更新時間:</label>
+        <p class="text-lg text-gray-600">
+          {{ goods_receipt.updated_at|date:"M d, Y H:i" }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">運送方式:</label>
+        <p class="text-lg text-gray-600">
+          {{ goods_receipt.receiving_method }}
+        </p>
+      </div>
+      <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
         <p class="text-lg text-gray-600">{{ goods_receipt.note }}</p>
       </div>

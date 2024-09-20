@@ -51,10 +51,9 @@ class GoodsReceiptForm(forms.ModelForm):
                     "placeholder": "請輸入備註",
                 }
             ),
-            "receiving_method": forms.TextInput(
+            "receiving_method": forms.Select(
                 attrs={
                     "class": "w-full",
-                    "class": "form-control",
                     "placeholder": "請輸入運送方式",
                 }
             ),

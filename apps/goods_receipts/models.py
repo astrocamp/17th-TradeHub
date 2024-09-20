@@ -21,12 +21,17 @@ class GoodsReceipt(models.Model):
     supplier_tel = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
     supplier_email = models.EmailField(unique=False)
-    created_at = models.DateTimeField(default=timezone.now)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
-    receiving_method = models.CharField(max_length=20)
+    RECEIVING_METHOD_CHOICES = [
+        ("貨運", "貨運"),
+        ("自取", "自取"),
+    ]
+    receiving_method = models.CharField(max_length=20, choices=RECEIVING_METHOD_CHOICES)
 
     objects = GoodReceiptManager()
     all_objects = models.Manager()

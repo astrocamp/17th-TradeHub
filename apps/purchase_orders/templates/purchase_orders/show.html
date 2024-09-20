@@ -39,7 +39,13 @@
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">建立時間:</label>
         <p class="text-lg text-gray-600">
-          {{ purchase_order.created_at|date:"M d, Y H:i" }}
+          {{ purchase_order.created_at|date:"Y-m-d H:i" }}
+        </p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">更新時間:</label>
+        <p class="text-lg text-gray-600">
+          {{ purchase_order.updated_at|date:"Y-m-d H:i" }}
         </p>
       </div>
       <div class="flex flex-col">

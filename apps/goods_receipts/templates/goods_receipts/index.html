@@ -11,7 +11,7 @@
 </div>
 <div class="divider text-3xl font-bold">進貨單列表</div>
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto w-full">
         <table class="table table-xl text-center">
             <thead>
                 <tr class="text-xl">
@@ -43,11 +43,9 @@
                     <th><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier_email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商Email{% if order_by == 'supplier_email' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=method&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">運送方式{% if order_by == 'receiving_method' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
                     <th></th>
             </thead>
             <tbody>
@@ -66,19 +64,12 @@
                     <span class="btn btn-sm btn-warning text-lg">待入庫</span>
                   </th>
                   {% endif %}
-                  <!-- {% comment %} <input
-                      type="checkbox"
-                      name="selected_purchase_orders"
-                      value="{{ purchase_order.id }}"
-                      class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    /> {% endcomment %} -->
                     <th>{{ goods_receipt.order_number }}</th>
                     <th>{{ goods_receipt.supplier.name }}</th>
                     <th>{{ goods_receipt.supplier_tel }}</th>
-                    <th>{{ goods_receipt.supplier_email }}</th>
                     <th>{{ goods_receipt.amount }}</th>
-                    <th>{{ goods_receipt.receiving_method }}</th>
                     <th>{{ goods_receipt.note }}</th>
+                    <th>{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>
                         <div class="flex justify-center gap-1">
                             <a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">
