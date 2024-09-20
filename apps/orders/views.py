@@ -3,14 +3,21 @@ import csv
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.clients.models import Client
 from apps.products.models import Product
 
-from .forms.form import FileUploadForm, OrderForm
-from .models import Orders
+from .forms.orders_form import (
+    FileUploadForm,
+    OrderForm,
+    OrderProductItemForm,
+    OrderProductItemFormSet,
+)
+from .models import Order, OrderProductItem
 
 
 def index(request):
@@ -18,10 +25,10 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    orders = Orders.objects.all()
+    orders = Order.objects.all()
 
-    if state in Orders.AVAILABLE_STATES:
-        orders = Orders.objects.filter(state=state)
+    if state in Order.AVAILABLE_STATES:
+        orders = Order.objects.filter(state=state)
     order_by_field = order_by if is_desc else "-" + order_by
     orders = orders.order_by(order_by_field)
 
@@ -41,13 +48,39 @@ def index(request):
 
 
 def new(request):
+    new_order_number = generate_order_number()
     if request.method == "POST":
         form = OrderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        formset = OrderProductItemFormSet(request.POST, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
+            order = form.save(commit=False)
+            order.order_number = new_order_number
+            order.username = request.user.username
+            order.save()
+            formset.instance = order
+            formset.save()
             return redirect("orders:index")
+        else:
+            return render(
+                request, "orders/new.html", {"form": form, "formset": formset}
+            )
     form = OrderForm()
-    return render(request, "orders/new.html", {"form": form})
+    formset = OrderProductItemFormSet(instance=form.instance)
+    return render(
+        request,
+        "orders/new.html",
+        {"form": form, "formset": formset},
+    )
+
+
+def show(request, id):
+    order = get_object_or_404(Order, pk=id)
+    product_items = OrderProductItem.objects.filter(order=order)
+    return render(
+        request,
+        "orders/show.html",
+        {"order": order, "product_items": product_items},
+    )
 
 
 def order_update_and_delete(request, id):
@@ -66,6 +99,81 @@ def order_update_and_delete(request, id):
     return render(request, "orders/edit.html", {"order": order, "form": form})
 
 
+def edit(request, id):
+    order = get_object_or_404(Order, pk=id)
+    if request.method == "POST":
+        form = OrderForm(request.POST, instance=order)
+        formset = OrderProductItemFormSet(request.POST, instance=order)
+
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            return redirect("orders:show", order.id)
+        return render(
+            request,
+            "orders/edit.html",
+            {"order": order, "form": form, "formset": formset},
+        )
+    form = OrderForm(instance=order)
+    formset = get_product_item_formset(0)(instance=order)
+    return render(
+        request,
+        "orders/edit.html",
+        {"order": order, "form": form, "formset": formset},
+    )
+
+
+def delete(request, id):
+    order = get_object_or_404(Order, pk=id)
+    order.delete()
+    messages.success(request, "刪除完成!")
+    return redirect("purchase_orders:index")
+
+
+def get_product_item_formset(extra):
+    return inlineformset_factory(
+        Order,
+        OrderProductItem,
+        form=OrderProductItemForm,
+        extra=extra,
+        can_delete=True,
+    )
+
+
+def load_client_info(request):
+    client_id = request.GET.get("client_id")
+    client = Client.objects.get(id=client_id)
+    data = {
+        "client_tel": client.phone_number,
+        "client_address": client.address,
+        "client_email": client.email,
+    }
+    return JsonResponse(data)
+
+
+def load_product_info(request):
+    product_id = request.GET.get("id")
+    product = Product.objects.get(id=product_id)
+    return JsonResponse({"sale_price": product.sale_price})
+
+
+def generate_order_number():
+    today = timezone.localtime().strftime("%Y%m%d")
+    last_order = (
+        Order.all_objects.filter(order_number__startswith=today)
+        .order_by("-order_number")
+        .first()
+    )
+
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{last_order_number + 1:03d}"
+    else:
+        new_order_number = "001"
+
+    return f"{today}{new_order_number}"
+
+
 def import_file(request):
     if request.method == "POST":
         form = FileUploadForm(request.POST, request.FILES)
@@ -82,7 +190,7 @@ def import_file(request):
                         client = Client.objects.get(id=row[1])
                         product = Product.objects.get(id=row[2])
 
-                        Orders.objects.create(
+                        Order.objects.create(
                             code=row[0],
                             client=client,
                             product=product,
@@ -111,7 +219,7 @@ def import_file(request):
                         client = Client.objects.get(id=int(row["client"]))
                         product = Product.objects.get(id=int(row["product"]))
 
-                        Orders.objects.create(
+                        Order.objects.create(
                             code=str(row["code"]),
                             client=client,
                             product=product,
@@ -141,7 +249,7 @@ def export_csv(request):
         ["序號", "客戶名稱", "商品名稱", "備註", "建立時間", "更新時間", "刪除時間"]
     )
 
-    orders = Orders.objects.all()
+    orders = Order.objects.all()
     for order in orders:
         writer.writerow(
             [
@@ -163,7 +271,7 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Orders.xlsx"
 
-    orders = Orders.objects.select_related("client", "product").values(
+    orders = Order.objects.select_related("client", "product").values(
         "code",
         "client__name",
         "product__product_name",
