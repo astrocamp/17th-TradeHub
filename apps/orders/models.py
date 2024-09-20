@@ -23,6 +23,7 @@ class Order(models.Model):
     username = models.CharField(max_length=150, default="admin")
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = OrdersManager()

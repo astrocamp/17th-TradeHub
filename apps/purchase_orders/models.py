@@ -22,6 +22,7 @@ class PurchaseOrder(models.Model):
     contact_person = models.CharField(max_length=20)
     supplier_email = models.EmailField(unique=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
     note = models.TextField(blank=True, null=True)
@@ -63,6 +64,8 @@ class PurchaseOrder(models.Model):
         choices=STATES_CHOICES,
         protected=True,
     )
+
+    is_finished = models.BooleanField(default=False)
 
     @transition(field=state, source="*", target=PENDING)
     def set_pending(self):

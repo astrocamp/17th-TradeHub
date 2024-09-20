@@ -4,9 +4,13 @@
   <a href="{% url 'inventory:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
-
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+  <div class="dropdown dropdown-bottom dropdown-end">
+    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+      <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
+      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+    </ul>
+  </div>
 </div>
 <div class="divider text-3xl font-bold">庫存列表</div>
 <div class="flex justify-center mt-5">
@@ -69,27 +73,28 @@
           <td>{{ item.supplier }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ item.safety_stock }}</td>
-          <td>{{ item.note }}</td>
-          <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
+          <td>{{ item.note|truncatechars:15 }}</td>
+          <td>{{ item.last_updated|date:"Y/m/d H:i" }}</td>
           <td>
-            <a
-              href="{% url 'inventory:edit' item.id %}"
-              class="btn btn-primary"
-            >
-              編輯
-            </a>
-            <a onclick="return confirm('確認刪除?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error"
-              >刪除</a
-            >
+            <div class="dropdown dropdown-left">
+              <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                <li><a href="{% url 'inventory:edit' item.id %}" class="btn btn-primary">編輯</a></li>
+                <li>
+                  <a onclick="return confirm('確認刪除?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error">
+                    刪除
+                  </a>
+                </li>
+              </ul>
+            </div>
           </td>
         </tr>
         {% endfor %}
       </tbody>
     </table>
+    {% if page_obj.paginator.num_pages > 1 %}
     <div class="pagination join flex justify-center">
-      {% if page_obj.has_other_pages %}
       <span class="step-links">
-
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">第1頁</button></a
         >
@@ -114,8 +119,8 @@
           ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
         >
       </span>
-      {% endif %}
     </div>
+    {% endif %}
   </div>
 </div>
 {% include "shared/import_export.html" %}

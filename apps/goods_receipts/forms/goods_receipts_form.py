@@ -18,9 +18,9 @@ class GoodsReceiptForm(forms.ModelForm):
             "supplier_tel",
             "contact_person",
             "supplier_email",
-            "note",
-            "amount",
             "receiving_method",
+            "amount",
+            "note",
         ]
         labels = {
             "supplier": "供應商名稱",
@@ -51,10 +51,9 @@ class GoodsReceiptForm(forms.ModelForm):
                     "placeholder": "請輸入備註",
                 }
             ),
-            "receiving_method": forms.TextInput(
+            "receiving_method": forms.Select(
                 attrs={
                     "class": "w-full",
-                    "class": "form-control",
                     "placeholder": "請輸入運送方式",
                 }
             ),
@@ -80,6 +79,7 @@ class GoodsReceiptForm(forms.ModelForm):
         contact_person = cleaned_data.get("contact_person")
         supplier_email = cleaned_data.get("supplier_email")
         amount = cleaned_data.get("amount")
+        receiving_method = cleaned_data.get("receiving_method")
 
         if not supplier:
             self.add_error("supplier", "供應商名稱為必填")
@@ -96,6 +96,8 @@ class GoodsReceiptForm(forms.ModelForm):
             self.add_error("supplier_email", "供應商Email為必填")
         if amount == 0:
             self.add_error("amount", "請填寫下方進貨單細項")
+        if not receiving_method:
+            self.add_error("receiving_method", "運送方式為必填")
 
         return cleaned_data
 
