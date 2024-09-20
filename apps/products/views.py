@@ -218,6 +218,6 @@ def update_state(sender, instance, **kwargs):
         product=instance,
         supplier=instance.supplier,
         quantity=0,
-        safety_stock=1,
+        safety_stock=0,
         note=f"{time_now} 新建商品，預建庫存",
     )
