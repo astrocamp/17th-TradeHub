@@ -1,0 +1,23 @@
+{% extends "layouts/base.html" %} {% load static %}
+
+{% block content %}
+
+<a href="{% url 'company:new' %}">新增</a>
+
+<div>
+    <ul>
+        {% for company in companies %}
+        <a href="{% url 'company:show' company.id %}">
+            <p>{{company.company_id}}</p>
+            <p>{{company.company_name}}</p>
+            <p>{{company.gui_number}}</p>
+            <p>{{company.address}}</p>
+            <p>{{company.user}}</p>
+            <p>{{company.created_at}}</p>
+
+        </a>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

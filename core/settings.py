@@ -64,6 +64,7 @@ INSTALLED_APPS = [
     "apps.sales_orders",
     "apps.goods_receipts",
     "social_django",
+    "apps.company",
 ]
 
 if is_dev():

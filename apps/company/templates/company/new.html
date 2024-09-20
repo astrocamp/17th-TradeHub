@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %} {% load static %}
+
+{% block content %}
+
+<a href="{% url 'company:index' %}">首頁</a>
+
+<form action="{% url 'company:index' %}" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button>新增</button>
+</form>
+
+{% endblock %}
