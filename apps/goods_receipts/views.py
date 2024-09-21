@@ -12,7 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_POST
 
-from apps.goods_receipts.models import GoodsReceipt, Supplier, Product
+from apps.goods_receipts.models import GoodsReceipt, Product, Supplier
 from apps.inventory.models import Inventory
 
 from .forms.goods_receipts_form import (
