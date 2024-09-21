@@ -3,10 +3,6 @@ from django import forms
 from apps.orders.models import Orders
 
 
-class FileUploadForm(forms.Form):
-    file = forms.FileField()
-
-
 class OrderForm(forms.ModelForm):
     class Meta:
         model = Orders
