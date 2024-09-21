@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.company.models import Company
 
@@ -10,20 +11,37 @@ def index(request):
     if request.method == "POST":
         form = CompanyForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect("company:index")
+            company = form.save(commit=False)
+            company.created_at = timezone.now()
+            company.save()
+
+            request.user.company = company
+            request.user.is_superuser = True
+            request.user.save()
+
+            messages.success(request, "公司帳號新增成功!")
+            return redirect("company:show", id=request.user.company.id)
         return render(request, "company/new.html", {"form": form})
-    company = Company.objects.order_by("-id")
-    return render(request, "company/index.html", {"company": company})
+    else:
+        return redirect("company:show", id=request.user.company.id)
 
 
 def new(request):
-    form = CompanyForm
-    return render(request, "company/new.html", {"form": form})
+    if request.user.company.company_name == "個人公司":
+        form = CompanyForm()
+        return render(request, "company/new.html", {"form": form})
+    else:
+        messages.success(request, "您已經有公司帳號了!")
+        return redirect("pages:home")
 
 
 def show(request, id):
     company = get_object_or_404(Company, id=id)
+    if request.user.company is None:
+        messages.success(request, "您還沒有公司帳號!")
+        return redirect("company:index")
+    if request.user.company != company:
+        return redirect("pages:home")
     if request.method == "POST":
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():

@@ -7,14 +7,19 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('company', '0002_alter_company_user'),
-        ('users', '0003_customuser_company_id'),
+        ("company", "0002_alter_company_user"),
+        ("users", "0003_customuser_company_id"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='customuser',
-            name='company_id',
-            field=models.ForeignKey(default='', on_delete=django.db.models.deletion.PROTECT, related_name='CustomUser', to='company.company'),
+            model_name="customuser",
+            name="company_id",
+            field=models.ForeignKey(
+                default="",
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="CustomUser",
+                to="company.company",
+            ),
         ),
     ]

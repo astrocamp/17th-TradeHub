@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
@@ -27,7 +29,11 @@ class CustomUser(AbstractUser):
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.CharField(max_length=100, blank=False, null=False, default="")
     company = models.ForeignKey(
-        Company, on_delete=models.PROTECT, related_name="CustomUser", default=0
+        Company,
+        on_delete=models.PROTECT,
+        related_name="CustomUser",
+        blank=True,
+        null=True,
     )
     department = models.CharField(
         choices=DEPARTMENT_CHOICES, max_length=20, default="", blank=False, null=False
@@ -37,6 +43,8 @@ class CustomUser(AbstractUser):
     )
     hire_date = models.DateTimeField(default=timezone.now)
     note = models.TextField(blank=True, null=True)
+    is_superuser = models.BooleanField(default=False)
+    first_login = models.BooleanField(default=True)
 
     def __str__(self):
         return f"{self.username}"
