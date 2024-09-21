@@ -6,6 +6,7 @@ app_name = "pages"
 
 
 urlpatterns = [
+    path("home", views.out_home, name="out_home"),
     path("", views.home, name="home"),
     path("about/", views.about, name="about"),
 ]
