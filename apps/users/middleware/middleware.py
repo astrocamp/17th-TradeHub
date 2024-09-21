@@ -28,7 +28,7 @@ class LoginRequiredMiddleware:
                     reverse("users:reset_password"),
                 ]:
                     return self.get_response(request)
-            return redirect("users:log_in")
+            return redirect("pages:out_home")
 
         response = self.get_response(request)
         return response
