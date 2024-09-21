@@ -63,7 +63,6 @@ class Supplier(models.Model):
         super().save(*args, **kwargs)
 
     def format_telephone(self, number):
-        # 把所有非數字符號改為空字串(清除)
         number = re.sub(r"\D", "", number)
 
         # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX

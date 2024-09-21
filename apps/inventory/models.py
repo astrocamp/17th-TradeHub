@@ -39,6 +39,7 @@ class Inventory(models.Model):
     OUT_STOCK = "out_stock"
     LOW_STOCK = "low_stock"
     NORMAL = "normal"
+    NEW_STOCK = "new_stock"
 
     AVAILABLE_STATES = OUT_STOCK, LOW_STOCK, NORMAL
 
@@ -46,6 +47,7 @@ class Inventory(models.Model):
         (OUT_STOCK, "缺貨"),
         (LOW_STOCK, "低於安全庫存量"),
         (NORMAL, "正常"),
+        (NEW_STOCK, "新庫存"),
     ]
 
     state = FSMField(
@@ -106,4 +108,8 @@ class Inventory(models.Model):
 
     @transition(field=state, source="*", target=NORMAL)
     def set_normal(self):
+        pass
+
+    @transition(field=state, source="*", target=NEW_STOCK)
+    def set_new_stock(self):
         pass
