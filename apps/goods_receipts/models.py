@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -25,6 +26,13 @@ class GoodsReceipt(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="GoodsReceipt",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
     RECEIVING_METHOD_CHOICES = [

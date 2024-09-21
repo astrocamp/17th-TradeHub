@@ -3,6 +3,8 @@ import re
 from django.db import models
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
+
 
 class Client(models.Model):
     name = models.CharField(max_length=20)
@@ -11,6 +13,13 @@ class Client(models.Model):
     email = models.EmailField(unique=True)
     create_at = models.DateTimeField(auto_now_add=True)
     delete_at = models.DateTimeField(auto_now=True)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="Client",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True, max_length=150)
 
     def __str__(self):

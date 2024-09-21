@@ -1,6 +1,7 @@
 from django.db import models
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 from apps.purchase_orders.views import generate_order_number
@@ -17,6 +18,13 @@ class Inventory(models.Model):
     quantity = models.PositiveIntegerField()
     safety_stock = models.PositiveIntegerField()
     last_updated = models.DateTimeField(auto_now=True)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="Inventory",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True)
 
     def __str__(self):

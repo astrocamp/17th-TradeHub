@@ -3,6 +3,8 @@ import re
 from django.db import models
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
+
 
 class Supplier(models.Model):
     name = models.CharField(max_length=20)
@@ -12,6 +14,13 @@ class Supplier(models.Model):
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
     established_date = models.DateTimeField(auto_now_add=True)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="Supplier",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
 
     def __str__(self):

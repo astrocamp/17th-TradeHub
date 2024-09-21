@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
+
 from ..clients.models import Client
 from ..inventory.models import Inventory
 from ..products.models import Product
@@ -22,6 +24,13 @@ class Orders(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     stock_quantity = models.ForeignKey(
         Inventory, on_delete=models.CASCADE, related_name="orders"
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="Orders",
+        blank=True,
+        null=True,
     )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
