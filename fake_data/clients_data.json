@@ -8,7 +8,6 @@
       "address": "台北市信義區松仁路123號",
       "email": "xiaohua.chen@example.com",
       "create_at": "2024-09-01T12:34:56Z",
-      "delete_at": "2024-09-01T12:34:56Z",
       "note": "經理電話: 0912-654321"
     }
   },
@@ -21,7 +20,6 @@
       "address": "台北市中正區仁愛路456號",
       "email": "daming.li@example.com",
       "create_at": "2024-09-02T14:23:45Z",
-      "delete_at": "2024-09-02T14:23:45Z",
       "note": "備用電話: 0912-987654"
     }
   },
@@ -34,7 +32,6 @@
       "address": "台北市大安區和平東路789號",
       "email": "meili.lin@example.com",
       "create_at": "2024-09-03T09:15:30Z",
-      "delete_at": "2024-09-03T09:15:30Z",
       "note": "一次性大量購買"
     }
   },
@@ -47,7 +44,6 @@
       "address": "台北市士林區中正路101號",
       "email": "zhiming.wang@example.com",
       "create_at": "2024-09-04T11:05:22Z",
-      "delete_at": "2024-09-04T11:05:22Z",
       "note": ""
     }
   },
@@ -60,7 +56,6 @@
       "address": "台北市文山區興隆路202號",
       "email": "xiaoyan.huang@example.com",
       "create_at": "2024-09-05T13:20:10Z",
-      "delete_at": "2024-09-05T13:20:10Z",
       "note": "需要快速配送"
     }
   },
@@ -73,7 +68,6 @@
       "address": "台北市南港區經貿二路303號",
       "email": "wei.zhang@example.com",
       "create_at": "2024-09-06T15:35:25Z",
-      "delete_at": "2024-09-06T15:35:25Z",
       "note": "備用電話: 0912-765432"
     }
   },
@@ -86,7 +80,6 @@
       "address": "台北市北投區中央北路404號",
       "email": "yilin.tsai@example.com",
       "create_at": "2024-09-07T17:45:30Z",
-      "delete_at": "2024-09-07T17:45:30Z",
       "note": "經理電話: 0912-890123"
     }
   },
@@ -99,7 +92,6 @@
       "address": "台北市信義區光復南路505號",
       "email": "zhihao.hsu@example.com",
       "create_at": "2024-09-08T19:55:40Z",
-      "delete_at": "2024-09-08T19:55:40Z",
       "note": ""
     }
   },
@@ -112,7 +104,6 @@
       "address": "台北市中山區建國北路606號",
       "email": "yating.cheng@example.com",
       "create_at": "2024-09-09T21:05:50Z",
-      "delete_at": "2024-09-09T21:05:50Z",
       "note": ""
     }
   },
@@ -125,7 +116,6 @@
       "address": "台北市大同區民生西路707號",
       "email": "guanlin.lai@example.com",
       "create_at": "2024-09-10T22:15:00Z",
-      "delete_at": "2024-09-10T22:15:00Z",
       "note": "備用電話: 0912-890123; 偏好：高端商品"
     }
   },
@@ -138,7 +128,6 @@
       "address": "台北市松山區八德路808號",
       "email": "xiaolian.qiu@example.com",
       "create_at": "2024-09-11T23:25:10Z",
-      "delete_at": "2024-09-11T23:25:10Z",
       "note": "偏好：環保商品"
     }
   },
@@ -151,7 +140,6 @@
       "address": "台北市信義區市府路909號",
       "email": "guanyu.chen@example.com",
       "create_at": "2024-09-12T00:35:20Z",
-      "delete_at": "2024-09-12T00:35:20Z",
       "note": "備用電話: 0912-234567; 偏好：促銷活動"
     }
   },
@@ -164,7 +152,6 @@
       "address": "台北市萬華區西園路1010號",
       "email": "mingjie.hsieh@example.com",
       "create_at": "2024-09-13T01:45:30Z",
-      "delete_at": "2024-09-13T01:45:30Z",
       "note": "經理電話: 0912-345678; 偏好：經常購買"
     }
   },
@@ -177,7 +164,6 @@
       "address": "台北市中正區和平西路1111號",
       "email": "zhiwei.chu@example.com",
       "create_at": "2024-09-14T02:55:40Z",
-      "delete_at": "2024-09-14T02:55:40Z",
       "note": "備用電話: 0912-678901; 偏好：商品試用"
     }
   },
@@ -190,7 +176,6 @@
       "address": "台北市南港區經貿路1212號",
       "email": "yijun.lin@example.com",
       "create_at": "2024-09-15T04:05:50Z",
-      "delete_at": "2024-09-15T04:05:50Z",
       "note": "組長電話: 0912-890123"
     }
   },
@@ -203,7 +188,6 @@
       "address": "台北市士林區中山北路1313號",
       "email": "zihao.lin@example.com",
       "create_at": "2024-09-16T05:15:00Z",
-      "delete_at": "2024-09-16T05:15:00Z",
       "note": "備用電話: 0912-321098; 偏好：高端服務"
     }
   }

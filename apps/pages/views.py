@@ -8,7 +8,7 @@ from bokeh.palettes import Category20c
 from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.transform import cumsum
-from django.db.models import Sum
+from django.db.models import Count, Sum
 from django.shortcuts import render
 from django.utils import timezone
 
@@ -32,7 +32,7 @@ def sales_chart(request):
     )
     orders_pending_num = len(
         Orders.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
+            deleted_at=None, state="to_be_confirmed"
         )
     )
     sales_orders_num = len(
@@ -66,12 +66,12 @@ def sales_chart(request):
     )
     goods_receipts_progress_num = len(
         GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
+            deleted_at=None, state="to_be_stocked"
         )
     )
     goods_receipts_pending_num = len(
         GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
+            deleted_at=None, state="to_be_restocked"
         )
     )
 
@@ -106,9 +106,13 @@ def sales_chart(request):
         deleted_at=None,
     ).count()
 
-    vip_clients = len(Client.objects.values("name"))
-
-    clients_name = len(Client.objects.values("name"))
+    vip_clients = (
+        Client.objects.annotate(
+            total_quantity=Count("orders"), total_amount=Sum("orders__price")
+        )
+        .filter(total_quantity__gt=0)
+        .order_by("-total_quantity")[:5]
+    )
 
     sales_data = (
         sales_orders.values("product__product_name")
@@ -128,11 +132,22 @@ def sales_chart(request):
         df["angle"] = [2 * pi]  # 100%
         df["color"] = ["#d9d9d9"]
     else:
-        if num_products <= 20:
-            palette = Category20c[num_products]
+        # 如果產品數量少於 3，給定一個預設的調色板
+        if num_products == 1:
+            palette = ["#1f77b4"]  # 單一顏色，例如藍色
+        elif num_products == 2:
+            palette = ["#1f77b4", "#ff7f0e"]  # 兩個顏色
+        elif num_products <= 20:
+            palette = Category20c[
+                num_products
+            ]  # 如果產品數量 <= 20，使用相應大小的調色板
         else:
-            palette = Category20c[20]
-        df["color"] = palette[:num_products]
+            palette = Category20c[20]  # 如果產品數量 > 20，使用最大的調色板
+            # 若產品數量超過 20，則需要重複顏色
+            extra_colors = num_products - 20
+            palette += palette[:extra_colors]  # 重複部分顏色來滿足更多的產品數量
+
+        df["color"] = palette[:num_products]  # 給產品分配顏色
     source1 = ColumnDataSource(df)
 
     p1 = figure(

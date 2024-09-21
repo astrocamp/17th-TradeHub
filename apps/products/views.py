@@ -1,18 +1,17 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from datetime import datetime, timedelta, timezone
-
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
-from apps.inventory.models import Inventory
 
 from .forms.product_form import FileUploadForm, ProductForm
 
