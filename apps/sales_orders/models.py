@@ -24,11 +24,14 @@ class SalesOrder(models.Model):
         Inventory, on_delete=models.PROTECT, related_name="sales_orders"
     )
     price = models.PositiveIntegerField()
+    note = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True)
 
     objects = SalesOrderManager()
+
+    is_finished = models.BooleanField(default=False)
 
     def delete(self):
         self.deleted_at = timezone.now()

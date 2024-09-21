@@ -46,29 +46,26 @@
             {% endfor %}
 
 
-            <!-- 子表單 -->
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">商品項目</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">採購單細項</h2>
 
-                <!-- 表頭 -->
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">數量</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">價格</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品數量</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">商品進價</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
                     <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
                         新增
                     </button>
                 </div>
 
-                <!-- 表單子項目 -->
                 <div id="formset-items">
                 {% for form in formset %}
                     <fieldset class="p-4 pb-2   bg-gray-100 items-center">
 
                         <div class="flex items-center gap-4">
-                            {{ form.id }} <!-- 隱藏的 ID 欄位 -->
+                            {{ form.id }}
                             <div class="flex-1">{{ form.product }}</div>
                             <div class="flex-1">{{ form.quantity }}</div>
                             <div class="flex-1">{{ form.cost_price }}</div>
@@ -85,7 +82,6 @@
                 </div>
             </div>
 
-            <!-- 新增按鈕 -->
 
             <div class="col-span-full flex justify-center gap-4">
                 <button type="submit" class="w-1/2 bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold">確認更新</button>
