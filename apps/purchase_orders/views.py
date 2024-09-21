@@ -118,13 +118,6 @@ def delete(request, id):
     return redirect("purchase_orders:index")
 
 
-@require_POST
-def delete_selected_purchase_orders(request):
-    selected_purchase_orders = request.POST.getlist("selected_purchase_orders")
-    PurchaseOrder.objects.filter(id__in=selected_purchase_orders).delete()
-    return redirect("purchase_orders:index")
-
-
 def get_product_item_formset(extra):
     return inlineformset_factory(
         PurchaseOrder,

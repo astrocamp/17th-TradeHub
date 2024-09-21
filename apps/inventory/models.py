@@ -20,7 +20,7 @@ class Inventory(models.Model):
     note = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.product} - {self.get_state_display()} ({self.quantity})"
+        return f"{self.quantity}"
 
     OUT_STOCK = "out_stock"
     LOW_STOCK = "low_stock"

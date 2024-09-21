@@ -38,7 +38,9 @@ class SalesOrder(models.Model):
         self.save()
 
     def __repr__(self):
-        return f"訂單 #{self.id} - 客戶: {self.client.name} ({self.created_at.date()})"
+        return (
+            f"訂購單 #{self.id} - 客戶: {self.client.name} ({self.created_at.date()})"
+        )
 
     PENDING = "pending"
     PROGRESS = "progress"
