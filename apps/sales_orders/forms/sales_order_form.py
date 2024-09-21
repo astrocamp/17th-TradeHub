@@ -104,9 +104,16 @@ class SalesOrderForm(forms.ModelForm):
 class SalesOrderProductItemForm(forms.ModelForm):
     class Meta:
         model = SalesOrderProductItem
-        fields = ["product", "shipped_quantity", "sale_price", "subtotal"]
+        fields = [
+            "product",
+            "ordered_quantity",
+            "shipped_quantity",
+            "sale_price",
+            "subtotal",
+        ]
         widgets = {
             "product": forms.Select(attrs={"class": "w-full"}),
+            "ordered_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "shipped_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "sale_price": forms.NumberInput(attrs={"class": "w-full"}),
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),

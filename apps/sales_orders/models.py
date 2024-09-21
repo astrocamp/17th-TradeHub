@@ -89,8 +89,11 @@ class SalesOrder(models.Model):
 
 
 class SalesOrderProductItem(models.Model):
-    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(
+        "SalesOrder", on_delete=models.CASCADE, related_name="items"
+    )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    ordered_quantity = models.PositiveIntegerField()
     shipped_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
