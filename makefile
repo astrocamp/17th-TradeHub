@@ -37,3 +37,6 @@ mg: migration migrate
 
 all: mg data server
 	@echo "Migration, data loading, and server start complete."
+
+collectstatic:
+	python manage.py collectstatic

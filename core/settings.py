@@ -39,7 +39,12 @@ SECRET_KEY = os.getenv("APP_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = is_dev()
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "18.183.80.89",  # 公共IP
+    "127.0.0.1",  # 本地IP
+    "www.tradehub17th.com",
+    "tradehub17th.com",
+]
 
 
 # Application definition
@@ -75,6 +80,7 @@ if is_dev():
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -85,7 +91,7 @@ MIDDLEWARE = [
     "apps.users.middleware.middleware.LoginRequiredMiddleware",
 ]
 
-# 未登入時導向的頁面（登入頁面），如果後續用到login_required裝飾器，也會自動導向這個頁面
+# 未登入時導向的頁面（登入頁面）
 LOGIN_URL = "/users/log_in/"
 LOGOUT_URL = "/users/log_out/"
 LOGIN_REDIRECT_URL = "/"
@@ -122,30 +128,30 @@ WSGI_APPLICATION = "core.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+# 開發時使用sqlite，部署時使用postgresql
+if is_dev():
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
     }
-}
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": os.getenv("DB_NAME"),
+            "USER": os.getenv("DB_USER"),
+            "PASSWORD": os.getenv("DB_PASSWORD"),
+            "HOST": os.getenv("DB_HOST"),
+            "PORT": os.getenv("DB_PORT", 5432),
+        }
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-]
+AUTH_PASSWORD_VALIDATORS = []
 
 AUTH_USER_MODEL = "users.CustomUser"
 
@@ -165,9 +171,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+
+# 開發時的靜態檔案路徑
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
+
+# 部署時的靜態檔案路徑，收集靜態檔案到這個路徑
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

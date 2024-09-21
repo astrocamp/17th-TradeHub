@@ -36,20 +36,16 @@ class LoginForm(forms.Form):
         return username
 
     def clean_password(self):
-        password = self.cleaned_data.get("password")
-        if password == "":
-            self.add_error("password", "請輸入您的密碼")
-        return password
-
-    def clean(self):
         cleaned_data = super().clean()
         username = cleaned_data.get("username")
         password = cleaned_data.get("password")
 
         user = authenticate(username=username, password=password)
 
-        if username and password:
-            if user is None:
-                raise forms.ValidationError("帳號或密碼錯誤")
+        if username:
+            if password and user is None:
+                raise forms.ValidationError("您的密碼輸入錯誤")
+            elif not password:
+                raise forms.ValidationError("請輸入您的密碼")
 
-        return cleaned_data
+        return password

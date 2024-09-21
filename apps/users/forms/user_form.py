@@ -101,9 +101,11 @@ class CustomUserCreationForm(UserCreationForm):
 
     def clean_password2(self):
         password2 = self.cleaned_data.get("password2")
-
+        password1 = self.cleaned_data.get("password1")
         if password2 == "":
             raise forms.ValidationError("請再次輸入您的密碼")
+        if password1 != password2:
+            raise forms.ValidationError("兩次密碼不一致")
 
         return password2
 

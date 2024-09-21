@@ -76,7 +76,7 @@ def log_in(request):
 def log_out(request):
     if request.method == "POST":
         logout(request)
-        messages.success(request, "登出成功!")
+        messages.success(request, "成功登出！")
         return redirect("pages:home")
 
 
@@ -93,7 +93,7 @@ def reset_password(request):
                 return render(
                     request,
                     "users/reset_password.html",
-                    {"error": "此用戶不存在."},
+                    {"error": "此帳號不存在"},
                 )
 
             if password == password_confirm:
@@ -101,13 +101,13 @@ def reset_password(request):
                 user.save()
                 user.backend = "django.contrib.auth.backends.ModelBackend"
                 login(request, user)
-                messages.success(request, "密碼重設成功!")
+                messages.success(request, "成功修改密碼！")
                 return redirect("users:log_in")
             else:
                 return render(
                     request,
                     "users/reset_password.html",
-                    {"error": "Password does not match."},
+                    {"error": "密碼不一致"},
                 )
 
         else:

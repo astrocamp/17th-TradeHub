@@ -4,12 +4,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     const costPriceInput = document.querySelector('input[name$="-cost_price"]');
-    const quantityInput = document.querySelector('input[name$="-quantity"]');
-    const quantityInputs = document.querySelectorAll('input[name$="-quantity"]');
+    const orderedQuantityInput = document.querySelector('input[name$="-ordered_quantity"]');
+    const receivedQuantityInput = document.querySelector('input[name$="-received_quantity"]');
+    const orderedQuantityInputs = document.querySelectorAll('input[name$="-ordered_quantity"]');
+    const receivedQuantityInputs = document.querySelectorAll('input[name$="-received_quantity"]');
     const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
     let formCount = parseInt(totalForms.value);
 
-    quantityInputs.forEach(input => {
+    orderedQuantityInputs.forEach(input => {
+        input.setAttribute('min', '1');
+    });
+    receivedQuantityInputs.forEach(input => {
         input.setAttribute('min', '1');
     });
     subtotalInputs.forEach(input =>{
@@ -21,7 +26,8 @@ document.addEventListener('DOMContentLoaded', () => {
             productSelect.disabled = disabled;
         });
         costPriceInput.readOnly = disabled;
-        quantityInput.readOnly = disabled;
+        orderedQuantityInput.readOnly = disabled;
+        receivedQuantityInput.readOnly = disabled;
         addItemButton.disabled = disabled;
     }
 
@@ -69,20 +75,20 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 計算金額
     formsetItems.addEventListener('input', (event) => {
-        if (event.target.matches('input[name$="-quantity"], input[name$="-cost_price"]')) {
+        if (event.target.matches('input[name$="-received_quantity"], input[name$="-cost_price"]')) {
             const row = event.target.closest('fieldset');
-            const quantityInput = row.querySelector('input[name$="-quantity"]');
+            const receivedQuantity = row.querySelector('input[name$="-received_quantity"]');
             const costPriceInput = row.querySelector('input[name$="-cost_price"]');
             const subtotalInput = row.querySelector('input[name$="-subtotal"]');
-            if (quantityInput && costPriceInput && subtotalInput) {
-                subtotalInput.value = Math.round(quantityInput.value * costPriceInput.value);
+            if (receivedQuantity && costPriceInput && subtotalInput) {
+                subtotalInput.value = Math.round(receivedQuantity.value * costPriceInput.value);
                 updateTotalAmount();
             }
         }
     });
 
     function fetchSupplierInfo(supplierId) {
-        fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)
+        fetch(`/goods_receipts/load_supplier_info/?supplier_id=${supplierId}`)
             .then(response => response.json())
             .then(data => {
                 document.getElementById('id_supplier_tel').value = data.supplier_tel;
@@ -93,7 +99,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 costPriceInputs.forEach(input => {
                     input.value = '';
                 });
-                quantityInputs.forEach(input => {
+                receivedQuantityInputs.forEach(input => {
+                    input.value = '';
+                });
+                orderedQuantityInputs.forEach(input => {
                     input.value = '';
                 });
                 subtotalInputs.forEach(input => {
@@ -138,14 +147,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productId = this.value;
                 const fieldset = this.closest('fieldset');
                 const costPriceInput = fieldset.querySelector('input[name$="-cost_price"]');
-                const quantityInput = fieldset.querySelector('input[name$="-quantity"]');
+                const receivedQuantityInput = fieldset.querySelector('input[name$="-received_quantity"]');
+                const orderedQuantityInput = fieldset.querySelector('input[name$="-ordered_quantity"]');
                 const subtotalInput = fieldset.querySelector('input[name$="-subtotal"]');
                 fetch(`/purchase_orders/load_product_info/?id=${productId}`)
                     .then(response => response.json())
                     .then(data => {
                         costPriceInput.value = data.cost_price;
-                        quantityInput.value = 1;
-                        subtotalInput.value = quantityInput.value*costPriceInput.value;
+                        orderedQuantityInput.value = 1;
+                        receivedQuantityInput.value = 1;
+                        subtotalInput.value = receivedQuantityInput.value*costPriceInput.value;
                         updateTotalAmount();
                     });
 
