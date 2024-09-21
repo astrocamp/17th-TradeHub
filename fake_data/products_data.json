@@ -358,5 +358,186 @@
             "supplier": 10,
             "note": "新鮮雞腿"
         }
-    }
+    },
+    {
+        "model": "inventory.inventory",
+        "pk": 16,
+        "fields": {
+          "product": 16,
+          "supplier": 6,
+          "quantity": 120,
+          "safety_stock": 20,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "冷凍雞胸肉"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 17,
+        "fields": {
+          "product": 17,
+          "supplier": 6,
+          "quantity": 100,
+          "safety_stock": 15,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "冷凍豬排"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 18,
+        "fields": {
+          "product": 18,
+          "supplier": 6,
+          "quantity": 200,
+          "safety_stock": 25,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "冷凍魚片"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 19,
+        "fields": {
+          "product": 19,
+          "supplier": 7,
+          "quantity": 300,
+          "safety_stock": 40,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "蘋果"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 20,
+        "fields": {
+          "product": 20,
+          "supplier": 7,
+          "quantity": 500,
+          "safety_stock": 60,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "香蕉"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 21,
+        "fields": {
+          "product": 21,
+          "supplier": 7,
+          "quantity": 350,
+          "safety_stock": 50,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "葡萄"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 22,
+        "fields": {
+          "product": 22,
+          "supplier": 8,
+          "quantity": 400,
+          "safety_stock": 70,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "啤酒"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 23,
+        "fields": {
+          "product": 23,
+          "supplier": 8,
+          "quantity": 150,
+          "safety_stock": 30,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "紅酒"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 24,
+        "fields": {
+          "product": 24,
+          "supplier": 8,
+          "quantity": 200,
+          "safety_stock": 40,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "白酒"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 25,
+        "fields": {
+          "product": 25,
+          "supplier": 9,
+          "quantity": 800,
+          "safety_stock": 100,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "鹽"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 26,
+        "fields": {
+          "product": 26,
+          "supplier": 9,
+          "quantity": 600,
+          "safety_stock": 90,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "糖"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 27,
+        "fields": {
+          "product": 27,
+          "supplier": 9,
+          "quantity": 450,
+          "safety_stock": 70,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "胡椒粉"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 28,
+        "fields": {
+          "product": 28,
+          "supplier": 10,
+          "quantity": 250,
+          "safety_stock": 50,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "豬肉"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 29,
+        "fields": {
+          "product": 29,
+          "supplier": 10,
+          "quantity": 200,
+          "safety_stock": 40,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "牛肉"
+        }
+      },
+      {
+        "model": "inventory.inventory",
+        "pk": 30,
+        "fields": {
+          "product": 30,
+          "supplier": 10,
+          "quantity": 300,
+          "safety_stock": 60,
+          "last_updated": "2024-09-15T12:00:00Z",
+          "note": "雞腿"
+        }
+      }
+
 ]
