@@ -242,9 +242,9 @@ def export_excel(request):
 #             instance.is_finished = False
 
 
-def transform_sales_order(request, id):
-    order = get_object_or_404(Order, id=id)
-    order.is_finished = True
-    order.save()
-    messages.success(request, "轉銷貨單完成!")
-    return redirect("orders:index")
+# def transform_sales_order(request, id):
+#     order = get_object_or_404(Orders, id=id)
+#     order.is_finished = True
+#     order.save()
+#     messages.success(request, "轉銷貨單完成!")
+#     return redirect("orders:index")

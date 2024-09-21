@@ -58,6 +58,11 @@ class SalesOrderForm(forms.ModelForm):
                     "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
                 }
             ),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
+                }
+            ),
         }
         # help_texts = {
         #     "client": "請輸入客戶名稱。",
