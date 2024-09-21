@@ -6,11 +6,7 @@ from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.clients.models import Client
-from apps.inventory.models import Inventory
-from apps.products.models import Product
-
-from .forms.sales_order_form import FileUploadForm, SalesOrderForm
+from .forms.sales_order_form import SalesOrderForm
 from .models import SalesOrder
 
 
@@ -28,7 +24,6 @@ def index(request):
     paginator = Paginator(sales_orders, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    has_import = False
 
     content = {
         "sales_orders": page_obj,
@@ -36,7 +31,6 @@ def index(request):
         "is_desc": is_desc,
         "order_by": order_by,
         "page_obj": page_obj,
-        "has_import": has_import,
     }
 
     return render(request, "sales_orders/index.html", content)
@@ -75,71 +69,6 @@ def delete(request, id):
     sales_orders.delete()
     messages.success(request, "刪除完成!")
     return redirect("sales_orders:index")
-
-
-def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-            if file.name.endswith(".csv"):
-
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)
-
-                for row in reader:
-                    if len(row) < 1:
-                        continue
-
-                    client = Client.objects.get(id=row[0])
-                    product = Product.objects.get(id=row[1])
-                    stock = Inventory.objects.get(id=row[3])
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=row[2],
-                        stock=stock,
-                        price=row[4],
-                    )
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("sales_orders:index")
-
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "客戶": "client",
-                        "商品": "product",
-                        "數量": "quantity",
-                        "庫存": "stock",
-                        "價位": "price",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
-
-                    client = Client.objects.get(id=int(row["client"]))
-                    product = Product.objects.get(id=int(row["product"]))
-                    stock = Inventory.objects.get(id=int(row["stock"]))
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=str(row["quantity"]),
-                        stock=stock,
-                        price=str(row["price"]),
-                    )
-
-                messages.success(request, "成功匯入 Excel")
-                return redirect("sales_orders:index")
-
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
-
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
 
 
 def export_csv(request):
