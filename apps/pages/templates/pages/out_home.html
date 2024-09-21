@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+<div class="hero min-h-screen">
+  <img src="{% static 'images/home.jpg' %}" alt="home page" />
+  <div class="hero-overlay bg-opacity-80"></div>
+  <div class="hero-content text-neutral-content text-center">
+    <div class="max-w-md">
+      <h1 class="mb-5 text-5xl font-bold">您好</h1>
+      <p class="mb-5">
+        是否用傳統 Excel 管理進銷存? 是否不知如何倉管?
+        <br />
+        我們是幫您處理進銷存後台倉管!
+      </p>
+      <button class="btn btn-primary">開始使用</button>
+    </div>
+  </div>
+</div>
+{% endblock %}
