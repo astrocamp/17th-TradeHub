@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     const salePriceInput = document.querySelector('input[name$="-sale_price"]');
+    const stockQuantitySelects = document.querySelectorAll('select[name$="-stock_quantity"]');
     const orderedQuantityInput = document.querySelector('input[name$="-ordered_quantity"]');
     const shippedQuantityInput = document.querySelector('input[name$="-shipped_quantity"]');
     const orderedQuantityInputs = document.querySelectorAll('input[name$="-ordered_quantity"]');
@@ -20,6 +21,9 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
+    // stockQuantitySelects.forEach(select =>{
+    //     select.disabled = true;
+    // })
 
 
     // 自動填入客戶資訊
@@ -125,6 +129,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const productId = this.value;
                 const fieldset = this.closest('fieldset');
                 const salePriceInput = fieldset.querySelector('input[name$="-sale_price"]');
+                const stockQuantitySelect = fieldset.querySelector('select[name$="-stock_quantity"]');
                 const shippedQuantityInput = fieldset.querySelector('input[name$="-shipped_quantity"]');
                 const orderedQuantityInput = fieldset.querySelector('input[name$="-ordered_quantity"]');
                 const subtotalInput = fieldset.querySelector('input[name$="-subtotal"]');
@@ -132,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     .then(response => response.json())
                     .then(data => {
                         salePriceInput.value = data.sale_price;
+                        stockQuantitySelect.value = productId;
                         shippedQuantityInput.value = 1;
                         orderedQuantityInput.value = 1;
                         subtotalInput.value = shippedQuantityInput.value*salePriceInput.value;

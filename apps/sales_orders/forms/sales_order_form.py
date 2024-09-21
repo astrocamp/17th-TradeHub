@@ -55,12 +55,9 @@ class SalesOrderForm(forms.ModelForm):
             ),
             "note": forms.Textarea(
                 attrs={
-                    "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
-                }
-            ),
-            "note": forms.Textarea(
-                attrs={
-                    "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
+                    "class": "w-full",
+                    "rows": 3,
+                    "placeholder": "請輸入備註",
                 }
             ),
         }

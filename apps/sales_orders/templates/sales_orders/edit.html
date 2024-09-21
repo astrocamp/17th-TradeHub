@@ -52,6 +52,7 @@
 
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">庫存數量</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">訂購數量</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">銷貨數量</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品售價</span>
@@ -68,6 +69,7 @@
                         <div class="flex items-center gap-4">
                             {{ form.id }}
                             <div class="flex-1">{{ form.product }}</div>
+                            <div class="flex-1">{{ form.stock_quantity }}</div>
                             <div class="flex-1">{{ form.ordered_quantity }}</div>
                             <div class="flex-1">{{ form.shipped_quantity }}</div>
                             <div class="flex-1">{{ form.sale_price }}</div>
