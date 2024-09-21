@@ -92,15 +92,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('id_client_email').value = data.client_email;
                 handleProductChange();
                 const salePriceInputs = document.querySelectorAll('input[name$="-sale_price"]');
-                salePriceInputs.forEach(input => {
-                    input.value = '';
-                });
-                orderedQuantityInputs.forEach(input => {
-                    input.value = '';
-                });
-                subtotalInputs.forEach(input => {
-                    input.value = '';
-                });
+                // salePriceInputs.forEach(input => {
+                //     input.value = '';
+                // });
+                // orderedQuantityInputs.forEach(input => {
+                //     input.value = '';
+                // });
+                // subtotalInputs.forEach(input => {
+                //     input.value = '';
+                // });
             });
     }
 

@@ -91,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('id_supplier_email').value = data.supplier_email;
                 updateProductOptions(data.products);
                 const costPriceInputs = document.querySelectorAll('input[name$="-cost_price"]');
+                const quantityInputs = document.querySelectorAll('input[name$="-quantity"]');
+                const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
                 costPriceInputs.forEach(input => {
                     input.value = '';
                 });
@@ -100,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtotalInputs.forEach(input => {
                     input.value = '';
                 });
+                updateTotalAmount();
             });
     }
 
