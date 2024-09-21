@@ -34,7 +34,9 @@
           </div>
           <div class="stat-title">客戶</div>
           <div class="stat-value">{{clients_num}}位</div>
-          <div class="stat-desc">Jan 1st - Feb 1st</div>
+          <div class="stat-desc">
+            {% if clients_month_num %}↗︎{% endif %} {{clients_month_num}}人
+          </div>
         </div>
       </a>
       <a href="{% url 'products:index' %}">
@@ -130,7 +132,9 @@
           </div>
           <div class="stat-title">商品</div>
           <div class="stat-value">{{products_num}}個</div>
-          <div class="stat-desc">↗︎ 340 (62%)</div>
+          <div class="stat-desc">
+            {% if products_month_num %}↗︎{% endif %} {{products_month_num}}個
+          </div>
         </div>
       </a>
       <a href="{% url 'suppliers:index' %}">

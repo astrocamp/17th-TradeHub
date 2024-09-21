@@ -2,6 +2,12 @@ import re
 
 from django.db import models
 from django_fsm import FSMField, transition
+from django.utils import timezone
+
+
+class ClientManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Client(models.Model):
@@ -10,8 +16,14 @@ class Client(models.Model):
     address = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     create_at = models.DateTimeField(auto_now_add=True)
-    delete_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True, null=True, max_length=150)
+
+    objects = ClientManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name

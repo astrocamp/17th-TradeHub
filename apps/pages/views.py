@@ -9,6 +9,8 @@ from bokeh.resources import CDN
 from bokeh.transform import cumsum
 from django.db.models import Sum
 from django.shortcuts import render
+from django.utils import timezone
+from datetime import timedelta
 
 from apps.clients.models import Client
 from apps.goods_receipts.models import GoodsReceipt
@@ -78,6 +80,22 @@ def sales_chart(request):
     suppliers_num = len(Supplier.objects.values("name"))
     inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
 
+    now = timezone.now()
+    first_day_of_month = now.replace(day=1)
+    last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(
+        day=1
+    ) - timedelta(days=1)
+
+    clients_month_num = Client.objects.filter(
+        create_at__range=(first_day_of_month, last_day_of_month),
+        deleted_at=None,
+    ).count()
+
+    products_month_num = Product.objects.filter(
+        create_at__range=(first_day_of_month, last_day_of_month),
+        deleted_at=None,
+    ).count()
+
     clients_name = len(Client.objects.values("name"))
 
     sales_data = (
@@ -93,7 +111,12 @@ def sales_chart(request):
     df = pd.DataFrame(data)
     df["angle"] = df["quantity"] / df["quantity"].sum() * 2 * pi
     num_products = len(df)
-    palette = Category20c[num_products] if num_products <= 20 else Category20c[20]
+    if num_products == 0:
+        palette = []
+    elif num_products <= 20:
+        palette = Category20c[num_products]
+    else:
+        palette = Category20c[20]
     df["color"] = palette[:num_products]
     source1 = ColumnDataSource(df)
 
@@ -148,6 +171,8 @@ def sales_chart(request):
         "purchase_orders_pending_num": purchase_orders_pending_num,
         "goods_receipts_progress_num": goods_receipts_progress_num,
         "goods_receipts_pending_num": goods_receipts_pending_num,
+        "clients_month_num": clients_month_num,
+        "products_month_num": products_month_num,
     }
 
     return render(request, "pages/sales_chart.html", content)

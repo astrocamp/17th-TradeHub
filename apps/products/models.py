@@ -1,7 +1,12 @@
 from django.db import models
 from django_fsm import FSMField, transition
-
+from django.utils import timezone
 from apps.suppliers.models import Supplier
+
+
+class ProductManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Product(models.Model):
@@ -13,6 +18,14 @@ class Product(models.Model):
         Supplier, on_delete=models.PROTECT, related_name="products", default=0
     )
     note = models.TextField(blank=True, null=True)
+    create_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(null=True)
+
+    objects = ProductManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.product_name
