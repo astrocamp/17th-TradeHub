@@ -214,9 +214,9 @@ def export_sample(request):
     data = {
         "product_number": ["P033"],
         "product_name": ["米"],
-        "cost_price": [100],
-        "sale_price": [120],
-        "supplier": [1],
+        "cost_price": ["100"],
+        "sale_price": ["120"],
+        "supplier": ["1"],
         "note": ["這是一個備註"],
     }
 

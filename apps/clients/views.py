@@ -180,7 +180,7 @@ def export_sample(request):
 
     data = {
         "name": ["陳小明"],
-        "phone_number": [914408235],
+        "phone_number": ["0914408235"],
         "address": [
             "台北市中正區XX路XX號",
         ],

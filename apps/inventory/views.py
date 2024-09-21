@@ -228,10 +228,10 @@ def export_sample(request):
     response["Content-Disposition"] = "attachment; filename=InventorySample.xlsx"
 
     data = {
-        "product": [2],
-        "supplier": [1],
-        "quantity": [150],
-        "safety_stock": [30],
+        "product": ["2"],
+        "supplier": ["1"],
+        "quantity": ["150"],
+        "safety_stock": ["30"],
         "note": ["備註"],
     }
 
