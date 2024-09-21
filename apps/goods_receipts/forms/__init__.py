@@ -1,1 +1,1 @@
-from .goods_receipt_form import GoodsReceiptForm
+from .goods_receipts_form import GoodsReceiptForm

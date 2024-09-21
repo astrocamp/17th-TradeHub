@@ -3,19 +3,24 @@ import re
 from django import forms
 from django.forms import inlineformset_factory
 
-from apps.purchase_orders.models import ProductItem, PurchaseOrder
+from apps.goods_receipts.models import GoodsReceipt, GoodsReceiptProductItem
 
 
-class PurchaseOrderForm(forms.ModelForm):
+class FileUploadForm(forms.Form):
+    file = forms.FileField()
+
+
+class GoodsReceiptForm(forms.ModelForm):
     class Meta:
-        model = PurchaseOrder
+        model = GoodsReceipt
         fields = [
             "supplier",
             "supplier_tel",
             "contact_person",
             "supplier_email",
-            "note",
+            "receiving_method",
             "amount",
+            "note",
         ]
         labels = {
             "supplier": "供應商名稱",
@@ -24,6 +29,7 @@ class PurchaseOrderForm(forms.ModelForm):
             "supplier_email": "供應商Email",
             "note": "備註",
             "amount": "總金額",
+            "receiving_method": "運送方式",
         }
         widgets = {
             "supplier": forms.Select(
@@ -45,6 +51,12 @@ class PurchaseOrderForm(forms.ModelForm):
                     "placeholder": "請輸入備註",
                 }
             ),
+            "receiving_method": forms.Select(
+                attrs={
+                    "class": "w-full",
+                    "placeholder": "請輸入運送方式",
+                }
+            ),
         }
         # help_texts = {
         #     "supplier": "請輸入供應商名稱。",
@@ -52,6 +64,7 @@ class PurchaseOrderForm(forms.ModelForm):
         #     "contact_person":"請輸入聯絡人。",
         #     "supplier_email":"請輸入供應商Email。",
         #     "note": "請輸入備註。",
+        #     "receiving_method":"自取，貨運。",
         # }
 
     def __init__(self, *args, **kwargs):
@@ -66,6 +79,7 @@ class PurchaseOrderForm(forms.ModelForm):
         contact_person = cleaned_data.get("contact_person")
         supplier_email = cleaned_data.get("supplier_email")
         amount = cleaned_data.get("amount")
+        receiving_method = cleaned_data.get("receiving_method")
 
         if not supplier:
             self.add_error("supplier", "供應商名稱為必填")
@@ -81,23 +95,36 @@ class PurchaseOrderForm(forms.ModelForm):
         if supplier_email == "":
             self.add_error("supplier_email", "供應商Email為必填")
         if amount == 0:
-            self.add_error("amount", "請填寫下方採購單細項")
+            self.add_error("amount", "請填寫下方進貨單細項")
+        if not receiving_method:
+            self.add_error("receiving_method", "運送方式為必填")
 
         return cleaned_data
 
 
-class ProductItemForm(forms.ModelForm):
+class GoodsReceiptProductItemForm(forms.ModelForm):
     class Meta:
-        model = ProductItem
-        fields = ["product", "quantity", "cost_price", "subtotal"]
+        model = GoodsReceiptProductItem
+        fields = [
+            "product",
+            "ordered_quantity",
+            "received_quantity",
+            "cost_price",
+            "subtotal",
+        ]
         widgets = {
             "product": forms.Select(attrs={"class": "w-full"}),
-            "quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "ordered_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
+            "received_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "cost_price": forms.NumberInput(attrs={"class": "w-full"}),
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
         }
 
 
 ProductItemFormSet = inlineformset_factory(
-    PurchaseOrder, ProductItem, form=ProductItemForm, extra=1, can_delete=True
+    GoodsReceipt,
+    GoodsReceiptProductItem,
+    form=GoodsReceiptProductItemForm,
+    extra=1,
+    can_delete=True,
 )

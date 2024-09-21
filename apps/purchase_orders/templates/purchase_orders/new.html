@@ -5,7 +5,6 @@
         <form action="{% url 'purchase_orders:new' %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {% csrf_token %}
 
-            <!-- Display purchaser information -->
             <div class=" flex justify-between items-end col-span-full p-2 px-4">
                 <h2 class="text-2xl font-bold text-gray-800">新增採購單</h2>
                 <div class="text-gray-700">
@@ -14,7 +13,6 @@
                 </div>
             </div>
 
-            <!-- Form fields -->
             {% for field in form %}
                 {% if field.name == 'amount' %}
                     <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
@@ -48,7 +46,6 @@
                 {% endif %}
             {% endfor %}
 
-            <!-- Subform for purchase order items -->
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
                 <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">採購單細項</h2>
@@ -64,7 +61,6 @@
                     </button>
                 </div>
 
-                <!-- Table rows -->
                 <div id="formset-items">
                     {% for form in formset %}
                         <fieldset class="p-3 bg-gray-100 ">
@@ -85,7 +81,6 @@
                 </div>
             </div>
 
-            <!-- Submit and cancel buttons -->
             <div class="col-span-full flex space-x-4">
                 <button type="submit" class="w-full bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition">
                     確認新增
