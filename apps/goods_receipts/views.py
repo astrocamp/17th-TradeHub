@@ -1,22 +1,31 @@
 import csv
-from datetime import datetime, timedelta, timezone
 
 import pandas as pd
+import pytz
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db import transaction
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.http import HttpResponse
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
-from .forms.goods_receipt_form import FileUploadForm, GoodsReceiptForm
+from .forms.goods_receipts_form import (
+    FileUploadForm,
+    GoodsReceiptForm,
+    GoodsReceiptProductItemForm,
+    ProductItemFormSet,
+)
+from .models import GoodsReceipt, GoodsReceiptProductItem
+
+# from datetime import datetime, timedelta, timezone
 
 
 def index(request):
@@ -41,67 +50,131 @@ def index(request):
         "order_by": order_by,
         "page_obj": page_obj,
     }
-    if request.method == "POST":
-        form = GoodsReceiptForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect("goods_receipts:index")
-        return render(request, "goods_receipts/new.html", {"form": form})
+
     return render(request, "goods_receipts/index.html", content)
 
 
 def new(request):
+    new_order_number = generate_order_number()
     if request.method == "POST":
         form = GoodsReceiptForm(request.POST)
-        if form.is_valid():
-            form.save()
+        formset = ProductItemFormSet(request.POST, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
+            order = form.save(commit=False)
+            order.order_number = new_order_number
+            order.username = request.user.username
+            order.save()
+            formset.instance = order
+            formset.save()
             return redirect("goods_receipts:index")
-        return render(request, "goods_receipts/new.html", {"form": form})
+        else:
+            return render(
+                request, "goods_receipts/new.html", {"form": form, "formset": formset}
+            )
     form = GoodsReceiptForm()
-    return render(request, "goods_receipts/new.html", {"form": form})
+    form = GoodsReceiptForm(initial={"order_number": new_order_number})
+    formset = ProductItemFormSet(instance=form.instance)
+    return render(
+        request,
+        "goods_receipts/new.html",
+        {"form": form, "formset": formset},
+    )
 
 
 def show(request, id):
-    goods_receipt = get_object_or_404(GoodsReceipt, id=id)
-    if request.method == "POST":
-        form = GoodsReceiptForm(request.POST, instance=goods_receipt)
-        if form.is_valid():
-            form.save()
-            return redirect("goods_receipts:index")
-        return render(
-            request,
-            "goods_receipts/edit.html",
-            {"goods_receipt": goods_receipt, "form": form},
-        )
-    return render(request, "goods_receipts/show.html", {"goods_receipt": goods_receipt})
+    goods_receipt = get_object_or_404(GoodsReceipt, pk=id)
+    product_items = GoodsReceiptProductItem.objects.filter(goods_receipt=goods_receipt)
+    return render(
+        request,
+        "goods_receipts/show.html",
+        {"goods_receipt": goods_receipt, "product_items": product_items},
+    )
 
 
 def edit(request, id):
+    goods_receipt = get_object_or_404(GoodsReceipt, pk=id)
     if request.method == "POST":
-        goods_receipt = get_object_or_404(GoodsReceipt, id=id)
         form = GoodsReceiptForm(request.POST, instance=goods_receipt)
-        if form.is_valid():
+        formset = ProductItemFormSet(request.POST, instance=goods_receipt)
+        if form.is_valid() and formset.is_valid():
             form.save()
-            return redirect("goods_receipts:index")
+            formset.save()
+            return redirect("goods_receipts:show", goods_receipt.id)
         return render(
             request,
             "goods_receipts/edit.html",
-            {"goods_receipt": goods_receipt, "form": form},
+            {"goods_receipt": goods_receipt, "form": form, "formset": formset},
         )
-    goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     form = GoodsReceiptForm(instance=goods_receipt)
+    formset = get_product_item_formset(0)(instance=goods_receipt)
     return render(
         request,
         "goods_receipts/edit.html",
-        {"goods_receipt": goods_receipt, "form": form},
+        {"goods_receipt": goods_receipt, "form": form, "formset": formset},
     )
 
 
 def delete(request, id):
-    goods_receipt = get_object_or_404(GoodsReceipt, id=id)
+    goods_receipt = get_object_or_404(GoodsReceipt, pk=id)
     goods_receipt.delete()
     messages.success(request, "刪除完成!")
     return redirect("goods_receipts:index")
+
+
+@require_POST
+def delete_selected_goods_receipts(request):
+    selected_goods_receipts = request.POST.getlist("selected_goods_receipts")
+    GoodsReceipt.objects.filter(id__in=selected_goods_receipts).delete()
+    return redirect("goods_receipts:index")
+
+
+def get_product_item_formset(extra):
+    return inlineformset_factory(
+        GoodsReceipt,
+        GoodsReceiptProductItem,
+        form=GoodsReceiptProductItemForm,
+        extra=extra,
+        can_delete=True,
+    )
+
+
+def load_supplier_info(request):
+    supplier_id = request.GET.get("supplier_id")
+    supplier = Supplier.objects.get(id=supplier_id)
+    products = Product.objects.filter(supplier=supplier).values(
+        "id", "product_number", "product_name", "cost_price", "sale_price"
+    )
+    products_data = list(products)
+    data = {
+        "supplier_tel": supplier.telephone,
+        "contact_person": supplier.contact_person,
+        "supplier_email": supplier.email,
+        "products": products_data,
+    }
+    return JsonResponse(data)
+
+
+def load_product_info(request):
+    product_id = request.GET.get("id")
+    product = Product.objects.get(id=product_id)
+    return JsonResponse({"cost_price": product.cost_price})
+
+
+def generate_order_number():
+    today = timezone.localtime().strftime("%Y%m%d")
+    last_order = (
+        GoodsReceipt.all_objects.filter(order_number__startswith=today)
+        .order_by("-order_number")
+        .first()
+    )
+
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{last_order_number + 1:03d}"
+    else:
+        new_order_number = "001"
+
+    return f"{today}{new_order_number}"
 
 
 def import_file(request):
@@ -249,10 +322,10 @@ def export_excel(request):
         df.to_excel(writer, index=False, sheet_name="GoodsReceipts")
     return response
 
-
-@receiver(pre_save, sender=GoodsReceipt)
-def update_state(sender, instance, **kwargs):
-    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    # @receiver(pre_save, sender=GoodsReceipt)
+    # def update_state(sender, instance, **kwargs):
+    utc_8 = pytz.timezone("Asia/Taipei")
+    time_now = timezone.now().astimezone(utc_8).strftime("%Y/%m/%d %H:%M:%S")
     if instance.purchase_quantity < instance.order_quantity:
         if instance.is_finished:
             instance.order_quantity -= instance.purchase_quantity

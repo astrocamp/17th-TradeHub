@@ -69,28 +69,7 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-    return render(request, "purchase_orders/index.html", content)
-
-
-from django.utils import timezone
-
-from .models import PurchaseOrder
-
-
-def new(request):
-    today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        PurchaseOrder.all_objects.filter(order_number__startswith=today)
-        .order_by("-order_number")
-        .first()
-    )
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{today}{last_order_number + 1:03d}"
-    else:
-        new_order_number = f"{today}001"
-
-    form = PurchaseOrderForm(initial={"order_number": new_order_number})
+    form = PurchaseOrderForm()
     formset = ProductItemFormSet(instance=form.instance)
     return render(
         request,
@@ -100,7 +79,7 @@ def new(request):
 
 
 def show(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, id=id)
+    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     product_items = ProductItem.objects.filter(purchase_order=purchase_order)
     return render(
         request,
@@ -110,7 +89,7 @@ def show(request, id):
 
 
 def edit(request, id):
-    purchase_order = get_object_or_404(PurchaseOrder, id=id)
+    purchase_order = get_object_or_404(PurchaseOrder, pk=id)
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST, instance=purchase_order)
         formset = ProductItemFormSet(request.POST, instance=purchase_order)
@@ -119,29 +98,17 @@ def edit(request, id):
             form.save()
             formset.save()
             return redirect("purchase_orders:show", purchase_order.id)
-
-        else:
-            return render(
-                request,
-                "purchase_orders/edit.html",
-                {"form": form, "formset": formset, "purchase_order": purchase_order},
-            )
+        return render(
+            request,
+            "purchase_orders/edit.html",
+            {"purchase_order": purchase_order, "form": form, "formset": formset},
+        )
     form = PurchaseOrderForm(instance=purchase_order)
     formset = get_product_item_formset(0)(instance=purchase_order)
     return render(
         request,
         "purchase_orders/edit.html",
-        {"form": form, "formset": formset, "purchase_order": purchase_order},
-    )
-
-
-def get_product_item_formset(extra):
-    return inlineformset_factory(
-        PurchaseOrder,
-        ProductItem,
-        form=ProductItemForm,
-        extra=extra,
-        can_delete=True,
+        {"purchase_order": purchase_order, "form": form, "formset": formset},
     )
 
 
@@ -157,6 +124,16 @@ def delete_selected_purchase_orders(request):
     selected_purchase_orders = request.POST.getlist("selected_purchase_orders")
     PurchaseOrder.objects.filter(id__in=selected_purchase_orders).delete()
     return redirect("purchase_orders:index")
+
+
+def get_product_item_formset(extra):
+    return inlineformset_factory(
+        PurchaseOrder,
+        ProductItem,
+        form=ProductItemForm,
+        extra=extra,
+        can_delete=True,
+    )
 
 
 def load_supplier_info(request):
