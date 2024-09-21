@@ -131,7 +131,7 @@ def delete(request, id):
     order = get_object_or_404(Order, pk=id)
     order.delete()
     messages.success(request, "刪除完成!")
-    return redirect("purchase_orders:index")
+    return redirect("orders:index")
 
 
 def get_product_item_formset(extra):

@@ -75,7 +75,7 @@
                     <th>{{ order.note|date:"Y-m-d" }}</th>
                     <th>{{ order.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>
-                      <form action="{% url 'orders:edit' order.id %}" method="POST">
+                      <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}
                         <div class="dropdown dropdown-left">
                           <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>

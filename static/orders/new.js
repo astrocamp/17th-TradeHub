@@ -4,6 +4,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
     const salePriceInput = document.querySelector('input[name$="-sale_price"]');
+    const stockQuantitySelects = document.querySelectorAll('select[name$="-stock_quantity"]');
     const orderedQuantityInput = document.querySelector('input[name$="-ordered_quantity"]');
     const orderedQuantityInputs = document.querySelectorAll('input[name$="-ordered_quantity"]');
     const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
@@ -15,6 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
+    // stockQuantitySelects.forEach(select =>{
+    //     select.disabled = true;
+    // })
 
 
     // 自動填入客戶資訊
@@ -91,28 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('id_client_address').value = data.client_address;
                 document.getElementById('id_client_email').value = data.client_email;
                 handleProductChange();
-                const salePriceInputs = document.querySelectorAll('input[name$="-sale_price"]');
-                // salePriceInputs.forEach(input => {
-                //     input.value = '';
-                // });
-                // orderedQuantityInputs.forEach(input => {
-                //     input.value = '';
-                // });
-                // subtotalInputs.forEach(input => {
-                //     input.value = '';
-                // });
             });
-    }
-
-    function updateProductOptions(products) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
-            const selectedProduct = productSelect.value;
-            productSelect.innerHTML = '<option value="">---------</option>';
-            products.forEach(product => {
-                const option = new Option(product.product_name, product.id, false, product.id == selectedProduct);
-                productSelect.appendChild(option);
-            });
-        });
     }
 
     function updateFormIndexes() {
@@ -139,12 +122,14 @@ document.addEventListener('DOMContentLoaded', () => {
             productSelect.addEventListener('change', function() {
                 const productId = this.value;
                 const fieldset = this.closest('fieldset');
-                const salePriceInput = fieldset.querySelector('input[name$="-sale_price"]');
+                const stockQuantitySelect = fieldset.querySelector('select[name$="-stock_quantity"]');
                 const orderdQuantityInput = fieldset.querySelector('input[name$="-ordered_quantity"]');
+                const salePriceInput = fieldset.querySelector('input[name$="-sale_price"]');
                 const subtotalInput = fieldset.querySelector('input[name$="-subtotal"]');
                 fetch(`/orders/load_product_info/?id=${productId}`)
                     .then(response => response.json())
                     .then(data => {
+                        stockQuantitySelect.value = productId;
                         salePriceInput.value = data.sale_price;
                         orderdQuantityInput.value = 1;
                         subtotalInput.value = orderdQuantityInput.value*salePriceInput.value;
