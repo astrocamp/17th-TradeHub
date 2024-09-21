@@ -1,3 +1,5 @@
+import re
+
 from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
@@ -13,31 +15,47 @@ class SalesOrderManager(models.Manager):
 
 
 class SalesOrder(models.Model):
+    order_number = models.CharField(max_length=11, unique=True)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, related_name="sales_orders"
     )
-    product = models.ForeignKey(
-        Product, on_delete=models.PROTECT, related_name="sales_orders"
-    )
-    quantity = models.PositiveIntegerField()
+    client_tel = models.CharField(max_length=15)
+    client_address = models.CharField(max_length=150)
+    client_email = models.EmailField(unique=False)
+    amount = models.PositiveIntegerField()
+    username = models.CharField(max_length=150, default="admin")
+    note = models.TextField(blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
+    RECEIVING_METHOD_CHOICES = [
+        ("貨運", "貨運"),
+        ("自取", "自取"),
+    ]
+    shipping_method = models.CharField(max_length=20, choices=RECEIVING_METHOD_CHOICES)
+
     stock = models.ForeignKey(
         Inventory, on_delete=models.PROTECT, related_name="sales_orders"
     )
-    price = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=True)
-    last_updated = models.DateTimeField(auto_now=True)
-    deleted_at = models.DateTimeField(null=True)
 
     objects = SalesOrderManager()
+    all_objects = models.Manager()
 
     def delete(self):
         self.deleted_at = timezone.now()
         self.save()
 
     def __repr__(self):
-        return (
-            f"訂購單 #{self.id} - 客戶: {self.client.name} ({self.created_at.date()})"
-        )
+        return f"銷貨單:{self.order_number} - 客戶:{self.client.name}"
+
+    def format_client_tel(self, number):
+        number = re.sub(r"\D", "", number)
+        if len(number) == 10 and number.startswith("09"):
+            return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 9 and number.startswith("0"):
+            return f"{number[:2]}-{number[2:]}"
+        else:
+            return number
 
     PENDING = "pending"
     PROGRESS = "progress"
@@ -68,3 +86,14 @@ class SalesOrder(models.Model):
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
         pass
+
+
+class SalesOrderProductItem(models.Model):
+    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="items")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    shipped_quantity = models.PositiveIntegerField()
+    sale_price = models.PositiveIntegerField()
+    subtotal = models.PositiveIntegerField()
+
+    def __str__(self):
+        return f"{self.product} - {self.shipped_quantity} @ {self.sale_price}"
