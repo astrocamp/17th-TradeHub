@@ -6,9 +6,8 @@
 - 後端：Python, Django
 - 資料庫：PostgreSQL
 - 版本控制：Git
-- 圖片上傳：AWS S3
-- 電子信箱：tradehub.team@gmail.com
-- 部署：
+- 電子信箱：tradehub17th@gmail.com
+- 部署：AWS EC2/RDS
 
 ### TradeHub Team
 

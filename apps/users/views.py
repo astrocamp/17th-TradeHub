@@ -32,7 +32,7 @@ def register(request):
             user.backend = "django.contrib.auth.backends.ModelBackend"  # 指定後端
 
             login(request, user)
-            messages.success(request, "Successfully registered.")
+            messages.success(request, "成功註冊！")
             return redirect("pages:home")
 
         else:
@@ -53,7 +53,7 @@ def log_in(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, "Successfully logged in.")
+                messages.success(request, "成功登入！")
                 return redirect(next_url) if next_url else redirect("pages:home")
             else:
                 return render(request, "users/log_in.html", {"login_form": login_form})
@@ -68,7 +68,7 @@ def log_in(request):
 def log_out(request):
     if request.method == "POST":
         logout(request)
-        messages.success(request, "Successfully logged out.")
+        messages.success(request, "成功登出！")
         return redirect("pages:home")
 
 
@@ -85,7 +85,7 @@ def reset_password(request):
                 return render(
                     request,
                     "users/reset_password.html",
-                    {"error": "User does not exist."},
+                    {"error": "此帳號不存在"},
                 )
 
             if password == password_confirm:
@@ -93,12 +93,13 @@ def reset_password(request):
                 user.save()
                 user.backend = "django.contrib.auth.backends.ModelBackend"
                 login(request, user)
+                messages.success(request, "成功修改密碼！")
                 return redirect("users:log_in")
             else:
                 return render(
                     request,
                     "users/reset_password.html",
-                    {"error": "Password does not match."},
+                    {"error": "密碼不一致"},
                 )
 
         else:

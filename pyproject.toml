@@ -18,6 +18,8 @@ pandas = "^2.2.2"
 openpyxl = "^3.1.5"
 gunicorn = "^23.0.0"
 whitenoise = "^6.7.0"
+pytz = "^2024.2"
+
 
 [tool.poetry.group.dev.dependencies]
 django-extensions = "^3.2.3"
