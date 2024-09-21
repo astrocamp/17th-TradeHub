@@ -11,4 +11,5 @@ urlpatterns = [
     path("delete/<int:id>/", views.delete, name="delete"),
     path("export_csv", views.export_csv, name="export_csv"),
     path("export_excel", views.export_excel, name="export_excel"),
+    path("transform/<int:id>", views.transform, name="transform"),
 ]

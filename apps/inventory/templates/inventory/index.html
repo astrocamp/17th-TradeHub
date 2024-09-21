@@ -29,6 +29,7 @@
                 <option value="normal" {% if selected_state == "normal" %}selected{% endif %}>正常</option>
                 <option value="low_stock" {% if selected_state == "low_stock" %}selected{% endif %}>低庫存</option>
                 <option value="out_stock" {% if selected_state == "out_stock" %}selected{% endif %}>缺貨</option>
+                <option value="new_stock" {% if selected_state == "new_stock" %}selected{% endif %}>新庫存</option>
               </select>
               <input type="hidden" name="page" value="{{ page_obj.number }}">
               <button type="submit" class="btn btn-square btn-sm">
@@ -64,9 +65,13 @@
           <th>
             <span class="btn btn-sm btn-warning text-lg">低庫存</span>
           </th>
-          {% else %}
+          {% elif item.state == "out_stock" %}
           <th>
             <span class="btn btn-sm btn-error text-lg">缺貨</span>
+          </th>
+          {% else %}
+          <th>
+            <span class="btn btn-sm btn-success text-lg">新庫存</span>
           </th>
           {% endif %}
           <td>{{ item.product }}</td>

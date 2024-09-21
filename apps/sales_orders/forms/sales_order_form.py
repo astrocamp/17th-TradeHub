@@ -12,6 +12,7 @@ class SalesOrderForm(forms.ModelForm):
             "quantity",
             "stock",
             "price",
+            "note",
         ]
 
         labels = {
@@ -20,6 +21,7 @@ class SalesOrderForm(forms.ModelForm):
             "quantity": "數量",
             "stock": "庫存",
             "price": "價格",
+            "note": "備註",
         }
 
         widgets = {
@@ -48,6 +50,11 @@ class SalesOrderForm(forms.ModelForm):
                     "class": "form-control w-full input input-bordered flex items-center justify-center"
                 }
             ),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
+                }
+            ),
         }
         help_texts = {
             "client": "請選擇客戶。",
@@ -55,6 +62,7 @@ class SalesOrderForm(forms.ModelForm):
             "quantity": "請輸入數量。",
             "stock": "請選擇庫存。",
             "price": "請輸入價格。",
+            "note": "請輸入備註。",
         }
 
     def __init__(self, *args, **kwargs):

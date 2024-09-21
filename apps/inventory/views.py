@@ -78,12 +78,14 @@ def delete(request, id):
 
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
-    if instance.quantity <= 0:
-        instance.set_out_stock()
-    elif instance.quantity < instance.safety_stock:
-        instance.set_low_stock()
-    else:
-        instance.set_normal()
+    if instance.safety_stock != 0:
+        if instance.quantity <= 0:
+            instance.set_out_stock()
+        elif instance.quantity < instance.safety_stock:
+            instance.set_low_stock()
+        else:
+            instance.set_normal()
+    instance.set_new_stock()
 
 
 def import_file(request):
