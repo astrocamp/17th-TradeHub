@@ -1,0 +1,25 @@
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
+
+<div class="divider text-3xl font-bold mt-20">搜尋結果</div>
+<div class="flex justify-center mt-10">
+  <div class="overflow">
+    <table class="table table-xl text-center">
+      <thead>
+        <th></th>
+        {% for fields_name in fields_names %}
+        <th class="text-xl">{{ fields_name }}</th>
+        {% endfor %}
+      </thead>
+      </tbody>
+        {% for items in results %}
+        <tr>
+          {% for item in items %}
+          <td class="text-lg">{{ item }}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
