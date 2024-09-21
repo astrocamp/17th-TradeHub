@@ -104,17 +104,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
     }
 
-    function updateProductOptions(products) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
-            const selectedProduct = productSelect.value;
-            productSelect.innerHTML = '<option value="">---------</option>';
-            products.forEach(product => {
-                const option = new Option(product.product_name, product.id, false, product.id == selectedProduct);
-                productSelect.appendChild(option);
-            });
-        });
-    }
-
     function updateFormIndexes() {
         formsetItems.querySelectorAll('fieldset').forEach((fieldset, index) => {
             fieldset.querySelectorAll('input, select').forEach(element => {

@@ -35,7 +35,11 @@ class SalesOrder(models.Model):
     shipping_method = models.CharField(max_length=20, choices=RECEIVING_METHOD_CHOICES)
 
     stock = models.ForeignKey(
-        Inventory, on_delete=models.PROTECT, related_name="sales_orders"
+        Inventory,
+        on_delete=models.PROTECT,
+        related_name="sales_orders",
+        null=True,
+        blank=True,
     )
 
     objects = SalesOrderManager()
@@ -89,7 +93,7 @@ class SalesOrder(models.Model):
 
 
 class SalesOrderProductItem(models.Model):
-    order = models.ForeignKey(
+    sales_order = models.ForeignKey(
         "SalesOrder", on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

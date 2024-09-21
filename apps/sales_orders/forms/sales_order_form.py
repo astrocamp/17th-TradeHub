@@ -19,8 +19,8 @@ class SalesOrderForm(forms.ModelForm):
             "client_address",
             "client_email",
             "shipping_method",
-            "note",
             "amount",
+            "note",
         ]
         labels = {
             "client": "客戶名稱",

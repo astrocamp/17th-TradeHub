@@ -73,11 +73,11 @@ def new(request):
 
 
 def show(request, id):
-    sales_order = get_object_or_404(SalesOrder, pk=id)
+    sales_order = get_object_or_404(SalesOrder, id=id)
     product_items = SalesOrderProductItem.objects.filter(sales_order=sales_order)
     return render(
         request,
-        "orders/show.html",
+        "sales_orders/show.html",
         {"sales_order": sales_order, "product_items": product_items},
     )
 
