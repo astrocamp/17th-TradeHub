@@ -20,19 +20,23 @@ def index(request):
             request.user.save()
 
             messages.success(request, "公司帳號新增成功!")
-            return redirect("company:show", id=request.user.company.id)
+            return redirect("company:show", id=company.id)
         return render(request, "company/new.html", {"form": form})
     else:
-        return redirect("company:show", id=request.user.company.id)
+        return redirect("company:show", id=company.id)
 
 
 def new(request):
-    if request.user.company.company_name == "個人公司":
-        form = CompanyForm()
-        return render(request, "company/new.html", {"form": form})
+    form = CompanyForm()
+    if request.user.company:
+        if request.user.company.company_name == "個人公司":
+            return render(request, "company/new.html", {"form": form})
+        else:
+            messages.success(request, "您已經有公司帳號了!")
+            return redirect("pages:home")
     else:
-        messages.success(request, "您已經有公司帳號了!")
-        return redirect("pages:home")
+        messages.success(request, "您還沒有公司帳號!")
+        return render(request, "company/new.html", {"form": form})
 
 
 def show(request, id):

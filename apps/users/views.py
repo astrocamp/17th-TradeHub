@@ -159,4 +159,4 @@ def update_company_id(request):
             return redirect("pages:home")
         except Company.DoesNotExist:
             messages.error(request, "此公司尚未註冊")
-            return redirect("pages:welcome")
+            return redirect("company:new")
