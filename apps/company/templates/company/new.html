@@ -2,12 +2,12 @@
 
 {% block content %}
 
-<a href="{% url 'company:index' %}">首頁</a>
+<a href="{% url 'company:index' %}" class="btn btn-primary">首頁</a>
 
 <form action="{% url 'company:index' %}" method="POST">
     {% csrf_token %}
-    {{form}}
-    <button>新增</button>
+    {{form.as_p}}
+    <button class="btn btn-primary">新增</button>
 </form>
 
 {% endblock %}

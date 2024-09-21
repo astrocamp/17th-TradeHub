@@ -2,19 +2,20 @@
 
 {% block content %}
 
-<a href="{% url 'company:new' %}">新增</a>
+<button>
+    <a href="{% url 'company:new' %}" class="btn btn-primary">新增</a>
+</button>
 
 <div>
     <ul>
         {% for company in company %}
         <a href="{% url 'company:show' company.id %}">
-            <p>{{company.company_id}}</p>
-            <p>{{company.company_name}}</p>
-            <p>{{company.gui_number}}</p>
-            <p>{{company.address}}</p>
-            <p>{{company.user}}</p>
+            <p>公司代碼：{{company.company_id}}</p>
+            <p>公司名稱：{{company.company_name}}</p>
+            <p>統一編號：{{company.gui_number}}</p>
+            <p>公司地址：{{company.address}}</p>
+            <p>公司負責人：{{company.user}}</p>
             <!-- <p>{{company.created_at}}</p> -->
-
         </a>
         {% endfor %}
     </ul>
