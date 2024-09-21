@@ -2,6 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
 
+from apps.company.models import Company
+
 
 class CustomUser(AbstractUser):
 
@@ -24,6 +26,9 @@ class CustomUser(AbstractUser):
     birthday = models.DateField(blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=True)
     address = models.CharField(max_length=100, blank=False, null=False, default="")
+    company = models.ForeignKey(
+        Company, on_delete=models.PROTECT, related_name="CustomUser", default=0
+    )
     department = models.CharField(
         choices=DEPARTMENT_CHOICES, max_length=20, default="", blank=False, null=False
     )
