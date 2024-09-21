@@ -1,8 +1,8 @@
 import re
 
 from django.db import models
-from django_fsm import FSMField, transition
 from django.utils import timezone
+from django_fsm import FSMField, transition
 
 
 class SupplierManager(models.Manager):
@@ -21,7 +21,7 @@ class Supplier(models.Model):
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True, null=True)
 
-    bjects = SupplierManager()
+    objects = SupplierManager()
 
     def delete(self):
         self.deleted_at = timezone.now()

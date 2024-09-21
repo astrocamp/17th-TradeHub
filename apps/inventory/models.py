@@ -1,6 +1,6 @@
 from django.db import models
-from django_fsm import FSMField, transition
 from django.utils import timezone
+from django_fsm import FSMField, transition
 
 from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder

@@ -1,6 +1,7 @@
 from django.db import models
-from django_fsm import FSMField, transition
 from django.utils import timezone
+from django_fsm import FSMField, transition
+
 from apps.suppliers.models import Supplier
 
 

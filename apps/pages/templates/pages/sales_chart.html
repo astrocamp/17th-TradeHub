@@ -174,7 +174,9 @@
           </div>
           <div class="stat-title">供應商</div>
           <div class="stat-value">{{suppliers_num}}個</div>
-          <div class="stat-desc">↗︎ 425 (78%)</div>
+          <div class="stat-desc">
+            {% if suppliers_month_num %}↗︎{% endif %} {{suppliers_month_num}}個
+          </div>
         </div>
       </a>
       <a href="{% url 'inventory:index' %}">
@@ -213,8 +215,14 @@
             </svg>
           </div>
           <div class="stat-title">庫存</div>
-          <div class="stat-value">{{inventory_num}}件</div>
-          <div class="stat-desc">↘︎ 792 (36%)</div>
+          <div class="stat-value">
+            {% if inventory_num == None %}0件 {% else %}
+            <p>{{inventory_num}}件</p>
+            {% endif %}
+          </div>
+          <div class="stat-desc">
+            {% if inventory_month_num %}↗︎{% endif %} {{inventory_month_num}}件
+          </div>
         </div>
       </a>
     </div>
@@ -293,7 +301,7 @@
         <!-- row 1 -->
         <tr>
           <th>1</th>
-          <td>陳大明</td>
+          <td>{{vip_clients}}</td>
           <td>622</td>
           <td>$423012</td>
         </tr>

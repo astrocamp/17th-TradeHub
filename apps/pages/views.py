@@ -1,3 +1,4 @@
+from datetime import timedelta
 from math import pi
 
 import pandas as pd
@@ -10,7 +11,6 @@ from bokeh.transform import cumsum
 from django.db.models import Sum
 from django.shortcuts import render
 from django.utils import timezone
-from datetime import timedelta
 
 from apps.clients.models import Client
 from apps.goods_receipts.models import GoodsReceipt
@@ -96,6 +96,18 @@ def sales_chart(request):
         deleted_at=None,
     ).count()
 
+    suppliers_month_num = Supplier.objects.filter(
+        established_date__range=(first_day_of_month, last_day_of_month),
+        deleted_at=None,
+    ).count()
+
+    inventory_month_num = Inventory.objects.filter(
+        create_at__range=(first_day_of_month, last_day_of_month),
+        deleted_at=None,
+    ).count()
+
+    vip_clients = len(Client.objects.values("name"))
+
     clients_name = len(Client.objects.values("name"))
 
     sales_data = (
@@ -112,12 +124,15 @@ def sales_chart(request):
     df["angle"] = df["quantity"] / df["quantity"].sum() * 2 * pi
     num_products = len(df)
     if num_products == 0:
-        palette = []
-    elif num_products <= 20:
-        palette = Category20c[num_products]
+        df = pd.DataFrame({"product": ["無資料"], "quantity": [1]})
+        df["angle"] = [2 * pi]  # 100%
+        df["color"] = ["#d9d9d9"]
     else:
-        palette = Category20c[20]
-    df["color"] = palette[:num_products]
+        if num_products <= 20:
+            palette = Category20c[num_products]
+        else:
+            palette = Category20c[20]
+        df["color"] = palette[:num_products]
     source1 = ColumnDataSource(df)
 
     p1 = figure(
@@ -173,6 +188,9 @@ def sales_chart(request):
         "goods_receipts_pending_num": goods_receipts_pending_num,
         "clients_month_num": clients_month_num,
         "products_month_num": products_month_num,
+        "suppliers_month_num": suppliers_month_num,
+        "inventory_month_num": inventory_month_num,
+        "vip_clients": vip_clients,
     }
 
     return render(request, "pages/sales_chart.html", content)
