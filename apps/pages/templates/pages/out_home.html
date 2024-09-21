@@ -1,9 +1,11 @@
-{% extends "layouts/base.html" %} {% block content %} {% load static %}
-<div class="hero min-h-screen">
-  <img src="{% static 'images/home.jpg' %}" alt="home page" />
-  <div class="hero-overlay bg-opacity-80"></div>
+{% extends "layouts/base.html" %} 
+{% block content %} 
+{% load static %}
+<div class="hero">
+  <img src="{% static 'images/home.jpg' %}" alt="home page" class="hero-image"/>
+  <div class="hero-overlay"></div>
   <div class="hero-content text-neutral-content">
-    <div class="max-w-md">
+    <div class="max-w-md text-center"> 
       <h1 class="mb-5 text-5xl font-bold">您好</h1>
       <p class="mb-5">
         是否用傳統 Excel 管理進銷存? 是否不知如何倉管?
