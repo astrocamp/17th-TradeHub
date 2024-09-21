@@ -6,10 +6,6 @@ from django.forms import inlineformset_factory
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 
 
-class FileUploadForm(forms.Form):
-    file = forms.FileField()
-
-
 class PurchaseOrderForm(forms.ModelForm):
     class Meta:
         model = PurchaseOrder

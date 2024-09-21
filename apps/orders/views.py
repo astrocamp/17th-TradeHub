@@ -9,11 +9,9 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.clients.models import Client
-from apps.products.models import Product
 from apps.sales_orders.models import SalesOrder
 
-from .forms.form import FileUploadForm, OrderForm
+from .forms.form import OrderForm
 from .models import Orders
 
 
@@ -68,72 +66,6 @@ def order_update_and_delete(request, id):
                 return redirect("orders:index")
     form = OrderForm(instance=order)
     return render(request, "orders/edit.html", {"order": order, "form": form})
-
-
-def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-
-            if file.name.endswith(".csv"):
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
-
-                for row in reader:
-                    try:
-                        client = Client.objects.get(id=row[1])
-                        product = Product.objects.get(id=row[2])
-
-                        Orders.objects.create(
-                            code=row[0],
-                            client=client,
-                            product=product,
-                            note=row[3],
-                        )
-                    except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("orders:index")
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("orders:index")
-
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "序號": "code",
-                        "客戶名稱": "client",
-                        "商品名稱": "product",
-                        "備註": "note",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
-                    try:
-                        client = Client.objects.get(id=int(row["client"]))
-                        product = Product.objects.get(id=int(row["product"]))
-
-                        Orders.objects.create(
-                            code=str(row["code"]),
-                            client=client,
-                            product=product,
-                            note=str(row["note"]) if not pd.isna(row["note"]) else "",
-                        )
-                    except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("orders:index")
-
-                messages.success(request, "成功匯入 Excel")
-                return redirect("orders:index")
-
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
-
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
 
 
 def export_csv(request):
