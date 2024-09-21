@@ -10,7 +10,7 @@
       <form
         class="flex flex-col justify-center w-full gap-4"
         method="POST"
-        action="{% url 'clients:import_file' %}"
+        action="{{urlImport}}"
         enctype="multipart/form-data"
       >
         {% csrf_token %}
@@ -20,6 +20,12 @@
           class="file-input file-input-bordered w-full"
           name="file"
         />
+        <a
+          href="{{urlExmportSample}}"
+          class="btn bg-orange-500 text-lg text-white"
+        >
+          範例檔案
+        </a>
         <button class="btn btn-success text-lg text-white">確認</button>
       </form>
     </div>
@@ -39,7 +45,7 @@
       <form
         class="flex justify-center w-full"
         method="POST"
-        action="{% url 'clients:export_csv' %}"
+        action="{{urlCSV}}"
       >
         {% csrf_token %}
         <button class="btn btn-info text-lg text-white w-full">CSV</button>
@@ -47,7 +53,7 @@
       <form
         class="flex justify-center w-full"
         method="POST"
-        action="{% url 'clients:export_excel' %}"
+        action="{{urlExcel}}"
       >
         {% csrf_token %}
         <button class="btn btn-success text-lg text-white w-full">Excel</button>

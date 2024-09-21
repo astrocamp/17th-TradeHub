@@ -4,13 +4,11 @@
   <a href="{% url 'sales_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
-
   <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
 <div class="divider text-3xl font-bold">銷售單列表</div>
 <div class="flex justify-center mt-10">
-  <div class="overflow-x-auto w-full">
+  <div class="overflow">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl text-center">
@@ -46,7 +44,7 @@
           <th><a href="{% url 'sales_orders:index' %}?sort=stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
           <th><a href="{% url 'sales_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-          <th></th>
+          <th><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
         </tr>
       </thead>
       {% for item in sales_orders %}
@@ -71,16 +69,20 @@
           <td>{{ item.stock }}</td>
           <td>{{ item.price }}</td>
           <td>{{ item.last_updated|date:"Y-m-d H:i" }}</td>
+          <td>{{ item.note|truncatechars:15 }}</td>
           <td>
-            <a
-              href="{% url 'sales_orders:edit' item.id %}"
-              class="btn btn-primary"
-            >
-              編輯
-            </a>
-            <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error"
-              >刪除</a
-            >
+            <div class="dropdown dropdown-left">
+              <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                <li><a href="{% url 'sales_orders:edit' item.id %}" class="btn btn-primary">編輯</a></li>
+                <li>
+                  <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error">
+                    刪除
+                  </a>
+                </li>
+                <li><a onclick="return confirm('確認扣除庫存?')" href="{% url 'sales_orders:transform' item.id %}" class="btn btn-info">確認庫存</a></li>
+              </ul>
+            </div>
           </td>
         </tr>
         {% endfor %}
@@ -115,5 +117,9 @@
     {% endif %}
   </div>
 </div>
-{% include "shared/import_export.html" %}
+{% url 'sales_orders:import_file' as import_file_url %}
+{% url 'sales_orders:export_csv' as export_csv_url %}
+{% url 'sales_orders:export_excel' as export_excel_url %}
+
+{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
 {% endblock %}

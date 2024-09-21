@@ -1,16 +1,18 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
-from apps.clients.models import Client
 from apps.inventory.models import Inventory
-from apps.products.models import Product
+from apps.sales_orders.models import SalesOrder
 
-from .forms.sales_order_form import FileUploadForm, SalesOrderForm
+from .forms.sales_order_form import SalesOrderForm
 from .models import SalesOrder
 
 
@@ -73,71 +75,6 @@ def delete(request, id):
     sales_orders.delete()
     messages.success(request, "刪除完成!")
     return redirect("sales_orders:index")
-
-
-def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-            if file.name.endswith(".csv"):
-
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)
-
-                for row in reader:
-                    if len(row) < 1:
-                        continue
-
-                    client = Client.objects.get(id=row[0])
-                    product = Product.objects.get(id=row[1])
-                    stock = Inventory.objects.get(id=row[3])
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=row[2],
-                        stock=stock,
-                        price=row[4],
-                    )
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("sales_orders:index")
-
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "客戶": "client",
-                        "商品": "product",
-                        "數量": "quantity",
-                        "庫存": "stock",
-                        "價位": "price",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
-
-                    client = Client.objects.get(id=int(row["client"]))
-                    product = Product.objects.get(id=int(row["product"]))
-                    stock = Inventory.objects.get(id=int(row["stock"]))
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=str(row["quantity"]),
-                        stock=stock,
-                        price=str(row["price"]),
-                    )
-
-                messages.success(request, "成功匯入 Excel")
-                return redirect("sales_orders:index")
-
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
-
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
 
 
 def export_csv(request):
@@ -215,3 +152,27 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="SalesOrders")
     return response
+
+
+@receiver(pre_save, sender=SalesOrder)
+def update_stats(sender, instance, **kwargs):
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if instance.quantity > instance.stock.quantity:
+        instance.set_pending()
+    elif instance.quantity < instance.stock.quantity:
+        instance.set_progress()
+        if instance.is_finished:
+            inventory = Inventory.objects.get(id=instance.stock.id)
+            inventory.quantity -= instance.quantity
+            inventory.note += f"{time_now} 扣除庫存{instance.quantity}\n"
+            inventory.save()
+            instance.set_finished()
+            instance.is_finished = True
+
+
+def transform(request, id):
+    sales_order = get_object_or_404(SalesOrder, id=id)
+    sales_order.is_finished = True
+    sales_order.save()
+    messages.success(request, "扣除庫存完成!")
+    return redirect("sales_orders:index")

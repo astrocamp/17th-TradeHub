@@ -1,8 +1,11 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,6 +13,7 @@ from django.utils import timezone
 
 from apps.clients.models import Client
 from apps.products.models import Product
+from apps.sales_orders.models import SalesOrder
 
 from .forms.orders_form import (
     FileUploadForm,
@@ -174,72 +178,6 @@ def generate_order_number():
     return f"{today}{new_order_number}"
 
 
-def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-
-            if file.name.endswith(".csv"):
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
-
-                for row in reader:
-                    try:
-                        client = Client.objects.get(id=row[1])
-                        product = Product.objects.get(id=row[2])
-
-                        Order.objects.create(
-                            code=row[0],
-                            client=client,
-                            product=product,
-                            note=row[3],
-                        )
-                    except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("orders:index")
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("orders:index")
-
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "序號": "code",
-                        "客戶名稱": "client",
-                        "商品名稱": "product",
-                        "備註": "note",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
-                    try:
-                        client = Client.objects.get(id=int(row["client"]))
-                        product = Product.objects.get(id=int(row["product"]))
-
-                        Order.objects.create(
-                            code=str(row["code"]),
-                            client=client,
-                            product=product,
-                            note=str(row["note"]) if not pd.isna(row["note"]) else "",
-                        )
-                    except (Client.DoesNotExist, Product.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("orders:index")
-
-                messages.success(request, "成功匯入 Excel")
-                return redirect("orders:index")
-
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
-
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
-
-
 def export_csv(request):
     response = HttpResponse(content_type="text/csv")
     response["Content-Disposition"] = 'attachment; filename="Orders.csv"'
@@ -301,3 +239,32 @@ def export_excel(request):
         df.to_excel(writer, index=False, sheet_name="Orders")
 
     return response
+
+
+# @receiver(pre_save, sender=Orders)
+# def update_state(sender, instance, **kwargs):
+#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+#     if instance.quantity > instance.stock_quantity.quantity:
+#         instance.set_to_be_confirmed()
+#     elif instance.quantity <= instance.stock_quantity.quantity:
+#         instance.set_progress()
+#         if instance.is_finished:
+#             SalesOrder.objects.create(
+#                 client=instance.client,
+#                 product=instance.product,
+#                 quantity=instance.quantity,
+#                 stock=instance.stock_quantity,
+#                 price=instance.price,
+#                 note=f"{time_now}轉銷貨單",
+#             )
+#             instance.note = f"{time_now}已轉銷貨單"
+#             instance.set_finished()
+#             instance.is_finished = False
+
+
+# def transform_sales_order(request, id):
+#     order = get_object_or_404(Orders, id=id)
+#     order.is_finished = True
+#     order.save()
+#     messages.success(request, "轉銷貨單完成!")
+#     return redirect("orders:index")

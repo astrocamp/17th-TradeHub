@@ -1,15 +1,19 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.inventory.models import Inventory
+from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
 from .forms.product_form import FileUploadForm, ProductForm
-from .models import Product
 
 
 def index(request):
@@ -203,3 +207,39 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Products")
     return response
+
+
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=ProductSample.xlsx"
+
+    data = {
+        "product_number": ["P033"],
+        "product_name": ["米"],
+        "cost_price": ["100"],
+        "sale_price": ["120"],
+        "supplier": ["1"],
+        "note": ["這是一個備註"],
+    }
+
+    df = pd.DataFrame(data)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Products")
+
+    return response
+
+
+@receiver(post_save, sender=Product)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if Inventory.objects.filter(product=instance).exists():
+        Inventory.objects.create(
+            product=instance,
+            supplier=instance.supplier,
+            quantity=0,
+            safety_stock=0,
+            note=f"{time_now} 新建商品，預建庫存",
+        )

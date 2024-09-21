@@ -78,12 +78,14 @@ def delete(request, id):
 
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
-    if instance.quantity <= 0:
-        instance.set_out_stock()
-    elif instance.quantity < instance.safety_stock:
-        instance.set_low_stock()
-    else:
-        instance.set_normal()
+    if instance.safety_stock != 0:
+        if instance.quantity <= 0:
+            instance.set_out_stock()
+        elif instance.quantity < instance.safety_stock:
+            instance.set_low_stock()
+        else:
+            instance.set_normal()
+    instance.set_new_stock()
 
 
 def import_file(request):
@@ -136,8 +138,8 @@ def import_file(request):
                         Inventory.objects.create(
                             product=product,
                             supplier=supplier,
-                            quantity=str(row["quantity"]),
-                            safety_stock=str(row["safety_stock"]),
+                            quantity=int(row["quantity"]),
+                            safety_stock=int(row["safety_stock"]),
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
                     except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
@@ -218,4 +220,26 @@ def export_excel(request):
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Inventory")
+    return response
+
+
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=InventorySample.xlsx"
+
+    data = {
+        "product": ["2"],
+        "supplier": ["1"],
+        "quantity": ["150"],
+        "safety_stock": ["30"],
+        "note": ["備註"],
+    }
+
+    df = pd.DataFrame(data)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Inventory")
+
     return response
