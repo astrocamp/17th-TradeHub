@@ -7,6 +7,8 @@ from django_fsm import FSMField, transition
 from apps.clients.models import Client
 from apps.products.models import Product
 
+from ..inventory.models import Inventory
+
 
 class OrdersManager(models.Manager):
     def get_queryset(self):
@@ -29,6 +31,12 @@ class Order(models.Model):
     objects = OrdersManager()
     all_objects = models.Manager()
 
+    is_finished = models.BooleanField(default=False)
+
+    def save(self, *args, **kwargs):
+        # self.stock_quantity = Inventory.objects.get(product=self.product)
+        super().save(*args, **kwargs)
+
     def delete(self):
         self.deleted_at = timezone.now()
         self.save()
@@ -45,26 +53,26 @@ class Order(models.Model):
         else:
             return number
 
-    PENDING = "pending"
+    TO_BE_CONFIRMED = "to_be_confirmed"
     PROGRESS = "progress"
     FINISHED = "finished"
 
-    AVAILABLE_STATES = PENDING, PROGRESS, FINISHED
+    AVAILABLE_STATES = TO_BE_CONFIRMED, PROGRESS, FINISHED
 
     STATES_CHOICES = [
-        (PENDING, "待處理"),
+        (TO_BE_CONFIRMED, "待確認"),
         (PROGRESS, "進行中"),
         (FINISHED, "已完成"),
     ]
 
     state = FSMField(
-        default=PROGRESS,
+        default=TO_BE_CONFIRMED,
         choices=STATES_CHOICES,
         protected=True,
     )
 
-    @transition(field=state, source="*", target=PENDING)
-    def set_pending(self):
+    @transition(field=state, source="*", target=TO_BE_CONFIRMED)
+    def set_to_be_confirmed(self):
         pass
 
     @transition(field=state, source="*", target=PROGRESS)
@@ -82,6 +90,13 @@ class OrderProductItem(models.Model):
     ordered_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
+    stock_quantity = models.ForeignKey(
+        Inventory,
+        on_delete=models.CASCADE,
+        related_name="orders",
+        null=True,
+        blank=True,
+    )
 
     def __str__(self):
-        return f"{self.product} - {self.quantity} @ {self.sale_price}"
+        return f"{self.product} - {self.ordered_quantity} @ {self.sale_price}"

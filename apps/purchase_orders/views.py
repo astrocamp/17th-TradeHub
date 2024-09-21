@@ -18,7 +18,6 @@ from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
 from .forms.purchase_orders_form import (
-    FileUploadForm,
     ProductItemForm,
     ProductItemFormSet,
     PurchaseOrderForm,

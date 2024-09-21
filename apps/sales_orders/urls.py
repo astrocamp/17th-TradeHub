@@ -14,4 +14,5 @@ urlpatterns = [
     path("load_product_info/", views.load_product_info, name="load_product_info"),
     path("export_csv", views.export_csv, name="export_csv"),
     path("export_excel", views.export_excel, name="export_excel"),
+    # path("transform/<int:id>", views.transform, name="transform"),
 ]

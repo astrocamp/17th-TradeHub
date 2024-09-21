@@ -34,16 +34,10 @@ class SalesOrder(models.Model):
     ]
     shipping_method = models.CharField(max_length=20, choices=RECEIVING_METHOD_CHOICES)
 
-    stock = models.ForeignKey(
-        Inventory,
-        on_delete=models.PROTECT,
-        related_name="sales_orders",
-        null=True,
-        blank=True,
-    )
-
     objects = SalesOrderManager()
     all_objects = models.Manager()
+
+    is_finished = models.BooleanField(default=False)
 
     def delete(self):
         self.deleted_at = timezone.now()
@@ -97,6 +91,9 @@ class SalesOrderProductItem(models.Model):
         "SalesOrder", on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    stock_quantity = models.ForeignKey(
+        Inventory, on_delete=models.PROTECT, related_name="sales_orders"
+    )
     ordered_quantity = models.PositiveIntegerField()
     shipped_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()

@@ -76,17 +76,18 @@
                     <th>{{ sales_order.note|date:"Y-m-d" }}</th>
                     <th>{{ sales_order.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>
-                        <div class="flex justify-center gap-1">
-                            <a href="{% url 'sales_orders:edit' sales_order.id %}" class="btn btn-primary">
-                              編輯
+                      <div class="dropdown dropdown-left">
+                        <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                          <li><a href="{% url 'sales_orders:edit' item.id %}" class="btn btn-primary">編輯</a></li>
+                          <li>
+                            <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' item.id %}" class="btn btn-error">
+                              刪除
                             </a>
-                            <form action="{% url 'sales_orders:delete' sales_order.id %}" method="POST">
-                                {% csrf_token %}
-                                <button onclick="return confirm('確認刪除?')" type="submit" class="btn btn-error">
-                                    刪除
-                                </button>
-                            </form>
-                        </div>
+                          </li>
+                          <li><a onclick="return confirm('確認扣除庫存?')" href="{% url 'sales_orders:transform' item.id %}" class="btn btn-info">確認庫存</a></li>
+                        </ul>
+                      </div>
                     </th>
                 </tr>
                 {% endfor %}
@@ -121,5 +122,9 @@
         {% endif %}
     </div>
 </div>
-{% include "shared/import_export.html" %}
+{% url 'sales_orders:import_file' as import_file_url %}
+{% url 'sales_orders:export_csv' as export_csv_url %}
+{% url 'sales_orders:export_excel' as export_excel_url %}
+
+{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
 {% endblock %}

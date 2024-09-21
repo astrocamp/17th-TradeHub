@@ -3,6 +3,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const formsetItems = document.getElementById('formset-items');
     const addItemButton = document.getElementById('add-item');
     const totalForms = document.getElementById('id_items-TOTAL_FORMS');
+    const stockQuantitySelects = document.querySelectorAll('select[name$="-stock_quantity"]');
     const orderedQuantityInputs = document.querySelectorAll('input[name$="-ordered_quantity"]');
     const clientInput = document.querySelector('select[name="client"]');
     const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
@@ -17,6 +18,9 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
+    // stockQuantitySelects.forEach(select =>{
+    //     select.disabled = true;
+    // })
     handleProductChange();
     // 新增子表單項目
     addItemButton.addEventListener('click', () => {
@@ -61,17 +65,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    function updateProductOptions(products) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
-            const selectedProduct = productSelect.value;
-            productSelect.innerHTML = '<option value="">---------</option>';
-            products.forEach(product => {
-                const option = new Option(product.product_name, product.id, false, product.id == selectedProduct);
-                productSelect.appendChild(option);
-            });
-        });
-    }
-
     function updateFormIndexes() {
         formsetItems.querySelectorAll('fieldset').forEach((fieldset, index) => {
             fieldset.querySelectorAll('input, select').forEach(element => {
@@ -101,12 +94,14 @@ document.addEventListener('DOMContentLoaded', () => {
             productSelect.addEventListener('change', function() {
                 const productId = this.value;
                 const fieldset = this.closest('fieldset');
+                const stockQuantitySelect = fieldset.querySelector('select[name$="-stock_quantity"]');
                 const salePriceInput = fieldset.querySelector('input[name$="-sale_price"]');
                 const orderedQuantityInput = fieldset.querySelector('input[name$="-ordered_quantity"]');
                 const subtotalInput = fieldset.querySelector('input[name$="-subtotal"]');
                 fetch(`/orders/load_product_info/?id=${productId}`)
                     .then(response => response.json())
                     .then(data => {
+                        stockQuantitySelect.value = productId;
                         salePriceInput.value = data.sale_price;
                         orderedQuantityInput.value = 1;
                         subtotalInput.value = orderedQuantityInput.value*salePriceInput.value;

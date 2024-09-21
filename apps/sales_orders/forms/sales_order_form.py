@@ -6,10 +6,6 @@ from django.forms import inlineformset_factory
 from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 
-class FileUploadForm(forms.Form):
-    file = forms.FileField()
-
-
 class SalesOrderForm(forms.ModelForm):
     class Meta:
         model = SalesOrder
@@ -55,6 +51,11 @@ class SalesOrderForm(forms.ModelForm):
                     "class": "w-full",
                     "rows": 3,
                     "placeholder": "請輸入備註",
+                }
+            ),
+            "note": forms.Textarea(
+                attrs={
+                    "class": "form-control w-full textarea textarea-bordered flex items-center justify-center"
                 }
             ),
         }
@@ -106,6 +107,7 @@ class SalesOrderProductItemForm(forms.ModelForm):
         model = SalesOrderProductItem
         fields = [
             "product",
+            "stock_quantity",
             "ordered_quantity",
             "shipped_quantity",
             "sale_price",
@@ -113,6 +115,7 @@ class SalesOrderProductItemForm(forms.ModelForm):
         ]
         widgets = {
             "product": forms.Select(attrs={"class": "w-full"}),
+            "stock_quantity": forms.Select(attrs={"class": "w-full"}),
             "ordered_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "shipped_quantity": forms.NumberInput(attrs={"class": "w-full", "min": 1}),
             "sale_price": forms.NumberInput(attrs={"class": "w-full"}),
