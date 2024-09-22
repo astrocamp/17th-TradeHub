@@ -5,7 +5,7 @@ def home(request):
     if request.user.first_login:
         request.user.first_login = False
         request.user.save()
-        return render(request, "pages/home.html", {"first_login": True})
+        return render(request, "pages/welcome.html", {"first_login": True})
     return render(request, "pages/home.html")
 
 
