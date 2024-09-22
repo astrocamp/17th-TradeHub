@@ -1,10 +1,16 @@
 from django.db import models
+from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
+
+
+class InventoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Inventory(models.Model):
@@ -16,11 +22,19 @@ class Inventory(models.Model):
     )
     quantity = models.PositiveIntegerField()
     safety_stock = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)
 
+    objects = InventoryManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
+
     def __str__(self):
-        return f"{self.product} - {self.get_state_display()} ({self.quantity})"
+        return f"{self.quantity}"
 
     OUT_STOCK = "out_stock"
     LOW_STOCK = "low_stock"

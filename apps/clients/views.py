@@ -131,7 +131,7 @@ def export_csv(request):
                 client.phone_number,
                 client.address,
                 client.email,
-                client.create_at,
+                client.created_at,
                 client.delete_at,
                 client.note,
             ]
@@ -147,7 +147,7 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
 
     clients = Client.objects.all().values(
-        "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
+        "name", "phone_number", "address", "email", "created_at", "delete_at", "note"
     )
 
     df = pd.DataFrame(clients)
@@ -159,12 +159,36 @@ def export_excel(request):
         "phone_number": "電話",
         "address": "地址",
         "email": "Email",
-        "create_at": "建立時間",
+        "created_at": "建立時間",
         "delete_at": "刪除時間",
         "note": "備註",
     }
 
     df.rename(columns=column_mapping, inplace=True)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Clients")
+
+    return response
+
+
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=ClientsSample.xlsx"
+
+    data = {
+        "name": ["陳小明"],
+        "phone_number": ["0914408235"],
+        "address": [
+            "台北市中正區XX路XX號",
+        ],
+        "email": ["alice@example.com"],
+        "note": ["這是另一個備註"],
+    }
+
+    df = pd.DataFrame(data)
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Clients")

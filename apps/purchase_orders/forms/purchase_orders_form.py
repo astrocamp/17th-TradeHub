@@ -6,10 +6,6 @@ from django.forms import inlineformset_factory
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 
 
-class FileUploadForm(forms.Form):
-    file = forms.FileField()
-
-
 class PurchaseOrderForm(forms.ModelForm):
     class Meta:
         model = PurchaseOrder
@@ -18,16 +14,16 @@ class PurchaseOrderForm(forms.ModelForm):
             "supplier_tel",
             "contact_person",
             "supplier_email",
-            "note",
             "amount",
+            "note",
         ]
         labels = {
             "supplier": "供應商名稱",
             "supplier_tel": "供應商電話",
             "contact_person": "聯絡人",
             "supplier_email": "供應商Email",
-            "note": "備註",
             "amount": "總金額",
+            "note": "備註",
         }
         widgets = {
             "supplier": forms.Select(

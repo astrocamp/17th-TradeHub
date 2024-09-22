@@ -6,7 +6,6 @@
   <div class="dropdown dropdown-bottom dropdown-end">
     <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
       <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
     </ul>
   </div>
@@ -14,7 +13,7 @@
 <div class="divider text-3xl font-bold">採購單列表</div>
 
 <div class="flex justify-center mt-10">
-    <div class="overflow">
+    <div class="overflow w-full">
         <table class="table table-xl text-center">
             <thead>
                 <tr class="text-xl">
@@ -127,5 +126,9 @@
         {% endif %}
     </div>
 </div>
-{% include "shared/import_export.html" %}
+{% url 'purchase_orders:import_file' as import_file_url %}
+{% url 'purchase_orders:export_csv' as export_csv_url %}
+{% url 'purchase_orders:export_excel' as export_excel_url %}
+
+{% include "shared/import_export.html" with urlImportSample=urlImportSample urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
 {% endblock %}

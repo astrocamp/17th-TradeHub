@@ -1,22 +1,26 @@
 import csv
+from datetime import datetime, timedelta, timezone
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
-from datetime import datetime, timedelta, timezone
-
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from apps.clients.models import Client
+from django.forms import inlineformset_factory
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
+
 from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.sales_orders.models import SalesOrder
 
-
-from .forms.sales_order_form import FileUploadForm, SalesOrderForm
-from .models import SalesOrder
+from .forms.sales_order_form import (
+    SalesOrderForm,
+    SalesOrderProductItemForm,
+    SalesOrderProductItemFormSet,
+)
+from .models import SalesOrder, SalesOrderProductItem
 
 
 def index(request):
@@ -46,103 +50,117 @@ def index(request):
 
 
 def new(request):
+    new_order_number = generate_order_number()
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
-        if form.is_valid():
-            form.save()
+        formset = SalesOrderProductItemFormSet(request.POST, instance=form.instance)
+        if form.is_valid() and formset.is_valid():
+            order = form.save(commit=False)
+            order.order_number = new_order_number
+            order.username = request.user.username
+            order.save()
+            formset.instance = order
+            formset.save()
             return redirect("sales_orders:index")
-    else:
-        form = SalesOrderForm()
-    return render(request, "sales_orders/new.html", {"form": form})
+        else:
+            print(form.errors)
+            print("------")
+            print(formset.errors)
+            return render(
+                request, "sales_orders/new.html", {"form": form, "formset": formset}
+            )
+    form = SalesOrderForm()
+    formset = SalesOrderProductItemFormSet(instance=form.instance)
+    return render(
+        request,
+        "sales_orders/new.html",
+        {"form": form, "formset": formset},
+    )
+
+
+def show(request, id):
+    sales_order = get_object_or_404(SalesOrder, id=id)
+    product_items = SalesOrderProductItem.objects.filter(sales_order=sales_order)
+    return render(
+        request,
+        "sales_orders/show.html",
+        {"sales_order": sales_order, "product_items": product_items},
+    )
 
 
 def edit(request, id):
-    sales_orders = get_object_or_404(SalesOrder, id=id)
+    sales_order = get_object_or_404(SalesOrder, pk=id)
     if request.method == "POST":
-        form = SalesOrderForm(request.POST, instance=sales_orders)
-        if form.is_valid():
-            form.save()
-            return redirect("sales_orders:index")
-    else:
-        form = SalesOrderForm(instance=sales_orders)
+        form = SalesOrderForm(request.POST, instance=sales_order)
+        formset = SalesOrderProductItemFormSet(request.POST, instance=sales_order)
 
+        if form.is_valid() and formset.is_valid():
+            form.save()
+            formset.save()
+            return redirect("sales_orders:show", sales_order.id)
+        return render(
+            request,
+            "sales_orders/edit.html",
+            {"sales_order": sales_order, "form": form, "formset": formset},
+        )
+    form = SalesOrderForm(instance=sales_order)
+    formset = get_product_item_formset(0)(instance=sales_order)
     return render(
         request,
         "sales_orders/edit.html",
-        {"sales_orders": sales_orders, "form": form},
+        {"sales_order": sales_order, "form": form, "formset": formset},
     )
 
 
 def delete(request, id):
-    sales_orders = get_object_or_404(SalesOrder, id=id)
-    sales_orders.delete()
+    sales_order = get_object_or_404(SalesOrder, pk=id)
+    sales_order.delete()
     messages.success(request, "刪除完成!")
     return redirect("sales_orders:index")
 
 
-def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-            if file.name.endswith(".csv"):
+def get_product_item_formset(extra):
+    return inlineformset_factory(
+        SalesOrder,
+        SalesOrderProductItem,
+        form=SalesOrderProductItemForm,
+        extra=extra,
+        can_delete=True,
+    )
 
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)
 
-                for row in reader:
-                    if len(row) < 1:
-                        continue
+def load_client_info(request):
+    client_id = request.GET.get("client_id")
+    client = Client.objects.get(id=client_id)
+    data = {
+        "client_tel": client.phone_number,
+        "client_address": client.address,
+        "client_email": client.email,
+    }
+    return JsonResponse(data)
 
-                    client = Client.objects.get(id=row[0])
-                    product = Product.objects.get(id=row[1])
-                    stock = Inventory.objects.get(id=row[3])
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=row[2],
-                        stock=stock,
-                        price=row[4],
-                    )
 
-                messages.success(request, "成功匯入 CSV")
-                return redirect("sales_orders:index")
+def load_product_info(request):
+    product_id = request.GET.get("id")
+    product = Product.objects.get(id=product_id)
+    return JsonResponse({"sale_price": product.sale_price})
 
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "客戶": "client",
-                        "商品": "product",
-                        "數量": "quantity",
-                        "庫存": "stock",
-                        "價位": "price",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
 
-                    client = Client.objects.get(id=int(row["client"]))
-                    product = Product.objects.get(id=int(row["product"]))
-                    stock = Inventory.objects.get(id=int(row["stock"]))
-                    SalesOrder.objects.create(
-                        client=client,
-                        product=product,
-                        quantity=str(row["quantity"]),
-                        stock=stock,
-                        price=str(row["price"]),
-                    )
+def generate_order_number():
+    today = timezone.localtime().strftime("%Y%m%d")
+    last_order = (
+        SalesOrder.all_objects.filter(order_number__startswith=today)
+        .order_by("-order_number")
+        .first()
+    )
 
-                messages.success(request, "成功匯入 Excel")
-                return redirect("sales_orders:index")
+    if last_order:
+        last_order_number = int(last_order.order_number[-3:])
+        new_order_number = f"{last_order_number + 1:03d}"
+    else:
+        new_order_number = "001"
 
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
-
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
+    return f"{today}{new_order_number}"
 
 
 def export_csv(request):
@@ -222,25 +240,25 @@ def export_excel(request):
     return response
 
 
-@receiver(pre_save, sender=SalesOrder)
-def update_stats(sender, instance, **kwargs):
-    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if instance.quantity > instance.stock.quantity:
-        instance.set_pending()
-    elif instance.quantity < instance.stock.quantity:
-        instance.set_progress()
-        if instance.is_finished:
-            inventory = Inventory.objects.get(id=instance.stock.id)
-            inventory.quantity -= instance.quantity
-            inventory.note += f"{time_now} 扣除庫存{instance.quantity}\n"
-            inventory.save()
-            instance.set_finished()
-            instance.is_finished = True
+# @receiver(pre_save, sender=SalesOrder)
+# def update_stats(sender, instance, **kwargs):
+#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+#     if instance.quantity > instance.stock.quantity:
+#         instance.set_pending()
+#     elif instance.quantity < instance.stock.quantity:
+#         instance.set_progress()
+#         if instance.is_finished:
+#             inventory = Inventory.objects.get(id=instance.stock.id)
+#             inventory.quantity -= instance.quantity
+#             inventory.note += f"{time_now} 扣除庫存{instance.quantity}\n"
+#             inventory.save()
+#             instance.set_finished()
+#             instance.is_finished = True
 
 
-def transform(request, id):
-    sales_order = get_object_or_404(SalesOrder, id=id)
-    sales_order.is_finished = True
-    sales_order.save()
-    messages.success(request, "扣除庫存完成!")
-    return redirect("sales_orders:index")
+# def transform(request, id):
+#     sales_order = get_object_or_404(SalesOrder, id=id)
+#     sales_order.is_finished = True
+#     sales_order.save()
+#     messages.success(request, "扣除庫存完成!")
+#     return redirect("sales_orders:index")

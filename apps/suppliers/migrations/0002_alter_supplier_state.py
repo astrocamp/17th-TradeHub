@@ -2,7 +2,7 @@
 
 
 import django_fsm
-from django.db import migrations
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -24,5 +24,10 @@ class Migration(migrations.Migration):
                 max_length=50,
                 protected=True,
             ),
+        ),
+        migrations.AddField(
+            model_name="supplier",
+            name="delete_at",
+            field=models.DateTimeField(auto_now=True),
         ),
     ]

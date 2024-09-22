@@ -1,149 +1,127 @@
-{% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-20 gap-2">
+{% extends 'layouts/base.html' %} {% block content %}
+<div class="flex justify-end mt-10 gap-2">
   <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow">
-      <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
-      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
-    </ul>
-  </div>
+  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
-<div class="divider text-3xl font-bold">訂單列表</div>
+<div class="divider text-3xl font-bold">訂購單列表</div>
+
 <div class="flex justify-center mt-10">
-  <div class="overflow">
-    <table class="table table-xl text-center">
-      <thead>
-        <tr class="text-xl">
-          <th>
-            <form action="{% url 'orders:index' %}" method="GET">
-              <select
-                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
-                name="select"
-              >
-                <option disabled>選擇</option>
-                <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
-                <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
-                <option value="to_be_confirmed" {% if selected_state == "to_be_confirmed" %}selected{% endif %}>待確認</option>
-                <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
-              </select>
-              <button type="submit" class="btn btn-square btn-sm">
-                <svg
-                  class="w-5 h-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                      d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                  />
-                </svg>
-              </button>
-            </form>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">序號{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=code&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">編號{% if order_by == 'code' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶{% if order_by == 'client' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">價格{% if order_by == 'price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=stock_quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存{% if order_by == 'stock_quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th>
-            <a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a>
-          </th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-          {% for order in orders %}
-          <tr class="hover">
-          {% if order.state == "finished" %}
-          <td>
-            <span class="btn btn-sm btn-success text-lg">完成</span>
-          </td>
-          {% elif order.state == "to_be_confirmed" %}
-          <td>
-            <span class="btn btn-sm btn-error text-lg">待確認</span>
-          </td>
-          {% elif order.state == "progress" %}
-          <td>
-            <span class="btn btn-sm btn-warning text-lg">進行中</span>
-          </td>
-          {% endif %}
-          <td>{{ order.id }}</td>
-          <td>{{ order.code }}</td>
-          <td>{{ order.client }}</td>
-          <td>{{ order.product }}</td>
-          <td>{{ order.price }}</td>
-          <td>{{ order.quantity }}</td>
-          <td>{{ order.stock_quantity }}</td>
-          <td>{{ order.note }}</td>
-          <td>
-            <form action="{% url 'orders:edit' order.id %}" method="POST">
-              {% csrf_token %}
-              <div class="dropdown dropdown-left">
-                <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
-              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary">編輯</a></li>
-                <li>
-                    <button type="submit" class="btn btn-error" name="delete">
-                      刪除
-                    </button>
-                </li>
-                {% if order.state == "progress" %}
-                <li><a onclick="return confirm('確認轉銷貨單?')" href="{% url 'orders:transform' order.id %}" class="btn btn-info">轉銷貨單</a></li>
-                {% endif %}
-                </ul>
-              </div>
-            </form>
-          </td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-    {% if page_obj.paginator.num_pages > 1 %}
-    <div class="pagination join flex justify-center">
-      <span class="step-links">
-        <a href="?page=1"><button class="join-item btn">第1頁</button></a>
-        {% if page_obj.has_previous %}
-        <a href="?page={{ page_obj.previous_page_number }}"
-          ><button class="join-item btn">«</button></a
-        >
-        {% else %}
-        <button class="join-item btn" disabled="disabled">«</button>
+    <div class="overflow w-full">
+        <table class="table table-xl text-center">
+            <thead>
+                <tr class="text-xl">
+                    <th>
+                      <form action="{% url 'orders:index' %}" method="GET">
+                        <select
+                          class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                          name="select"
+                        >
+                          <option disabled>選擇</option>
+                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                          <option value="to_be_confirmed" {% if selected_state == "to_be_confirmed" %}selected{% endif %}>待確認</option>
+                          <option value="progress" {% if selected_state == "progress" %}selected{% endif %}>進行中</option>
+                        </select>
+                        <button type="submit" class="btn btn-square btn-sm">
+                          <svg
+                            class="w-5 h-5"
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 512 512"
+                          >
+                            <path
+                              d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                            />
+                          </svg>
+                        </button>
+                      </form>
+                    </th>
+                    <th><a href="{% url 'orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">訂購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'client_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                <tr onclick="window.location.href='{% url 'orders:show' order.id %}'" class="hover cursor-pointer">
+                    {% if order.state == "finished" %}
+                    <th>
+                      <span class="btn btn-sm btn-success text-lg">完成</span>
+                    </th>
+                    {% elif order.state == "to_be_confirmed" %}
+                    <th>
+                      <span class="btn btn-sm btn-error text-lg">待確認</span>
+                    </th>
+                    {% elif order.state == "progress" %}
+                    <th>
+                      <span class="btn btn-sm btn-warning text-lg">進行中</span>
+                    </th>
+                    {% endif %}
+                    <th>{{ order.order_number }}</th>
+                    <th>{{ order.client.name }}</th>
+                    <th>{{ order.client_tel }}</th>
+                    <th>{{ order.amount }}</th>
+                    <th>{{ order.note|date:"Y-m-d" }}</th>
+                    <th>{{ order.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th>
+                      <form action="{% url 'orders:delete' order.id %}" method="POST">
+                        {% csrf_token %}
+                        <div class="dropdown dropdown-left">
+                          <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                          <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary">編輯</a></li>
+                          <li>
+                              <button type="submit" class="btn btn-error" name="delete">
+                                刪除
+                              </button>
+                          </li>
+                          {% if order.state == "progress" %}
+                          <li><a onclick="return confirm('確認轉銷貨單?')" href="{% url 'orders:transform' order.id %}" class="btn btn-info">轉銷貨單</a></li>
+                          {% endif %}
+                          </ul>
+                        </div>
+                      </form>
+                    </th>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% if page_obj.has_other_pages %}
+        <div class="pagination join flex justify-center">
+          <span class="step-links">
+            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">«</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">«</button>
+            {% endif %}
+            <button class="join-item btn">第{{ page_obj.number }}頁</button>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">»</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">»</button>
+            {% endif %}
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">
+                第{{ page_obj.paginator.num_pages }}頁
+              </button></a
+            >
+          </span>
+        </div>
         {% endif %}
-        <button class="join-item btn">第{{ page_obj.number }}頁</button>
-        {% if page_obj.has_next %}
-        <a href="?page={{ page_obj.next_page_number }}"
-          ><button class="join-item btn">»</button></a
-        >
-        {% else %}
-        <button class="join-item btn" disabled="disabled">»</button>
-        {% endif %}
-        <a href="?page={{ page_obj.paginator.num_pages }}"
-          ><button class="join-item btn">
-            第{{ page_obj.paginator.num_pages }}頁
-          </button></a
-        >
-      </span>
     </div>
-    {% endif %}
-  </div>
 </div>
-{% include "shared/import_export.html" %}
+{% url 'orders:export_csv' as export_csv_url %}
+{% url 'orders:export_excel' as export_excel_url %}
+
+{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
 {% endblock %}
