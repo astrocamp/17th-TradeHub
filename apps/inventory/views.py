@@ -273,7 +273,6 @@ def update_state(sender, instance, **kwargs):
             order = PurchaseOrder.objects.get(
                 supplier=instance.supplier,
                 state=PurchaseOrder.PENDING,
-                note__contains="缺貨",
             )
             order.note += "\n" + message
             orderitem = ProductItem.objects.create(
@@ -309,7 +308,8 @@ def update_state(sender, instance, **kwargs):
                 product=instance.product,
                 quantity=instance.safety_stock - instance.quantity,
                 cost_price=instance.product.cost_price,
-                subtotal=instance.product.cost_price * instance.safety_stock,
+                subtotal=instance.product.cost_price
+                * (instance.safety_stock - instance.quantity),
             )
             order.amount = orderitem.subtotal
             order.save()
@@ -328,7 +328,8 @@ def update_state(sender, instance, **kwargs):
                 product=instance.product,
                 quantity=instance.safety_stock - instance.quantity,
                 cost_price=instance.product.cost_price,
-                subtotal=instance.product.cost_price * instance.safety_stock,
+                subtotal=instance.product.cost_price
+                * (instance.safety_stock - instance.quantity),
             )
             orderitem.quantity += instance.safety_stock - instance.quantity
             order.amount += orderitem.subtotal
