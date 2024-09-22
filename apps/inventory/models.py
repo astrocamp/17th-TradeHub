@@ -5,6 +5,7 @@ from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
+from apps.users.models import Notification
 
 
 class Inventory(models.Model):

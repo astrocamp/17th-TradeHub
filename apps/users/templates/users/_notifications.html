@@ -1,0 +1,23 @@
+<div id="notification-list" class="">
+  <h3 class="text-lg font-bold">通知</h3>
+  <ul>
+      {% for notification in notifications %}
+        <li class="notification-item hover:bg-gray-200 w-full">
+          <a href="{% url 'users:notifications' %}">
+            <div class="flex justify-between text-sm">
+              <p>{{ notification.created_at|date:"y/m/d H:i" }}</p>
+              <!-- <p>({{ notification.created_at|timesince }} 前)</p> -->
+              {% if not notification.is_read %}
+                <span class="text-red-500">(未讀)</span>
+              {% endif %}
+            </div>
+            <div class="flex flex-col font-bold text-sm">
+              <p>{{ notification.message }}</p>
+            </div>
+          </a>
+        </li>
+      {% empty %}
+        <li>沒有通知</li>
+      {% endfor %}
+  </ul>
+</div>
