@@ -39,7 +39,7 @@
               </button>
             </form>
             </th>
-            <th><a href="{% url 'products:index' %}?sort=product_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品編號{% if order_by == 'product_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -64,7 +64,7 @@
               <span class="btn btn-sm btn-error text-lg">未購買</span>
             </th>
             {% endif %}
-            <th>{{product.product_number}}</th>
+            <th>{{product.number}}</th>
             <th>{{product.product_name}}</th>
             <th>{{product.cost_price}}</th>
             <th>{{product.sale_price}}</th>

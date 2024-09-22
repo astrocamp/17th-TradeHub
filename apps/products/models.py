@@ -11,7 +11,7 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    product_number = models.CharField(max_length=10, unique=True)
+    number = models.CharField(max_length=20, unique=True)
     product_name = models.CharField(max_length=20)
     cost_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()

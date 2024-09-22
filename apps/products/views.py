@@ -92,7 +92,7 @@ def import_file(request):
                     try:
                         supplier = Supplier.objects.get(id=row[4])
                         Product.objects.create(
-                            product_number=row[0],
+                            number=row[0],
                             product_name=row[1],
                             cost_price=row[2],
                             sale_price=row[3],
@@ -110,7 +110,7 @@ def import_file(request):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
-                        "商品編號": "product_number",
+                        "商品編號": "number",
                         "商品名稱": "product_name",
                         "商品進價": "cost_price",
                         "商品售價": "sale_price",
@@ -123,7 +123,7 @@ def import_file(request):
                     try:
                         supplier = Supplier.objects.get(id=int(row["supplier"]))
                         Product.objects.create(
-                            product_number=str(row["product_number"]),
+                            number=str(row["number"]),
                             product_name=str(row["product_name"]),
                             cost_price=str(row["cost_price"]),
                             sale_price=str(row["sale_price"]),
@@ -163,7 +163,7 @@ def export_csv(request):
     for product in products:
         writer.writerow(
             [
-                product.product_number,
+                product.number,
                 product.product_name,
                 product.price,
                 product.supplier,
@@ -181,7 +181,7 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Products.xlsx"
 
     products = Product.objects.select_related("product", "supplier").values(
-        "product_number",
+        "number",
         "product_name",
         "cost_price",
         "sale_price",
@@ -194,7 +194,7 @@ def export_excel(request):
         df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     column_mapping = {
-        "product_number": "商品編號",
+        "number": "商品編號",
         "product_name": "商品名稱",
         "cost_price": "商品進價",
         "sale_price": "商品售價",
@@ -216,7 +216,7 @@ def export_sample(request):
     response["Content-Disposition"] = "attachment; filename=ProductSample.xlsx"
 
     data = {
-        "product_number": ["P033"],
+        "number": ["P033"],
         "product_name": ["米"],
         "cost_price": ["100"],
         "sale_price": ["120"],

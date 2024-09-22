@@ -11,6 +11,7 @@ class SupplierManager(models.Manager):
 
 
 class Supplier(models.Model):
+    number = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=20)
     telephone = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)

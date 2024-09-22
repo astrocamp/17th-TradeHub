@@ -140,7 +140,7 @@ def load_supplier_info(request):
     supplier_id = request.GET.get("supplier_id")
     supplier = Supplier.objects.get(id=supplier_id)
     products = Product.objects.filter(supplier=supplier).values(
-        "id", "product_number", "product_name", "cost_price", "sale_price"
+        "id", "number", "product_name", "cost_price", "sale_price"
     )
     products_data = list(products)
     data = {

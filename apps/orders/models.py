@@ -16,7 +16,7 @@ class OrdersManager(models.Manager):
 
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=20, unique=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="orders")
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)

@@ -12,6 +12,7 @@ class InventoryManager(models.Manager):
 
 
 class Inventory(models.Model):
+    number = models.CharField(max_length=20, unique=True)
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="inventories"
     )
