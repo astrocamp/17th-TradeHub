@@ -67,12 +67,6 @@
                       <span class="btn btn-sm btn-warning text-lg">進行中</span>
                     </th>
                     {% endif %}
-                    {% comment %} <input
-                      type="checkbox"
-                      name="selected_purchase_orders"
-                      value="{{ purchase_order.id }}"
-                      class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                    /> {% endcomment %}
                     <th>{{ purchase_order.order_number }}</th>
                     <th>{{ purchase_order.supplier.name }}</th>
                     <th>{{ purchase_order.supplier_tel }}</th>
@@ -89,7 +83,12 @@
                               刪除
                             </a>
                           </li>
+                          {% if purchase_order.state == "progress" %}
                           <li><a onclick="return confirm('確認轉進貨單?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info">轉進貨單</a></li>
+                          {% endif %}
+                          {% if purchase_order.state == "pending" %}
+                          <li><a onclick="return confirm('確認轉成進行中?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info">轉進行中</a></li>
+                          {% endif %}
                         </ul>
                       </div>
                     </th>
