@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta
 
-import pandas as pd
+# import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -13,7 +13,7 @@ from django.utils import timezone
 from django.utils.timezone import timezone as tz
 from django.views.decorators.http import require_POST
 
-from apps.goods_receipts.models import GoodsReceipt
+from apps.goods_receipts.models import GoodsReceipt, GoodsReceiptProductItem
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -276,18 +276,33 @@ def export_excel(request):
 @receiver(pre_save, sender=PurchaseOrder)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if instance.state == PurchaseOrder.PENDING:
+        if instance.is_finished:
+            instance.set_progress()
+            instance.is_finished = False
     if instance.state == PurchaseOrder.PROGRESS:
         if instance.is_finished:
-            items = ProductItem.objects.get(purchase_order=instance)
-            GoodsReceipt.objects.create(
-                receipt_number=instance.order_number,
+            items = ProductItem.objects.filter(purchase_order=instance)
+            receipt = GoodsReceipt.objects.create(
+                order_number="G" + instance.order_number,
                 supplier=instance.supplier,
-                goods_name=items.product,
-                order_quantity=items.quantity,
-                purchase_quantity=0,
-                method="採購單",
-                note=f"{time_now} 採購單 -> 進貨單，訂單編號{instance.order_number}",
+                supplier_tel=instance.supplier_tel,
+                contact_person=instance.contact_person,
+                supplier_email=instance.supplier_email,
+                amount=0,
+                note=f"訂單編號{instance.order_number}採購->進貨{time_now}",
             )
+            for item in items:
+                receipt_item = GoodsReceiptProductItem.objects.create(
+                    goods_receipt=receipt,
+                    product=item.product,
+                    ordered_quantity=item.quantity,
+                    received_quantity=0,
+                    cost_price=item.cost_price,
+                    subtotal=item.cost_price * item.quantity,
+                )
+                receipt.amount += receipt_item.subtotal
+            receipt.save()
             instance.set_finished()
             instance.is_finished = False
 
@@ -296,5 +311,5 @@ def transform_goods_receipt(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, id=id)
     purchase_order.is_finished = True
     purchase_order.save()
-    messages.success(request, "轉進貨單完成!")
+    messages.success(request, "轉換成功!")
     return redirect("purchase_orders:index")

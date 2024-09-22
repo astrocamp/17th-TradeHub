@@ -1,7 +1,7 @@
 import csv
-from datetime import datetime
+from datetime import datetime, timedelta, timezone
 
-import pandas as pd
+# import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -10,6 +10,8 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.products.models import Product
+from apps.purchase_orders.models import ProductItem, PurchaseOrder
+from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
 
 from .forms.inventory_form import FileUploadForm, RestockForm
@@ -74,18 +76,6 @@ def delete(request, id):
     inventory.delete()
     messages.success(request, "刪除完成!")
     return redirect("inventory:index")
-
-
-@receiver(pre_save, sender=Inventory)
-def update_state(sender, instance, **kwargs):
-    if instance.safety_stock != 0:
-        if instance.quantity <= 0:
-            instance.set_out_stock()
-        elif instance.quantity < instance.safety_stock:
-            instance.set_low_stock()
-        else:
-            instance.set_normal()
-    instance.set_new_stock()
 
 
 def import_file(request):
@@ -243,3 +233,107 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Inventory")
 
     return response
+
+
+@receiver(pre_save, sender=Inventory)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    if instance.safety_stock == 0:
+        instance.set_new_stock()
+    if instance.quantity <= 0:
+        purchase_order = PurchaseOrder.objects.filter(
+            supplier=instance.supplier,
+            state=PurchaseOrder.PENDING,
+        )
+        if not purchase_order:
+            message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
+            supplier = Supplier.objects.get(name=instance.supplier.name)
+            order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
+                supplier=instance.supplier,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
+                amount=0,
+                note=message,
+                state=PurchaseOrder.PENDING,
+            )
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price * instance.safety_stock,
+            )
+            order.amount = orderitem.subtotal
+            order.save()
+
+        else:
+            message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
+            order = PurchaseOrder.objects.get(
+                supplier=instance.supplier,
+                state=PurchaseOrder.PENDING,
+            )
+            order.note += "\n" + message
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price * instance.safety_stock,
+            )
+            order.amount += orderitem.subtotal
+            order.save()
+        instance.set_out_stock()
+    elif instance.quantity < instance.safety_stock:
+        purchase_order = PurchaseOrder.objects.filter(
+            supplier=instance.supplier,
+            state=PurchaseOrder.PENDING,
+        )
+        if not purchase_order:
+            message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
+            supplier = Supplier.objects.get(name=instance.supplier.name)
+            order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(),
+                supplier=instance.supplier,
+                supplier_tel=supplier.telephone,
+                contact_person=supplier.contact_person,
+                supplier_email=supplier.email,
+                amount=0,
+                note=message,
+                state=PurchaseOrder.PENDING,
+            )
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock - instance.quantity,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price
+                * (instance.safety_stock - instance.quantity),
+            )
+            order.amount = orderitem.subtotal
+            order.save()
+        else:
+            message = (
+                f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
+            )
+            order = PurchaseOrder.objects.get(
+                supplier=instance.supplier,
+                state=PurchaseOrder.PENDING,
+                note__contains="低水位",
+            )
+            order.note += "\n" + message
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock - instance.quantity,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price
+                * (instance.safety_stock - instance.quantity),
+            )
+            orderitem.quantity += instance.safety_stock - instance.quantity
+            order.amount += orderitem.subtotal
+            order.save()
+        instance.set_low_stock()
+    else:
+        instance.set_normal()

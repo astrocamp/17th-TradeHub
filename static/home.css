@@ -28,7 +28,7 @@
   position: absolute;
   z-index: 1;
   padding: 1rem;
-  right: 10%;
+  right: 5%;
   top: 50%;
   transform: translateY(-50%);
 }
