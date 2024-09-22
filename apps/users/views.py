@@ -143,10 +143,18 @@ def edit_profile(request, id):
 def notifications(request):
     notifications_list = Notification.objects.order_by("-created_at")
     paginator = Paginator(notifications_list, 5)
-
+    sender_type = request.GET.get("sender_type")
+    sender_state = request.GET.get("sender_state")
     page_number = request.GET.get("page")
     notifications = paginator.get_page(page_number)
 
+    if sender_type and sender_state:
+        Notification.objects.filter(
+            sender_type=sender_type, sender_state=sender_state
+        ).update(is_read=True)
+
     return render(
-        request, "users/_notifications.html", {"notifications": notifications}
+        request,
+        "users/_notifications.html",
+        {"notifications": notifications, "sender_type": sender_type},
     )

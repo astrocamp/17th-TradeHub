@@ -75,6 +75,8 @@ class Notification(models.Model):
     message = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     is_read = models.BooleanField(default=False)
+    sender_type = models.CharField(max_length=20, default="")
+    sender_state = models.CharField(max_length=20, default="")
 
     def __str__(self):
         return f"{self.message}-{self.created_at}"
@@ -86,21 +88,14 @@ def notify_purchase_order(sender, instance, created, **kwargs):
     if created and instance.state == PurchaseOrder.PENDING:
         notification = Notification(
             message=f"[採購單編號 {instance.order_number}] 等待審核",
+            sender_type="PurchaseOrder",
+            sender_state="pending",
         )
         notification.save()
-    # elif not created:
-    #     previous_state = PurchaseOrder.objects.get(pk=instance.pk).state
-    #     if previous_state != instance.state:
-    #         notification = Notification(
-    #             message=f"[採購單編號({instance.order_number})] 狀態變更，等待審核",
-    #         )
-    #         notification.save()
-
-
-# @receiver(post_save, sender=GoodsReceipt)
-# def notify_goods_receipt(sender, instance, created, **kwargs):
-#     if created and instance.state == GoodsReceipt.TO_BE_RESTOCKED:
-#         notification = Notification(
-#             message=f"[進貨單編號 {instance.receipt_number}] 等待審核",
-#         )
-#         notification.save()
+    elif created and instance.state == PurchaseOrder.PROGRESS:
+        notification = Notification(
+            message=f"[採購單編號{instance.order_number}] 已進入採購流程",
+            sender_type="PurchaseOrder",
+            sender_state="progress",
+        )
+        notification.save()
