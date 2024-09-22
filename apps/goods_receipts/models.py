@@ -15,7 +15,7 @@ class GoodReceiptManager(models.Manager):
 
 
 class GoodsReceipt(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=11)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="goods_receipts"
     )

@@ -15,7 +15,6 @@
     </a>
   </div>
 
-  <!-- Display Order Information -->
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
       <div class="flex flex-col">
@@ -55,14 +54,13 @@
     </div>
   </div>
 
-  <!-- Product Items Section -->
   <div class="bg-gray-100 p-4 rounded-lg shadow-sm">
-    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">商品項目</h2>
+    <h2 class="text-xl font-bold text-gray-800 mb-6 text-center">商品細項</h2>
     <div
       class="flex items-center justify-between border-b border-gray-200 pb-2 mb-4 font-semibold text-gray-800"
     >
       <div class="flex-1 text-center">商品名稱</div>
-      <div class="flex-1 text-center">商品數量</div>
+      <div class="flex-1 text-center">採購數量</div>
       <div class="flex-1 text-center">商品進價</div>
       <div class="flex-1 text-center">小計</div>
     </div>
@@ -90,7 +88,6 @@
     </div>
   </div>
 
-  <!-- Edit and Delete Buttons -->
   <div class="flex justify-center gap-4 mt-6">
     <a
       href="{% url 'purchase_orders:edit' purchase_order.id %}"

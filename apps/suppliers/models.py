@@ -1,9 +1,15 @@
 import re
 
 from django.db import models
+from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
+
+
+class SupplierManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Supplier(models.Model):
@@ -13,7 +19,6 @@ class Supplier(models.Model):
     email = models.EmailField(unique=True)
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
-    established_date = models.DateTimeField(auto_now_add=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
@@ -21,7 +26,15 @@ class Supplier(models.Model):
         blank=True,
         null=True,
     )
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True, null=True)
+
+    objects = SupplierManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return f"{self.name} ({self.gui_number})"

@@ -1,11 +1,15 @@
 from django.db import models
+from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
 from apps.products.models import Product
-from apps.purchase_orders.models import ProductItem, PurchaseOrder
-from apps.purchase_orders.views import generate_order_number
 from apps.suppliers.models import Supplier
+
+
+class InventoryManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Inventory(models.Model):
@@ -17,6 +21,7 @@ class Inventory(models.Model):
     )
     quantity = models.PositiveIntegerField()
     safety_stock = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
@@ -25,10 +30,17 @@ class Inventory(models.Model):
         blank=True,
         null=True,
     )
+    deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)
 
+    objects = InventoryManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
+
     def __str__(self):
-        return f"{self.product} - {self.get_state_display()} ({self.quantity})"
+        return f"{self.quantity}"
 
     OUT_STOCK = "out_stock"
     LOW_STOCK = "low_stock"
@@ -52,53 +64,11 @@ class Inventory(models.Model):
 
     @transition(field=state, source="*", target=OUT_STOCK)
     def set_out_stock(self):
-        if not PurchaseOrder.objects.filter(
-            supplier=self.supplier, state=PurchaseOrder.PROGRESS
-        ):
-            message = f"庫存於缺貨狀態，自動下單 {self.safety_stock} 個 {self.product}"
-            supplier = Supplier.objects.get(name=self.supplier.name)
-            purchase_order = PurchaseOrder.objects.create(
-                order_number=generate_order_number(),
-                supplier=self.supplier,
-                supplier_tel=supplier.telephone,
-                contact_person=supplier.contact_person,
-                supplier_email=supplier.email,
-                amount=0,
-                note=message,
-                state=PurchaseOrder.PROGRESS,
-            )
-            ProductItem.objects.create(
-                purchase_order=purchase_order,
-                product=self.product,
-                quantity=self.safety_stock,
-                cost_price=0,
-                subtotal=0,
-            )
+        pass
 
     @transition(field=state, source="*", target=LOW_STOCK)
     def set_low_stock(self):
-        if not PurchaseOrder.objects.filter(
-            supplier=self.supplier, state=PurchaseOrder.PENDING
-        ):
-            message = f"庫存低於安全庫存量，自動下單 {self.safety_stock - self.quantity} 個 {self.product}"
-            supplier = Supplier.objects.get(name=self.supplier.name)
-            purchase_order = PurchaseOrder.objects.create(
-                order_number=generate_order_number(),
-                supplier=self.supplier,
-                supplier_tel=supplier.telephone,
-                contact_person=supplier.contact_person,
-                supplier_email=supplier.email,
-                amount=0,
-                note=message,
-                state=PurchaseOrder.PENDING,
-            )
-            ProductItem.objects.create(
-                purchase_order=purchase_order,
-                product=self.product,
-                quantity=self.safety_stock - self.quantity,
-                cost_price=0,
-                subtotal=0,
-            )
+        pass
 
     @transition(field=state, source="*", target=NORMAL)
     def set_normal(self):

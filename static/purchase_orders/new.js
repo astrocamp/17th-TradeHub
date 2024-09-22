@@ -15,15 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     subtotalInputs.forEach(input =>{
         input.readOnly = true;
     })
-    // 禁用或啟用子表單的商品選擇
-    function toggleFormItems(disabled) {
-        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
-            productSelect.disabled = disabled;
-        });
-        costPriceInput.readOnly = disabled;
-        quantityInput.readOnly = disabled;
-        addItemButton.disabled = disabled;
-    }
 
     // 自動填入供應商資訊
     if (supplierSelect.value) {
@@ -81,6 +72,16 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // 禁用或啟用子表單的商品選擇
+    function toggleFormItems(disabled) {
+        document.querySelectorAll('[id^="id_items-"][id$="-product"]').forEach(productSelect => {
+            productSelect.disabled = disabled;
+        });
+        costPriceInput.readOnly = disabled;
+        quantityInput.readOnly = disabled;
+        addItemButton.disabled = disabled;
+    }
+
     function fetchSupplierInfo(supplierId) {
         fetch(`/purchase_orders/load_supplier_info/?supplier_id=${supplierId}`)
             .then(response => response.json())
@@ -90,6 +91,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.getElementById('id_supplier_email').value = data.supplier_email;
                 updateProductOptions(data.products);
                 const costPriceInputs = document.querySelectorAll('input[name$="-cost_price"]');
+                const quantityInputs = document.querySelectorAll('input[name$="-quantity"]');
+                const subtotalInputs = document.querySelectorAll('input[name$="-subtotal"]');
                 costPriceInputs.forEach(input => {
                     input.value = '';
                 });
@@ -99,6 +102,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 subtotalInputs.forEach(input => {
                     input.value = '';
                 });
+                updateTotalAmount();
             });
     }
 

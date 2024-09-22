@@ -9,6 +9,7 @@ class LoginRequiredMiddleware:
     def __call__(self, request):
 
         exempt_urls = [
+            reverse("pages:out_home"),
             reverse("users:log_in"),
             reverse("users:register"),
             reverse("users:forget_password"),
@@ -27,7 +28,7 @@ class LoginRequiredMiddleware:
                     reverse("users:reset_password"),
                 ]:
                     return self.get_response(request)
-            return redirect("users:log_in")
+            return redirect("pages:out_home")
 
         response = self.get_response(request)
         return response
