@@ -69,7 +69,7 @@
           <th>
             <span class="btn btn-sm btn-error text-lg">缺貨</span>
           </th>
-          {% else %}
+          {% elif item.state == "new_stock" %}
           <th>
             <span class="btn btn-sm btn-success text-lg">新庫存</span>
           </th>
