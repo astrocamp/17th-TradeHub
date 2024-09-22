@@ -16,7 +16,6 @@ from apps.goods_receipts.models import GoodsReceipt, Product, Supplier
 from apps.inventory.models import Inventory
 
 from .forms.goods_receipts_form import (
-    FileUploadForm,
     GoodsReceiptForm,
     GoodsReceiptProductItemForm,
     ProductItemFormSet,
@@ -249,64 +248,65 @@ def export_excel(request):
         df.to_excel(writer, index=False, sheet_name="GoodsReceipts")
     return response
 
-    # @receiver(pre_save, sender=GoodsReceipt)
-    # def update_state(sender, instance, **kwargs):
-    utc_8 = pytz.timezone("Asia/Taipei")
-    time_now = timezone.now().astimezone(utc_8).strftime("%Y/%m/%d %H:%M:%S")
-    if instance.purchase_quantity < instance.order_quantity:
-        if instance.is_finished:
-            instance.order_quantity -= instance.purchase_quantity
-            instance.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}，剩餘{instance.order_quantity}個"
-            if Inventory.objects.filter(
-                product=instance.goods_name, supplier=instance.supplier
-            ).exists():
-                inventory = Inventory.objects.get(
-                    product=instance.goods_name, supplier=instance.supplier
-                )
-                inventory.quantity += instance.purchase_quantity
-                inventory.last_updated = time_now
-                inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
-                inventory.save()
-            else:
-                Inventory.objects.create(
-                    product=instance.goods_name,
-                    supplier=instance.supplier,
-                    quantity=instance.purchase_quantity,
-                    safety_stock=0,
-                    note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
-                    last_updated=time_now,
-                )
-            instance.purchase_quantity = 0
-            instance.is_finished = False
-    instance.set_to_be_restocked()
-    if instance.purchase_quantity >= instance.order_quantity:
-        instance.set_to_be_stocked()
-        if instance.is_finished:
-            if Inventory.objects.filter(
-                product=instance.goods_name, supplier=instance.supplier
-            ).exists():
-                inventory = Inventory.objects.get(
-                    product=instance.goods_name, supplier=instance.supplier
-                )
-                inventory.quantity += instance.purchase_quantity
-                inventory.last_updated = time_now
-                inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
-                inventory.save()
-            else:
-                Inventory.objects.create(
-                    product=instance.goods_name,
-                    supplier=instance.supplier,
-                    quantity=instance.purchase_quantity,
-                    safety_stock=0,
-                    note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
-                    last_updated=time_now,
-                )
-            instance.note += (
-                f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
-            )
-            instance.order_quantity -= instance.purchase_quantity
-            instance.purchase_quantity = 0
-            instance.set_finished()
+
+# @receiver(pre_save, sender=GoodsReceipt)
+# def update_state(sender, instance, **kwargs):
+#     utc_8 = pytz.timezone("Asia/Taipei")
+#     time_now = timezone.now().astimezone(utc_8).strftime("%Y/%m/%d %H:%M:%S")
+#     if instance.purchase_quantity < instance.order_quantity:
+#         if instance.is_finished:
+#             instance.order_quantity -= instance.purchase_quantity
+#             instance.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}，剩餘{instance.order_quantity}個"
+#             if Inventory.objects.filter(
+#                 product=instance.goods_name, supplier=instance.supplier
+#             ).exists():
+#                 inventory = Inventory.objects.get(
+#                     product=instance.goods_name, supplier=instance.supplier
+#                 )
+#                 inventory.quantity += instance.purchase_quantity
+#                 inventory.last_updated = time_now
+#                 inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
+#                 inventory.save()
+#             else:
+#                 Inventory.objects.create(
+#                     product=instance.goods_name,
+#                     supplier=instance.supplier,
+#                     quantity=instance.purchase_quantity,
+#                     safety_stock=0,
+#                     note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
+#                     last_updated=time_now,
+#                 )
+#             instance.purchase_quantity = 0
+#             instance.is_finished = False
+#     instance.set_to_be_restocked()
+#     if instance.purchase_quantity >= instance.order_quantity:
+#         instance.set_to_be_stocked()
+#         if instance.is_finished:
+#             if Inventory.objects.filter(
+#                 product=instance.goods_name, supplier=instance.supplier
+#             ).exists():
+#                 inventory = Inventory.objects.get(
+#                     product=instance.goods_name, supplier=instance.supplier
+#                 )
+#                 inventory.quantity += instance.purchase_quantity
+#                 inventory.last_updated = time_now
+#                 inventory.note += f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
+#                 inventory.save()
+#             else:
+#                 Inventory.objects.create(
+#                     product=instance.goods_name,
+#                     supplier=instance.supplier,
+#                     quantity=instance.purchase_quantity,
+#                     safety_stock=0,
+#                     note=f"{time_now} 新進貨物{instance.goods_name}：{instance.purchase_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}",
+#                     last_updated=time_now,
+#                 )
+#             instance.note += (
+#                 f"{time_now} 入庫{instance.purchase_quantity}個：{instance.goods_name}"
+#             )
+#             instance.order_quantity -= instance.purchase_quantity
+#             instance.purchase_quantity = 0
+#             instance.set_finished()
 
 
 def stocked(request, id):
