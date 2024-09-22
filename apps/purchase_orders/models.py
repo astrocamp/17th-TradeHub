@@ -14,7 +14,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=11)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -82,7 +82,7 @@ class PurchaseOrder(models.Model):
 
 class ProductItem(models.Model):
     purchase_order = models.ForeignKey(
-        "PurchaseOrder", on_delete=models.CASCADE, related_name="items"
+        PurchaseOrder, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()

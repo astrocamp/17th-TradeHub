@@ -82,12 +82,12 @@ class GoodsReceipt(models.Model):
 
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
-        self.is_finished = False
+        pass
 
 
 class GoodsReceiptProductItem(models.Model):
     goods_receipt = models.ForeignKey(
-        "GoodsReceipt", on_delete=models.CASCADE, related_name="items"
+        GoodsReceipt, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordered_quantity = models.PositiveIntegerField()

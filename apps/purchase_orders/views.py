@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 # import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -273,18 +273,25 @@ def export_excel(request):
     return response
 
 
-@receiver(pre_save, sender=PurchaseOrder)
+@receiver(post_save, sender=PurchaseOrder)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.state == PurchaseOrder.PENDING:
         if instance.is_finished:
             instance.set_progress()
             instance.is_finished = False
+            instance.save()
+
     if instance.state == PurchaseOrder.PROGRESS:
         if instance.is_finished:
             items = ProductItem.objects.filter(purchase_order=instance)
+
+            for item in items:
+                if not item.pk:
+                    item.save()
+
             receipt = GoodsReceipt.objects.create(
-                order_number="G" + instance.order_number,
+                order_number=instance.order_number,
                 supplier=instance.supplier,
                 supplier_tel=instance.supplier_tel,
                 contact_person=instance.contact_person,
@@ -292,6 +299,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=f"訂單編號{instance.order_number}採購->進貨{time_now}",
             )
+
             for item in items:
                 receipt_item = GoodsReceiptProductItem.objects.create(
                     goods_receipt=receipt,
@@ -302,9 +310,11 @@ def update_state(sender, instance, **kwargs):
                     subtotal=item.cost_price * item.quantity,
                 )
                 receipt.amount += receipt_item.subtotal
-            receipt.save()
+
+            receipt.save(update_fields=["amount"])
             instance.set_finished()
             instance.is_finished = False
+            instance.save()
 
 
 def transform_goods_receipt(request, id):
