@@ -17,8 +17,8 @@ class Client(models.Model):
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-    delete_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
