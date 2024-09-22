@@ -46,15 +46,6 @@ class CustomUser(AbstractUser):
     def get_full_name(self):
         return f"{self.last_name} {self.first_name}"
 
-    class Meta:
-
-        permissions = [
-            # 設置權限類別
-            ("can_edit_department", "Can edit department"),
-            ("can_edit_position", "Can edit position"),
-            ("can_edit_hire_date", "Can edit hire date"),
-        ]
-
     def format_telephone(self, number):
         number = re.sub(r"\D", "", number)
 
@@ -92,10 +83,17 @@ def notify_purchase_order(sender, instance, created, **kwargs):
             sender_state="pending",
         )
         notification.save()
-    elif created and instance.state == PurchaseOrder.PROGRESS:
+    elif instance.state == PurchaseOrder.PROGRESS:
         notification = Notification(
             message=f"[採購單編號{instance.order_number}] 已進入採購流程",
             sender_type="PurchaseOrder",
             sender_state="progress",
+        )
+        notification.save()
+    elif instance.state == PurchaseOrder.FINISHED:
+        notification = Notification(
+            message=f"[採購單編號{instance.order_number}] 已結案",
+            sender_type="PurchaseOrder",
+            sender_state="finished",
         )
         notification.save()

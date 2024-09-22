@@ -10,7 +10,10 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(model_name="notification", name="sender_id",),
+        migrations.RemoveField(
+            model_name="notification",
+            name="sender_id",
+        ),
         migrations.AddField(
             model_name="notification",
             name="sender_state",

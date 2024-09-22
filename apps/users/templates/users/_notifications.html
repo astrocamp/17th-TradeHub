@@ -8,6 +8,8 @@
               <a href="{% url 'purchase_orders:index' %}?select=pending" class="cursor-pointer">
             {% elif notification.sender_state == 'progress' %}
               <a href="{% url 'purchase_orders:index' %}?select=progress" class="cursor-pointer">
+            {% elif notification.sender_state == 'finished' %}
+              <a href="{% url 'purchase_orders:index' %}?select=finished" class="cursor-pointer">
             {% endif %}
           {% endif %}
             <div class="flex justify-between text-sm">
