@@ -57,6 +57,9 @@ class SalesOrder(models.Model):
         else:
             return number
 
+    def __str__(self):
+        return self.product.product_name
+
     PENDING = "pending"
     PROGRESS = "progress"
     FINISHED = "finished"
