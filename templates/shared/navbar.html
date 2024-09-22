@@ -105,32 +105,45 @@
       </li>
     </ul>
   </div>
-  <div x-data="{ focusSearch: false }" class="navbar-end">
-    {% if request.user.is_authenticated %}
+  <div x-data="{ focusSearch: false, searchField: '' }" class="navbar-end">
+    <form method="POST" action="{% url 'pages:search' %}">
+      <input
+        type="hidden"
+        name="csrfmiddlewaretoken"
+        value="{{ csrf_token }}"
+      />
+      {% if request.user.is_authenticated %}
     <div class="hidden lg:flex join">
-      <select class="select select-bordered max-w-xs join-item">
-        <option disabled selected>分類</option>
-        <option>客戶</option>
-        <option>商品</option>
-        <option>供應商</option>
-        <option>庫存</option>
-      </select>
-      <label
-        @keydown.window="if (($event.ctrlKey || $event.metaKey) && $event.key === 'k'){ $event.preventDefault();$refs.searchInput.focus(); }"
-        class="input input-bordered flex items-center join-item"
-      >
-        <input
-          type="text"
-          x-ref="searchInput"
-          class="grow"
-          name="search"
-          placeholder="Search"
-        />
-        <kbd class="kbd kbd-sm">⌘</kbd>
-        <kbd class="kbd kbd-sm">K</kbd>
-      </label>
-      {% endif %}
+        <select name="select" class="select select-bordered max-w-xs join-item">
+          <option disabled>分類</option>
+          <option {% if category == "Product" %}selected{% endif %} value="Product">商品</option>
+          <option {% if category == "Client" %}selected{% endif %} value="Client">客戶</option>
+          <option {% if category == "Supplier" %}selected{% endif %} value="Supplier">供應商</option>
+          <option {% if category == "Inventory" %}selected{% endif %} value="Inventory">庫存</option>
+          <option {% if category == "Order" %}selected{% endif %} value="Order">訂購單</option>
+          <option {% if category == "PurchaseOrder" %}selected{% endif %} value="PurchaseOrder">採購單</option>
+          <option {% if category == "SalesOrder" %}selected{% endif %} value="SalesOrder">銷貨單</option>
+          <option {% if category == "GoodsReceipt" %}selected{% endif %} value="GoodsReceipt">進貨單</option>
+        </select>
+        <label
+          @keydown.window="if (($event.ctrlKey || $event.metaKey) && $event.key === 'k'){ $event.preventDefault();$refs.searchInput.focus(); }"
+          class="input input-bordered flex items-center join-item"
+        >
+          <input
+            type="text"
+            x-ref="searchInput"
+            class="grow"
+            name="search"
+            placeholder="請輸入名稱 / 單號"
+            x-model="searchField"
+            @keydown.enter="$el.form.submit()"
+          />
+          <kbd class="kbd kbd-sm">⌘</kbd>
+          <kbd class="kbd kbd-sm">K</kbd>
+        </label>
+        {% endif %}
     </div>
+    </form>
 
     <!-- user status -->
     <div class="flex">

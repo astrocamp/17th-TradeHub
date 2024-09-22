@@ -24,8 +24,8 @@ class SalesOrderForm(forms.ModelForm):
             "client_address": "客戶地址",
             "client_email": "客戶Email",
             "shipping_method": "送貨方式",
-            "note": "備註",
             "amount": "總金額",
+            "note": "備註",
         }
         widgets = {
             "client": forms.Select(
