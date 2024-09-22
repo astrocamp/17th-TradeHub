@@ -29,7 +29,7 @@ class GoodsReceipt(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="GoodsReceipt",
+        related_name="goods_receipts",
         blank=True,
         null=True,
     )

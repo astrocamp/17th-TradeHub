@@ -17,7 +17,7 @@ class Supplier(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="Supplier",
+        related_name="suppliers",
         blank=True,
         null=True,
     )

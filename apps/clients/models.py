@@ -16,7 +16,7 @@ class Client(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="Client",
+        related_name="clients",
         blank=True,
         null=True,
     )

@@ -29,7 +29,7 @@ class PurchaseOrder(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="PurchaseOrder",
+        related_name="purchase_orders",
         blank=True,
         null=True,
     )

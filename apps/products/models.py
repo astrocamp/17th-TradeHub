@@ -16,7 +16,7 @@ class Product(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="Product",
+        related_name="products",
         blank=True,
         null=True,
     )

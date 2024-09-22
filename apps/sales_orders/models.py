@@ -28,7 +28,7 @@ class SalesOrder(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="SalesOrder",
+        related_name="sales_orders",
         blank=True,
         null=True,
     )

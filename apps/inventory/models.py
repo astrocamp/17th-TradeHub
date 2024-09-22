@@ -21,7 +21,7 @@ class Inventory(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
-        related_name="Inventory",
+        related_name="inventories",
         blank=True,
         null=True,
     )
