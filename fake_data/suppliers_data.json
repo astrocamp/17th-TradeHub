@@ -3,27 +3,31 @@
     "model": "suppliers.supplier",
     "pk": 1,
     "fields": {
-      "name": "供應商A",
+      "number": "S01",
+      "name": "阿明文具批發",
       "telephone": "0912-345678",
       "contact_person": "王小明",
       "email": "wangxiaoming@example.com",
       "gui_number": "12345678",
       "address": "台北市信義區光復南路123號",
       "created_at": "2024-09-03T12:00:00Z",
-      "note": "主要供應日常用品。"
+      "updated_at": "2024-09-03T12:00:00Z",
+      "note": "主要供應文具批發。"
     }
   },
   {
     "model": "suppliers.supplier",
     "pk": 2,
     "fields": {
-      "name": "供應商B",
+      "number": "S02",
+      "name": "華華蔬菜批發",
       "telephone": "0987-654321",
       "contact_person": "李大華",
       "email": "lidahua@example.com",
       "gui_number": "87654321",
       "address": "台中市西區建國北路456號",
       "created_at": "2024-09-02T12:00:00Z",
+      "updated_at": "2024-09-02T12:00:00Z",
       "note": "提供新鮮蔬菜。"
     }
   },
@@ -31,13 +35,15 @@
     "model": "suppliers.supplier",
     "pk": 3,
     "fields": {
-      "name": "供應商C",
+      "number": "S03",
+      "name": "美麗海鮮市場",
       "telephone": "0922-334455",
       "contact_person": "張美麗",
       "email": "zhangmeili@example.com",
       "gui_number": "23456789",
       "address": "高雄市前鎮區瑞隆路789號",
       "created_at": "2024-09-01T12:00:00Z",
+      "updated_at": "2024-09-01T12:00:00Z",
       "note": "提供海鮮商品。"
     }
   },
@@ -45,13 +51,15 @@
     "model": "suppliers.supplier",
     "pk": 4,
     "fields": {
-      "name": "供應商D",
+      "number": "S04",
+      "name": "小妮清潔用品",
       "telephone": "0933-445566",
-      "contact_person": "劉哲明",
+      "contact_person": "徐小妮",
       "email": "liuzheming@example.com",
       "gui_number": "34567890",
       "address": "台南市南區健康路012號",
       "created_at": "2024-08-30T12:00:00Z",
+      "updated_at": "2024-08-30T12:00:00Z",
       "note": "專供清潔用品。"
     }
   },
@@ -59,13 +67,15 @@
     "model": "suppliers.supplier",
     "pk": 5,
     "fields": {
-      "name": "供應商E",
+      "number": "S05",
+      "name": "志明包裝材料公司",
       "telephone": "0944-556677",
       "contact_person": "陳志明",
       "email": "chenzhiming@example.com",
       "gui_number": "45678901",
       "address": "新竹市東區光明路345號",
       "created_at": "2024-08-29T12:00:00Z",
+      "updated_at": "2024-08-29T12:00:00Z",
       "note": "提供包裝材料。"
     }
   },
@@ -73,13 +83,15 @@
     "model": "suppliers.supplier",
     "pk": 6,
     "fields": {
-      "name": "供應商F",
+      "number": "S06",
+      "name": "小華冷凍食品",
       "telephone": "0955-667788",
       "contact_person": "李小華",
       "email": "lixiaohua@example.com",
       "gui_number": "56789012",
       "address": "桃園市桃園區中華路678號",
       "created_at": "2024-08-28T12:00:00Z",
+      "updated_at": "2024-08-28T12:00:00Z",
       "note": "專供冷凍食品。"
     }
   },
@@ -87,13 +99,15 @@
     "model": "suppliers.supplier",
     "pk": 7,
     "fields": {
-      "name": "供應商G",
+      "number": "S07",
+      "name": "美君水果批發",
       "telephone": "0966-778899",
       "contact_person": "黃美君",
       "email": "huangmeijun@example.com",
       "gui_number": "67890123",
       "address": "台北市大安區復興南路234號",
       "created_at": "2024-08-27T12:00:00Z",
+      "updated_at": "2024-08-27T12:00:00Z",
       "note": "提供水果商品。"
     }
   },
@@ -101,13 +115,15 @@
     "model": "suppliers.supplier",
     "pk": 8,
     "fields": {
-      "name": "供應商H",
+      "number": "S08",
+      "name": "志明酒類批發",
       "telephone": "0977-889900",
       "contact_person": "吳志明",
       "email": "wuzhiming@example.com",
       "gui_number": "78901234",
       "address": "基隆市中正區和平路567號",
       "created_at": "2024-08-26T12:00:00Z",
+      "updated_at": "2024-08-26T12:00:00Z",
       "note": "專供酒類。"
     }
   },
@@ -115,13 +131,15 @@
     "model": "suppliers.supplier",
     "pk": 9,
     "fields": {
-      "name": "供應商I",
+      "number": "S09",
+      "name": "佳慧調味品公司",
       "telephone": "0988-776655",
       "contact_person": "蔡佳慧",
       "email": "caijiahui@example.com",
       "gui_number": "89012345",
       "address": "台南市北區中華北路890號",
       "created_at": "2024-08-25T12:00:00Z",
+      "updated_at": "2024-08-25T12:00:00Z",
       "note": "提供調味品。"
     }
   },
@@ -129,13 +147,15 @@
     "model": "suppliers.supplier",
     "pk": 10,
     "fields": {
-      "name": "供應商J",
+      "number": "S10",
+      "name": "阿偉肉舖",
       "telephone": "0933-888777",
       "contact_person": "林志偉",
       "email": "linzhiwei@example.com",
       "gui_number": "90123456",
       "address": "新竹市竹北市光復路345號",
       "created_at": "2024-08-24T12:00:00Z",
+      "updated_at": "2024-08-24T12:00:00Z",
       "note": "主要供應肉類商品。"
     }
   }
