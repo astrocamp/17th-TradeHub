@@ -21,6 +21,10 @@ from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.models import SalesOrder
 
 
+def out_home(request):
+    return render(request, "pages/out_home.html")
+
+
 def sales_chart(request):
 
     # 抓基本資料數值

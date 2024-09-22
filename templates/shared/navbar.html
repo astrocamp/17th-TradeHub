@@ -20,6 +20,7 @@
           />
         </svg>
       </div>
+
       <ul
         tabindex="0"
         class="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
@@ -27,7 +28,7 @@
         <li>客戶</li>
         <ul class="p-2">
           <li><a href="{% url 'clients:index' %}">客戶列表</a></li>
-          <li><a href="{% url 'orders:index' %}">訂單</a></li>
+          <li><a href="{% url 'orders:index' %}">訂購單</a></li>
         </ul>
         <li>商品</li>
         <ul class="p-2">
@@ -55,23 +56,28 @@
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal gap-x-5 font-bold text-md">
       <li>
+        {% if request.user.is_authenticated %}
         <details name="dropdown">
           <summary>客戶</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'clients:index' %}">客戶列表</a></li>
-            <li><a href="{% url 'orders:index' %}">訂單</a></li>
+            <li><a href="{% url 'orders:index' %}">訂購單</a></li>
           </ul>
         </details>
+        {% endif %}
       </li>
       <li>
+        {% if request.user.is_authenticated %}
         <details name="dropdown">
           <summary>商品</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
             <li><a href="{% url 'products:index' %}">商品列表</a></li>
           </ul>
         </details>
+        {% endif %}
       </li>
       <li>
+        {% if request.user.is_authenticated %}
         <details name="dropdown">
           <summary>供應商</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
@@ -81,8 +87,10 @@
             </li>
           </ul>
         </details>
+        {% endif %}
       </li>
       <li>
+        {% if request.user.is_authenticated %}
         <details name="dropdown">
           <summary>庫存</summary>
           <ul class="bg-base-100 rounded-t-none w-[120px]">
@@ -93,10 +101,12 @@
             <li><a href="{% url 'sales_orders:index' %}">銷貨單</a></li>
           </ul>
         </details>
+        {% endif %}
       </li>
     </ul>
   </div>
   <div x-data="{ focusSearch: false }" class="navbar-end">
+    {% if request.user.is_authenticated %}
     <div class="hidden lg:flex join">
       <select class="select select-bordered max-w-xs join-item">
         <option disabled selected>分類</option>
@@ -119,7 +129,9 @@
         <kbd class="kbd kbd-sm">⌘</kbd>
         <kbd class="kbd kbd-sm">K</kbd>
       </label>
+      {% endif %}
     </div>
+
     <!-- user status -->
     <div class="flex">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->
