@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
                 ),
                 ("quantity", models.PositiveIntegerField()),
                 ("safety_stock", models.PositiveIntegerField()),
-                ("create_at", models.DateTimeField(auto_now_add=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("delete_at", models.DateTimeField(auto_now=True)),
                 ("last_updated", models.DateTimeField(auto_now=True)),
                 ("note", models.TextField(blank=True)),

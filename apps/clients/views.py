@@ -131,7 +131,7 @@ def export_csv(request):
                 client.phone_number,
                 client.address,
                 client.email,
-                client.create_at,
+                client.created_at,
                 client.delete_at,
                 client.note,
             ]
@@ -147,7 +147,7 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
 
     clients = Client.objects.all().values(
-        "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
+        "name", "phone_number", "address", "email", "created_at", "delete_at", "note"
     )
 
     df = pd.DataFrame(clients)
@@ -159,7 +159,7 @@ def export_excel(request):
         "phone_number": "電話",
         "address": "地址",
         "email": "Email",
-        "create_at": "建立時間",
+        "created_at": "建立時間",
         "delete_at": "刪除時間",
         "note": "備註",
     }

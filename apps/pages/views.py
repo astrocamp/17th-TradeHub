@@ -63,22 +63,22 @@ def sales_chart(request):
     last_day_of_month_chinese = format_chinese_date(last_day_of_month)
 
     clients_month_num = Client.objects.filter(
-        create_at__range=(first_day_of_month, last_day_of_month),
+        created_at__range=(first_day_of_month, last_day_of_month),
         deleted_at=None,
     ).count()
 
     products_month_num = Product.objects.filter(
-        create_at__range=(first_day_of_month, last_day_of_month),
+        created_at__range=(first_day_of_month, last_day_of_month),
         deleted_at=None,
     ).count()
 
     suppliers_month_num = Supplier.objects.filter(
-        create_at__range=(first_day_of_month, last_day_of_month),
+        created_at__range=(first_day_of_month, last_day_of_month),
         deleted_at=None,
     ).count()
 
     inventory_month_num = Inventory.objects.filter(
-        create_at__range=(first_day_of_month, last_day_of_month),
+        created_at__range=(first_day_of_month, last_day_of_month),
         deleted_at=None,
     ).count()
 

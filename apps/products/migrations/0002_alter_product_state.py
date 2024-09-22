@@ -26,7 +26,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name="product",
-            name="create_at",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True),
         ),
         migrations.AddField(

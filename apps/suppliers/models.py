@@ -17,7 +17,7 @@ class Supplier(models.Model):
     email = models.EmailField(unique=True)
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True, null=True)
 

@@ -8,7 +8,7 @@
       "cost_price": 80,
       "sale_price": 100,
       "supplier": 1,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "長粒米"
     }
   },
@@ -21,7 +21,7 @@
       "cost_price": 40,
       "sale_price": 50,
       "supplier": 1,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "小麥面粉"
     }
   },
@@ -34,7 +34,7 @@
       "cost_price": 120,
       "sale_price": 150,
       "supplier": 1,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "植物油"
     }
   },
@@ -47,7 +47,7 @@
       "cost_price": 20,
       "sale_price": 30,
       "supplier": 2,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮生菜"
     }
   },
@@ -60,7 +60,7 @@
       "cost_price": 30,
       "sale_price": 40,
       "supplier": 2,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮番茄"
     }
   },
@@ -73,7 +73,7 @@
       "cost_price": 25,
       "sale_price": 35,
       "supplier": 2,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮黃瓜"
     }
   },
@@ -86,7 +86,7 @@
       "cost_price": 400,
       "sale_price": 500,
       "supplier": 3,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮鮭魚"
     }
   },
@@ -99,7 +99,7 @@
       "cost_price": 240,
       "sale_price": 300,
       "supplier": 3,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮蝦仁"
     }
   },
@@ -112,7 +112,7 @@
       "cost_price": 350,
       "sale_price": 450,
       "supplier": 3,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮螃蟹"
     }
   },
@@ -125,7 +125,7 @@
       "cost_price": 60,
       "sale_price": 80,
       "supplier": 4,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "家庭清潔劑"
     }
   },
@@ -138,7 +138,7 @@
       "cost_price": 45,
       "sale_price": 60,
       "supplier": 4,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "強效去油洗碗液"
     }
   },
@@ -151,7 +151,7 @@
       "cost_price": 20,
       "sale_price": 25,
       "supplier": 4,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "耐用垃圾袋"
     }
   },
@@ -164,7 +164,7 @@
       "cost_price": 15,
       "sale_price": 20,
       "supplier": 5,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "多用途包裝紙"
     }
   },
@@ -177,7 +177,7 @@
       "cost_price": 10,
       "sale_price": 15,
       "supplier": 5,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "超市用塑膠袋"
     }
   },
@@ -190,7 +190,7 @@
       "cost_price": 8,
       "sale_price": 10,
       "supplier": 5,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "辦公用透明膠帶"
     }
   },
@@ -203,7 +203,7 @@
       "cost_price": 200,
       "sale_price": 250,
       "supplier": 6,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "冷凍雞胸肉"
     }
   },
@@ -216,7 +216,7 @@
       "cost_price": 250,
       "sale_price": 300,
       "supplier": 6,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "冷凍豬排"
     }
   },
@@ -229,7 +229,7 @@
       "cost_price": 150,
       "sale_price": 200,
       "supplier": 6,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "冷凍魚片"
     }
   },
@@ -242,7 +242,7 @@
       "cost_price": 60,
       "sale_price": 80,
       "supplier": 7,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮蘋果"
     }
   },
@@ -255,7 +255,7 @@
       "cost_price": 40,
       "sale_price": 50,
       "supplier": 7,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮香蕉"
     }
   },
@@ -268,7 +268,7 @@
       "cost_price": 100,
       "sale_price": 120,
       "supplier": 7,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮葡萄"
     }
   },
@@ -281,7 +281,7 @@
       "cost_price": 120,
       "sale_price": 150,
       "supplier": 8,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "各種啤酒"
     }
   },
@@ -294,7 +294,7 @@
       "cost_price": 350,
       "sale_price": 400,
       "supplier": 8,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "優質紅酒"
     }
   },
@@ -307,7 +307,7 @@
       "cost_price": 450,
       "sale_price": 500,
       "supplier": 8,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "高級白酒"
     }
   },
@@ -320,7 +320,7 @@
       "cost_price": 15,
       "sale_price": 20,
       "supplier": 9,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "食用鹽"
     }
   },
@@ -333,7 +333,7 @@
       "cost_price": 30,
       "sale_price": 40,
       "supplier": 9,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "白砂糖"
     }
   },
@@ -346,7 +346,7 @@
       "cost_price": 25,
       "sale_price": 30,
       "supplier": 9,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "黑胡椒粉"
     }
   },
@@ -359,7 +359,7 @@
       "cost_price": 300,
       "sale_price": 350,
       "supplier": 10,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮豬肉"
     }
   },
@@ -372,7 +372,7 @@
       "cost_price": 400,
       "sale_price": 450,
       "supplier": 10,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮牛肉"
     }
   },
@@ -385,7 +385,7 @@
       "cost_price": 150,
       "sale_price": 200,
       "supplier": 10,
-      "create_at": "2024-09-01T12:34:56Z",
+      "created_at": "2024-09-01T12:34:56Z",
       "note": "新鮮雞腿"
     }
   }

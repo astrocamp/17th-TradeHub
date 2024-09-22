@@ -19,7 +19,7 @@ class Product(models.Model):
         Supplier, on_delete=models.PROTECT, related_name="products", default=0
     )
     note = models.TextField(blank=True, null=True)
-    create_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True)
 
     objects = ProductManager()

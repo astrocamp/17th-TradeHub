@@ -28,7 +28,7 @@ class Migration(migrations.Migration):
                 ("email", models.EmailField(max_length=254, unique=True)),
                 ("gui_number", models.CharField(max_length=8, unique=True)),
                 ("address", models.TextField()),
-                ("create_at", models.DateTimeField(auto_now_add=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("note", models.TextField(blank=True, null=True)),
                 (
                     "state",

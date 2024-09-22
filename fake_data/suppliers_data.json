@@ -9,7 +9,7 @@
       "email": "wangxiaoming@example.com",
       "gui_number": "12345678",
       "address": "台北市信義區光復南路123號",
-      "create_at": "2024-09-03T12:00:00Z",
+      "created_at": "2024-09-03T12:00:00Z",
       "note": "主要供應日常用品。"
     }
   },
@@ -23,7 +23,7 @@
       "email": "lidahua@example.com",
       "gui_number": "87654321",
       "address": "台中市西區建國北路456號",
-      "create_at": "2024-09-02T12:00:00Z",
+      "created_at": "2024-09-02T12:00:00Z",
       "note": "提供新鮮蔬菜。"
     }
   },
@@ -37,7 +37,7 @@
       "email": "zhangmeili@example.com",
       "gui_number": "23456789",
       "address": "高雄市前鎮區瑞隆路789號",
-      "create_at": "2024-09-01T12:00:00Z",
+      "created_at": "2024-09-01T12:00:00Z",
       "note": "提供海鮮商品。"
     }
   },
@@ -51,7 +51,7 @@
       "email": "liuzheming@example.com",
       "gui_number": "34567890",
       "address": "台南市南區健康路012號",
-      "create_at": "2024-08-30T12:00:00Z",
+      "created_at": "2024-08-30T12:00:00Z",
       "note": "專供清潔用品。"
     }
   },
@@ -65,7 +65,7 @@
       "email": "chenzhiming@example.com",
       "gui_number": "45678901",
       "address": "新竹市東區光明路345號",
-      "create_at": "2024-08-29T12:00:00Z",
+      "created_at": "2024-08-29T12:00:00Z",
       "note": "提供包裝材料。"
     }
   },
@@ -79,7 +79,7 @@
       "email": "lixiaohua@example.com",
       "gui_number": "56789012",
       "address": "桃園市桃園區中華路678號",
-      "create_at": "2024-08-28T12:00:00Z",
+      "created_at": "2024-08-28T12:00:00Z",
       "note": "專供冷凍食品。"
     }
   },
@@ -93,7 +93,7 @@
       "email": "huangmeijun@example.com",
       "gui_number": "67890123",
       "address": "台北市大安區復興南路234號",
-      "create_at": "2024-08-27T12:00:00Z",
+      "created_at": "2024-08-27T12:00:00Z",
       "note": "提供水果商品。"
     }
   },
@@ -107,7 +107,7 @@
       "email": "wuzhiming@example.com",
       "gui_number": "78901234",
       "address": "基隆市中正區和平路567號",
-      "create_at": "2024-08-26T12:00:00Z",
+      "created_at": "2024-08-26T12:00:00Z",
       "note": "專供酒類。"
     }
   },
@@ -121,7 +121,7 @@
       "email": "caijiahui@example.com",
       "gui_number": "89012345",
       "address": "台南市北區中華北路890號",
-      "create_at": "2024-08-25T12:00:00Z",
+      "created_at": "2024-08-25T12:00:00Z",
       "note": "提供調味品。"
     }
   },
@@ -135,7 +135,7 @@
       "email": "linzhiwei@example.com",
       "gui_number": "90123456",
       "address": "新竹市竹北市光復路345號",
-      "create_at": "2024-08-24T12:00:00Z",
+      "created_at": "2024-08-24T12:00:00Z",
       "note": "主要供應肉類商品。"
     }
   }
