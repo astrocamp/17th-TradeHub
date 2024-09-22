@@ -1,11 +1,12 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.core.paginator import Paginator
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Notification
 
 # 取得自定義的 User 模型 CustomUser
 User = get_user_model()
@@ -136,3 +137,15 @@ def edit_profile(request, id):
         form = ProfileForm(instance=user)
 
     return render(request, "users/edit_profile.html", {"form": form, "user": user})
+
+
+def notifications(request):
+    notifications_list = Notification.objects.order_by("-created_at")
+    paginator = Paginator(notifications_list, 5)
+
+    page_number = request.GET.get("page")
+    notifications = paginator.get_page(page_number)
+
+    return render(
+        request, "users/_notifications.html", {"notifications": notifications}
+    )

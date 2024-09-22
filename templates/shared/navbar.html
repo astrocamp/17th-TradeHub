@@ -120,6 +120,27 @@
         <kbd class="kbd kbd-sm">K</kbd>
       </label>
     </div>
+    <!-- notifications -->
+    {% if request.user.is_authenticated %}
+    <div class="dropdown relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
+        <button href="javascript:void(0);" class="btn btn-ghost"
+            @click="isOpen = !isOpen; if (isOpen) { htmx.ajax('GET', '{% url 'users:notifications' %}', {target: '#notifications-container', swap: 'innerHTML'}); }">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon icon-tabler icons-tabler-bell">
+                <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                <path d="M10 5a2 2 0 0 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3" />
+                <path d="M18 8a2 2 0 0 1 1.84 2.795l-1.34 5.365a2 2 0 0 1 -1.9 1.57h-6.842a2 2 0 0 1 -1.9 -1.57l-1.34 -5.365a2 2 0 0 1 1.84 -2.795" />
+                <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+            </svg>
+        </button>
+        <div id="notifications-container"
+             class="w-[220px] p-2 bg-base-100 rounded-box shadow-md overflow-y-auto absolute z-50"
+             x-show="isOpen"
+             style="display: none;">
+            <!-- 通知內容將在這裡加載 -->
+        </div>
+    </div>
+{% endif %}
+
     <!-- user status -->
     <div class="flex">
       <!-- request.user 是 django 的內建變數，表示當前登入的使用者 -->

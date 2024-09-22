@@ -13,4 +13,5 @@ urlpatterns = [
     path("forget_password", views.forget_password, name="forget_password"),
     path("profile/<int:id>", views.profile, name="profile"),
     path("profile/edit/<int:id>", views.edit_profile, name="edit_profile"),
+    path("notifications", views.notifications, name="notifications"),
 ]
