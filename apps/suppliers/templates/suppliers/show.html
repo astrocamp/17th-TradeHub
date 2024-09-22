@@ -1,55 +1,72 @@
-{% extends 'layouts/base.html' %}
+{% extends 'layouts/base.html' %} {% block content %}
+<div
+  class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8"
+>
+  <div
+    class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
+  >
+    <h1 class="text-2xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
+    <a
+      href="{% url 'suppliers:index' %}"
+      class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
+    >
+      返回供應商列表
+    </a>
+  </div>
 
-{% block content %}
-    <div class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8">
-        <div class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6">
-            <h1 class="text-2xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
-            <a href="{% url 'suppliers:index' %}" class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105">
-                返回供應商列表
-            </a>
-        </div>
-
-        <div class="space-y-6">
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">電話:</label>
-                <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
-                <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">Email:</label>
-                <p class="text-lg text-gray-600">{{ supplier.email }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">統一編號:</label>
-                <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">地址:</label>
-                <p class="text-lg text-gray-600">{{ supplier.address }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">備註:</label>
-                <p class="text-lg text-gray-600">{{ supplier.note }}</p>
-            </div>
-            <div class="flex flex-col">
-                <label class="text-lg font-semibold text-gray-800">建立日期:</label>
-                <p class="text-lg text-gray-600">{{ supplier.established_date|date:"F j, Y, g:i a" }}</p>
-            </div>
-        </div>
-
-        <div class="flex justify-center gap-4 mt-6">
-            <a href="{% url 'suppliers:edit' supplier.id %}" class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105">
-                編輯
-            </a>
-            <form action="{% url 'suppliers:delete' supplier.id %}" method="POST" class="inline-block">
-                {% csrf_token %}
-                <button type="submit" class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105">
-                    刪除
-                </button>
-            </form>
-        </div>
+  <div class="space-y-6">
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">電話:</label>
+      <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
     </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
+      <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
+    </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">Email:</label>
+      <p class="text-lg text-gray-600">{{ supplier.email }}</p>
+    </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">統一編號:</label>
+      <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
+    </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">地址:</label>
+      <p class="text-lg text-gray-600">{{ supplier.address }}</p>
+    </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">備註:</label>
+      <p class="text-lg text-gray-600">{{ supplier.note }}</p>
+    </div>
+    <div class="flex flex-col">
+      <label class="text-lg font-semibold text-gray-800">建立日期:</label>
+      <p class="text-lg text-gray-600">
+        {{ supplier.create_at|date:"F j, Y, g:i a" }}
+      </p>
+    </div>
+  </div>
+
+  <div class="flex justify-center gap-4 mt-6">
+    <a
+      href="{% url 'suppliers:edit' supplier.id %}"
+      class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+    >
+      編輯
+    </a>
+    <form
+      action="{% url 'suppliers:delete' supplier.id %}"
+      method="POST"
+      class="inline-block"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        刪除
+      </button>
+    </form>
+  </div>
+</div>
 {% endblock %}

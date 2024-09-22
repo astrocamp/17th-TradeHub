@@ -15,7 +15,7 @@ from django.utils import timezone
 from apps.clients.models import Client
 from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
-from apps.orders.models import Orders
+from apps.orders.models import Order
 from apps.products.models import Product, Supplier
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.models import SalesOrder
@@ -73,7 +73,7 @@ def sales_chart(request):
     ).count()
 
     suppliers_month_num = Supplier.objects.filter(
-        established_date__range=(first_day_of_month, last_day_of_month),
+        create_at__range=(first_day_of_month, last_day_of_month),
         deleted_at=None,
     ).count()
 
@@ -83,14 +83,14 @@ def sales_chart(request):
     ).count()
 
     # 抓訂單類數值
-    orders_num = len(Orders.objects.values("deleted_at").filter(deleted_at=None))
+    orders_num = len(Order.objects.values("deleted_at").filter(deleted_at=None))
     orders_progress_num = len(
-        Orders.objects.values("deleted_at", "state").filter(
+        Order.objects.values("deleted_at", "state").filter(
             deleted_at=None, state="progress"
         )
     )
     orders_pending_num = len(
-        Orders.objects.values("deleted_at", "state").filter(
+        Order.objects.values("deleted_at", "state").filter(
             deleted_at=None, state="to_be_confirmed"
         )
     )
@@ -137,10 +137,10 @@ def sales_chart(request):
     # 抓VIP訂單客戶
     vip_clients = (
         Client.objects.annotate(
-            total_quantity=Count("orders"), total_amount=Sum("orders__price")
+            total_quantity=Count("orders"), total_amount=Sum("orders__amount")
         )
         .filter(total_quantity__gt=0)
-        .order_by("-total_quantity")[:5]
+        .order_by("-total_amount")[:5]
     )
 
     # 做圓餅圖表
