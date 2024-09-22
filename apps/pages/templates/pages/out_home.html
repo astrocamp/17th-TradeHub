@@ -1,16 +1,18 @@
-{% extends "layouts/base.html" %}
-{% block content %}
-{% load static %}
+{% extends "layouts/base.html" %} {% block content %} {% load static %}
 <div class="hero">
-  <img src="{% static 'images/home.jpg' %}" alt="home page" class="hero-image"/>
+  <img
+    src="{% static 'images/home.jpg' %}"
+    alt="home page"
+    class="hero-image"
+  />
   <div class="hero-overlay"></div>
   <div class="hero-content text-neutral-content">
-    <div class="max-w-md text-center">
+    <div class="max-w-md text-start">
       <h1 class="mb-5 text-5xl font-bold">您好</h1>
       <p class="mb-5">
-        是否用傳統 Excel 管理進銷存? 是否不知如何倉管?
+        還在用 Excel 管理進銷存嗎？ 倉儲管理遇到困難嗎？
         <br />
-        我們是幫您處理進銷存後台倉管!
+        我們為您提供專業的進銷存後台服務，輕鬆解決倉管問題！
       </p>
       <a href="{% url 'users:log_in' %}">
         <button class="btn btn-primary">開始使用</button>
