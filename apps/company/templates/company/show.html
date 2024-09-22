@@ -2,21 +2,21 @@
 
 {% block content %}
 
-<a href="{% url 'company:index' %}" class="btn btn-primary">首頁</a>
+<a href="{% url 'pages:home' %}" class="btn btn-primary">進入TradeHub！</a>
 
 <div>
-    <p>公司代碼：{{company.company_id}}</p>
+    <!-- <p>公司代碼：{{company.company_id}}</p> -->
     <p>公司名稱：{{company.company_name}}</p>
     <p>統一編號：{{company.gui_number}}</p>
     <p>公司地址：{{company.address}}</p>
-    <p>公司負責人：{{company.user}}</p>
+    <p>公司聯絡人：{{company.contact_person}}</p>
     <!-- <p>{{company.created_at}}</p> -->
 </div>
 
 <div class="flex justify-start">
     <div>
         <a href="{% url 'company:edit' company.id %}" class="btn btn-primary">編輯</a>
-        <a onclick="return confirm('確認刪除?')" href="{% url 'company:delete' company.id %}" class="btn btn-primary">刪除</a>
+        <a onclick="return confirm('確認取消建立公司帳號?')" href="{% url 'pages:home' %}" class="btn btn-primary">取消建立公司帳號</a>
     </div>
 </div>
 
