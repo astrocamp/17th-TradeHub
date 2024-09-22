@@ -39,14 +39,6 @@
       <form
         class="flex justify-center w-full"
         method="POST"
-        action="{% url 'clients:export_csv' %}"
-      >
-        {% csrf_token %}
-        <button class="btn btn-info text-lg text-white w-full">CSV</button>
-      </form>
-      <form
-        class="flex justify-center w-full"
-        method="POST"
         action="{% url 'clients:export_excel' %}"
       >
         {% csrf_token %}

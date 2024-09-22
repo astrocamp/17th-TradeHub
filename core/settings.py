@@ -89,6 +89,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "apps.users.middleware.middleware.LoginRequiredMiddleware",
+    "apps.company.middleware.middleware.CompanyMiddleware",
 ]
 
 # 未登入時導向的頁面（登入頁面）

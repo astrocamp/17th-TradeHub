@@ -35,6 +35,7 @@ def register(request):
             )
             user.company = company
             user.save()
+            request.session["company_id"] = user.company_id
             login(request, user)
 
             return redirect("pages:welcome")
