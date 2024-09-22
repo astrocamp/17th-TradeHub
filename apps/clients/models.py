@@ -17,7 +17,8 @@ class Client(models.Model):
     address = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     note = models.TextField(blank=True, null=True, max_length=150)
 
     objects = ClientManager()
@@ -28,6 +29,25 @@ class Client(models.Model):
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        self.phone_number = self.format_phone_number(self.phone_number)
+        super().save(*args, **kwargs)
+        self.number = f"C{self.id:03d}"
+        super().save(update_fields=["number"])
+
+    def format_phone_number(self, number):
+        number = re.sub(r"\D", "", number)
+        if len(number) == 10 and number.startswith("09"):
+            return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
+        elif len(number) == 9 and number.startswith("0"):
+            return f"{number[:2]}-{number[2:]}"
+        else:
+            return number
 
     OFTEN = "often"
     HAPLY = "haply"
@@ -65,23 +85,3 @@ class Client(models.Model):
     @transition(field=state, source="*", target=NEVER)
     def set_normal(self):
         pass
-
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_phone_number(self.phone_number)
-        super().save(*args, **kwargs)
-
-    def format_phone_number(self, number):
-        # 把所有非數字符號改為空字串(清除)
-        number = re.sub(r"\D", "", number)
-
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
-        if len(number) == 10 and number.startswith("09"):
-            return f"{number[:4]}-{number[4:]}"
-        elif len(number) == 10 and number.startswith(("037", "049")):
-            return f"{number[:3]}-{number[3:]}"
-        elif len(number) == 10:
-            return f"{number[:2]}-{number[2:]}"
-        elif len(number) == 9 and number.startswith("0"):
-            return f"{number[:2]}-{number[2:]}"
-        else:
-            return number

@@ -20,7 +20,8 @@ class Product(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = ProductManager()
 
@@ -30,6 +31,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.number = f"I{self.id:03d}"
+        super().save(update_fields=["number"])
 
     OFTEN = "often"
     HAPLY = "haply"

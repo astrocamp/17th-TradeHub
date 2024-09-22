@@ -21,23 +21,18 @@ def index(request):
 
     if state in state_match:
         suppliers = Supplier.objects.filter(state=state)
-        order_by_field = order_by if is_desc else "-" + order_by
-        suppliers = suppliers.order_by(order_by_field)
-        paginator = Paginator(suppliers, 5)
-        page_number = request.GET.get("page")
-        page_obj = paginator.get_page(page_number)
+    order_by_field = f"{'-' if is_desc else ''}{order_by or '-id'}"
+    suppliers = suppliers.order_by(order_by_field)
 
-    # suppliers = Supplier.objects.order_by("id")
     paginator = Paginator(suppliers, 5)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
     content = {
-        "suppliers": suppliers,
-        "selected_state": state,
-        "order_by": order_by,
-        "is_desc": is_desc,
         "suppliers": page_obj,
+        "selected_state": state,
+        "is_desc": is_desc,
+        "order_by": order_by,
         "page_obj": page_obj,
     }
 

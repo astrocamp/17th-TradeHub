@@ -45,6 +45,7 @@
             <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th><a href="{% url 'products:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th></th>
           </tr>
         </thead>
@@ -69,7 +70,7 @@
             <th>{{product.cost_price}}</th>
             <th>{{product.sale_price}}</th>
             <th>{{product.supplier}}</th>
-            <th>{{product.note}}</th>
+            <th>{{product.updated_at|date:"Y-m-d H:i"}}</th>
             <th>
               <div class="flex justify-center">
                 <div>
