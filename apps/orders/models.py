@@ -5,9 +5,9 @@ from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.clients.models import Client
+from apps.company.models import Company
+from apps.inventory.models import Inventory
 from apps.products.models import Product
-
-from ..inventory.models import Inventory
 
 
 class OrdersManager(models.Manager):
@@ -23,6 +23,13 @@ class Order(models.Model):
     client_email = models.EmailField(unique=False)
     amount = models.PositiveIntegerField()
     username = models.CharField(max_length=150, default="admin")
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

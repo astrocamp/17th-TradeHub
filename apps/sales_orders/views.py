@@ -15,12 +15,9 @@ from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.sales_orders.models import SalesOrder
 
-from .forms.sales_order_form import (
-    SalesOrderForm,
-    SalesOrderProductItemForm,
-    SalesOrderProductItemFormSet,
-)
-from .models import SalesOrder, SalesOrderProductItem
+from apps.clients.models import Client
+from apps.sales_orders.forms.sales_order_form import SalesOrderForm, SalesOrderProductItemForm, SalesOrderProductItemFormSet
+from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 
 def index(request):

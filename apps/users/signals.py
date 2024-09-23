@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from .models import Notification, PurchaseOrder, GoodsReceipt
+
+from .models import GoodsReceipt, Notification, PurchaseOrder
+
 
 @receiver(post_save, sender=PurchaseOrder)
 def notify_purchase_order(sender, instance, created, **kwargs):
@@ -50,9 +52,9 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
     if created:
         if instance.state == GoodsReceipt.TO_BE_RESTOCKED:
             notification = Notification(
-            message=f"[進貨單編號 {instance.order_number}] 待進貨",
-            sender_type="GoodsReceipt",
-            sender_state="to_be_restocked",
+                message=f"[進貨單編號 {instance.order_number}] 待進貨",
+                sender_type="GoodsReceipt",
+                sender_state="to_be_restocked",
             )
             notification.save()
         elif instance.state == GoodsReceipt.TO_BE_STOCKED:

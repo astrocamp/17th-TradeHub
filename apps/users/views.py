@@ -1,13 +1,16 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.core.mail import send_mail
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
+from django.utils.crypto import get_random_string
 
+from .forms.invitation_form import InvitationRegistrationForm
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
-from .models import CustomUser, Notification
+from .models import Company, CustomUser, Invitation, Notification
 
 # 取得自定義的 User 模型 CustomUser
 User = get_user_model()
@@ -21,21 +24,18 @@ def index(request):
 def register(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST)
-        username = request.POST.get("username")
-        password1 = request.POST.get("password1")
-        password2 = request.POST.get("password2")
-        email = request.POST.get("email")
-
-        print(username, password1, password2, email)
 
         if user_form.is_valid():
 
-            user = user_form.save()
+            user = user_form.save(commit=False)
             user.backend = "django.contrib.auth.backends.ModelBackend"  # 指定後端
 
+            company = Company.objects.get(id=1)
+            user.company = company
+            user.save()
             login(request, user)
-            messages.success(request, "成功註冊！")
-            return redirect("pages:home")
+
+            return redirect("pages:welcome")
 
         else:
             return render(request, "users/register.html", {"user_form": user_form})
@@ -55,7 +55,11 @@ def log_in(request):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, "成功登入！")
+
+                user.first_login = False
+                user.save()
+
+                messages.success(request, "登入成功!")
                 return redirect(next_url) if next_url else redirect("pages:home")
             else:
                 return render(request, "users/log_in.html", {"login_form": login_form})
@@ -139,6 +143,51 @@ def edit_profile(request, id):
         form = ProfileForm(instance=user)
 
     return render(request, "users/edit_profile.html", {"form": form, "user": user})
+
+
+def update_company_id(request):
+    if request.method == "POST":
+        gui_number = request.POST.get("gui_number")
+        try:
+            company = Company.objects.get(gui_number=gui_number)
+            user = request.user
+            user.company = company
+            user.save()
+            messages.success(request, f"您已成功註冊至公司：{company.name}")
+            return redirect("pages:home")
+        except Company.DoesNotExist:
+            messages.error(request, "此公司尚未註冊")
+            return redirect("company:new")
+
+
+def invitation_register(request):
+    if request.method == "POST":
+        form = InvitationRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            login(request, form)
+            return redirect("pages:welcome")
+        else:
+            return render(request, "users/invitation.html", {"form": form})
+    form = InvitationRegistrationForm()
+    return render(request, "users/invitation.html", {"form": form})
+
+
+def send_invitation(request, company_id):
+    company = Company.objects.get(id=company_id)
+    email = request.POST["email"]
+    token = get_random_string(50)
+    invitation = Invitation.objects.create(email=email, company=company, token=token)
+    registration_url = f"http://yourdomain.com/register?token={token}"
+
+    send_mail(
+        "邀請您加入我們的公司",
+        f"請點擊以下網址進行註冊:{registration_url}",
+        "from@example.com",
+        [email],
+        fail_silently=False,
+    )
+    return invitation
 
 
 def notifications(request):

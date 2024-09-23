@@ -1,8 +1,8 @@
 {% if notification.sender_type == 'PurchaseOrder' %}
-  <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" 
+  <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}"
     class="cursor-pointer">
 {% elif notification.sender_type == 'GoodsReceipt' %}
-  <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" 
+  <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}"
     class="cursor-pointer">
 
 {% endif %}

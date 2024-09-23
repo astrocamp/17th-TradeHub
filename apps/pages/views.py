@@ -9,21 +9,8 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.transform import cumsum
 from django.db.models import Count, Sum
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.utils import timezone
-
-from apps.clients.models import Client
-from apps.goods_receipts.models import GoodsReceipt
-from apps.inventory.models import Inventory
-from apps.orders.models import Order
-from apps.products.models import Product, Supplier
-from apps.purchase_orders.models import PurchaseOrder
-from apps.sales_orders.models import SalesOrder
-
-
-def out_home(request):
-    return render(request, "pages/out_home.html")
-
 
 from apps.clients.forms.clients_form import ClientForm
 from apps.clients.models import Client
@@ -34,7 +21,7 @@ from apps.inventory.models import Inventory
 from apps.orders.forms.orders_form import OrderForm
 from apps.orders.models import Order
 from apps.products.forms import ProductForm
-from apps.products.models import Product
+from apps.products.models import Product, Supplier
 from apps.purchase_orders.forms.purchase_orders_form import PurchaseOrderForm
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.forms.sales_order_form import SalesOrderForm
@@ -43,8 +30,20 @@ from apps.suppliers.forms.form import SupplierForm
 from apps.suppliers.models import Supplier
 
 
+def out_home(request):
+    return render(request, "pages/out_home.html")
+
+
 def home(request):
     return render(request, "pages/home.html")
+
+
+def welcome(request):
+    if request.session.get("has_seen_welcome", False):
+        return redirect("pages:home")
+
+    request.session["has_seen_welcome"] = True
+    return render(request, "pages/welcome.html")
 
 
 def sales_chart(request):

@@ -4,6 +4,8 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
+
 
 class SupplierManager(models.Manager):
     def get_queryset(self):
@@ -19,6 +21,13 @@ class Supplier(models.Model):
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
     deleted_at = models.DateTimeField(null=True)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="suppliers",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
 
     objects = SupplierManager()

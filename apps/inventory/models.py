@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -22,6 +23,13 @@ class Inventory(models.Model):
     safety_stock = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     last_updated = models.DateTimeField(auto_now=True)
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="inventories",
+        blank=True,
+        null=True,
+    )
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)
 

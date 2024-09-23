@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.suppliers.models import Supplier
 
 
@@ -17,6 +18,13 @@ class Product(models.Model):
     sale_price = models.PositiveIntegerField()
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="products", default=0
+    )
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="products",
+        blank=True,
+        null=True,
     )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
