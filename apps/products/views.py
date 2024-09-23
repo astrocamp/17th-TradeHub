@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.company.middleware.middleware import get_current_company
 from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
@@ -17,15 +18,17 @@ from .forms.product_form import FileUploadForm, ProductForm
 
 
 def index(request):
+    current_company = get_current_company(request)
+
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", True) == "False"
     state_match = {"often", "haply", "never"}
 
-    products = Product.objects.all()
+    products = Product.objects.filter(company=current_company)
 
     if state in state_match:
-        products = Product.objects.filter(state=state)
+        products = Product.objects.filter(company=current_company, state=state)
     order_by_field = order_by if is_desc else "-" + order_by
     products = products.order_by(order_by_field)
 
@@ -45,10 +48,13 @@ def index(request):
 
 
 def new(request):
+    current_company = get_current_company(request)
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            products = form.save(commit=False)
+            products.company = current_company
+            products.save()
             return redirect("products:index")
         return render(request, "products/new.html", {"form": form})
     form = ProductForm()
@@ -56,11 +62,14 @@ def new(request):
 
 
 def edit(request, id):
-    product = get_object_or_404(Product, id=id)
+    current_company = get_current_company(request)
+    product = get_object_or_404(Product, id=id, company=current_company)
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
-            form.save()
+            products = form.save(commit=False)
+            products.company = current_company
+            products.save()
             return redirect("products:index")
 
     else:
@@ -69,44 +78,20 @@ def edit(request, id):
 
 
 def delete(request, id):
-    product = get_object_or_404(Product, id=id)
+    current_company = get_current_company(request)
+    product = get_object_or_404(Product, id=id, company=current_company)
     product.delete()
     messages.success(request, "刪除完成!")
     return redirect("products:index")
 
 
 def import_file(request):
+    current_company = get_current_company(request)
     if request.method == "POST":
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES["file"]
-            if file.name.endswith(".csv"):
-
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)
-
-                for row in reader:
-                    if len(row) < 1:
-                        continue
-                    try:
-                        supplier = Supplier.objects.get(id=row[4])
-                        Product.objects.create(
-                            product_number=row[0],
-                            product_name=row[1],
-                            cost_price=row[2],
-                            sale_price=row[3],
-                            supplier=supplier,
-                            note=row[5],
-                        )
-                    except Supplier.DoesNotExist as e:
-                        messages.error(request, f"匯入失敗，找不到供應商: {e}")
-                        return redirect("products:index")
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("products:index")
-
-            elif file.name.endswith(".xlsx"):
+            if file.name.endswith(".xlsx"):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
@@ -129,6 +114,7 @@ def import_file(request):
                             sale_price=str(row["sale_price"]),
                             supplier=supplier,
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                            company=current_company,
                         )
                     except Supplier.DoesNotExist as e:
                         messages.error(request, f"匯入失敗，找不到供應商: {e}")
@@ -137,56 +123,31 @@ def import_file(request):
                 return redirect("products:index")
 
             else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗檔案不是 Excel)")
                 return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
     return render(request, "layouts/import.html", {"form": form})
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="Products.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "序號",
-            "商品",
-            "價位",
-            "供應商",
-            "備註",
-        ]
-    )
-
-    products = Product.objects.all()
-    for product in products:
-        writer.writerow(
-            [
-                product.product_number,
-                product.product_name,
-                product.price,
-                product.supplier,
-                product.note,
-            ]
-        )
-
-    return response
-
-
 def export_excel(request):
+    current_company = get_current_company(request)
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     response["Content-Disposition"] = "attachment; filename=Products.xlsx"
 
-    products = Product.objects.select_related("product", "supplier").values(
-        "product_number",
-        "product_name",
-        "cost_price",
-        "sale_price",
-        "supplier__name",
-        "note",
+    products = (
+        Product.objects.filter(company=current_company)
+        .select_related("product", "supplier")
+        .values(
+            "product_number",
+            "product_name",
+            "cost_price",
+            "sale_price",
+            "supplier__name",
+            "note",
+        )
     )
 
     df = pd.DataFrame(products)

@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta, timezone
 
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -9,6 +9,7 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
+from apps.company.middleware.middleware import get_current_company
 from apps.products.models import Product
 from apps.purchase_orders.models import ProductItem, PurchaseOrder
 from apps.purchase_orders.views import generate_order_number
@@ -19,14 +20,17 @@ from .models import Inventory
 
 
 def index(request):
+
+    current_company = get_current_company(request)
+
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    inventory = Inventory.objects.order_by(order_by)
+    inventory = Inventory.objects.filter(company=current_company)
 
     if state in Inventory.AVAILABLE_STATES:
-        inventory = Inventory.objects.filter(state=state)
+        inventory = Inventory.objects.filter(company=current_company, state=state)
     order_by_field = order_by if is_desc else "-" + order_by
     inventory = inventory.order_by(order_by_field)
 
@@ -46,10 +50,14 @@ def index(request):
 
 
 def new(request):
+    current_company = get_current_company(request)
     if request.method == "POST":
         form = RestockForm(request.POST)
         if form.is_valid():
-            form.save()
+            inventory = form.save(commit=False)
+            inventory.company = current_company
+            inventory.save()
+            messages.success(request, "成功新增!")
             return redirect("inventory:index")
     else:
         form = RestockForm()
@@ -57,11 +65,15 @@ def new(request):
 
 
 def edit(request, id):
-    inventory = get_object_or_404(Inventory, id=id)
+    current_company = get_current_company(request)
+    inventory = get_object_or_404(Inventory, id=id, company=current_company)
     if request.method == "POST":
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
-            form.save()
+            inventory = form.save(commit=False)
+            inventory.company = current_company
+            inventory.save()
+            messages.success(request, "更新完成!")
             return redirect("inventory:index")
     else:
         form = RestockForm(instance=inventory)
@@ -72,44 +84,20 @@ def edit(request, id):
 
 
 def delete(request, id):
-    inventory = get_object_or_404(Inventory, id=id)
+    current_company = get_current_company(request)
+    inventory = get_object_or_404(Inventory, id=id, company=current_company)
     inventory.delete()
     messages.success(request, "刪除完成!")
     return redirect("inventory:index")
 
 
 def import_file(request):
+    current_company = get_current_company(request)
     if request.method == "POST":
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES["file"]
-            if file.name.endswith(".csv"):
-
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
-
-                for row in reader:
-                    if len(row) < 1:
-                        continue
-                    try:
-                        product = Product.objects.get(id=row[0])
-                        supplier = Supplier.objects.get(id=row[1])
-                        Inventory.objects.create(
-                            product=product,
-                            supplier=supplier,
-                            quantity=row[2],
-                            safety_stock=row[3],
-                            note=row[4],
-                        )
-                    except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("inventory:index")
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("inventory:index")
-
-            elif file.name.endswith(".xlsx"):
+            if file.name.endswith(".xlsx"):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
@@ -131,6 +119,7 @@ def import_file(request):
                             quantity=int(row["quantity"]),
                             safety_stock=int(row["safety_stock"]),
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                            company=current_company,
                         )
                     except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
                         messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
@@ -139,58 +128,31 @@ def import_file(request):
                 return redirect("inventory:index")
 
             else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗(檔案不是 Excel)")
                 return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
     return render(request, "layouts/import.html", {"form": form})
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="Inventory.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "商品",
-            "供應商",
-            "數量",
-            "安全水位",
-            "最後更新",
-            "備註",
-        ]
-    )
-
-    inventorys = Inventory.objects.all()
-    for inventory in inventorys:
-        writer.writerow(
-            [
-                inventory.product,
-                inventory.supplier,
-                inventory.quantity,
-                inventory.safety_stock,
-                inventory.last_updated,
-                inventory.note,
-            ]
-        )
-
-    return response
-
-
 def export_excel(request):
+    current_company = get_current_company(request)
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     response["Content-Disposition"] = "attachment; filename=Inventory.xlsx"
 
-    inventory = Inventory.objects.select_related("product", "supplier").values(
-        "product__product_name",
-        "supplier__name",
-        "quantity",
-        "safety_stock",
-        "last_updated",
-        "note",
+    inventory = (
+        Inventory.objects.filter(company=current_company)
+        .select_related("product", "supplier")
+        .values(
+            "product__product_name",
+            "supplier__name",
+            "quantity",
+            "safety_stock",
+            "last_updated",
+            "note",
+        )
     )
 
     df = pd.DataFrame(inventory)
@@ -237,6 +199,7 @@ def export_sample(request):
 
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
+    current_company = get_current_company(request)
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.safety_stock == 0:
         instance.set_new_stock()
@@ -244,6 +207,7 @@ def update_state(sender, instance, **kwargs):
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
             state=PurchaseOrder.PENDING,
+            company=current_company,
         )
         if not purchase_order:
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
@@ -257,6 +221,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                company=current_company,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -273,6 +238,7 @@ def update_state(sender, instance, **kwargs):
             order = PurchaseOrder.objects.get(
                 supplier=instance.supplier,
                 state=PurchaseOrder.PENDING,
+                company=current_company,
             )
             order.note += "\n" + message
             orderitem = ProductItem.objects.create(
@@ -289,6 +255,7 @@ def update_state(sender, instance, **kwargs):
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
             state=PurchaseOrder.PENDING,
+            company=current_company,
         )
         if not purchase_order:
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
@@ -302,6 +269,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                company=current_company,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -320,6 +288,7 @@ def update_state(sender, instance, **kwargs):
             order = PurchaseOrder.objects.get(
                 supplier=instance.supplier,
                 state=PurchaseOrder.PENDING,
+                company=current_company,
                 note__contains="低水位",
             )
             order.note += "\n" + message

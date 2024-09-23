@@ -7,20 +7,25 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
 
+from apps.company.middleware.middleware import get_current_company
+
 from .forms.form import FileUploadForm, SupplierForm
 from .models import Supplier
 
 
 def index(request):
+
+    current_company = get_current_company(request)
+
     state = request.GET.get("select")
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"often", "haply", "never"}
 
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.filter(company=current_company)
 
     if state in state_match:
-        suppliers = Supplier.objects.filter(state=state)
+        suppliers = Supplier.objects.filter(company=current_company, state=state)
         order_by_field = order_by if is_desc else "-" + order_by
         suppliers = suppliers.order_by(order_by_field)
         paginator = Paginator(suppliers, 5)
@@ -45,10 +50,14 @@ def index(request):
 
 
 def new(request):
+    current_company = get_current_company(request)
     if request.method == "POST":
         form = SupplierForm(request.POST)
         if form.is_valid():
-            form.save()
+            suppliers = form.save(commit=False)
+            suppliers.company = current_company
+            suppliers.save()
+            messages.success(request, "成功新增!")
             return redirect("suppliers:index")
         else:
             return render(request, "suppliers/new.html", {"form": form})
@@ -57,11 +66,15 @@ def new(request):
 
 
 def show(request, id):
-    supplier = get_object_or_404(Supplier, pk=id)
+    current_company = get_current_company(request)
+    supplier = get_object_or_404(Supplier, pk=id, company=current_company)
     if request.method == "POST":
         form = SupplierForm(request.POST, instance=supplier)
         if form.is_valid():
-            form.save()
+            suppliers = form.save(commit=False)
+            suppliers.company = current_company
+            suppliers.save()
+            messages.success(request, "更新完成!")
             return redirect("suppliers:index")
         else:
             return render(
@@ -71,13 +84,15 @@ def show(request, id):
 
 
 def edit(request, id):
-    supplier = get_object_or_404(Supplier, pk=id)
+    current_company = get_current_company(request)
+    supplier = get_object_or_404(Supplier, pk=id, company=current_company)
     form = SupplierForm(instance=supplier)
     return render(request, "suppliers/edit.html", {"supplier": supplier, "form": form})
 
 
 def delete(request, id):
-    supplier = get_object_or_404(Supplier, pk=id)
+    current_company = get_current_company(request)
+    supplier = get_object_or_404(Supplier, pk=id, company=current_company)
     supplier.delete()
     messages.success(request, "刪除完成!")
     return redirect("suppliers:index")
@@ -85,41 +100,18 @@ def delete(request, id):
 
 @require_POST
 def delete_selected_suppliers(request):
+    current_company = get_current_company(request)
     selected_suppliers = request.POST.getlist("selected_suppliers")
-    Supplier.objects.filter(id__in=selected_suppliers).delete()
+    Supplier.objects.filter(id__in=selected_suppliers, company=current_company).delete()
     return redirect("suppliers:index")
 
 
 def import_file(request):
+    current_company = get_current_company(request)
     form = FileUploadForm(request.POST, request.FILES)
     if form.is_valid():
         file = request.FILES["file"]
-        if file.name.endswith(".csv"):
-
-            decoded_file = file.read().decode("utf-8").splitlines()
-            reader = csv.reader(decoded_file)
-            next(reader)
-            try:
-
-                for row in reader:
-                    if len(row) < 7:
-                        continue
-                    Supplier.objects.create(
-                        name=row[0],
-                        telephone=row[1],
-                        contact_person=row[2],
-                        email=row[3],
-                        gui_number=row[4],
-                        address=row[5],
-                        note=row[6],
-                    )
-                messages.success(request, "成功匯入 CSV")
-                return redirect("suppliers:index")
-            except:
-                messages.error(request, "匯入失敗(CSV 裡格式或名稱有問題)")
-                return redirect("suppliers:import_file")
-
-        elif file.name.endswith(".xlsx"):
+        if file.name.endswith(".xlsx"):
             df = pd.read_excel(file)
             df.rename(
                 columns={
@@ -143,6 +135,7 @@ def import_file(request):
                         gui_number=str(row["gui_number"]),
                         address=str(row["address"]),
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                        company=current_company,
                     )
                 messages.success(request, "成功匯入 Excel")
                 return redirect("suppliers:index")
@@ -151,56 +144,21 @@ def import_file(request):
                 return redirect("suppliers:import_file")
 
         else:
-            messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+            messages.error(request, "匯入失敗檔案不是 Excel")
             return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
     return render(request, "layouts/import.html", {"form": form})
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="csv")
-    response["Content-Disposition"] = 'attachment; filename="Suppliers.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "供應商名稱",
-            "電話",
-            "連絡人",
-            "Email",
-            "統一編號",
-            "地址",
-            "建立時間",
-            "備註",
-        ]
-    )
-
-    suppliers = Supplier.objects.all()
-    for supplier in suppliers:
-        writer.writerow(
-            [
-                supplier.name,
-                supplier.telephone,
-                supplier.contact_person,
-                supplier.email,
-                supplier.gui_number,
-                supplier.address,
-                supplier.created_at,
-                supplier.note,
-            ]
-        )
-
-    return response
-
-
 def export_excel(request):
+    current_company = get_current_company(request)
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
     response["Content-Disposition"] = "attachment; filename=Suppliers.xlsx"
 
-    suppliers = Supplier.objects.all().values(
+    suppliers = Supplier.objects.filter(company=current_company).values(
         "name",
         "telephone",
         "contact_person",

@@ -4,9 +4,10 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
-from apps.company.models import Company
 from apps.clients.models import Client
+from apps.company.models import Company
 from apps.products.models import Product
+
 from ..inventory.models import Inventory
 
 

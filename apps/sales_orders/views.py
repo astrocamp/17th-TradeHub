@@ -6,16 +6,14 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
 from django.dispatch import receiver
-from django.shortcuts import get_object_or_404, redirect, render
-from apps.clients.models import Client
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+
+from apps.clients.models import Client
 from apps.inventory.models import Inventory
 from apps.products.models import Product
-
-from .forms.sales_order_form import SalesOrderForm
-from .models import SalesOrder
 
 from .forms.sales_order_form import (
     SalesOrderForm,
