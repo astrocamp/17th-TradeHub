@@ -199,7 +199,6 @@ def export_sample(request):
 
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
-    current_company = get_current_company(request)
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.safety_stock == 0:
         instance.set_new_stock()
@@ -207,7 +206,6 @@ def update_state(sender, instance, **kwargs):
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
             state=PurchaseOrder.PENDING,
-            company=current_company,
         )
         if not purchase_order:
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
@@ -221,7 +219,6 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
-                company=current_company,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -238,7 +235,6 @@ def update_state(sender, instance, **kwargs):
             order = PurchaseOrder.objects.get(
                 supplier=instance.supplier,
                 state=PurchaseOrder.PENDING,
-                company=current_company,
             )
             order.note += "\n" + message
             orderitem = ProductItem.objects.create(
@@ -255,7 +251,6 @@ def update_state(sender, instance, **kwargs):
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
             state=PurchaseOrder.PENDING,
-            company=current_company,
         )
         if not purchase_order:
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
@@ -269,7 +264,6 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
-                company=current_company,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -288,7 +282,6 @@ def update_state(sender, instance, **kwargs):
             order = PurchaseOrder.objects.get(
                 supplier=instance.supplier,
                 state=PurchaseOrder.PENDING,
-                company=current_company,
                 note__contains="低水位",
             )
             order.note += "\n" + message

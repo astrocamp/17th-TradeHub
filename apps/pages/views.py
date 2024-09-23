@@ -275,6 +275,17 @@ def sales_chart(request):
 
     # 做圓餅圖表
     sales_orders = SalesOrder.objects.all()
+    fields = SalesOrder._meta.get_fields()
+
+    for field in fields:
+        if field.name == "items":  # 確保這是 items 字段
+            # 獲取與 items 相關的所有欄位
+            related_fields = field.related_model._meta.get_fields()
+            for related_field in related_fields:
+                print(
+                    f"Related Field name: {related_field.name}, Field type:     {related_field.get_internal_type()}"
+                )
+
     sales_data = (
         sales_orders.values("items__product__product_name")
         .annotate(total_quantity=Sum("items__ordered_quantity"))

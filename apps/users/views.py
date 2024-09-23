@@ -61,6 +61,7 @@ def log_in(request):
 
                 user.first_login = False
                 user.save()
+                request.session["company_id"] = user.company_id
 
                 messages.success(request, "登入成功!")
                 return redirect(next_url) if next_url else redirect("pages:home")
