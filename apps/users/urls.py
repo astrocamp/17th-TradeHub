@@ -16,4 +16,11 @@ urlpatterns = [
     path("update_company_id", views.update_company_id, name="update_company_id"),
     path("invitation_register/", views.invitation_register, name="invitation_register"),
     path("send-invitation/", views.send_invitation, name="send_invitation"),
+    path("notifications", views.notifications, name="notifications"),
+    path(
+        "notifications/<int:notification_id>/mark_as_read/",
+        views.mark_as_read,
+        name="mark_as_read",
+    ),
+    path("notifications/all", views.all_notifications, name="all_notifications"),
 ]

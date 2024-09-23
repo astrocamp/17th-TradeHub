@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "apps.sales_orders",
     "apps.goods_receipts",
     "social_django",
+    "django_htmx",
     "apps.company",
 ]
 

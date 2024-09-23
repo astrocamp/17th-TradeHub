@@ -186,7 +186,7 @@ def export_csv(request):
                 supplier.email,
                 supplier.gui_number,
                 supplier.address,
-                supplier.established_date,
+                supplier.created_at,
                 supplier.note,
             ]
         )
@@ -207,7 +207,7 @@ def export_excel(request):
         "email",
         "gui_number",
         "address",
-        "established_date",
+        "created_at",
         "note",
     )
 
@@ -222,7 +222,7 @@ def export_excel(request):
         "email": "Email",
         "gui_number": "統一編號",
         "address": "地址",
-        "established_date": "建立時間",
+        "created_at": "建立時間",
         "note": "備註",
     }
 
@@ -230,4 +230,28 @@ def export_excel(request):
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Suppliers")
+    return response
+
+
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=SuppliersSample.xlsx"
+
+    data = {
+        "name": ["供應商Y"],
+        "telephone": ["0912-345600"],
+        "contact_person": ["大華"],
+        "email": ["55dahua@example.com"],
+        "gui_number": ["10458574"],
+        "address": ["台中市西區建國北路6號"],
+        "note": ["備註"],
+    }
+
+    df = pd.DataFrame(data)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Suppliers")
+
     return response

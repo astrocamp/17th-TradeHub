@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
                 ("phone_number", models.CharField(max_length=15)),
                 ("address", models.CharField(max_length=150)),
                 ("email", models.EmailField(max_length=254, unique=True)),
-                ("create_at", models.DateTimeField(auto_now_add=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
                 ("delete_at", models.DateTimeField(auto_now=True)),
                 ("note", models.TextField(blank=True, max_length=150, null=True)),
                 (

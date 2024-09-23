@@ -1,9 +1,15 @@
 import re
 
 from django.db import models
+from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
+
+
+class ClientManager(models.Manager):
+    def get_queryset(self):
+        return super().get_queryset().filter(deleted_at=None)
 
 
 class Client(models.Model):
@@ -11,8 +17,8 @@ class Client(models.Model):
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
     email = models.EmailField(unique=True)
-    create_at = models.DateTimeField(auto_now_add=True)
-    delete_at = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    deleted_at = models.DateTimeField(auto_now=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
@@ -21,6 +27,12 @@ class Client(models.Model):
         null=True,
     )
     note = models.TextField(blank=True, null=True, max_length=150)
+
+    objects = ClientManager()
+
+    def delete(self):
+        self.deleted_at = timezone.now()
+        self.save()
 
     def __str__(self):
         return self.name
@@ -67,10 +79,8 @@ class Client(models.Model):
         super().save(*args, **kwargs)
 
     def format_phone_number(self, number):
-        # 把所有非數字符號改為空字串(清除)
         number = re.sub(r"\D", "", number)
 
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
         elif len(number) == 10 and number.startswith(("037", "049")):

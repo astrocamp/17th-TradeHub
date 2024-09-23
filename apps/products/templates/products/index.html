@@ -9,7 +9,7 @@
 </div>
 <div class="divider text-3xl font-bold">商品列表</div>
 <div class="flex justify-center mt-10">
-    <div class="overflow-x-auto">
+    <div class="overflow-x-auto w-full">
       <table class="table table-xl text-center">
         <thead>
           <tr class="text-xl text-center">
@@ -122,5 +122,10 @@
     </div>
   </div>
 </div>
-{% include "shared/import_export.html" %}
+{% url 'products:export_sample' as urlExmportSample %}
+{% url 'products:import_file' as import_file_url %}
+{% url 'products:export_csv' as export_csv_url %}
+{% url 'products:export_excel' as export_excel_url %}
+
+{% include "shared/import_export.html" with urlExmportSample=urlExmportSample urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
 {% endblock %}

@@ -209,6 +209,29 @@ def export_excel(request):
     return response
 
 
+def export_sample(request):
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    response["Content-Disposition"] = "attachment; filename=ProductSample.xlsx"
+
+    data = {
+        "product_number": ["P033"],
+        "product_name": ["米"],
+        "cost_price": ["100"],
+        "sale_price": ["120"],
+        "supplier": ["1"],
+        "note": ["這是一個備註"],
+    }
+
+    df = pd.DataFrame(data)
+
+    with pd.ExcelWriter(response, engine="openpyxl") as writer:
+        df.to_excel(writer, index=False, sheet_name="Products")
+
+    return response
+
+
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")

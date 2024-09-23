@@ -2,9 +2,14 @@ import re
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
 
 from apps.company.models import Company
+from apps.goods_receipts.models import GoodsReceipt
+from apps.purchase_orders.models import PurchaseOrder
+from apps.sales_orders.models import SalesOrder
 
 DEPARTMENT_CHOICES = [
     ("", "Select Department"),
@@ -26,7 +31,7 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True)
     birthday = models.DateField(blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True, null=False)
+    phone = models.CharField(max_length=15, blank=True, null=False, default="")
     address = models.CharField(max_length=100, blank=False, null=False, default="")
     company = models.ForeignKey(
         Company,
@@ -43,7 +48,7 @@ class CustomUser(AbstractUser):
         choices=POSITION_CHOICES, max_length=20, default="", blank=False, null=False
     )
     hire_date = models.DateTimeField(default=timezone.now)
-    note = models.TextField(blank=True, null=False)
+    note = models.TextField(blank=True, null=False, default="")
     is_superuser = models.BooleanField(default=False)
     first_login = models.BooleanField(default=True)
 
@@ -56,7 +61,6 @@ class CustomUser(AbstractUser):
     def format_telephone(self, number):
         number = re.sub(r"\D", "", number)
 
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
         elif len(number) == 10 and number.startswith(("037", "049")):
@@ -77,3 +81,14 @@ class Invitation(models.Model):
 
     def __str__(self):
         return f"Invitation to {self.email} for {self.company.name}"
+
+
+class Notification(models.Model):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    sender_type = models.CharField(max_length=20, default="")
+    sender_state = models.CharField(max_length=20, default="")
+
+    def __str__(self):
+        return f"{self.message}-{self.created_at}"
