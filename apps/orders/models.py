@@ -16,7 +16,7 @@ class OrdersManager(models.Manager):
 
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=11)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="orders")
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)
@@ -32,10 +32,6 @@ class Order(models.Model):
     all_objects = models.Manager()
 
     is_finished = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        # self.stock_quantity = Inventory.objects.get(product=self.product)
-        super().save(*args, **kwargs)
 
     def delete(self):
         self.deleted_at = timezone.now()
@@ -85,7 +81,7 @@ class Order(models.Model):
 
 
 class OrderProductItem(models.Model):
-    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordered_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()

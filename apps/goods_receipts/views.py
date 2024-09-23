@@ -327,6 +327,6 @@ def update_state(sender, instance, **kwargs):
 def stocked(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     goods_receipt.is_finished = True
-    post_save.send(sender=GoodsReceipt, instance=goods_receipt)
+    post_save.send(sender=GoodsReceipt, instance=goods_receipt, created=True)
     messages.success(request, "入庫完成!")
     return redirect("goods_receipts:index")

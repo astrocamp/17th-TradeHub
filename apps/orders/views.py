@@ -1,10 +1,11 @@
 import csv
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -13,7 +14,7 @@ from django.utils import timezone
 
 from apps.clients.models import Client
 from apps.products.models import Product
-from apps.sales_orders.models import SalesOrder
+from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 from .forms.orders_form import OrderForm, OrderProductItemForm, OrderProductItemFormSet
 from .models import Order, OrderProductItem
@@ -221,30 +222,53 @@ def export_excel(request):
     return response
 
 
-# @receiver(pre_save, sender=Orders)
-# def update_state(sender, instance, **kwargs):
-#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-#     if instance.quantity > instance.stock_quantity.quantity:
-#         instance.set_to_be_confirmed()
-#     elif instance.quantity <= instance.stock_quantity.quantity:
-#         instance.set_progress()
-#         if instance.is_finished:
-#             SalesOrder.objects.create(
-#                 client=instance.client,
-#                 product=instance.product,
-#                 quantity=instance.quantity,
-#                 stock=instance.stock_quantity,
-#                 price=instance.price,
-#                 note=f"{time_now}轉銷貨單",
-#             )
-#             instance.note = f"{time_now}已轉銷貨單"
-#             instance.set_finished()
-#             instance.is_finished = False
+@receiver(post_save, sender=Order)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    order_items = OrderProductItem.objects.filter(order=instance)
+
+    for item in order_items:
+        if instance.is_finished:
+            order = SalesOrder.objects.create(
+                order_number=generate_order_number(),
+                client=instance.client,
+                client_tel=instance.client_tel,
+                client_address=instance.client_address,
+                client_email=instance.client_email,
+                amount=instance.amount,
+                note=f"轉銷貨單{time_now}",
+            )
+            SalesOrderProductItem.objects.create(
+                sales_order=order,
+                product=item.product,
+                ordered_quantity=item.ordered_quantity,
+                sale_price=item.sale_price,
+                shipped_quantity=0,
+                subtotal=item.subtotal,
+                stock_quantity=item.stock_quantity,
+            )
+            instance.note = f"{time_now}已轉銷貨單"
+            instance.is_finished = False
+            instance.set_finished()
+
+    ordered_quantity = [item.ordered_quantity for item in order_items]
+    stock_quantity = [item.stock_quantity.quantity for item in order_items]
+    order_zip_stock = zip(ordered_quantity, stock_quantity)
+    quantity_bool = [quantity[0] > quantity[1] for quantity in order_zip_stock]
+
+    post_save.disconnect(update_state, sender=Order)
+    if True in quantity_bool:
+        instance.set_to_be_confirmed()
+        instance.save()
+    else:
+        instance.set_progress()
+        instance.save()
+    post_save.connect(update_state, sender=Order)
 
 
-# def transform_sales_order(request, id):
-#     order = get_object_or_404(Orders, id=id)
-#     order.is_finished = True
-#     order.save()
-#     messages.success(request, "轉銷貨單完成!")
-#     return redirect("orders:index")
+def transform_sales_order(request, id):
+    order = get_object_or_404(Order, id=id)
+    order.is_finished = True
+    post_save.send(sender=Order, instance=order, created=True)
+    messages.success(request, "轉銷貨單完成!")
+    return redirect("orders:index")

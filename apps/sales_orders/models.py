@@ -15,7 +15,7 @@ class SalesOrderManager(models.Manager):
 
 
 class SalesOrder(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=11)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, related_name="sales_orders"
     )
@@ -36,8 +36,6 @@ class SalesOrder(models.Model):
 
     objects = SalesOrderManager()
     all_objects = models.Manager()
-
-    is_finished = models.BooleanField(default=False)
 
     is_finished = models.BooleanField(default=False)
 
@@ -93,7 +91,7 @@ class SalesOrder(models.Model):
 
 class SalesOrderProductItem(models.Model):
     sales_order = models.ForeignKey(
-        "SalesOrder", on_delete=models.CASCADE, related_name="items"
+        SalesOrder, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock_quantity = models.ForeignKey(
