@@ -6,7 +6,11 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
 
+<<<<<<< HEAD
 from .forms.invitation_form import InvitationRegistrationForm
+=======
+from .decorators import redirect_if_logged_in
+>>>>>>> issue/#86
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
@@ -16,11 +20,13 @@ from .models import Company, CustomUser, Invitation, Notification
 User = get_user_model()
 
 
+@redirect_if_logged_in
 def index(request):
     user_form = CustomUserCreationForm()
     return render(request, "users/register.html", {"user_form": user_form})
 
 
+@redirect_if_logged_in
 def register(request):
     if request.method == "POST":
         user_form = CustomUserCreationForm(request.POST)
@@ -44,6 +50,7 @@ def register(request):
     return render(request, "users/register.html", {"user_form": user_form})
 
 
+@redirect_if_logged_in
 def log_in(request):
     if request.method == "POST":
         login_form = LoginForm(request.POST)
