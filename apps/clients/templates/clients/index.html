@@ -39,13 +39,13 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'clients:index' %}?sort=id&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">ID{% if order_by == 'id' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">地址{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=created_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">建立時間{% if order_by == 'created_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'clients:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th></th>
         </tr>
       </thead>
@@ -65,16 +65,17 @@
             <span class="btn btn-sm btn-error text-lg">未購買</span>
           </th>
           {% endif %}
-          <th>{{ client.id }}</th>
+          <th>{{ client.number }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
           <td>{{ client.address }}</td>
           <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
-
           <td>{{ client.created_at|date:"Y-m-d H:i" }}</td>
           <td class="flex justify-center gap-1">
-            <button class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</button>
+            <a href="{% url 'clients:edit' client.id %}" class="btn btn-primary">
+              編輯
+            </a>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
