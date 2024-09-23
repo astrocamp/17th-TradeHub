@@ -1,6 +1,8 @@
 from django import forms
-from apps.users.models import CustomUser, Invitation
 from django.core.validators import MinLengthValidator, RegexValidator
+
+from apps.users.models import CustomUser, Invitation
+
 
 class InvitationRegistrationForm(forms.ModelForm):
     token = forms.CharField(max_length=50, required=True)
@@ -32,7 +34,6 @@ class InvitationRegistrationForm(forms.ModelForm):
         help_text="兩次密碼必須相同",
     )
 
-
     class Meta:
         model = CustomUser
         fields = [
@@ -44,18 +45,20 @@ class InvitationRegistrationForm(forms.ModelForm):
         ]
 
     def clean_token(self):
-        token = self.cleaned_data['token']
+        token = self.cleaned_data["token"]
         try:
             invitation = Invitation.objects.get(token=token, is_used=False)
         except Invitation.DoesNotExist:
             raise forms.ValidationError("無效邀請碼")
-        self.cleaned_data['company'] = invitation.company
+        self.cleaned_data["company"] = invitation.company
         return token
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.company = self.cleaned_data['company']
+        user.company = self.cleaned_data["company"]
         if commit:
             user.save()
-            Invitation.objects.filter(token=self.cleaned_data['token']).update(is_used=True)
+            Invitation.objects.filter(token=self.cleaned_data["token"]).update(
+                is_used=True
+            )
         return user

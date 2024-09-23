@@ -2,10 +2,18 @@
 
 from django.db import migrations
 
+
 def create_initial_companies(apps, schema_editor):
-    Company = apps.get_model('company', 'Company')
+    Company = apps.get_model("company", "Company")
     if not Company.objects.filter(id="1").exists():
-        Company.objects.create(id="1",name='訪問公司', gui_number='12345678', address='地址A', contact_person='聯絡人A')
+        Company.objects.create(
+            id="1",
+            name="訪問公司",
+            gui_number="12345678",
+            address="地址A",
+            contact_person="聯絡人A",
+        )
+
 
 class Migration(migrations.Migration):
 
