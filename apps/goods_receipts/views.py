@@ -269,7 +269,7 @@ def update_state(sender, instance, **kwargs):
                     inventory.note += (
                         f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
                     )
-                    inventory.save(update_fields=["quantity", "last_updated", "note"])
+                    inventory.save()
                 else:
                     Inventory.objects.create(
                         product=item.product,
@@ -294,7 +294,7 @@ def update_state(sender, instance, **kwargs):
                     inventory.note += (
                         f"入庫{item.received_quantity}個：{item.product}{time_now}"
                     )
-                    inventory.save(update_fields=["quantity", "last_updated", "note"])
+                    inventory.save()
                 else:
                     Inventory.objects.create(
                         product=item.product,
@@ -321,7 +321,7 @@ def update_state(sender, instance, **kwargs):
         instance.set_to_be_stocked()
     if sum(ordered_quantity) == 0:
         instance.set_finished()
-        instance.save()
+    instance.save()
     post_save.connect(update_state, sender=GoodsReceipt)
 
 
