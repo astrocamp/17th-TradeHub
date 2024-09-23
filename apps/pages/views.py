@@ -9,24 +9,23 @@ from bokeh.plotting import figure
 from bokeh.resources import CDN
 from bokeh.transform import cumsum
 from django.db.models import Count, Sum
-from django.shortcuts import render, redirect
+from django.shortcuts import redirect, render
 from django.utils import timezone
 
-from apps.clients.models import Client
-from apps.goods_receipts.models import GoodsReceipt
-from apps.inventory.models import Inventory
-from apps.orders.models import Order
-from apps.products.models import Product, Supplier
-from apps.purchase_orders.models import PurchaseOrder
-from apps.sales_orders.models import SalesOrder
-
 from apps.clients.forms.clients_form import ClientForm
+from apps.clients.models import Client
 from apps.goods_receipts.forms.goods_receipts_form import GoodsReceiptForm
+from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.forms.inventory_form import RestockForm
+from apps.inventory.models import Inventory
 from apps.orders.forms.orders_form import OrderForm
+from apps.orders.models import Order
 from apps.products.forms import ProductForm
+from apps.products.models import Product, Supplier
 from apps.purchase_orders.forms.purchase_orders_form import PurchaseOrderForm
+from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.forms.sales_order_form import SalesOrderForm
+from apps.sales_orders.models import SalesOrder
 from apps.suppliers.forms.form import SupplierForm
 
 
@@ -284,7 +283,7 @@ def sales_chart(request):
 
     data = {
         "product": [item["items__product__product_name"] for item in sales_data],
-        "quantity": [item["items__ordered_quantity"] for item in sales_data],
+        "quantity": [item["total_quantity"] for item in sales_data],
     }
 
     df = pd.DataFrame(data)

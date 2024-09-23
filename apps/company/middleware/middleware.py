@@ -1,6 +1,8 @@
-from django.utils.deprecation import MiddlewareMixin
-from ..models import Company
 from threading import local
+
+from django.utils.deprecation import MiddlewareMixin
+
+from ..models import Company
 
 _thread_locals = local()
 

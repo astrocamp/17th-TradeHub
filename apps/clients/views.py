@@ -24,7 +24,7 @@ def index(request):
     clients = Client.objects.filter(company=current_company)
 
     if state in state_match:
-        clients = Client.objects.filter(state=state)
+        clients = Client.objects.filter(company=current_company, state=state)
     order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
     clients = clients.order_by(order_by_field)
 

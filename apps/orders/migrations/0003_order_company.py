@@ -7,14 +7,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('company', '0006_remove_company_company_id'),
-        ('orders', '0002_order_orderproductitem_delete_orders'),
+        ("company", "0006_remove_company_company_id"),
+        ("orders", "0002_order_orderproductitem_delete_orders"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='order',
-            name='company',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.PROTECT, related_name='orders', to='company.company'),
+            model_name="order",
+            name="company",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.PROTECT,
+                related_name="orders",
+                to="company.company",
+            ),
         ),
     ]
