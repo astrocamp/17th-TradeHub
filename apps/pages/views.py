@@ -294,7 +294,7 @@ def sales_chart(request):
 
     data = {
         "product": [item["items__product__product_name"] for item in sales_data],
-        "quantity": [item["items__ordered_quantity"] for item in sales_data],
+        "quantity": [item["total_quantity"] for item in sales_data],
     }
 
     df = pd.DataFrame(data)

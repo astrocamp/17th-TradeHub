@@ -35,7 +35,6 @@ def register(request):
             )
             user.company = company
             user.save()
-            request.session["company_id"] = user.company_id
             login(request, user)
 
             return redirect("pages:welcome")
@@ -157,6 +156,7 @@ def update_company_id(request):
             user = request.user
             user.company = company
             user.save()
+            request.session["company_id"] = user.company_id
             messages.success(request, f"您已成功註冊至公司：{company.company_name}")
             return redirect("pages:home")
         except Company.DoesNotExist:

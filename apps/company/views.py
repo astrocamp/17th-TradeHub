@@ -18,7 +18,7 @@ def index(request):
             request.user.company = company
             request.user.is_superuser = True
             request.user.save()
-
+            request.session["company_id"] = request.user.company_id
             messages.success(request, "公司帳號新增成功!")
             return redirect("company:show", id=company.id)
         return render(request, "company/new.html", {"form": form})

@@ -121,7 +121,13 @@ def export_excel(request):
 
     clients = (
         Client.objects.filter(company=current_company).values(
-            "name", "phone_number", "address", "email", "create_at", "delete_at", "note"
+            "name",
+            "phone_number",
+            "address",
+            "email",
+            "created_at",
+            "deleted_at",
+            "note",
         )
         if current_company
         else Client.objects.none()
