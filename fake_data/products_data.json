@@ -3,390 +3,1500 @@
     "model": "products.product",
     "pk": 1,
     "fields": {
-      "product_number": "P001",
-      "product_name": "米",
-      "cost_price": 80,
-      "sale_price": 100,
+      "number": "P001",
+      "product_name": "鉛筆",
+      "cost_price": 5,
+      "sale_price": 10,
       "supplier": 1,
+      "note": "HB 鉛筆",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "長粒米"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 2,
     "fields": {
-      "product_number": "P002",
-      "product_name": "面粉",
-      "cost_price": 40,
-      "sale_price": 50,
+      "number": "P002",
+      "product_name": "原子筆",
+      "cost_price": 15,
+      "sale_price": 25,
       "supplier": 1,
+      "note": "黑色原子筆",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "小麥面粉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 3,
     "fields": {
-      "product_number": "P003",
-      "product_name": "食用油",
-      "cost_price": 120,
-      "sale_price": 150,
+      "number": "P003",
+      "product_name": "筆記本",
+      "cost_price": 20,
+      "sale_price": 35,
       "supplier": 1,
+      "note": "A5 筆記本",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "植物油"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 4,
     "fields": {
-      "product_number": "P004",
-      "product_name": "生菜",
-      "cost_price": 20,
-      "sale_price": 30,
-      "supplier": 2,
+      "number": "P004",
+      "product_name": "橡皮擦",
+      "cost_price": 3,
+      "sale_price": 5,
+      "supplier": 1,
+      "note": "白色橡皮擦",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮生菜"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 5,
     "fields": {
-      "product_number": "P005",
-      "product_name": "番茄",
-      "cost_price": 30,
-      "sale_price": 40,
-      "supplier": 2,
+      "number": "P005",
+      "product_name": "訂書機",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 1,
+      "note": "辦公室必備",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮番茄"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 6,
     "fields": {
-      "product_number": "P006",
-      "product_name": "黃瓜",
-      "cost_price": 25,
-      "sale_price": 35,
-      "supplier": 2,
+      "number": "P006",
+      "product_name": "膠帶",
+      "cost_price": 10,
+      "sale_price": 15,
+      "supplier": 1,
+      "note": "透明膠帶",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮黃瓜"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 7,
     "fields": {
-      "product_number": "P007",
-      "product_name": "鮭魚",
-      "cost_price": 400,
-      "sale_price": 500,
-      "supplier": 3,
+      "number": "P007",
+      "product_name": "剪刀",
+      "cost_price": 25,
+      "sale_price": 40,
+      "supplier": 1,
+      "note": "安全剪刀",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮鮭魚"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 8,
     "fields": {
-      "product_number": "P008",
-      "product_name": "蝦仁",
-      "cost_price": 240,
-      "sale_price": 300,
-      "supplier": 3,
+      "number": "P008",
+      "product_name": "畫筆",
+      "cost_price": 12,
+      "sale_price": 20,
+      "supplier": 1,
+      "note": "彩色畫筆",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮蝦仁"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 9,
     "fields": {
-      "product_number": "P009",
-      "product_name": "螃蟹",
-      "cost_price": 350,
-      "sale_price": 450,
-      "supplier": 3,
+      "number": "P009",
+      "product_name": "文件夾",
+      "cost_price": 8,
+      "sale_price": 15,
+      "supplier": 1,
+      "note": "A4 文件夾",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮螃蟹"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 10,
     "fields": {
-      "product_number": "P010",
-      "product_name": "清潔劑",
-      "cost_price": 60,
-      "sale_price": 80,
-      "supplier": 4,
+      "number": "P010",
+      "product_name": "便條紙",
+      "cost_price": 4,
+      "sale_price": 8,
+      "supplier": 1,
+      "note": "便利貼",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "家庭清潔劑"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 11,
     "fields": {
-      "product_number": "P011",
-      "product_name": "洗碗液",
-      "cost_price": 45,
-      "sale_price": 60,
-      "supplier": 4,
+      "number": "P011",
+      "product_name": "生菜",
+      "cost_price": 30,
+      "sale_price": 50,
+      "supplier": 2,
+      "note": "新鮮生菜",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "強效去油洗碗液"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 12,
     "fields": {
-      "product_number": "P012",
-      "product_name": "垃圾袋",
+      "number": "P012",
+      "product_name": "番茄",
       "cost_price": 20,
-      "sale_price": 25,
-      "supplier": 4,
+      "sale_price": 35,
+      "supplier": 2,
+      "note": "新鮮番茄",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "耐用垃圾袋"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 13,
     "fields": {
-      "product_number": "P013",
-      "product_name": "包裝紙",
+      "number": "P013",
+      "product_name": "黃瓜",
       "cost_price": 15,
-      "sale_price": 20,
-      "supplier": 5,
+      "sale_price": 25,
+      "supplier": 2,
+      "note": "脆口黃瓜",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "多用途包裝紙"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 14,
     "fields": {
-      "product_number": "P014",
-      "product_name": "塑膠袋",
+      "number": "P014",
+      "product_name": "胡蘿蔔",
       "cost_price": 10,
-      "sale_price": 15,
-      "supplier": 5,
+      "sale_price": 18,
+      "supplier": 2,
+      "note": "新鮮胡蘿蔔",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "超市用塑膠袋"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 15,
     "fields": {
-      "product_number": "P015",
-      "product_name": "透明膠帶",
-      "cost_price": 8,
-      "sale_price": 10,
-      "supplier": 5,
+      "number": "P015",
+      "product_name": "青椒",
+      "cost_price": 12,
+      "sale_price": 20,
+      "supplier": 2,
+      "note": "脆甜青椒",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "辦公用透明膠帶"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 16,
     "fields": {
-      "product_number": "P016",
-      "product_name": "冷凍雞胸肉",
-      "cost_price": 200,
-      "sale_price": 250,
-      "supplier": 6,
+      "number": "P016",
+      "product_name": "洋蔥",
+      "cost_price": 25,
+      "sale_price": 40,
+      "supplier": 2,
+      "note": "新鮮洋蔥",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "冷凍雞胸肉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 17,
     "fields": {
-      "product_number": "P017",
-      "product_name": "冷凍豬排",
-      "cost_price": 250,
-      "sale_price": 300,
-      "supplier": 6,
+      "number": "P017",
+      "product_name": "地瓜",
+      "cost_price": 20,
+      "sale_price": 30,
+      "supplier": 2,
+      "note": "甜美地瓜",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "冷凍豬排"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 18,
     "fields": {
-      "product_number": "P018",
-      "product_name": "冷凍魚片",
-      "cost_price": 150,
-      "sale_price": 200,
-      "supplier": 6,
+      "number": "P018",
+      "product_name": "茄子",
+      "cost_price": 18,
+      "sale_price": 28,
+      "supplier": 2,
+      "note": "新鮮茄子",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "冷凍魚片"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 19,
     "fields": {
-      "product_number": "P019",
-      "product_name": "蘋果",
-      "cost_price": 60,
-      "sale_price": 80,
-      "supplier": 7,
+      "number": "P019",
+      "product_name": "香菜",
+      "cost_price": 5,
+      "sale_price": 10,
+      "supplier": 2,
+      "note": "新鮮香菜",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮蘋果"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 20,
     "fields": {
-      "product_number": "P020",
-      "product_name": "香蕉",
-      "cost_price": 40,
-      "sale_price": 50,
-      "supplier": 7,
+      "number": "P020",
+      "product_name": "白菜",
+      "cost_price": 25,
+      "sale_price": 35,
+      "supplier": 2,
+      "note": "新鮮白菜",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮香蕉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 21,
     "fields": {
-      "product_number": "P021",
-      "product_name": "葡萄",
-      "cost_price": 100,
-      "sale_price": 120,
-      "supplier": 7,
+      "number": "P021",
+      "product_name": "鮮蝦",
+      "cost_price": 200,
+      "sale_price": 300,
+      "supplier": 3,
+      "note": "新鮮大蝦",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮葡萄"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 22,
     "fields": {
-      "product_number": "P022",
-      "product_name": "啤酒",
-      "cost_price": 120,
-      "sale_price": 150,
-      "supplier": 8,
+      "number": "P022",
+      "product_name": "鮭魚",
+      "cost_price": 350,
+      "sale_price": 500,
+      "supplier": 3,
+      "note": "新鮮鮭魚片",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "各種啤酒"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 23,
     "fields": {
-      "product_number": "P023",
-      "product_name": "紅酒",
-      "cost_price": 350,
+      "number": "P023",
+      "product_name": "鱸魚",
+      "cost_price": 280,
       "sale_price": 400,
-      "supplier": 8,
+      "supplier": 3,
+      "note": "新鮮鱸魚",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "優質紅酒"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 24,
     "fields": {
-      "product_number": "P024",
-      "product_name": "白酒",
-      "cost_price": 450,
-      "sale_price": 500,
-      "supplier": 8,
+      "number": "P024",
+      "product_name": "章魚",
+      "cost_price": 180,
+      "sale_price": 250,
+      "supplier": 3,
+      "note": "新鮮章魚",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "高級白酒"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 25,
     "fields": {
-      "product_number": "P025",
-      "product_name": "鹽",
-      "cost_price": 15,
-      "sale_price": 20,
-      "supplier": 9,
+      "number": "P025",
+      "product_name": "扇貝",
+      "cost_price": 300,
+      "sale_price": 450,
+      "supplier": 3,
+      "note": "新鮮扇貝",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "食用鹽"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 26,
     "fields": {
-      "product_number": "P026",
-      "product_name": "糖",
-      "cost_price": 30,
-      "sale_price": 40,
-      "supplier": 9,
+      "number": "P026",
+      "product_name": "蟹",
+      "cost_price": 400,
+      "sale_price": 600,
+      "supplier": 3,
+      "note": "新鮮螃蟹",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "白砂糖"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 27,
     "fields": {
-      "product_number": "P027",
-      "product_name": "胡椒粉",
-      "cost_price": 25,
-      "sale_price": 30,
-      "supplier": 9,
+      "number": "P027",
+      "product_name": "鰻魚",
+      "cost_price": 500,
+      "sale_price": 700,
+      "supplier": 3,
+      "note": "新鮮鰻魚",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "黑胡椒粉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 28,
     "fields": {
-      "product_number": "P028",
-      "product_name": "豬肉",
-      "cost_price": 300,
-      "sale_price": 350,
-      "supplier": 10,
+      "number": "P028",
+      "product_name": "魚翅",
+      "cost_price": 1000,
+      "sale_price": 1500,
+      "supplier": 3,
+      "note": "上等魚翅",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮豬肉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 29,
     "fields": {
-      "product_number": "P029",
-      "product_name": "牛肉",
-      "cost_price": 400,
-      "sale_price": 450,
-      "supplier": 10,
+      "number": "P029",
+      "product_name": "龍蝦",
+      "cost_price": 800,
+      "sale_price": 1200,
+      "supplier": 3,
+      "note": "新鮮龍蝦",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮牛肉"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   },
   {
     "model": "products.product",
     "pk": 30,
     "fields": {
-      "product_number": "P030",
-      "product_name": "雞腿",
-      "cost_price": 150,
-      "sale_price": 200,
-      "supplier": 10,
+      "number": "P030",
+      "product_name": "海藻",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 3,
+      "note": "新鮮海藻",
       "created_at": "2024-09-01T12:34:56Z",
-      "note": "新鮮雞腿"
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 31,
+    "fields": {
+      "number": "P031",
+      "product_name": "洗潔精",
+      "cost_price": 60,
+      "sale_price": 80,
+      "supplier": 4,
+      "note": "高效洗潔精",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 32,
+    "fields": {
+      "number": "P032",
+      "product_name": "清潔劑",
+      "cost_price": 70,
+      "sale_price": 100,
+      "supplier": 4,
+      "note": "多用途清潔劑",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 33,
+    "fields": {
+      "number": "P033",
+      "product_name": "消毒液",
+      "cost_price": 90,
+      "sale_price": 120,
+      "supplier": 4,
+      "note": "強效消毒液",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 34,
+    "fields": {
+      "number": "P034",
+      "product_name": "地板清潔劑",
+      "cost_price": 80,
+      "sale_price": 110,
+      "supplier": 4,
+      "note": "專用地板清潔劑",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 35,
+    "fields": {
+      "number": "P035",
+      "product_name": "廁所清潔劑",
+      "cost_price": 50,
+      "sale_price": 70,
+      "supplier": 4,
+      "note": "專用廁所清潔劑",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 36,
+    "fields": {
+      "number": "P036",
+      "product_name": "玻璃清潔劑",
+      "cost_price": 55,
+      "sale_price": 75,
+      "supplier": 4,
+      "note": "無 streak 玻璃清潔劑",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 37,
+    "fields": {
+      "number": "P037",
+      "product_name": "油污清潔劑",
+      "cost_price": 100,
+      "sale_price": 140,
+      "supplier": 4,
+      "note": "強效油污清潔劑",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 38,
+    "fields": {
+      "number": "P038",
+      "product_name": "洗衣粉",
+      "cost_price": 65,
+      "sale_price": 85,
+      "supplier": 4,
+      "note": "高效洗衣粉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 39,
+    "fields": {
+      "number": "P039",
+      "product_name": "清潔海綿",
+      "cost_price": 20,
+      "sale_price": 30,
+      "supplier": 4,
+      "note": "多用途清潔海綿",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 40,
+    "fields": {
+      "number": "P040",
+      "product_name": "消毒濕紙巾",
+      "cost_price": 40,
+      "sale_price": 60,
+      "supplier": 4,
+      "note": "便攜式消毒濕紙巾",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 41,
+    "fields": {
+      "number": "P041",
+      "product_name": "氣泡袋",
+      "cost_price": 15,
+      "sale_price": 25,
+      "supplier": 5,
+      "note": "保護易碎物品",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 42,
+    "fields": {
+      "number": "P042",
+      "product_name": "包裝紙",
+      "cost_price": 10,
+      "sale_price": 15,
+      "supplier": 5,
+      "note": "高品質包裝紙",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 43,
+    "fields": {
+      "number": "P043",
+      "product_name": "膠帶",
+      "cost_price": 5,
+      "sale_price": 8,
+      "supplier": 5,
+      "note": "強力膠帶",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 44,
+    "fields": {
+      "number": "P044",
+      "product_name": "包裝盒",
+      "cost_price": 20,
+      "sale_price": 30,
+      "supplier": 5,
+      "note": "各種尺寸包裝盒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 45,
+    "fields": {
+      "number": "P045",
+      "product_name": "塑膠袋",
+      "cost_price": 8,
+      "sale_price": 12,
+      "supplier": 5,
+      "note": "耐用塑膠袋",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 46,
+    "fields": {
+      "number": "P046",
+      "product_name": "泡沫箱",
+      "cost_price": 25,
+      "sale_price": 35,
+      "supplier": 5,
+      "note": "冷藏運輸專用",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 47,
+    "fields": {
+      "number": "P047",
+      "product_name": "包裝緩衝材料",
+      "cost_price": 18,
+      "sale_price": 28,
+      "supplier": 5,
+      "note": "緩衝包裝材料",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 48,
+    "fields": {
+      "number": "P048",
+      "product_name": "透明膠帶",
+      "cost_price": 6,
+      "sale_price": 9,
+      "supplier": 5,
+      "note": "透明強力膠帶",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 49,
+    "fields": {
+      "number": "P049",
+      "product_name": "箱子",
+      "cost_price": 30,
+      "sale_price": 40,
+      "supplier": 5,
+      "note": "堅固耐用箱子",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 50,
+    "fields": {
+      "number": "P050",
+      "product_name": "織帶",
+      "cost_price": 12,
+      "sale_price": 18,
+      "supplier": 5,
+      "note": "各種顏色織帶",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 51,
+    "fields": {
+      "number": "P051",
+      "product_name": "冷凍雞翅",
+      "cost_price": 100,
+      "sale_price": 150,
+      "supplier": 6,
+      "note": "新鮮冷凍雞翅",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 52,
+    "fields": {
+      "number": "P052",
+      "product_name": "冷凍牛肉",
+      "cost_price": 250,
+      "sale_price": 350,
+      "supplier": 6,
+      "note": "優質冷凍牛肉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 53,
+    "fields": {
+      "number": "P053",
+      "product_name": "冷凍豬肉",
+      "cost_price": 200,
+      "sale_price": 300,
+      "supplier": 6,
+      "note": "新鮮冷凍豬肉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 54,
+    "fields": {
+      "number": "P054",
+      "product_name": "冷凍海鮮拼盤",
+      "cost_price": 400,
+      "sale_price": 550,
+      "supplier": 6,
+      "note": "各種海鮮組合",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 55,
+    "fields": {
+      "number": "P055",
+      "product_name": "冷凍蔬菜",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 6,
+      "note": "健康冷凍蔬菜",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 56,
+    "fields": {
+      "number": "P056",
+      "product_name": "冷凍水餃",
+      "cost_price": 120,
+      "sale_price": 180,
+      "supplier": 6,
+      "note": "手工冷凍水餃",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 57,
+    "fields": {
+      "number": "P057",
+      "product_name": "冷凍漢堡",
+      "cost_price": 150,
+      "sale_price": 220,
+      "supplier": 6,
+      "note": "美味冷凍漢堡",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 58,
+    "fields": {
+      "number": "P058",
+      "product_name": "冷凍比薩",
+      "cost_price": 200,
+      "sale_price": 300,
+      "supplier": 6,
+      "note": "各種口味冷凍比薩",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 59,
+    "fields": {
+      "number": "P059",
+      "product_name": "冷凍玉米",
+      "cost_price": 40,
+      "sale_price": 60,
+      "supplier": 6,
+      "note": "新鮮冷凍玉米",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 60,
+    "fields": {
+      "number": "P060",
+      "product_name": "冷凍豆腐",
+      "cost_price": 30,
+      "sale_price": 50,
+      "supplier": 6,
+      "note": "健康冷凍豆腐",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 61,
+    "fields": {
+      "number": "P061",
+      "product_name": "蘋果",
+      "cost_price": 60,
+      "sale_price": 90,
+      "supplier": 7,
+      "note": "新鮮蘋果",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 62,
+    "fields": {
+      "number": "P062",
+      "product_name": "香蕉",
+      "cost_price": 30,
+      "sale_price": 50,
+      "supplier": 7,
+      "note": "新鮮香蕉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 63,
+    "fields": {
+      "number": "P063",
+      "product_name": "橙子",
+      "cost_price": 40,
+      "sale_price": 70,
+      "supplier": 7,
+      "note": "新鮮橙子",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 64,
+    "fields": {
+      "number": "P064",
+      "product_name": "葡萄",
+      "cost_price": 80,
+      "sale_price": 120,
+      "supplier": 7,
+      "note": "新鮮葡萄",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 65,
+    "fields": {
+      "number": "P065",
+      "product_name": "草莓",
+      "cost_price": 120,
+      "sale_price": 180,
+      "supplier": 7,
+      "note": "新鮮草莓",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 66,
+    "fields": {
+      "number": "P066",
+      "product_name": "西瓜",
+      "cost_price": 100,
+      "sale_price": 150,
+      "supplier": 7,
+      "note": "新鮮西瓜",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 67,
+    "fields": {
+      "number": "P067",
+      "product_name": "鳳梨",
+      "cost_price": 90,
+      "sale_price": 130,
+      "supplier": 7,
+      "note": "新鮮鳳梨",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 68,
+    "fields": {
+      "number": "P068",
+      "product_name": "芒果",
+      "cost_price": 110,
+      "sale_price": 160,
+      "supplier": 7,
+      "note": "新鮮芒果",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 69,
+    "fields": {
+      "number": "P069",
+      "product_name": "奇異果",
+      "cost_price": 70,
+      "sale_price": 100,
+      "supplier": 7,
+      "note": "新鮮奇異果",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 70,
+    "fields": {
+      "number": "P070",
+      "product_name": "檸檬",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 7,
+      "note": "新鮮檸檬",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 71,
+    "fields": {
+      "number": "P071",
+      "product_name": "啤酒",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 8,
+      "note": "各式啤酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 72,
+    "fields": {
+      "number": "P072",
+      "product_name": "紅酒",
+      "cost_price": 300,
+      "sale_price": 450,
+      "supplier": 8,
+      "note": "法國紅酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 73,
+    "fields": {
+      "number": "P073",
+      "product_name": "白酒",
+      "cost_price": 350,
+      "sale_price": 500,
+      "supplier": 8,
+      "note": "義大利白酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 74,
+    "fields": {
+      "number": "P074",
+      "product_name": "威士忌",
+      "cost_price": 800,
+      "sale_price": 1200,
+      "supplier": 8,
+      "note": "蘇格蘭威士忌",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 75,
+    "fields": {
+      "number": "P075",
+      "product_name": "香檳",
+      "cost_price": 1500,
+      "sale_price": 2000,
+      "supplier": 8,
+      "note": "法國香檳",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 76,
+    "fields": {
+      "number": "P076",
+      "product_name": "蘇打水",
+      "cost_price": 20,
+      "sale_price": 35,
+      "supplier": 8,
+      "note": "各式蘇打水",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 77,
+    "fields": {
+      "number": "P077",
+      "product_name": "米酒",
+      "cost_price": 100,
+      "sale_price": 150,
+      "supplier": 8,
+      "note": "傳統米酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 78,
+    "fields": {
+      "number": "P078",
+      "product_name": "果酒",
+      "cost_price": 200,
+      "sale_price": 300,
+      "supplier": 8,
+      "note": "各式果酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 79,
+    "fields": {
+      "number": "P079",
+      "product_name": "烈酒",
+      "cost_price": 500,
+      "sale_price": 700,
+      "supplier": 8,
+      "note": "各式烈酒",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 80,
+    "fields": {
+      "number": "P080",
+      "product_name": "調酒材料",
+      "cost_price": 250,
+      "sale_price": 350,
+      "supplier": 8,
+      "note": "各式調酒材料",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 81,
+    "fields": {
+      "number": "P081",
+      "product_name": "醬油",
+      "cost_price": 30,
+      "sale_price": 50,
+      "supplier": 9,
+      "note": "特製醬油",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 82,
+    "fields": {
+      "number": "P082",
+      "product_name": "蠔油",
+      "cost_price": 40,
+      "sale_price": 70,
+      "supplier": 9,
+      "note": "鮮味蠔油",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 83,
+    "fields": {
+      "number": "P083",
+      "product_name": "香油",
+      "cost_price": 50,
+      "sale_price": 80,
+      "supplier": 9,
+      "note": "純芝麻香油",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 84,
+    "fields": {
+      "number": "P084",
+      "product_name": "辣椒醬",
+      "cost_price": 20,
+      "sale_price": 40,
+      "supplier": 9,
+      "note": "特製辣椒醬",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 85,
+    "fields": {
+      "number": "P085",
+      "product_name": "甜辣醬",
+      "cost_price": 25,
+      "sale_price": 45,
+      "supplier": 9,
+      "note": "特製甜辣醬",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 86,
+    "fields": {
+      "number": "P086",
+      "product_name": "魚露",
+      "cost_price": 35,
+      "sale_price": 60,
+      "supplier": 9,
+      "note": "純魚露",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 87,
+    "fields": {
+      "number": "P087",
+      "product_name": "米醋",
+      "cost_price": 20,
+      "sale_price": 35,
+      "supplier": 9,
+      "note": "純米醋",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 88,
+    "fields": {
+      "number": "P088",
+      "product_name": "香料",
+      "cost_price": 60,
+      "sale_price": 100,
+      "supplier": 9,
+      "note": "各式香料",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 89,
+    "fields": {
+      "number": "P089",
+      "product_name": "沙茶醬",
+      "cost_price": 30,
+      "sale_price": 55,
+      "supplier": 9,
+      "note": "特製沙茶醬",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 90,
+    "fields": {
+      "number": "P090",
+      "product_name": "果醬",
+      "cost_price": 40,
+      "sale_price": 65,
+      "supplier": 10,
+      "note": "各式果醬",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 91,
+    "fields": {
+      "number": "P091",
+      "product_name": "豬肉片",
+      "cost_price": 120,
+      "sale_price": 180,
+      "supplier": 10,
+      "note": "新鮮豬肉片",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 92,
+    "fields": {
+      "number": "P092",
+      "product_name": "牛肉片",
+      "cost_price": 250,
+      "sale_price": 350,
+      "supplier": 10,
+      "note": "優質牛肉片",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 93,
+    "fields": {
+      "number": "P093",
+      "product_name": "雞胸肉",
+      "cost_price": 100,
+      "sale_price": 150,
+      "supplier": 10,
+      "note": "健康雞胸肉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 94,
+    "fields": {
+      "number": "P094",
+      "product_name": "鴨腿",
+      "cost_price": 180,
+      "sale_price": 250,
+      "supplier": 10,
+      "note": "美味鴨腿",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 95,
+    "fields": {
+      "number": "P095",
+      "product_name": "火腿",
+      "cost_price": 200,
+      "sale_price": 280,
+      "supplier": 10,
+      "note": "進口火腿",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 96,
+    "fields": {
+      "number": "P096",
+      "product_name": "香腸",
+      "cost_price": 90,
+      "sale_price": 140,
+      "supplier": 10,
+      "note": "手工香腸",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 97,
+    "fields": {
+      "number": "P097",
+      "product_name": "牛腩",
+      "cost_price": 220,
+      "sale_price": 300,
+      "supplier": 10,
+      "note": "嫩滑牛腩",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 98,
+    "fields": {
+      "number": "P098",
+      "product_name": "羊肉片",
+      "cost_price": 240,
+      "sale_price": 320,
+      "supplier": 10,
+      "note": "新鮮羊肉片",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 99,
+    "fields": {
+      "number": "P099",
+      "product_name": "鴨胸肉",
+      "cost_price": 190,
+      "sale_price": 260,
+      "supplier": 10,
+      "note": "優質鴨胸肉",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
+    }
+  },
+  {
+    "model": "products.product",
+    "pk": 100,
+    "fields": {
+      "number": "P100",
+      "product_name": "豬腳",
+      "cost_price": 80,
+      "sale_price": 120,
+      "supplier": 10,
+      "note": "新鮮豬腳",
+      "created_at": "2024-09-01T12:34:56Z",
+      "updated_at": "2024-09-01T12:34:56Z",
+      "deleted_at": null
     }
   }
 ]

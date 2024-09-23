@@ -26,7 +26,7 @@ from apps.purchase_orders.forms.purchase_orders_form import PurchaseOrderForm
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.forms.sales_order_form import SalesOrderForm
 from apps.sales_orders.models import SalesOrder
-from apps.suppliers.forms.form import SupplierForm
+from apps.suppliers.forms.supplier_form import SupplierForm
 from apps.suppliers.models import Supplier
 
 
@@ -50,7 +50,7 @@ def sales_chart(request):
 
     # 抓基本資料數值
     clients_num = len(Client.objects.values("name"))
-    products_num = len(Product.objects.values("product_number"))
+    products_num = len(Product.objects.values("number"))
     suppliers_num = len(Supplier.objects.values("name"))
     inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
 

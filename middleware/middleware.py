@@ -1,5 +1,6 @@
-from django.shortcuts import redirect
 from django.contrib import messages
+from django.shortcuts import redirect
+
 
 class Redirect404Middleware:
     def __init__(self, get_response):

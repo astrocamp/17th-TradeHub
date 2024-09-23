@@ -1,4 +1,6 @@
 import csv
+import random
+import string
 from datetime import datetime, timedelta, timezone
 
 import pandas as pd
@@ -11,12 +13,14 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from apps.clients.models import Client
 from apps.inventory.models import Inventory
 from apps.products.models import Product
-from apps.sales_orders.models import SalesOrder
-
-from apps.clients.models import Client
-from apps.sales_orders.forms.sales_order_form import SalesOrderForm, SalesOrderProductItemForm, SalesOrderProductItemFormSet
+from apps.sales_orders.forms.sales_order_form import (
+    SalesOrderForm,
+    SalesOrderProductItemForm,
+    SalesOrderProductItemFormSet,
+)
 from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 
@@ -47,14 +51,14 @@ def index(request):
 
 
 def new(request):
-    new_order_number = generate_order_number()
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
         formset = SalesOrderProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
-            order.order_number = new_order_number
             order.username = request.user.username
+            order.save()
+            order.order_number = generate_order_number(order)
             order.save()
             formset.instance = order
             formset.save()
@@ -143,21 +147,13 @@ def load_product_info(request):
     return JsonResponse({"sale_price": product.sale_price})
 
 
-def generate_order_number():
+def generate_order_number(order):
     today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        SalesOrder.all_objects.filter(order_number__startswith=today)
-        .order_by("-order_number")
-        .first()
-    )
-
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{last_order_number + 1:03d}"
-    else:
-        new_order_number = "001"
-
-    return f"{today}{new_order_number}"
+    order_id = order.id
+    order_suffix = f"{order_id:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
+    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
 def export_csv(request):

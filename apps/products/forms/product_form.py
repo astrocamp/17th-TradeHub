@@ -12,7 +12,6 @@ class ProductForm(ModelForm):
     class Meta:
         model = Product
         fields = [
-            "product_number",
             "product_name",
             "cost_price",
             "sale_price",
@@ -20,12 +19,6 @@ class ProductForm(ModelForm):
             "note",
         ]
         widgets = {
-            "product_number": forms.TextInput(
-                attrs={
-                    "class": "form-control w-full rounded-md p-2 bg-gray-100",
-                    "placeholder": "請輸入商品編號",
-                }
-            ),
             "product_name": forms.TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
@@ -58,15 +51,13 @@ class ProductForm(ModelForm):
             ),
         }
         labels = {
-            "product_number": "商品編號",
             "product_name": "商品名稱",
-            "cost_price": "進價",
-            "sale_price": "售價",
-            "supplier": "供應商",
+            "cost_price": "商品進價",
+            "sale_price": "商品售價",
+            "supplier": "供應商名稱",
             "note": "備註",
         }
         help_texts = {
-            "product_number": "例:P001",
             "product_name": "例:小黑板",
             "cost_price": "請填入數字即可",
             "sale_price": "售價應高於成本價",
@@ -81,20 +72,10 @@ class ProductForm(ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        product_number = cleaned_data.get("product_number")
         product_name = cleaned_data.get("product_name")
         cost_price = cleaned_data.get("cost_price")
         sale_price = cleaned_data.get("sale_price")
         supplier = cleaned_data.get("supplier")
-
-        if not product_number:
-            self.add_error("product_number", "請填入商品編號")
-        elif (
-            Product.objects.filter(product_number=product_number)
-            .exclude(id=self.instance.id)
-            .exists()
-        ):
-            self.add_error("product_number", "此商品編號已存在")
 
         if not product_name:
             self.add_error("product_name", "請填入商品名稱")

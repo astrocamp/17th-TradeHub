@@ -6,11 +6,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
 
-<<<<<<< HEAD
-from .forms.invitation_form import InvitationRegistrationForm
-=======
 from .decorators import redirect_if_logged_in
->>>>>>> issue/#86
+from .forms.invitation_form import InvitationRegistrationForm
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
@@ -114,7 +111,6 @@ def reset_password(request):
                     "users/reset_password.html",
                     {"error": "密碼不一致"},
                 )
-
         else:
             return render(request, "users/reset_password.html")
 
