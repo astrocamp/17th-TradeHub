@@ -113,6 +113,4 @@ class CustomUserCreationForm(UserCreationForm):
         email = self.cleaned_data.get("email")
         if email == "":
             raise forms.ValidationError("請輸入您的Email信箱")
-        elif CustomUser.objects.filter(email=email).exists():
-            raise forms.ValidationError("這個Email信箱已被使用")
         return email
