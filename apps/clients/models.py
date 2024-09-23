@@ -27,7 +27,7 @@ class Client(models.Model):
         related_name="clients",
         blank=True,
         null=True,
-    , blank=True)
+    )
     note = models.TextField(blank=True, null=True, max_length=150)
 
     objects = ClientManager()
@@ -100,8 +100,10 @@ class Client(models.Model):
         super().save(*args, **kwargs)
 
     def format_phone_number(self, number):
+        # 把所有非數字符號改為空字串(清除)
         number = re.sub(r"\D", "", number)
 
+        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
         elif len(number) == 10 and number.startswith(("037", "049")):

@@ -13,12 +13,14 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from apps.clients.models import Client
 from apps.inventory.models import Inventory
 from apps.products.models import Product
-from apps.sales_orders.models import SalesOrder
-
-from apps.clients.models import Client
-from apps.sales_orders.forms.sales_order_form import SalesOrderForm, SalesOrderProductItemForm, SalesOrderProductItemFormSet
+from apps.sales_orders.forms.sales_order_form import (
+    SalesOrderForm,
+    SalesOrderProductItemForm,
+    SalesOrderProductItemFormSet,
+)
 from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 
