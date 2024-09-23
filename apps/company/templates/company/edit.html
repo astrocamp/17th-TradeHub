@@ -2,11 +2,35 @@
 
 {% block content %}
 
-<a href="{% url 'company:show' company.id %}" class="btn btn-primary">首頁</a>
+<a href="{% url 'pages:home' %}" class="btn btn-primary">直接試用TradeHub!</a>
 
-<form action="{% url 'company:show' company.id %}" method="POST">
+<form action="{% url 'company:edit' company.id %}" method="POST">
     {% csrf_token %}
-    {{form.as_p}}
+    {% for field in form %}
+    <div class="flex flex-col gap-2 p-4 border rounded-lg shadow-sm bg-white">
+        <label for="{{ field.id_for_label }}" class="text-lg font-semibold text-gray-800">
+          {{ field.label }}
+          {% if field.name != "address" %}
+            <span class="text-red-500 text-sm mt-2"> *</span>
+          {% endif %}
+        </label>
+        <div>
+            {% if field.help_text %}
+                <p class="text-gray-600 text-sm mb-2 px-1">{{ field.help_text }}</p>
+            {% endif %}
+            {{ field }}
+            {% if field.errors %}
+                <ul class="errorlist text-red-500 text-sm mt-2 px-1">
+                    {% for error in field.errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+
+
     <button class="btn btn-primary">更新</button>
 </form>
 

@@ -27,7 +27,7 @@ def index(request):
 
 
 def new(request):
-    form = CompanyForm()
+    form = CompanyForm(user=request.user)
     if request.user.company:
         if request.user.company.company_name == "個人公司":
             return render(request, "company/new.html", {"form": form})
@@ -35,7 +35,6 @@ def new(request):
             messages.success(request, "您已經有公司帳號了!")
             return redirect("pages:home")
     else:
-        messages.success(request, "您還沒有公司帳號!")
         return render(request, "company/new.html", {"form": form})
 
 
@@ -45,7 +44,7 @@ def show(request, id):
         messages.success(request, "您還沒有公司帳號!")
         return redirect("company:index")
     if request.user.company != company:
-        return redirect("pages:home")
+        return redirect("company:show", id=request.user.company.id)
     if request.method == "POST":
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
@@ -57,6 +56,17 @@ def show(request, id):
 
 def edit(request, id):
     company = get_object_or_404(Company, id=id)
+    if request.method == "POST":
+        form = CompanyForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect("company:show", id=id)
+        return render(request, "company/edit.html", {"company": company, "form": form})
+    if request.user.company is None:
+        messages.success(request, "您還沒有公司帳號!")
+        return redirect("company:index")
+    if request.user.company != company:
+        return redirect("company:show", id=request.user.company.id)
     form = CompanyForm(instance=company)
     return render(request, "company/edit.html", {"company": company, "form": form})
 
