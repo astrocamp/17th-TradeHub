@@ -1,4 +1,5 @@
 import re
+from typing import Iterable
 
 from django.db import models
 from django.utils import timezone
@@ -39,6 +40,10 @@ class GoodsReceipt(models.Model):
     def delete(self):
         self.deleted_at = timezone.now()
         self.save()
+
+    def save(self):
+        self.is_finished = False
+        return super().save()
 
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"

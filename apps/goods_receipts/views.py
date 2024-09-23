@@ -6,6 +6,7 @@ import pandas as pd
 import pytz
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
@@ -61,9 +62,10 @@ def new(request):
             order = form.save(commit=False)
             order.order_number = new_order_number
             order.username = request.user.username
-            order.save()
-            formset.instance = order
-            formset.save()
+            with transaction.atomic():
+                order.save()
+                formset.instance = order
+                formset.save()
             return redirect("goods_receipts:index")
         else:
             return render(
@@ -95,8 +97,9 @@ def edit(request, id):
         form = GoodsReceiptForm(request.POST, instance=goods_receipt)
         formset = ProductItemFormSet(request.POST, instance=goods_receipt)
         if form.is_valid() and formset.is_valid():
-            form.save()
-            formset.save()
+            with transaction.atomic():
+                form.save()
+                formset.save()
             return redirect("goods_receipts:show", goods_receipt.id)
         return render(
             request,
@@ -254,7 +257,6 @@ def export_excel(request):
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     receipts_items = GoodsReceiptProductItem.objects.filter(goods_receipt=instance)
-
     for item in receipts_items:
         if item.received_quantity < item.ordered_quantity:
             if instance.is_finished:
@@ -274,20 +276,16 @@ def update_state(sender, instance, **kwargs):
                         supplier=instance.supplier,
                         quantity=item.received_quantity,
                         safety_stock=0,
-                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
+                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
                         last_updated=time_now,
                     )
 
             item.ordered_quantity -= item.received_quantity
             item.received_quantity = 0
-            instance.set_to_be_restocked()
             item.save(update_fields=["received_quantity", "ordered_quantity"])
 
-        if item.received_quantity >= item.ordered_quantity:
-            instance.set_to_be_stocked()
-            print(instance.is_finished)
+        if item.received_quantity == item.ordered_quantity:
             if instance.is_finished:
-                instance.set_finished()
 
                 inventory = Inventory.objects.filter(product=item.product).first()
                 if inventory:
@@ -306,19 +304,30 @@ def update_state(sender, instance, **kwargs):
                         note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}{time_now}",
                         last_updated=time_now,
                     )
+
                 instance.note += (
                     f"入庫{item.received_quantity}個：{item.product}{time_now}"
                 )
                 item.ordered_quantity = 0
                 item.received_quantity = 0
                 item.save(update_fields=["received_quantity", "ordered_quantity"])
-                # instance.is_finished = False
-                # instance.save(update_fields=["is_finished"])
+    instance.is_finished = False
+
+    ordered_quantity = [item.ordered_quantity for item in receipts_items]
+    received_quantity = [item.received_quantity for item in receipts_items]
+
+    post_save.disconnect(update_state, sender=GoodsReceipt)
+    if ordered_quantity != received_quantity:
+        instance.set_to_be_stocked()
+    if sum(ordered_quantity) == 0:
+        instance.set_finished()
+        instance.save()
+    post_save.connect(update_state, sender=GoodsReceipt)
 
 
 def stocked(request, id):
     goods_receipt = get_object_or_404(GoodsReceipt, id=id)
     goods_receipt.is_finished = True
-    goods_receipt.save()
+    post_save.send(sender=GoodsReceipt, instance=goods_receipt)
     messages.success(request, "入庫完成!")
     return redirect("goods_receipts:index")
