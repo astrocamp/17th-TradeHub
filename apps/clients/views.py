@@ -25,7 +25,7 @@ def index(request):
 
     if state in state_match:
         clients = Client.objects.filter(company=current_company, state=state)
-    order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
+    order_by_field = f"{'-' if is_desc else ''}{order_by or '-id'}"
     clients = clients.order_by(order_by_field)
 
     paginator = Paginator(clients, 5)

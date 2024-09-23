@@ -3,9 +3,9 @@
 {% block content %}
     <div class="max-w-5xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
         <div class="flex justify-between items-center p-4">
-            <h2 class="text-2xl font-bold text-gray-800" for="id_order_number">訂購單編號:{{ form.instance.order_number }}</h2>
+            <h2 class="text-2xl font-bold text-gray-800" for="id_order_number">客戶訂單編號:{{ form.instance.order_number }}</h2>
             <div class="text-gray-700">
-                <strong>訂購人:{{ form.instance.username }}</strong>
+                <strong>負責人:{{ form.instance.username }}</strong>
             </div>
         </div>
 
@@ -48,7 +48,7 @@
 
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">訂購單細項</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">客戶訂單細項</h2>
 
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>

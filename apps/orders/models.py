@@ -6,9 +6,8 @@ from django_fsm import FSMField, transition
 
 from apps.clients.models import Client
 from apps.company.models import Company
+from apps.inventory.models import Inventory
 from apps.products.models import Product
-
-from ..inventory.models import Inventory
 
 
 class OrdersManager(models.Manager):
@@ -17,13 +16,20 @@ class OrdersManager(models.Manager):
 
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=11, unique=True)
+    order_number = models.CharField(max_length=20, unique=True)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="orders")
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)
     client_email = models.EmailField(unique=False)
     amount = models.PositiveIntegerField()
     username = models.CharField(max_length=150, default="admin")
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="orders",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

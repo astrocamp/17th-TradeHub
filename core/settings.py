@@ -69,6 +69,7 @@ INSTALLED_APPS = [
     "apps.sales_orders",
     "apps.goods_receipts",
     "social_django",
+    "django_htmx",
     "apps.company",
 ]
 
@@ -90,6 +91,7 @@ MIDDLEWARE = [
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "apps.users.middleware.middleware.LoginRequiredMiddleware",
     "apps.company.middleware.middleware.CompanyMiddleware",
+    "middleware.middleware.Redirect404Middleware",
 ]
 
 # 未登入時導向的頁面（登入頁面）

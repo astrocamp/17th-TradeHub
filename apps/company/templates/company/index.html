@@ -11,7 +11,7 @@
         {% for company in company_list %}
         <a href="{% url 'company:show' company.id %}">
             <p>公司代碼：{{company.company_id}}</p>
-            <p>公司名稱：{{company.company_name}}</p>
+            <p>公司名稱：{{company.name}}</p>
             <p>統一編號：{{company.gui_number}}</p>
             <p>公司地址：{{company.address}}</p>
             <p>公司負責人：{{company.user}}</p>

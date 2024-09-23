@@ -15,7 +15,7 @@ class GoodReceiptManager(models.Manager):
 
 
 class GoodsReceipt(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=20, unique=True)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="goods_receipts"
     )
@@ -53,8 +53,13 @@ class GoodsReceipt(models.Model):
 
     def format_supplier_tel(self, number):
         number = re.sub(r"\D", "", number)
+        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
         elif len(number) == 9 and number.startswith("0"):
             return f"{number[:2]}-{number[2:]}"
         else:

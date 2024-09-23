@@ -12,7 +12,7 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    product_number = models.CharField(max_length=10, unique=True)
+    number = models.CharField(max_length=20, unique=True)
     product_name = models.CharField(max_length=20)
     cost_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
@@ -28,7 +28,8 @@ class Product(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
 
     objects = ProductManager()
 
@@ -38,6 +39,11 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        self.number = f"I{self.id:03d}"
+        super().save(update_fields=["number"])
 
     OFTEN = "often"
     HAPLY = "haply"

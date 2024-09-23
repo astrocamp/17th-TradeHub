@@ -13,12 +13,16 @@ class SupplierManager(models.Manager):
 
 
 class Supplier(models.Model):
+    number = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=20)
     telephone = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
     email = models.EmailField(unique=True)
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    deleted_at = models.DateTimeField(null=True, blank=True)
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
@@ -26,8 +30,6 @@ class Supplier(models.Model):
         blank=True,
         null=True,
     )
-    created_at = models.DateTimeField(auto_now_add=True)
-    deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True, null=True)
 
     objects = SupplierManager()
@@ -38,6 +40,25 @@ class Supplier(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.gui_number})"
+
+    def save(self, *args, **kwargs):
+        self.phone_number = self.format_telephone_number(self.telephone)
+        super().save(*args, **kwargs)
+        self.number = f"S{self.id:03d}"
+        super().save(update_fields=["number"])
+
+    def format_telephone_number(self, number):
+        number = re.sub(r"\D", "", number)
+        if len(number) == 10 and number.startswith("09"):
+            return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
+        elif len(number) == 9 and number.startswith("0"):
+            return f"{number[:2]}-{number[2:]}"
+        else:
+            return number
 
     OFTEN = "often"
     HAPLY = "haply"
@@ -66,22 +87,3 @@ class Supplier(models.Model):
     @transition(field=state, source="*", target=NEVER)
     def set_never(self):
         pass
-
-    def save(self, *args, **kwargs):
-        self.telephone = self.format_telephone(self.telephone)
-        super().save(*args, **kwargs)
-
-    def format_telephone(self, number):
-        number = re.sub(r"\D", "", number)
-
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
-        if len(number) == 10 and number.startswith("09"):
-            return f"{number[:4]}-{number[4:]}"
-        elif len(number) == 10 and number.startswith(("037", "049")):
-            return f"{number[:3]}-{number[3:]}"
-        elif len(number) == 10:
-            return f"{number[:2]}-{number[2:]}"
-        elif len(number) == 9 and number.startswith("0"):
-            return f"{number[:2]}-{number[2:]}"
-        else:
-            return number

@@ -1,4 +1,3 @@
-import json
 from datetime import timedelta
 from math import pi
 
@@ -21,7 +20,9 @@ from apps.purchase_orders.forms.purchase_orders_form import PurchaseOrderForm
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.forms.sales_order_form import SalesOrderForm
 from apps.sales_orders.models import SalesOrder
-from apps.suppliers.forms.form import SupplierForm
+
+from apps.suppliers.forms.supplier_form import SupplierForm
+from apps.suppliers.models import Supplier
 
 
 def out_home(request):
@@ -154,7 +155,7 @@ def sales_chart(request):
 
     # 抓基本資料數值
     clients_num = len(Client.objects.values("name"))
-    products_num = len(Product.objects.values("product_number"))
+    products_num = len(Product.objects.values("number"))
     suppliers_num = len(Supplier.objects.values("name"))
     inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
 
@@ -362,3 +363,113 @@ def sales_chart(request):
     }
 
     return render(request, "pages/sales_chart.html", content)
+
+
+def about(request):
+    return render(request, "pages/about.html")
+
+
+def search(request):
+    search = request.POST.get("search", "")
+    category = request.POST.get("select")
+
+    if category == "Product":
+        products = Product.objects.filter(product_name__contains=search)
+        results = [fields[:-3] for fields in products.values_list()]
+        fields_names = [fields for fields in ProductForm._meta.labels.values()]
+    elif category == "Client":
+        clients = Client.objects.filter(name__contains=search)
+        results = [fields[:5] for fields in clients.values_list()]
+        fields_names = [fields for fields in ClientForm._meta.labels.values()]
+    elif category == "Supplier":
+        suppliers = Supplier.objects.filter(name__contains=search)
+        results = [fields[:7] for fields in suppliers.values_list()]
+        fields_names = [fields for fields in SupplierForm._meta.labels.values()]
+    elif category == "Inventory":
+        inventory = Inventory.objects.filter(product__product_name__contains=search)
+        results = []
+        for item in inventory:
+            results += [
+                (
+                    item.id,
+                    item.product,
+                    item.supplier,
+                    item.quantity,
+                    item.safety_stock,
+                    item.note,
+                )
+            ]
+        fields_names = [fields for fields in RestockForm._meta.labels.values()]
+    elif category == "Order":
+        orders = Order.objects.filter(order_number__contains=search)
+        results = []
+        for order in orders:
+            results += [
+                (
+                    order.id,
+                    order.order_number,
+                    order.client.name,
+                    order.client_tel,
+                    order.client_address,
+                    order.client_email,
+                    order.username,
+                )
+            ]
+        fields_names = [fields for fields in OrderForm._meta.labels.values()]
+    elif category == "PurchaseOrder":
+        purchase = PurchaseOrder.objects.filter(order_number__contains=search)
+        results = []
+        for order in purchase:
+            results += [
+                (
+                    order.id,
+                    order.order_number,
+                    order.supplier.name,
+                    order.supplier_tel,
+                    order.supplier_email,
+                    order.amount,
+                    order.note,
+                )
+            ]
+        fields_names = [fields for fields in PurchaseOrderForm._meta.labels.values()]
+    elif category == "SalesOrder":
+        purchase = SalesOrder.objects.filter(order_number__contains=search)
+        results = []
+        for order in purchase:
+            results += [
+                (
+                    order.order_number,
+                    order.client,
+                    order.client_tel,
+                    order.client_address,
+                    order.client_email,
+                    order.shipping_method,
+                    order.note,
+                )
+            ]
+        fields_names = [fields for fields in SalesOrderForm._meta.labels.values()]
+    elif category == "GoodsReceipt":
+        purchase = GoodsReceipt.objects.filter(order_number__contains=search)
+        results = []
+        for order in purchase:
+            results += [
+                (
+                    order.order_number,
+                    order.supplier.name,
+                    order.supplier_tel,
+                    order.contact_person,
+                    order.supplier_email,
+                    order.receiving_method,
+                    order.amount,
+                    order.note,
+                )
+            ]
+        fields_names = [fields for fields in GoodsReceiptForm._meta.labels.values()]
+
+    content = {
+        "search": search,
+        "category": category,
+        "results": results,
+        "fields_names": fields_names,
+    }
+    return render(request, "pages/results.html", content)

@@ -24,7 +24,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("product_number", models.CharField(max_length=10, unique=True)),
+                ("number", models.CharField(max_length=10, unique=True)),
                 ("product_name", models.CharField(max_length=20)),
                 ("cost_price", models.PositiveIntegerField()),
                 ("sale_price", models.PositiveIntegerField()),
