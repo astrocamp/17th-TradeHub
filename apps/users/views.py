@@ -29,10 +29,7 @@ def register(request):
             user = user_form.save(commit=False)
             user.backend = "django.contrib.auth.backends.ModelBackend"  # 指定後端
 
-            company_name = "個人公司"
-            company = Company.objects.create(
-                company_name=company_name, id=len(Company.objects.all()) + 1
-            )
+            company = Company.objects.get(id=1)
             user.company = company
             user.save()
             login(request, user)

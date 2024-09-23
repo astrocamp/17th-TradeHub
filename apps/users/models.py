@@ -6,7 +6,6 @@ from django.utils import timezone
 
 from apps.company.models import Company
 
-
 DEPARTMENT_CHOICES = [
     ("", "Select Department"),
     ("Purchasing", "Purchasing"),
@@ -21,6 +20,7 @@ POSITION_CHOICES = [
     ("Manager", "Manager"),
     ("BOSS", "BOSS"),
 ]
+
 
 class CustomUser(AbstractUser):
 

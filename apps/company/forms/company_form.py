@@ -13,7 +13,8 @@ class CompanyForm(ModelForm):
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
                     "placeholder": "請輸入公司名稱",
-            }),
+                }
+            ),
             "gui_number": TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
@@ -41,13 +42,12 @@ class CompanyForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user', None)
+        user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
         if user:
-            self.fields['contact_person'].initial = user.username
+            self.fields["contact_person"].initial = user.username
         for field in self.fields.values():
             field.required = False
-
 
     def clean_gui_number(self):
         gui_number = self.cleaned_data.get("gui_number")
@@ -65,7 +65,7 @@ class CompanyForm(ModelForm):
                 self.add_error("gui_number", "統編驗證失敗")
 
         return gui_number
-    
+
     def validate_gui_number(self, gui_number):
         logic_multipliers = [1, 2, 1, 2, 1, 2, 4, 1]
         logic_sum = 0
@@ -81,7 +81,7 @@ class CompanyForm(ModelForm):
             if logic_sum % 5 == 0:
                 return "統編驗證成功"
         return "統編驗證失敗"
-    
+
     def clean_company_name(self):
         company_name = self.cleaned_data.get("company_name")
         if company_name == "":

@@ -29,7 +29,7 @@ def index(request):
 def new(request):
     form = CompanyForm(user=request.user)
     if request.user.company:
-        if request.user.company.company_name == "個人公司":
+        if request.user.company.id == 1:
             return render(request, "company/new.html", {"form": form})
         else:
             messages.success(request, "您已經有公司帳號了!")
