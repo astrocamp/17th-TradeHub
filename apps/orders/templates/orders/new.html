@@ -6,9 +6,9 @@
             {% csrf_token %}
 
             <div class=" flex justify-between items-end col-span-full p-2 px-4">
-                <h2 class="text-2xl font-bold text-gray-800">新增訂購單</h2>
+                <h2 class="text-2xl font-bold text-gray-800">新增客戶訂單</h2>
                 <div class="text-gray-700">
-                    <strong>訂購人: {{ request.user.username }}</strong>
+                    <strong>負責人: {{ request.user.username }}</strong>
                 </div>
             </div>
 
@@ -52,7 +52,7 @@
 
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
-                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">訂購單細項</h2>
+                <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">客戶訂單細項</h2>
 
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
                     <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>

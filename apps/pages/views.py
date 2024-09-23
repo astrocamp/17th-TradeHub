@@ -168,14 +168,14 @@ def sales_chart(request):
     # 做圓餅圖表
     sales_orders = SalesOrder.objects.all()
     sales_data = (
-        sales_orders.values("product__product_name")
-        .annotate(total_quantity=Sum("quantity"))
+        sales_orders.values("items__product__product_name")
+        .annotate(total_quantity=Sum("items__ordered_quantity"))
         .order_by("-total_quantity")
     )
 
     data = {
-        "product": [item["product__product_name"] for item in sales_data],
-        "quantity": [item["total_quantity"] for item in sales_data],
+        "product": [item["items__product__product_name"] for item in sales_data],
+        "quantity": [item["items__ordered_quantity"] for item in sales_data],
     }
 
     df = pd.DataFrame(data)

@@ -1,0 +1,44 @@
+{% extends "layouts/base.html" %}
+
+{% block content %}
+<div id="notification-list" class="p-4 max-w-4xl mx-auto">
+    <h3 class="text-2xl font-bold mb-4">所有通知</h3>
+    <ul class="space-y-4">
+        {% for notification in notifications %}
+        <li class="notification-item 
+            {% if notification.is_read %}bg-gray-200{% else %}bg-gray-50 hover:bg-gray-100{% endif %}
+            border border-gray-300 rounded-lg shadow-md p-4 transition duration-300">
+            {% if notification.sender_type == 'PurchaseOrder' %}
+            <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer" 
+                hx-get="{% url 'users:mark_as_read' notification.id %}" 
+                hx-target="this" 
+                hx-swap="outerHTML">
+            {% elif notification.sender_type == 'GoodsReceipt' %}
+            <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer" 
+                hx-get="{% url 'users:mark_as_read' notification.id %}" 
+                hx-target="this" 
+                hx-swap="outerHTML">
+            {% endif %}
+                <div class="flex justify-between items-center">
+                    <div class="flex-grow">
+                        <div class="flex justify-between">
+                            <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
+                        </div>
+                        <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
+                            <p>{{ notification.message }}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center ml-4 flex-shrink-0">
+                        {% if not notification.is_read %}
+                            <span class="text-red-500 font-bold mr-2">(未讀)</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </li>
+        {% empty %}
+        <li class="text-center text-gray-500">沒有通知</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

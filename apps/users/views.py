@@ -1,11 +1,13 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.template.loader import render_to_string
 
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
-from .models import CustomUser
+from .models import CustomUser, Notification
 
 # 取得自定義的 User 模型 CustomUser
 User = get_user_model()
@@ -137,3 +139,55 @@ def edit_profile(request, id):
         form = ProfileForm(instance=user)
 
     return render(request, "users/edit_profile.html", {"form": form, "user": user})
+
+
+def notifications(request):
+    # 限制為五筆
+    notifications_list = Notification.objects.order_by("-created_at")[:5]
+    sender_type = request.GET.get("sender_type")
+    sender_state = request.GET.get("sender_state")
+    unread_count = Notification.objects.filter(is_read=False).count()
+
+    if sender_type and sender_state:
+        Notification.objects.filter(
+            sender_type=sender_type, sender_state=sender_state
+        ).update(is_read=True)
+
+    return render(
+        request,
+        "users/_notifications.html",
+        {
+            "notifications": notifications_list,
+            "sender_type": sender_type,
+            "unread_count": unread_count,
+        },
+    )
+
+
+def all_notifications(request):
+    notifications_list = Notification.objects.order_by("-created_at")
+    return render(
+        request,
+        "users/notifications.html",
+        {"notifications": notifications_list},
+    )
+
+
+def mark_as_read(request, notification_id):
+    notification = get_object_or_404(Notification, pk=notification_id)
+    notification.is_read = True
+    notification.save()
+
+    html = render_to_string(
+        "users/_notifications_item.html", {"notification": notification}
+    )
+    return HttpResponse(html)
+
+
+def mark_all_as_read(request, notification_id):
+    notifications = Notification.objects.filter(is_read=False)
+    notifications.update(is_read=True)
+    notifications.save()
+
+    html = render_to_string("users/_notifications_item_all.html")
+    return HttpResponse(html)
