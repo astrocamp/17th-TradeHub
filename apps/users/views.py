@@ -2,14 +2,17 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils.crypto import get_random_string
 from django.views.decorators.csrf import csrf_exempt
 
+from .forms.invitation_form import InvitationRegistrationForm
 from .forms.login_form import LoginForm
 from .forms.profile_form import ProfileForm
 from .forms.user_form import CustomUserCreationForm
-from .models import Company, CustomUser
+from .models import Company, CustomUser, Invitation
 
 # 取得自定義的 User 模型 CustomUser
 User = get_user_model()
@@ -152,8 +155,38 @@ def update_company_id(request):
             user = request.user
             user.company = company
             user.save()
-            messages.success(request, f"您已成功註冊至公司：{company.company_name}")
+            messages.success(request, f"您已成功註冊至公司：{company.name}")
             return redirect("pages:home")
         except Company.DoesNotExist:
             messages.error(request, "此公司尚未註冊")
             return redirect("company:new")
+
+
+def invitation_register(request):
+    if request.method == "POST":
+        form = InvitationRegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            login(request, form)
+            return redirect("pages:welcome")
+        else:
+            return render(request, "users/invitation.html", {"form": form})
+    form = InvitationRegistrationForm()
+    return render(request, "users/invitation.html", {"form": form})
+
+
+def send_invitation(request, company_id):
+    company = Company.objects.get(id=company_id)
+    email = request.POST["email"]
+    token = get_random_string(50)
+    invitation = Invitation.objects.create(email=email, company=company, token=token)
+    registration_url = f"http://yourdomain.com/register?token={token}"
+
+    send_mail(
+        "邀請您加入我們的公司",
+        f"請點擊以下網址進行註冊:{registration_url}",
+        "from@example.com",
+        [email],
+        fail_silently=False,
+    )
+    return invitation

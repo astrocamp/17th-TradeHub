@@ -14,4 +14,6 @@ urlpatterns = [
     path("profile/<int:id>", views.profile, name="profile"),
     path("profile/edit/<int:id>", views.edit_profile, name="edit_profile"),
     path("update_company_id", views.update_company_id, name="update_company_id"),
+    path("invitation_register/", views.invitation_register, name="invitation_register"),
+    path("send-invitation/", views.send_invitation, name="send_invitation"),
 ]

@@ -7,9 +7,9 @@ from apps.company.models import Company
 class CompanyForm(ModelForm):
     class Meta:
         model = Company
-        fields = ["company_name", "gui_number", "address", "contact_person"]
+        fields = ["name", "gui_number", "address", "contact_person"]
         widgets = {
-            "company_name": TextInput(
+            "name": TextInput(
                 attrs={
                     "class": "form-control w-full rounded-md p-2 bg-gray-100",
                     "placeholder": "請輸入公司名稱",
@@ -35,7 +35,7 @@ class CompanyForm(ModelForm):
             ),
         }
         labels = {
-            "company_name": "公司名稱",
+            "name": "公司名稱",
             "gui_number": "統一編號",
             "address": "地址",
             "contact_person": "聯絡人",
@@ -82,8 +82,8 @@ class CompanyForm(ModelForm):
                 return "統編驗證成功"
         return "統編驗證失敗"
 
-    def clean_company_name(self):
-        company_name = self.cleaned_data.get("company_name")
-        if company_name == "":
-            self.add_error("company_name", "請填入公司名稱")
-        return company_name
+    def clean_name(self):
+        name = self.cleaned_data.get("name")
+        if name == "":
+            self.add_error("name", "請填入公司名稱")
+        return name

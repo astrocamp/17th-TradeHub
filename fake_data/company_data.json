@@ -3,7 +3,7 @@
         "model": "company.company",
         "pk": 1,
         "fields": {
-            "company_name": "訪客公司",
+            "name": "訪客公司",
             "gui_number": "12345678",
             "address": "台北市中正區衡陽路7號5樓",
             "contact_person": "高見龍",

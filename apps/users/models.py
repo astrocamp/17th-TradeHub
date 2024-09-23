@@ -34,6 +34,7 @@ class CustomUser(AbstractUser):
         related_name="CustomUser",
         blank=True,
         null=True,
+        default=1,
     )
     department = models.CharField(
         choices=DEPARTMENT_CHOICES, max_length=20, default="", blank=False, null=False
@@ -66,3 +67,13 @@ class CustomUser(AbstractUser):
             return f"{number[:2]}-{number[2:]}"
         else:
             return number
+
+
+class Invitation(models.Model):
+    email = models.EmailField()
+    company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    token = models.CharField(max_length=50, unique=True)
+    is_used = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"Invitation to {self.email} for {self.company.name}"
