@@ -3,7 +3,7 @@
     "model": "suppliers.supplier",
     "pk": 1,
     "fields": {
-      "number": "S01",
+      "number": "S001",
       "name": "阿明文具批發",
       "telephone": "0912-345678",
       "contact_person": "王小明",
@@ -19,7 +19,7 @@
     "model": "suppliers.supplier",
     "pk": 2,
     "fields": {
-      "number": "S02",
+      "number": "S002",
       "name": "華華蔬菜批發",
       "telephone": "0987-654321",
       "contact_person": "李大華",
@@ -35,7 +35,7 @@
     "model": "suppliers.supplier",
     "pk": 3,
     "fields": {
-      "number": "S03",
+      "number": "S003",
       "name": "美麗海鮮市場",
       "telephone": "0922-334455",
       "contact_person": "張美麗",
@@ -51,7 +51,7 @@
     "model": "suppliers.supplier",
     "pk": 4,
     "fields": {
-      "number": "S04",
+      "number": "S004",
       "name": "小妮清潔用品",
       "telephone": "0933-445566",
       "contact_person": "徐小妮",
@@ -67,7 +67,7 @@
     "model": "suppliers.supplier",
     "pk": 5,
     "fields": {
-      "number": "S05",
+      "number": "S005",
       "name": "志明包裝材料公司",
       "telephone": "0944-556677",
       "contact_person": "陳志明",
@@ -83,7 +83,7 @@
     "model": "suppliers.supplier",
     "pk": 6,
     "fields": {
-      "number": "S06",
+      "number": "S006",
       "name": "小華冷凍食品",
       "telephone": "0955-667788",
       "contact_person": "李小華",
@@ -99,7 +99,7 @@
     "model": "suppliers.supplier",
     "pk": 7,
     "fields": {
-      "number": "S07",
+      "number": "S007",
       "name": "美君水果批發",
       "telephone": "0966-778899",
       "contact_person": "黃美君",
@@ -115,7 +115,7 @@
     "model": "suppliers.supplier",
     "pk": 8,
     "fields": {
-      "number": "S08",
+      "number": "S008",
       "name": "志明酒類批發",
       "telephone": "0977-889900",
       "contact_person": "吳志明",
@@ -131,7 +131,7 @@
     "model": "suppliers.supplier",
     "pk": 9,
     "fields": {
-      "number": "S09",
+      "number": "S009",
       "name": "佳慧調味品公司",
       "telephone": "0988-776655",
       "contact_person": "蔡佳慧",
@@ -147,7 +147,7 @@
     "model": "suppliers.supplier",
     "pk": 10,
     "fields": {
-      "number": "S10",
+      "number": "S010",
       "name": "阿偉肉舖",
       "telephone": "0933-888777",
       "contact_person": "林志偉",

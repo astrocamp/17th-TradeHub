@@ -39,7 +39,7 @@ from apps.purchase_orders.forms.purchase_orders_form import PurchaseOrderForm
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.forms.sales_order_form import SalesOrderForm
 from apps.sales_orders.models import SalesOrder
-from apps.suppliers.forms.form import SupplierForm
+from apps.suppliers.forms.supplier_form import SupplierForm
 from apps.suppliers.models import Supplier
 
 

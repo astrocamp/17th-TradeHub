@@ -73,7 +73,9 @@
           <td>{{ client.note }}</td>
           <td>{{ client.created_at|date:"Y-m-d H:i" }}</td>
           <td class="flex justify-center gap-1">
-            <button class="btn btn-primary" href="{% url 'clients:edit' client.id %}">編輯</button>
+            <a href="{% url 'clients:edit' client.id %}" class="btn btn-primary">
+              編輯
+            </a>
             <form
               action="{% url 'clients:edit' client.id %}"
               method="post"
