@@ -19,7 +19,6 @@ from apps.goods_receipts.models import GoodsReceipt, Product, Supplier
 from apps.inventory.models import Inventory
 
 from .forms.goods_receipts_form import (
-    FileUploadForm,
     GoodsReceiptForm,
     GoodsReceiptProductItemForm,
     ProductItemFormSet,

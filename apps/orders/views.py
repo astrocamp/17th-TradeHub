@@ -15,12 +15,7 @@ from apps.clients.models import Client
 from apps.products.models import Product
 from apps.sales_orders.models import SalesOrder
 
-from .forms.orders_form import (
-    FileUploadForm,
-    OrderForm,
-    OrderProductItemForm,
-    OrderProductItemFormSet,
-)
+from .forms.orders_form import OrderForm, OrderProductItemForm, OrderProductItemFormSet
 from .models import Order, OrderProductItem
 
 
@@ -41,7 +36,8 @@ def index(request):
     page_obj = paginator.get_page(page_number)
 
     content = {
-        "state": state,
+        "orders": page_obj,
+        "selected_state": state,
         "order_by": order_by,
         "is_desc": is_desc,
         "orders": page_obj,
@@ -85,22 +81,6 @@ def show(request, id):
         "orders/show.html",
         {"order": order, "product_items": product_items},
     )
-
-
-def order_update_and_delete(request, id):
-    order = get_object_or_404(Order, id=id)
-    if request.method == "POST":
-        if "delete" in request.POST:
-            order.delete()
-            messages.success(request, "刪除完成!")
-            return redirect("orders:index")
-        else:
-            form = OrderForm(request.POST, instance=order)
-            if form.is_valid():
-                form.save()
-                return redirect("orders:index")
-    form = OrderForm(instance=order)
-    return render(request, "orders/edit.html", {"order": order, "form": form})
 
 
 def edit(request, id):

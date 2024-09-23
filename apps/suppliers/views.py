@@ -186,7 +186,7 @@ def export_csv(request):
                 supplier.email,
                 supplier.gui_number,
                 supplier.address,
-                supplier.established_date,
+                supplier.created_at,
                 supplier.note,
             ]
         )
@@ -207,7 +207,7 @@ def export_excel(request):
         "email",
         "gui_number",
         "address",
-        "established_date",
+        "created_at",
         "note",
     )
 
@@ -222,7 +222,7 @@ def export_excel(request):
         "email": "Email",
         "gui_number": "統一編號",
         "address": "地址",
-        "established_date": "建立時間",
+        "created_at": "建立時間",
         "note": "備註",
     }
 

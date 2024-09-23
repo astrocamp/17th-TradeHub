@@ -2,7 +2,13 @@ import re
 
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
+
+from apps.goods_receipts.models import GoodsReceipt
+from apps.purchase_orders.models import PurchaseOrder
+from apps.sales_orders.models import SalesOrder
 
 
 class CustomUser(AbstractUser):
@@ -24,7 +30,7 @@ class CustomUser(AbstractUser):
 
     email = models.EmailField(unique=True)
     birthday = models.DateField(blank=True, null=True)
-    phone = models.CharField(max_length=15, blank=True, null=False)
+    phone = models.CharField(max_length=15, blank=True, null=False, default="")
     address = models.CharField(max_length=100, blank=False, null=False, default="")
     department = models.CharField(
         choices=DEPARTMENT_CHOICES, max_length=20, default="", blank=False, null=False
@@ -33,22 +39,13 @@ class CustomUser(AbstractUser):
         choices=POSITION_CHOICES, max_length=20, default="", blank=False, null=False
     )
     hire_date = models.DateTimeField(default=timezone.now)
-    note = models.TextField(blank=True, null=False)
+    note = models.TextField(blank=True, null=False, default="")
 
     def __str__(self):
         return f"{self.username}"
 
     def get_full_name(self):
         return f"{self.last_name} {self.first_name}"
-
-    class Meta:
-
-        permissions = [
-            # 設置權限類別
-            ("can_edit_department", "Can edit department"),
-            ("can_edit_position", "Can edit position"),
-            ("can_edit_hire_date", "Can edit hire date"),
-        ]
 
     def format_telephone(self, number):
         number = re.sub(r"\D", "", number)
@@ -64,3 +61,14 @@ class CustomUser(AbstractUser):
             return f"{number[:2]}-{number[2:]}"
         else:
             return number
+
+
+class Notification(models.Model):
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)
+    sender_type = models.CharField(max_length=20, default="")
+    sender_state = models.CharField(max_length=20, default="")
+
+    def __str__(self):
+        return f"{self.message}-{self.created_at}"
