@@ -14,4 +14,10 @@ urlpatterns = [
     path("profile/<int:id>", views.profile, name="profile"),
     path("profile/edit/<int:id>", views.edit_profile, name="edit_profile"),
     path("notifications", views.notifications, name="notifications"),
+    path(
+        "notifications/<int:notification_id>/mark_as_read/",
+        views.mark_as_read,
+        name="mark_as_read",
+    ),
+    path("notifications/all", views.all_notifications, name="all_notifications"),
 ]

@@ -8,6 +8,7 @@ from django.utils import timezone
 
 from apps.goods_receipts.models import GoodsReceipt
 from apps.purchase_orders.models import PurchaseOrder
+from apps.sales_orders.models import SalesOrder
 
 
 class CustomUser(AbstractUser):
@@ -71,29 +72,3 @@ class Notification(models.Model):
 
     def __str__(self):
         return f"{self.message}-{self.created_at}"
-
-
-# 採購單-通知待審核ok,elif邏輯還沒
-@receiver(post_save, sender=PurchaseOrder)
-def notify_purchase_order(sender, instance, created, **kwargs):
-    if created and instance.state == PurchaseOrder.PENDING:
-        notification = Notification(
-            message=f"[採購單編號 {instance.order_number}] 等待審核",
-            sender_type="PurchaseOrder",
-            sender_state="pending",
-        )
-        notification.save()
-    elif instance.state == PurchaseOrder.PROGRESS:
-        notification = Notification(
-            message=f"[採購單編號{instance.order_number}] 已進入採購流程",
-            sender_type="PurchaseOrder",
-            sender_state="progress",
-        )
-        notification.save()
-    elif instance.state == PurchaseOrder.FINISHED:
-        notification = Notification(
-            message=f"[採購單編號{instance.order_number}] 已結案",
-            sender_type="PurchaseOrder",
-            sender_state="finished",
-        )
-        notification.save()

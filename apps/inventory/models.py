@@ -4,7 +4,6 @@ from django_fsm import FSMField, transition
 
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
-from apps.users.models import Notification
 
 
 class InventoryManager(models.Manager):
