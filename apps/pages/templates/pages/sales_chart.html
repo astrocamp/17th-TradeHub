@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
-<script src="{{ bokeh_js }}"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% if bokeh_css %}
 <link rel="stylesheet" href="{{ bokeh_css }}" />
 {% endif %}
@@ -243,7 +243,48 @@
     <div class="grid grid-cols-3 gap-4 place-items-center">
       <div class="col-span-2">
         <div class="flex">
-          <div>{{ div1 | safe }}</div>
+          <h1>熱銷產品</h3>
+            <canvas id="myPieChart" data-products="{{ data.product|safe }}" data-quantities="{{ data.quantity|safe }}" data-colors="{{ data.color|safe }}" width="350" height="150"></canvas>
+          <script>
+            const ctx = document.getElementById('myPieChart').getContext('2d');
+
+            // 數據從後端傳遞進來
+            const products = {{ data.product|safe }};
+            const quantities = {{ data.quantity|safe }};
+            const colors = {{ data.color|safe }};
+
+            const myPieChart = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: products,
+                    datasets: [{
+                        label: '熱銷商品',
+                        data: quantities,
+                        backgroundColor: colors,
+                        borderColor: 'white',
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: true,
+                            position: 'top',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(tooltipItem) {
+                                    let total = quantities.reduce((a, b) => a + b, 0);
+                                    let percentage = (tooltipItem.raw / total * 100).toFixed(2);
+                                    return `${tooltipItem.label}: ${percentage}%`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+          </script>
         </div>
       </div>
       <div class="col-span-1 space-y-4">
@@ -329,4 +370,5 @@
 
   <div>{{ script1 | safe }} {{ script2 | safe }} {{ script4 | safe }}</div>
 </div>
+<script src="{% static 'pages/home.js' %}" defer></script>
 {% endblock %}
