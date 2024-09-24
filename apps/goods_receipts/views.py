@@ -260,8 +260,12 @@ def export_excel(request):
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     receipts_items = GoodsReceiptProductItem.objects.filter(goods_receipt=instance)
+
+    post_save.disconnect(update_state, sender=GoodsReceipt)
     for item in receipts_items:
         if item.received_quantity < item.ordered_quantity:
+            instance.set_to_be_restocked()
+
             if instance.is_finished:
                 instance.note += f"入庫{item.received_quantity}個：{item.product}，剩餘{item.ordered_quantity}個{time_now}\n"
                 inventory = Inventory.objects.filter(product=item.product).first()
@@ -283,9 +287,9 @@ def update_state(sender, instance, **kwargs):
                         last_updated=time_now,
                     )
 
-            item.ordered_quantity -= item.received_quantity
-            item.received_quantity = 0
-            item.save(update_fields=["received_quantity", "ordered_quantity"])
+                item.ordered_quantity -= item.received_quantity
+                item.received_quantity = 0
+                item.save(update_fields=["received_quantity", "ordered_quantity"])
 
         if item.received_quantity == item.ordered_quantity:
             if instance.is_finished:
@@ -319,7 +323,6 @@ def update_state(sender, instance, **kwargs):
     ordered_quantity = [item.ordered_quantity for item in receipts_items]
     received_quantity = [item.received_quantity for item in receipts_items]
 
-    post_save.disconnect(update_state, sender=GoodsReceipt)
     if ordered_quantity != received_quantity:
         instance.set_to_be_stocked()
     if sum(ordered_quantity) == 0:

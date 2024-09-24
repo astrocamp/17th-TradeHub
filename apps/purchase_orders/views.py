@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta
 
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import post_save
