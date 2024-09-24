@@ -50,7 +50,7 @@
             <tbody>
                 {% for sales_order in sales_orders %}
                 <tr onclick="window.location.href='{% url 'sales_orders:show' sales_order.id %}'"      class="hover">
-                    {% if sale_order.state == "finished" %}
+                    {% if sales_order.state == "finished" %}
                     <th>
                       <span class="btn btn-sm btn-success text-lg">完成</span>
                     </th>
@@ -85,7 +85,7 @@
                               刪除
                             </a>
                           </li>
-                          <li><a onclick="return confirm('確認扣除庫存?')" href="/" class="btn btn-info">確認庫存</a></li>
+                          <li><a onclick="return confirm('確認扣除庫存?')" href="{% url 'sales_orders:transform' sales_order.id %}" class="btn btn-info">確認庫存</a></li>
                         </ul>
                       </div>
                     </th>

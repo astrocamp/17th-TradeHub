@@ -1,10 +1,11 @@
 import csv
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -114,9 +115,13 @@ def edit(request, id):
 
 def delete(request, id):
     sales_order = get_object_or_404(SalesOrder, pk=id)
-    sales_order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("sales_orders:index")
+    try:
+        sales_order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("sales_orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("sales_orders:index")
 
 
 def get_product_item_formset(extra):
@@ -240,25 +245,41 @@ def export_excel(request):
     return response
 
 
-# @receiver(pre_save, sender=SalesOrder)
-# def update_stats(sender, instance, **kwargs):
-#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-#     if instance.quantity > instance.stock.quantity:
-#         instance.set_pending()
-#     elif instance.quantity < instance.stock.quantity:
-#         instance.set_progress()
-#         if instance.is_finished:
-#             inventory = Inventory.objects.get(id=instance.stock.id)
-#             inventory.quantity -= instance.quantity
-#             inventory.note += f"{time_now} 扣除庫存{instance.quantity}\n"
-#             inventory.save()
-#             instance.set_finished()
-#             instance.is_finished = True
+@receiver(post_save, sender=SalesOrder)
+def update_stats(sender, instance, **kwargs):
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    order_items = SalesOrderProductItem.objects.filter(sales_order=instance)
+
+    post_save.disconnect(update_stats, sender=SalesOrder)
+    for item in order_items:
+        if item.ordered_quantity > item.stock_quantity.quantity:
+            print("1")
+            instance.set_pending()
+            instance.save()
+
+        elif item.ordered_quantity < item.stock_quantity.quantity:
+            print("2")
+            instance.set_progress()
+            instance.save()
+
+            if instance.is_finished:
+                inventory = Inventory.objects.get(id=item.stock_quantity.id)
+                inventory.quantity -= item.shipped_quantity
+                item.shipped_quantity = 0
+                inventory.note += f"扣除庫存:{item.shipped_quantity}{time_now}"
+                inventory.save()
+                item.save()
+                instance.set_finished()
+                instance.save()
+
+    instance.is_finished = False
+    instance.save()
+    post_save.connect(update_stats, sender=SalesOrder)
 
 
-# def transform(request, id):
-#     sales_order = get_object_or_404(SalesOrder, id=id)
-#     sales_order.is_finished = True
-#     sales_order.save()
-#     messages.success(request, "扣除庫存完成!")
-#     return redirect("sales_orders:index")
+def transform(request, id):
+    sales_order = get_object_or_404(SalesOrder, id=id)
+    sales_order.is_finished = True
+    post_save.send(sender=SalesOrder, instance=sales_order)
+    messages.success(request, "扣除庫存完成!")
+    return redirect("sales_orders:index")

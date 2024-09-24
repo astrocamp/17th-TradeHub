@@ -110,9 +110,13 @@ def edit(request, id):
 
 def delete(request, id):
     order = get_object_or_404(Order, pk=id)
-    order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("orders:index")
+    try:
+        order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("orders:index")
 
 
 def get_product_item_formset(extra):
@@ -227,30 +231,6 @@ def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     order_items = OrderProductItem.objects.filter(order=instance)
 
-    for item in order_items:
-        if instance.is_finished:
-            order = SalesOrder.objects.create(
-                order_number=generate_order_number(),
-                client=instance.client,
-                client_tel=instance.client_tel,
-                client_address=instance.client_address,
-                client_email=instance.client_email,
-                amount=instance.amount,
-                note=f"轉銷貨單{time_now}",
-            )
-            SalesOrderProductItem.objects.create(
-                sales_order=order,
-                product=item.product,
-                ordered_quantity=item.ordered_quantity,
-                sale_price=item.sale_price,
-                shipped_quantity=0,
-                subtotal=item.subtotal,
-                stock_quantity=item.stock_quantity,
-            )
-            instance.note = f"{time_now}已轉銷貨單"
-            instance.is_finished = False
-            instance.set_finished()
-
     ordered_quantity = [item.ordered_quantity for item in order_items]
     stock_quantity = [item.stock_quantity.quantity for item in order_items]
     order_zip_stock = zip(ordered_quantity, stock_quantity)
@@ -263,12 +243,37 @@ def update_state(sender, instance, **kwargs):
     else:
         instance.set_progress()
         instance.save()
+
+    if instance.is_finished:
+        order = SalesOrder.objects.create(
+            order_number=generate_order_number(),
+            client=instance.client,
+            client_tel=instance.client_tel,
+            client_address=instance.client_address,
+            client_email=instance.client_email,
+            amount=instance.amount,
+            note=f"轉銷貨單{time_now}",
+        )
+        for item in order_items:
+            SalesOrderProductItem.objects.create(
+                sales_order=order,
+                product=item.product,
+                ordered_quantity=item.ordered_quantity,
+                sale_price=item.sale_price,
+                shipped_quantity=0,
+                subtotal=item.subtotal,
+                stock_quantity=item.stock_quantity,
+            )
+        instance.note = f"{time_now}已轉銷貨單"
+        instance.is_finished = False
+        instance.set_finished()
+        instance.save()
     post_save.connect(update_state, sender=Order)
 
 
 def transform_sales_order(request, id):
     order = get_object_or_404(Order, id=id)
     order.is_finished = True
-    post_save.send(sender=Order, instance=order, created=True)
+    post_save.send(sender=Order, instance=order)
     messages.success(request, "轉銷貨單完成!")
     return redirect("orders:index")
