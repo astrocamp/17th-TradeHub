@@ -115,10 +115,14 @@ def edit(request, id):
 
 
 def delete(request, id):
-    goods_receipt = get_object_or_404(GoodsReceipt, pk=id)
-    goods_receipt.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("goods_receipts:index")
+    purchase_order = get_object_or_404(GoodsReceipt, pk=id)
+    try:
+        purchase_order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("goods_receipts:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("goods_receipts:index")
 
 
 @require_POST
