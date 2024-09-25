@@ -5,7 +5,10 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
+from apps.sales_orders.models import SalesOrder
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
 
@@ -194,3 +197,17 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
+
+
+@receiver(post_save, sender=Client)
+def update_state(sender, instance, **kwargs):
+    post_save.disconnect(update_state, sender=Client)
+    order = SalesOrder.objects.filter(client=instance.name).count()
+    if order == 0:
+        instance.set_never()
+    elif order > 0 and order < 3:
+        instance.set_haply()
+    elif order > 3:
+        instance.set_often()
+    instance.save()
+    post_save.connect(update_state, sender=Client)

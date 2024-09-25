@@ -44,25 +44,16 @@ class Client(models.Model):
         protected=True,
     )
 
-    def update_state(self):
-        if self.quantity <= 0:
-            self.set_out_stock()
-        elif self.quantity < self.safety_stock:
-            self.set_low_stock()
-        else:
-            self.set_normal()
-        self.save()
-
     @transition(field=state, source="*", target=OFTEN)
-    def set_out_stock(self):
+    def set_often(self):
         pass
 
     @transition(field=state, source="*", target=HAPLY)
-    def set_low_stock(self):
+    def set_haply(self):
         pass
 
     @transition(field=state, source="*", target=NEVER)
-    def set_normal(self):
+    def set_never(self):
         pass
 
     def save(self, *args, **kwargs):
