@@ -18,6 +18,21 @@
                 hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
                 hx-target="this"
                 hx-swap="outerHTML">
+            {% elif notification.sender_type == 'Inventory' %}
+            <a href="{% url 'inventory:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                hx-target="this"
+                hx-swap="outerHTML">
+            {% elif notification.sender_type == 'Order' %}
+            <a href="{% url 'orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                hx-target="this"
+                hx-swap="outerHTML">
+            {% elif notification.sender_type == 'SalesOrder' %}
+            <a href="{% url 'sales_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                hx-target="this"
+                hx-swap="outerHTML">
             {% endif %}
                 <div class="flex justify-between items-center">
                     <div class="flex-grow">

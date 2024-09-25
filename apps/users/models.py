@@ -68,6 +68,7 @@ class Notification(models.Model):
     is_read = models.BooleanField(default=False)
     sender_type = models.CharField(max_length=20, default="")
     sender_state = models.CharField(max_length=20, default="")
+    # user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.message}-{self.created_at}"

@@ -271,12 +271,13 @@ def update_state(sender, instance, **kwargs):
                 inventory = Inventory.objects.filter(product=item.product).first()
 
                 if inventory:
-                    inventory.quantity += item.received_quantity
-                    inventory.last_updated = time_now
-                    inventory.note += (
-                        f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
-                    )
-                    inventory.save()
+                    with transaction.atomic():
+                        inventory.quantity += item.received_quantity
+                        inventory.last_updated = time_now
+                        inventory.note += f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
+                        inventory.save(
+                            update_fields=["quantity", "last_updated", "note"]
+                        )
                 else:
                     Inventory.objects.create(
                         product=item.product,
@@ -296,12 +297,13 @@ def update_state(sender, instance, **kwargs):
 
                 inventory = Inventory.objects.filter(product=item.product).first()
                 if inventory:
-                    inventory.quantity += item.received_quantity
-                    inventory.last_updated = time_now
-                    inventory.note += (
-                        f"入庫{item.received_quantity}個：{item.product}{time_now}"
-                    )
-                    inventory.save()
+                    with transaction.atomic():
+                        inventory.quantity += item.received_quantity
+                        inventory.last_updated = time_now
+                        inventory.note += (
+                            f"入庫{item.received_quantity}個：{item.product}{time_now}"
+                        )
+                        inventory.save()
                 else:
                     Inventory.objects.create(
                         product=item.product,

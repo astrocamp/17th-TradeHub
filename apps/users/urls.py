@@ -25,4 +25,5 @@ urlpatterns = [
         views.mark_as_read_fullpage,
         name="mark_as_read_fullpage",
     ),
+    path("notifications/unread_count", views.unread_count, name="unread_count"),
 ]

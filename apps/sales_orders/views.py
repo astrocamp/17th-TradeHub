@@ -280,6 +280,6 @@ def update_stats(sender, instance, **kwargs):
 def transform(request, id):
     sales_order = get_object_or_404(SalesOrder, id=id)
     sales_order.is_finished = True
-    post_save.send(sender=SalesOrder, instance=sales_order)
+    post_save.send(sender=SalesOrder, instance=sales_order, created=False)
     messages.success(request, "扣除庫存完成!")
     return redirect("sales_orders:index")

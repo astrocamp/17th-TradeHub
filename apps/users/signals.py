@@ -5,6 +5,7 @@ from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
 from apps.orders.models import Order
 from apps.purchase_orders.models import PurchaseOrder
+from apps.sales_orders.models import SalesOrder
 
 from .models import Notification
 
@@ -127,29 +128,76 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
             notification.save()
 
 
-# @receiver(post_save, sender=SalesOrder)
-# def notify_sale_order(sender, instance, created, **kwargs):
-#     previous_state = instance.__class__.objects.get(pk=instance.pk).state
-#     if created and instance.state == SalesOrder.PENDING:
-#         notification = Notification(
-#             message=f"[銷貨單編號 {instance.order_number}] 等待審核",
-#             sender_type="SaleOrder",
-#             sender_state="pending",
-#         )
-#         notification.save()
-#     elif instance.state == SalesOrder.PROGRESS:
-#         if previous_state != SalesOrder.PROGRESS:
-#             notification = Notification(
-#                 message=f"[銷貨單編號{instance.order_number}] 已進入銷貨流程",
-#                 sender_type="SalesOrder",
-#                 sender_state="progress",
-#             )
-#             notification.save()
-#     elif instance.state == SalesOrder.FINISHED:
-#         if previous_state != SalesOrder.FINISHED:
-#             notification = Notification(
-#                 message=f"[銷貨單編號{instance.order_number}] 已結案",
-#                 sender_type="SalesOrder",
-#                 sender_state="finished",
-#             )
-#             notification.save()
+@receiver(post_save, sender=SalesOrder)
+def notify_sale_order(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == SalesOrder.PENDING:
+            notification = Notification(
+                message=f"[銷貨單編號 {instance.order_number}]\n待出貨",
+                sender_type="SalesOrder",
+                sender_state="pending",
+            )
+            notification.save()
+        elif instance.state == SalesOrder.PROGRESS:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已出貨",
+                sender_type="SalesOrder",
+                sender_state="progress",
+            )
+            notification.save()
+        elif instance.state == SalesOrder.FINISHED:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已結案",
+                sender_type="SalesOrder",
+                sender_state="finished",
+            )
+            notification.save()
+    else:
+        if instance.state == SalesOrder.PROGRESS:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已出貨",
+                sender_type="SalesOrder",
+                sender_state="progress",
+            )
+            notification.save()
+        elif instance.state == SalesOrder.FINISHED:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已結案",
+                sender_type="SalesOrder",
+                sender_state="finished",
+            )
+            notification.save()
+
+
+@receiver(post_save, sender=Inventory)
+def notify_inventory(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == Inventory.OUT_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",
+                sender_type="Inventory",
+                sender_state="out_stock",
+            )
+            notification.save()
+        elif instance.state == Inventory.LOW_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n已建立，現有庫存低於預設安全庫存量",
+                sender_type="Inventory",
+                sender_state="low_stock",
+            )
+            notification.save()
+    else:
+        if instance.state == Inventory.OUT_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n目前庫存量為0",
+                sender_type="Inventory",
+                sender_state="out_stock",
+            )
+            notification.save()
+        elif instance.state == Inventory.LOW_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n現有庫存數量低於預設安全庫存量",
+                sender_type="Inventory",
+                sender_state="low_stock",
+            )
+            notification.save()

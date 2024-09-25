@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 
@@ -26,8 +26,6 @@ def register(request):
         password1 = request.POST.get("password1")
         password2 = request.POST.get("password2")
         email = request.POST.get("email")
-
-        print(username, password1, password2, email)
 
         if user_form.is_valid():
 
@@ -207,4 +205,11 @@ def mark_as_read_fullpage(request, notification_id):
     return HttpResponse(html)
 
 
-# def mark_all_as_read(request, notification_id):
+def unread_count(request):
+    if request.user.is_authenticated:
+        unread_count = Notification.objects.filter(
+            is_read=False, user=request.user
+        ).count()
+        return JsonResponse({"unread_count": unread_count})
+    else:
+        return JsonResponse({"unread_count": 0})

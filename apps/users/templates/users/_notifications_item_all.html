@@ -1,10 +1,15 @@
 {% if notification.sender_type == 'PurchaseOrder' %}
     <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
-    {% elif notification.sender_type == 'GoodsReceipt' %}
+{% elif notification.sender_type == 'GoodsReceipt' %}
     <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
-    {% elif notification.sender_type == 'Inventory' %}
-    <a href="{% url 'inventories:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
-    {% endif %}
+{% elif notification.sender_type == 'Inventory' %}
+    <a href="{% url 'inventory:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% elif notification.sender_type == 'Order' %}
+    <a href="{% url 'orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% elif notification.sender_type == 'SalesOrder' %}
+    <a href="{% url 'sales_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% endif %}
+
         <div class="flex justify-between items-center">
             <div class="flex-grow">
                 <div class="flex justify-between">

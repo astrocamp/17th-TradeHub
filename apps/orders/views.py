@@ -274,6 +274,6 @@ def update_state(sender, instance, **kwargs):
 def transform_sales_order(request, id):
     order = get_object_or_404(Order, id=id)
     order.is_finished = True
-    post_save.send(sender=Order, instance=order)
+    post_save.send(sender=Order, instance=order, created=True)
     messages.success(request, "轉銷貨單完成!")
     return redirect("orders:index")
