@@ -1,51 +1,67 @@
-{% extends "layouts/base.html" %} {% block content %}
-
-<a href="{% url 'products:index' %}" class="btn btn-primary"
-  >返回列表</a
+{% extends 'layouts/base.html' %} {% block content %}
+<div
+  class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8"
 >
-
-<div class="flex justify-center mt-10">
-  <div class="overflow-x-auto">
-    <table class="table table-xl text-center">
-      <thead>
-        <tr class="text-xl">
-          <th>商品編號</th>
-          <th>商品名稱</th>
-          <th>進價</th>
-          <th>售價</th>
-          <th>供應商名稱</th>
-          <th>備註</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr class="hover">
-          <th>{{product.number}}</th>
-          <th>{{product.product_name}}</th>
-          <th>{{product.cost_price}}</th>
-          <th>{{product.sale_price}}</th>
-          <th>{{product.supplier}}</th>
-          <th>{{product.note}}</th>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div>
-
-<div class="flex justify-center mt-10">
-  <div>
-    <a href="{% url 'products:edit' product.id %}" class="btn btn-primary"
-      >編輯</a
-    >
-  </div>
-
-  <div>
+  <div
+    class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
+  >
+    <h1 class="text-2xl font-extrabold text-gray-900">{{ product.product_name }}</h1>
     <a
-      onclick="return confirm('DELETE?')"
-      href="{% url 'products:delete' product.id %}"
-      class="btn btn-primary"
-      >刪除</a
+      href="{% url 'products:index' %}"
+      class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
+      返回商品列表
+    </a>
+  </div>
+  <div class="space-y-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">商品編號:</label>
+        <p class="text-lg text-gray-600">{{ product.number }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">進價:</label>
+        <p class="text-lg text-gray-600">{{ product.cost_price }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">進價:</label>
+        <p class="text-lg text-gray-600">{{ product.sale_price }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
+        <p class="text-lg text-gray-600">{{ product.supplier }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">備註:</label>
+        <p class="text-lg text-gray-600">{{ product.note }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">建立日期:</label>
+        <p class="text-lg text-gray-600">{{ product.created_at|date:"Y-m-d H:i" }}</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex justify-center gap-4 mt-6">
+    <a
+      href="{% url 'products:edit' product.id %}"
+      class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
+    >
+      編輯
+    </a>
+    <form
+      action="{% url 'products:delete' product.id %}"
+      method="POST"
+      class="inline-block"
+    >
+      {% csrf_token %}
+      <button
+        type="submit"
+        class="rounded-lg bg-red-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-red-600 transition duration-300 ease-in-out transform hover:scale-105"
+      >
+        刪除
+      </button>
+    </form>
   </div>
 </div>
-
 {% endblock %}
