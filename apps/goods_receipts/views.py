@@ -265,18 +265,22 @@ def update_state(sender, instance, **kwargs):
     for item in receipts_items:
         if item.received_quantity < item.ordered_quantity:
             instance.set_to_be_restocked()
-
-            if instance.is_finished:
+            instance.save()
+            if instance.is_finished and item.received_quantity != 0:
                 instance.note += f"入庫{item.received_quantity}個：{item.product}，剩餘{item.ordered_quantity}個{time_now}\n"
                 inventory = Inventory.objects.filter(product=item.product).first()
 
                 if inventory:
-                    inventory.quantity += item.received_quantity
-                    inventory.last_updated = time_now
-                    inventory.note += (
-                        f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
+                    quantity = inventory.quantity + item.received_quantity
+                    note = (
+                        inventory.note
+                        + f"入庫{item.received_quantity}個：{item.product}{time_now}"
                     )
-                    inventory.save()
+                    Inventory.objects.filter(product=item.product).update(
+                        quantity=quantity,
+                        last_updated=timezone.now(),
+                        note=note,
+                    )
                 else:
                     Inventory.objects.create(
                         product=item.product,
@@ -289,19 +293,18 @@ def update_state(sender, instance, **kwargs):
 
                 item.ordered_quantity -= item.received_quantity
                 item.received_quantity = 0
-                item.save(update_fields=["received_quantity", "ordered_quantity"])
+                item.save()
 
         if item.received_quantity == item.ordered_quantity:
-            if instance.is_finished:
-
+            if instance.is_finished and item.received_quantity != 0:
                 inventory = Inventory.objects.filter(product=item.product).first()
                 if inventory:
                     inventory.quantity += item.received_quantity
                     inventory.last_updated = time_now
                     inventory.note += (
-                        f"入庫{item.received_quantity}個：{item.product}{time_now}"
+                        f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
                     )
-                    inventory.save()
+                    inventory.save(update_fields=["quantity", "last_updated", "note"])
                 else:
                     Inventory.objects.create(
                         product=item.product,
@@ -317,17 +320,21 @@ def update_state(sender, instance, **kwargs):
                 )
                 item.ordered_quantity = 0
                 item.received_quantity = 0
-                item.save(update_fields=["received_quantity", "ordered_quantity"])
+                item.save()
     instance.is_finished = False
 
     ordered_quantity = [item.ordered_quantity for item in receipts_items]
     received_quantity = [item.received_quantity for item in receipts_items]
-
+    print(0 in received_quantity, ordered_quantity != received_quantity)
     if ordered_quantity != received_quantity:
         instance.set_to_be_stocked()
+        instance.save()
+        if 0 in received_quantity:
+            instance.set_to_be_restocked()
+            instance.save()
     if sum(ordered_quantity) == 0:
         instance.set_finished()
-    instance.save()
+        instance.save()
     post_save.connect(update_state, sender=GoodsReceipt)
 
 

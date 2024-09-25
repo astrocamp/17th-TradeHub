@@ -41,10 +41,6 @@ class GoodsReceipt(models.Model):
         self.deleted_at = timezone.now()
         self.save()
 
-    def save(self, *args, **kwargs):
-        self.is_finished = False
-        return super().save(*args, **kwargs)
-
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"
 

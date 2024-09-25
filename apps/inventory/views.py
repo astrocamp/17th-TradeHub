@@ -238,6 +238,7 @@ def export_sample(request):
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    pre_save.disconnect(update_state, sender=Inventory)
     if instance.safety_stock == 0:
         instance.set_new_stock()
     if instance.quantity <= 0:
@@ -337,3 +338,4 @@ def update_state(sender, instance, **kwargs):
         instance.set_low_stock()
     else:
         instance.set_normal()
+    pre_save.connect(update_state, sender=Inventory)
