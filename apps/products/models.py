@@ -12,7 +12,7 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    number = models.CharField(max_length=20, unique=True)
+    number = models.CharField(max_length=20)
     product_name = models.CharField(max_length=20)
     cost_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
