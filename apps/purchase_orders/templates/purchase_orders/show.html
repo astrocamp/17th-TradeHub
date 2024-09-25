@@ -1,12 +1,9 @@
 {% extends 'layouts/base.html' %} {% block content %}
-<div class="max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8">
+<div class="inner_container max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8">
   <div class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6">
     <h1 class="text-2xl font-extrabold text-gray-900">
       採購單編號: {{ purchase_order.order_number }}
     </h1>
-    <h2 class="text-gray-600">
-      採購人：{{ purchase_order.username }}
-    </h2>
     <a
       href="{% url 'purchase_orders:index' %}"
       class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
@@ -16,7 +13,7 @@
   </div>
 
   <div class="space-y-6">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
         <span class="text-xl text-gray-600"
@@ -50,6 +47,10 @@
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
         <p class="text-lg text-gray-600">{{ purchase_order.note }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">採購人:</label>
+        <p class="text-lg text-gray-600">{{ purchase_order.username }}</p>
       </div>
     </div>
   </div>

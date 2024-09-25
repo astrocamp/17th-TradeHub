@@ -39,7 +39,6 @@
                     </th>
                     <th><a href="{% url 'orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶訂單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -65,7 +64,6 @@
                     <th>{{ order.order_number }}</th>
                     <th>{{ order.client.name }}</th>
                     <th>{{ order.client_tel }}</th>
-                    <th>{{ order.amount }}</th>
                     <th>{{ order.note|date:"Y-m-d" }}</th>
                     <th>{{ order.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>

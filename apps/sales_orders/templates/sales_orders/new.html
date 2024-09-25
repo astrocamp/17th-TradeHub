@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-    <div class="max-w-5xl mx-auto p-6 bg-white shadow-md border rounded-lg mt-8">
-        <form action="{% url 'sales_orders:new' %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="inner_container max-w-5xl mx-auto p-6 bg-white shadow-md border rounded-lg mt-8">
+        <form action="{% url 'sales_orders:new' %}" method="POST" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {% csrf_token %}
 
             <div class=" flex justify-between items-end col-span-full p-2 px-4">
