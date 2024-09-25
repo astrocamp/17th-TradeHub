@@ -5,60 +5,52 @@
   <div
     class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
   >
-    <h1 class="text-2xl font-extrabold text-gray-900">{{ supplier.name }}</h1>
+    <h1 class="text-2xl font-extrabold text-gray-900">{{ inventory.product }}</h1>
     <a
-      href="{% url 'suppliers:index' %}"
+      href="{% url 'inventory:index' %}"
       class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
-      返回供應商列表
+      返回商品列表
     </a>
   </div>
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商編號:</label>
-        <p class="text-lg text-gray-600">{{ supplier.number }}</p>
+        <label class="text-lg font-semibold text-gray-800">庫存編號:</label>
+        <p class="text-lg text-gray-600">{{ inventory.number }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">電話:</label>
-        <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
+        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
+        <p class="text-lg text-gray-600">{{ inventory.supplier }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
-        <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
+        <label class="text-lg font-semibold text-gray-800">庫存數量:</label>
+        <p class="text-lg text-gray-600">{{ inventory.quantity }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">Email:</label>
-        <p class="text-lg text-gray-600">{{ supplier.email }}</p>
-      </div>
-      <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">統一編號:</label>
-        <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
-      </div>
-      <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">地址:</label>
-        <p class="text-lg text-gray-600">{{ supplier.address }}</p>
+        <label class="text-lg font-semibold text-gray-800">安全數量:</label>
+        <p class="text-lg text-gray-600">{{ inventory.safety_stock }}</p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
-        <p class="text-lg text-gray-600">{{ supplier.note }}</p>
+        <p class="text-lg text-gray-600">{{ inventory.note }}</p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">建立日期:</label>
-        <p class="text-lg text-gray-600">{{ supplier.created_at|date:"Y-m-d H:i" }}</p>
+        <p class="text-lg text-gray-600">{{ inventory.created_at|date:"Y-m-d H:i" }}</p>
       </div>
     </div>
   </div>
 
   <div class="flex justify-center gap-4 mt-6">
     <a
-      href="{% url 'suppliers:edit' supplier.id %}"
+      href="{% url 'inventory:edit' inventory.id %}"
       class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
       編輯
     </a>
     <form
-      action="{% url 'suppliers:delete' supplier.id %}"
+      action="{% url 'inventory:delete' inventory.id %}"
       method="POST"
       class="inline-block"
     >

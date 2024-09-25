@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-20 gap-2">
+<div class="flex justify-end mt-10 gap-2">
   <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
@@ -9,7 +9,7 @@
 </div>
 <div class="divider text-3xl font-bold">客戶列表</div>
 <div class="flex justify-center mt-10">
-  <div class="overflow-x-auto w-full">
+  <div class="overflow w-full">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
