@@ -52,6 +52,11 @@
       </ul>
     </div>
     <a href="/" class="btn btn-ghost text-2xl">TradeHub</a>
+    {% if user.company_id == 1 and request.path != '/welcome/' %}
+      <a href="{% url 'company:new' %}" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+        建立公司帳號
+      </a>
+    {% endif %}
   </div>
   <div class="navbar-center hidden lg:flex">
     <ul class="menu menu-horizontal gap-x-5 font-bold text-md">

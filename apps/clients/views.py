@@ -3,8 +3,12 @@ import csv
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+
+from apps.sales_orders.models import SalesOrder
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
@@ -20,7 +24,7 @@ def index(request):
 
     if state in state_match:
         clients = Client.objects.filter(state=state)
-    order_by_field = f"{'-' if is_desc else ''}{order_by or 'id'}"
+    order_by_field = f"{'-' if is_desc else ''}{order_by or '-id'}"
     clients = clients.order_by(order_by_field)
 
     paginator = Paginator(clients, 5)
@@ -194,3 +198,17 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
+
+
+@receiver(post_save, sender=Client)
+def update_state(sender, instance, **kwargs):
+    post_save.disconnect(update_state, sender=Client)
+    order = SalesOrder.objects.filter(client=instance.id).count()
+    if order == 0:
+        instance.set_never()
+    elif order > 0 and order < 3:
+        instance.set_haply()
+    elif order > 3:
+        instance.set_often()
+    instance.save()
+    post_save.connect(update_state, sender=Client)

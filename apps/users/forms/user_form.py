@@ -17,10 +17,10 @@ class CustomUserCreationForm(UserCreationForm):
             }
         ),
         validators=[
-            MinLengthValidator(8, message="密碼至少8個字元。"),
+            MinLengthValidator(8, message="密碼至少8個字元"),
             RegexValidator(
                 regex=r"^[A-Za-z0-9]+$",
-                message="密碼至少包含一個數字和一個字母。",
+                message="密碼至少包含一個數字和一個字母",
             ),
         ],
         label="密碼",
@@ -73,10 +73,6 @@ class CustomUserCreationForm(UserCreationForm):
         for field in self.fields.values():
             field.required = False
 
-    # cleaned_data 方法可用來儲存經過驗證的數據，可以用來加強驗證邏輯
-    # UserCreationForm 預設已包含檢查兩次密碼是否一致，帳號是否已存在
-
-    # raise ValidationError 會迅速終止驗證，避免不必要的驗證
     def clean_username(self):
         username = self.cleaned_data.get("username")
         if username == "":
@@ -85,6 +81,8 @@ class CustomUserCreationForm(UserCreationForm):
             raise forms.ValidationError("這個帳號已被使用")
         elif len(username) < 6:
             raise forms.ValidationError("帳號至少6個字元")
+        elif not username.isalnum():
+            raise forms.ValidationError("帳號只能包含數字和字母")
         return username
 
     def clean_password1(self):

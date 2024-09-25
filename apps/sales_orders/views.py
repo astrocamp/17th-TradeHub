@@ -1,4 +1,6 @@
 import csv
+import random
+import string
 from datetime import datetime, timedelta
 from datetime import timezone as tz
 
@@ -12,16 +14,15 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
+from apps.clients.models import Client
 from apps.inventory.models import Inventory
 from apps.products.models import Product
-from apps.sales_orders.models import SalesOrder
-
-from .forms.sales_order_form import (
+from apps.sales_orders.forms.sales_order_form import (
     SalesOrderForm,
     SalesOrderProductItemForm,
     SalesOrderProductItemFormSet,
 )
-from .models import SalesOrder, SalesOrderProductItem
+from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 
 def index(request):
@@ -51,14 +52,14 @@ def index(request):
 
 
 def new(request):
-    new_order_number = generate_order_number()
     if request.method == "POST":
         form = SalesOrderForm(request.POST)
         formset = SalesOrderProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
-            order.order_number = new_order_number
             order.username = request.user.username
+            order.save()
+            order.order_number = generate_order_number(order)
             order.save()
             formset.instance = order
             formset.save()
@@ -151,21 +152,13 @@ def load_product_info(request):
     return JsonResponse({"sale_price": product.sale_price})
 
 
-def generate_order_number():
+def generate_order_number(order):
     today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        SalesOrder.all_objects.filter(order_number__startswith=today)
-        .order_by("-order_number")
-        .first()
-    )
-
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{last_order_number + 1:03d}"
-    else:
-        new_order_number = "001"
-
-    return f"{today}{new_order_number}"
+    order_id = order.id
+    order_suffix = f"{order_id:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
+    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
 def export_csv(request):
@@ -253,20 +246,20 @@ def update_stats(sender, instance, **kwargs):
     post_save.disconnect(update_stats, sender=SalesOrder)
     for item in order_items:
         if item.ordered_quantity > item.stock_quantity.quantity:
-            print("1")
             instance.set_pending()
             instance.save()
 
-        elif item.ordered_quantity < item.stock_quantity.quantity:
-            print("2")
+        elif item.ordered_quantity <= item.stock_quantity.quantity:
             instance.set_progress()
             instance.save()
 
             if instance.is_finished:
                 inventory = Inventory.objects.get(id=item.stock_quantity.id)
+                print()
                 inventory.quantity -= item.shipped_quantity
-                item.shipped_quantity = 0
+
                 inventory.note += f"扣除庫存:{item.shipped_quantity}{time_now}"
+                item.shipped_quantity = 0
                 inventory.save()
                 item.save()
                 instance.set_finished()

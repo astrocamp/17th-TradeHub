@@ -15,4 +15,5 @@ urlpatterns = [
     path("sales_orders/", include("apps.sales_orders.urls")),
     path("goods_receipts/", include("apps.goods_receipts.urls")),
     path("social-auth/", include("social_django.urls", namespace="social")),
+    path("company/", include("apps.company.urls")),
 ] + debug_toolbar_urls()

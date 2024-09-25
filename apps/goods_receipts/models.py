@@ -5,6 +5,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -15,7 +16,7 @@ class GoodReceiptManager(models.Manager):
 
 
 class GoodsReceipt(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=20, unique=True)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="goods_receipts"
     )
@@ -26,6 +27,13 @@ class GoodsReceipt(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="goods_receipts",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
     RECEIVING_METHOD_CHOICES = [
@@ -41,17 +49,18 @@ class GoodsReceipt(models.Model):
         self.deleted_at = timezone.now()
         self.save()
 
-    def save(self, *args, **kwargs):
-        self.is_finished = False
-        return super().save(*args, **kwargs)
-
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"
 
     def format_supplier_tel(self, number):
         number = re.sub(r"\D", "", number)
+        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
         elif len(number) == 9 and number.startswith("0"):
             return f"{number[:2]}-{number[2:]}"
         else:

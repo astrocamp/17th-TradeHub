@@ -12,6 +12,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="purchaseorder",
             name="order_number",
-            field=models.CharField(max_length=11),
+            field=models.CharField(max_length=20),
         ),
     ]

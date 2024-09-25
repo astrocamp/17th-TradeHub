@@ -238,6 +238,7 @@ def export_sample(request):
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    pre_save.disconnect(update_state, sender=Inventory)
     if instance.safety_stock == 0:
         instance.set_new_stock()
     if instance.quantity <= 0:
@@ -249,7 +250,6 @@ def update_state(sender, instance, **kwargs):
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
             supplier = Supplier.objects.get(name=instance.supplier.name)
             order = PurchaseOrder.objects.create(
-                order_number=generate_order_number(),
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
                 contact_person=supplier.contact_person,
@@ -265,6 +265,8 @@ def update_state(sender, instance, **kwargs):
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price * instance.safety_stock,
             )
+            order_number = generate_order_number(order)
+            order.order_number = order_number
             order.amount = orderitem.subtotal
             order.save()
 
@@ -294,7 +296,6 @@ def update_state(sender, instance, **kwargs):
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
             supplier = Supplier.objects.get(name=instance.supplier.name)
             order = PurchaseOrder.objects.create(
-                order_number=generate_order_number(),
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
                 contact_person=supplier.contact_person,
@@ -311,6 +312,8 @@ def update_state(sender, instance, **kwargs):
                 subtotal=instance.product.cost_price
                 * (instance.safety_stock - instance.quantity),
             )
+            order_number = generate_order_number(order)
+            order.order_number = order_number
             order.amount = orderitem.subtotal
             order.save()
         else:
@@ -337,3 +340,4 @@ def update_state(sender, instance, **kwargs):
         instance.set_low_stock()
     else:
         instance.set_normal()
+    pre_save.connect(update_state, sender=Inventory)
