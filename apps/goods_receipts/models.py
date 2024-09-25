@@ -8,6 +8,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class GoodReceiptManager(models.Manager):
@@ -36,6 +37,9 @@ class GoodsReceipt(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.PROTECT, blank=True, null=True
+    )
     RECEIVING_METHOD_CHOICES = [
         ("貨運", "貨運"),
         ("自取", "自取"),

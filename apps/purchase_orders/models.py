@@ -7,6 +7,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class PurchaseOrderManager(models.Manager):
@@ -35,6 +36,9 @@ class PurchaseOrder(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     objects = PurchaseOrderManager()
     all_objects = models.Manager()

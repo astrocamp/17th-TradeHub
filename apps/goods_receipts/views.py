@@ -61,6 +61,7 @@ def new(request):
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
+            order.user = request.user
             with transaction.atomic():
                 order.save()
                 order.order_number = generate_order_number(order)
@@ -298,10 +299,10 @@ def update_state(sender, instance, **kwargs):
                     with transaction.atomic():
                         inventory.quantity += item.received_quantity
                         inventory.last_updated = time_now
-                        inventory.note += (
-                            f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
+                        inventory.note += f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
+                        inventory.save(
+                            update_fields=["quantity", "last_updated", "note"]
                         )
-                        inventory.save(update_fields=["quantity", "last_updated", "note"])
                 else:
                     Inventory.objects.create(
                         product=item.product,

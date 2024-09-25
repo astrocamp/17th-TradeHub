@@ -18,6 +18,7 @@ def notify_order(sender, instance, created, **kwargs):
                 message=f"[訂單編號 {instance.order_number}]\n訂單已建立，庫存不足，請確認",
                 sender_type="Order",
                 sender_state="created",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == Order.PROGRESS:
@@ -25,6 +26,7 @@ def notify_order(sender, instance, created, **kwargs):
                 message=f"[訂單編號 {instance.order_number}]\n訂單已建立，且進入訂單流程",
                 sender_type="Order",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
     else:
@@ -33,6 +35,7 @@ def notify_order(sender, instance, created, **kwargs):
                 message=f"[訂單編號 {instance.order_number}]\n訂單已進入訂單流程",
                 sender_type="Order",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == Order.FINISHED:
@@ -40,19 +43,20 @@ def notify_order(sender, instance, created, **kwargs):
                 message=f"[訂單編號 {instance.order_number}]\n訂單已結案",
                 sender_type="Order",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
 
 
 @receiver(post_save, sender=PurchaseOrder)
 def notify_purchase_order(sender, instance, created, **kwargs):
-    # previous_state = instance.__class__.objects.get(pk=instance.pk).state
     if created:
         if instance.state == PurchaseOrder.PENDING:
             notification = Notification(
                 message=f"[採購單編號 {instance.order_number}]\n等待審核",
                 sender_type="PurchaseOrder",
                 sender_state="pending",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == PurchaseOrder.PROGRESS:
@@ -60,6 +64,7 @@ def notify_purchase_order(sender, instance, created, **kwargs):
                 message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
                 sender_type="PurchaseOrder",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == PurchaseOrder.FINISHED:
@@ -67,6 +72,7 @@ def notify_purchase_order(sender, instance, created, **kwargs):
                 message=f"[採購單編號 {instance.order_number}]\n已結案",
                 sender_type="PurchaseOrder",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
     else:
@@ -75,6 +81,7 @@ def notify_purchase_order(sender, instance, created, **kwargs):
                 message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
                 sender_type="PurchaseOrder",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == PurchaseOrder.FINISHED:
@@ -82,6 +89,7 @@ def notify_purchase_order(sender, instance, created, **kwargs):
                 message=f"[採購單編號 {instance.order_number}]\n已結案",
                 sender_type="PurchaseOrder",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
 
@@ -95,6 +103,7 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
                 message=f"[進貨單編號 {instance.order_number}]\n待進貨",
                 sender_type="GoodsReceipt",
                 sender_state="to_be_restocked",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == GoodsReceipt.TO_BE_STOCKED:
@@ -102,6 +111,7 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
                 message=f"[進貨單編號{instance.order_number}]\n已進貨",
                 sender_type="GoodsReceipt",
                 sender_state="to_be_stocked",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == GoodsReceipt.FINISHED:
@@ -109,6 +119,7 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
                 message=f"[進貨單編號{instance.order_number}]\n已入庫",
                 sender_type="GoodsReceipt",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
     elif previous_state != instance.state:
@@ -117,6 +128,7 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
                 message=f"[進貨單編號{instance.order_number}]\n已進貨",
                 sender_type="GoodsReceipt",
                 sender_state="to_be_stocked",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == GoodsReceipt.FINISHED:
@@ -124,6 +136,7 @@ def notify_goods_receipt(sender, instance, created, **kwargs):
                 message=f"[進貨單編號{instance.order_number}]\n已入庫",
                 sender_type="GoodsReceipt",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
 
@@ -136,6 +149,7 @@ def notify_sale_order(sender, instance, created, **kwargs):
                 message=f"[銷貨單編號 {instance.order_number}]\n待出貨",
                 sender_type="SalesOrder",
                 sender_state="pending",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == SalesOrder.PROGRESS:
@@ -143,6 +157,7 @@ def notify_sale_order(sender, instance, created, **kwargs):
                 message=f"[銷貨單編號{instance.order_number}]\n已出貨",
                 sender_type="SalesOrder",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == SalesOrder.FINISHED:
@@ -150,6 +165,7 @@ def notify_sale_order(sender, instance, created, **kwargs):
                 message=f"[銷貨單編號{instance.order_number}]\n已結案",
                 sender_type="SalesOrder",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
     else:
@@ -158,6 +174,7 @@ def notify_sale_order(sender, instance, created, **kwargs):
                 message=f"[銷貨單編號{instance.order_number}]\n已出貨",
                 sender_type="SalesOrder",
                 sender_state="progress",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == SalesOrder.FINISHED:
@@ -165,6 +182,7 @@ def notify_sale_order(sender, instance, created, **kwargs):
                 message=f"[銷貨單編號{instance.order_number}]\n已結案",
                 sender_type="SalesOrder",
                 sender_state="finished",
+                user=instance.user,
             )
             notification.save()
 
@@ -177,6 +195,7 @@ def notify_inventory(sender, instance, created, **kwargs):
                 message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",
                 sender_type="Inventory",
                 sender_state="out_stock",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == Inventory.LOW_STOCK:
@@ -184,6 +203,7 @@ def notify_inventory(sender, instance, created, **kwargs):
                 message=f"[庫存項目{instance.product.product_name}]\n已建立，現有庫存低於預設安全庫存量",
                 sender_type="Inventory",
                 sender_state="low_stock",
+                user=instance.user,
             )
             notification.save()
     else:
@@ -192,6 +212,7 @@ def notify_inventory(sender, instance, created, **kwargs):
                 message=f"[庫存項目{instance.product.product_name}]\n目前庫存量為0",
                 sender_type="Inventory",
                 sender_state="out_stock",
+                user=instance.user,
             )
             notification.save()
         elif instance.state == Inventory.LOW_STOCK:
@@ -199,5 +220,6 @@ def notify_inventory(sender, instance, created, **kwargs):
                 message=f"[庫存項目{instance.product.product_name}]\n現有庫存數量低於預設安全庫存量",
                 sender_type="Inventory",
                 sender_state="low_stock",
+                user=instance.user,
             )
             notification.save()

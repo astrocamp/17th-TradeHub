@@ -49,7 +49,9 @@ def new(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.user = request.user
+            product.save()
             return redirect("products:index")
         return render(request, "products/new.html", {"form": form})
     form = ProductForm()

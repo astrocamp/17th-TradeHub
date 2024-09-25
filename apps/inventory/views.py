@@ -49,7 +49,9 @@ def new(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
         if form.is_valid():
-            form.save()
+            inventory = form.save(commit=False)
+            inventory.user = request.user
+            inventory.save()
             return redirect("inventory:index")
     else:
         form = RestockForm()

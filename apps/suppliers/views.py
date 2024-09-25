@@ -43,7 +43,9 @@ def new(request):
     if request.method == "POST":
         form = SupplierForm(request.POST)
         if form.is_valid():
-            form.save()
+            supplier = form.save(commit=False)
+            supplier.user = request.user
+            supplier.save()
             return redirect("suppliers:index")
         else:
             return render(request, "suppliers/new.html", {"form": form})

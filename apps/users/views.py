@@ -1,9 +1,8 @@
 from django.contrib import messages
 from django.contrib.auth import authenticate, get_user_model, login, logout
-
+from django.core.mail import send_mail
 from django.core.paginator import Paginator
 from django.http import HttpResponse, JsonResponse
-from django.core.mail import send_mail
 from django.shortcuts import get_object_or_404, redirect, render
 from django.template.loader import render_to_string
 from django.utils.crypto import get_random_string
@@ -195,15 +194,12 @@ def send_invitation(request, company_id):
 
 
 def notifications(request):
-    notifications_list = Notification.objects.order_by("-created_at")[:4]
+    notifications_list = Notification.objects.filter(
+        is_read=False, user=request.user
+    ).order_by("-created_at")[:5]
     sender_type = request.GET.get("sender_type")
     sender_state = request.GET.get("sender_state")
-    unread_count = Notification.objects.filter(is_read=False).count()
-
-    if sender_type and sender_state:
-        Notification.objects.filter(
-            sender_type=sender_type, sender_state=sender_state
-        ).update(is_read=True)
+    unread_count = Notification.objects.filter(is_read=False, user=request.user).count()
 
     return render(
         request,
@@ -211,6 +207,7 @@ def notifications(request):
         {
             "notifications": notifications_list,
             "sender_type": sender_type,
+            "sender_state": sender_state,
             "unread_count": unread_count,
         },
     )
@@ -221,12 +218,16 @@ def all_notifications(request):
     paginator = Paginator(Notification.objects.order_by("-created_at"), 5)
     notifications_list = paginator.get_page(page)
     page_obj = paginator.get_page(page)
+    sender_type = request.GET.get("sender_type")
+    sender_state = request.GET.get("sender_state")
 
     content = {
         "notifications": notifications_list,
         "paginator": paginator,
         "page": page,
         "page_obj": page_obj,
+        "sender_type": sender_type,
+        "sender_state": sender_state,
     }
 
     return render(
@@ -252,8 +253,15 @@ def mark_as_read_fullpage(request, notification_id):
     notification.is_read = True
     notification.save()
 
+    notifications = Notification.objects.filter(is_read=False)
+    notifications.update(is_read=True)
+    notifications.save()
+
     html = render_to_string(
-        "users/_notifications_item_all.html", {"notification": notification}
+        "users/_notifications_item_all.html",
+        {
+            "notifications": notifications,
+        },
     )
     return HttpResponse(html)
 

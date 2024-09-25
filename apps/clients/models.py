@@ -13,7 +13,7 @@ class ClientManager(models.Manager):
 
 
 class Client(models.Model):
-    number = models.CharField(max_length=20, unique=True)
+    number = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
@@ -85,23 +85,3 @@ class Client(models.Model):
     @transition(field=state, source="*", target=NEVER)
     def set_never(self):
         pass
-
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_phone_number(self.phone_number)
-        super().save(*args, **kwargs)
-
-    def format_phone_number(self, number):
-        # 把所有非數字符號改為空字串(清除)
-        number = re.sub(r"\D", "", number)
-
-        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
-        if len(number) == 10 and number.startswith("09"):
-            return f"{number[:4]}-{number[4:]}"
-        elif len(number) == 10 and number.startswith(("037", "049")):
-            return f"{number[:3]}-{number[3:]}"
-        elif len(number) == 10:
-            return f"{number[:2]}-{number[2:]}"
-        elif len(number) == 9 and number.startswith("0"):
-            return f"{number[:2]}-{number[2:]}"
-        else:
-            return number

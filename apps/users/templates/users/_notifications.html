@@ -46,10 +46,10 @@
           </a>
         </li>
       {% empty %}
-        <li class="text-center text-gray-500">沒有通知</li>
+        <li class="text-center text-gray-500">目前沒有未讀通知</li>
       {% endfor %}
   </ul>
   <div class="mt-2 w-full flex bg-gray-200 rounded-md p-2 hover:bg-gray-300">
-    <a href="{% url 'users:all_notifications' %}" class="flex justify-center w-full font-bold rounded-md py-2 text-sm">查看其他通知</a>
+    <a href="{% url 'users:all_notifications' %}" class="flex justify-center w-full font-bold rounded-md py-2 text-sm">查看所有通知</a>
   </div>
 </div>

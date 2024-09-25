@@ -5,6 +5,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class InventoryManager(models.Manager):
@@ -30,6 +31,9 @@ class Inventory(models.Model):
         related_name="inventories",
         blank=True,
         null=True,
+    )
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)

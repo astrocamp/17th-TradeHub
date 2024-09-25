@@ -57,6 +57,7 @@ def new(request):
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
+            order.user = request.user
             order.save()
             order.order_number = generate_order_number(order)
             order.save()
