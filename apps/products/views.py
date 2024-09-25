@@ -236,7 +236,7 @@ def export_sample(request):
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if Inventory.objects.filter(product=instance.product_name).exists():
+    if Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
             product=instance,
             supplier=instance.supplier,
