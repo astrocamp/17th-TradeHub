@@ -12,6 +12,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.inventory.models import Inventory
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.sales_orders.models import SalesOrderProductItem
 
 from .forms.product_form import FileUploadForm, ProductForm
 
@@ -244,3 +245,17 @@ def update_state(sender, instance, **kwargs):
             note=f"{time_now} 新建商品，預建庫存",
             state="new_stock",
         )
+    post_save.disconnect(update_state, sender=Product)
+    product = SalesOrderProductItem.objects.filter(
+        product=instance.product_name
+    ).count()
+    if product == 0:
+        instance.set_never()
+        instance.save()
+    elif product > 0 and product < 3:
+        instance.set_haply()
+        instance.save()
+    elif product > 3:
+        instance.set_often()
+        instance.save()
+    post_save.connect(update_state, sender=Product)
