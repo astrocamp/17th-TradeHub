@@ -3,9 +3,13 @@
   <a href="{% url 'products:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
-
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+  <div class="dropdown dropdown-bottom dropdown-end">
+    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+      <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
+      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+    </ul>
+  </div>
 </div>
 <div class="divider text-3xl font-bold">商品列表</div>
 <div class="flex justify-center mt-10">
@@ -40,12 +44,12 @@
             </form>
             </th>
             <th><a href="{% url 'products:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+            <th class="mobile"><a href="{% url 'products:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th></th>
           </tr>
         </thead>
@@ -66,25 +70,27 @@
             </th>
             {% endif %}
             <th>{{product.number}}</th>
-            <th>{{product.product_name}}</th>
-            <th>{{product.cost_price}}</th>
-            <th>{{product.sale_price}}</th>
-            <th>{{product.supplier}}</th>
-            <th>{{product.note}}</th>
-            <th>{{product.updated_at|date:"Y-m-d H:i"}}</th>
+            <th class="mobile">{{product.product_name}}</th>
+            <th class="mobile">{{product.cost_price}}</th>
+            <th class="mobile">{{product.sale_price}}</th>
+            <th class="mobile">{{product.supplier}}</th>
+            <th class="mobile">{{product.note}}</th>
+            <th class="mobile">{{product.updated_at|date:"Y-m-d H:i"}}</th>
             <th>
-              <div class="flex justify-center">
-                <div>
-                  <a
-                    href="{% url 'products:edit' product.id %}"
-                    class="btn btn-primary"
-                  >
+              <div class="dropdown dropdown-left">
+                <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                  <li>
+                    <a href="{% url 'products:edit' product.id %}" class="btn btn-primary">
                     編輯
-                  </a>
-                  <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error"
-                    >刪除</a
-                  >
-                </div>
+                    </a>
+                  </li>
+                  <li>
+                    <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error">
+                      刪除
+                    </a>
+                  </li>
+                </ul>
               </div>
             </th>
           </tr>
