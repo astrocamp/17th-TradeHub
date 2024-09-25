@@ -23,7 +23,7 @@ class SalesOrder(models.Model):
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)
     client_email = models.EmailField(unique=False)
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
     company = models.ForeignKey(
         Company,

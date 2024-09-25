@@ -11,8 +11,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.inventory.models import Inventory
 from apps.products.models import Product
-from apps.suppliers.models import Supplier
 from apps.sales_orders.models import SalesOrderProductItem
+from apps.suppliers.models import Supplier
 
 from .forms.product_form import FileUploadForm, ProductForm
 
@@ -236,7 +236,7 @@ def export_sample(request):
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if Inventory.objects.filter(product=instance.product_name).exists():
+    if not Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
             product=instance,
             supplier=instance.supplier,
@@ -246,9 +246,7 @@ def update_state(sender, instance, **kwargs):
             state="new_stock",
         )
     post_save.disconnect(update_state, sender=Product)
-    product = SalesOrderProductItem.objects.filter(
-        product=instance.product_name
-    ).count()
+    product = SalesOrderProductItem.objects.filter(product=instance.id).count()
     if product == 0:
         instance.set_never()
         instance.save()

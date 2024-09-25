@@ -240,12 +240,12 @@ def update_state(sender, instance, **kwargs):
 
     if instance.is_finished:
         order = SalesOrder.objects.create(
-            order_number=generate_order_number(),
+            order_number=generate_order_number(instance),
             client=instance.client,
             client_tel=instance.client_tel,
             client_address=instance.client_address,
             client_email=instance.client_email,
-            amount=instance.amount,
+            amount=0,
             note=f"轉銷貨單{time_now}",
         )
         for item in order_items:

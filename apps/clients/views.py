@@ -3,12 +3,13 @@ import csv
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
-from django.shortcuts import get_object_or_404, redirect, render
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
 
 from apps.sales_orders.models import SalesOrder
+
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
 
@@ -202,7 +203,7 @@ def export_sample(request):
 @receiver(post_save, sender=Client)
 def update_state(sender, instance, **kwargs):
     post_save.disconnect(update_state, sender=Client)
-    order = SalesOrder.objects.filter(client=instance.name).count()
+    order = SalesOrder.objects.filter(client=instance.id).count()
     if order == 0:
         instance.set_never()
     elif order > 0 and order < 3:

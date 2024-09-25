@@ -246,20 +246,20 @@ def update_stats(sender, instance, **kwargs):
     post_save.disconnect(update_stats, sender=SalesOrder)
     for item in order_items:
         if item.ordered_quantity > item.stock_quantity.quantity:
-            print("1")
             instance.set_pending()
             instance.save()
 
-        elif item.ordered_quantity < item.stock_quantity.quantity:
-            print("2")
+        elif item.ordered_quantity <= item.stock_quantity.quantity:
             instance.set_progress()
             instance.save()
 
             if instance.is_finished:
                 inventory = Inventory.objects.get(id=item.stock_quantity.id)
+                print()
                 inventory.quantity -= item.shipped_quantity
-                item.shipped_quantity = 0
+
                 inventory.note += f"扣除庫存:{item.shipped_quantity}{time_now}"
+                item.shipped_quantity = 0
                 inventory.save()
                 item.save()
                 instance.set_finished()
