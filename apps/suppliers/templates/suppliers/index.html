@@ -3,12 +3,17 @@
 {% block content %}
 <div class="flex justify-end mt-20 gap-2">
     <a href="{% url 'suppliers:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
-    >新增</a
-  >
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
-
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+    >新增</a>
+  <div class="dropdown dropdown-bottom dropdown-end">
+    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+      <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_1.showModal()">匯入檔案</button>
+      <button class="btn bg-yellow-600 text-white hover:bg-yellow-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+    </ul>
+  </div>
 </div>
+
+
 <div class="divider text-3xl font-bold">供應商列表</div>
 
 <div class="flex justify-center mt-10">
@@ -43,11 +48,11 @@
                       </form>
                     </th>
                     <th><a href="{% url 'suppliers:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商編號{% if order_by == 'number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">統一編號{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">統一編號{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th></th>
                 </tr>
             </thead>
@@ -73,23 +78,27 @@
                     </th>
                     {% endcomment %}
                     <th>{{ supplier.number }}</th>
-                    <th>{{ supplier.name }}</th>
-                    <th>{{ supplier.telephone }}</th>
-                    <th>{{ supplier.gui_number }}</th>
-                    <th>{{ supplier.note }}</th>
-                    <th>{{ supplier.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th class="mobile">{{ supplier.name }}</th>
+                    <th class="mobile">{{ supplier.telephone }}</th>
+                    <th class="mobile">{{ supplier.gui_number }}</th>
+                    <th class="mobile">{{ supplier.note }}</th>
+                    <th class="mobile">{{ supplier.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>
-                        <div class="flex justify-center gap-1">
+                      <div class="dropdown dropdown-left">
+                        <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                          <li>
                             <a href="{% url 'suppliers:edit' supplier.id %}" class="btn btn-primary">
-                                編輯
+                            編輯
                             </a>
-                            <form action="{% url 'suppliers:delete' supplier.id %}" method="POST">
-                                {% csrf_token %}
-                                <button onclick="return confirm('確認刪除?')" type="submit" class="btn btn-error">
-                                    刪除
-                                </button>
-                            </form>
-                        </div>
+                          </li>
+                          <li>
+                            <a onclick="return confirm('確認刪除?')" href="{% url 'suppliers:delete' supplier.id %}" class="btn btn-error">
+                              刪除
+                            </a>
+                          </li>
+                        </ul>
+                      </div>
                     </th>
                 </tr>
                 {% endfor %}
