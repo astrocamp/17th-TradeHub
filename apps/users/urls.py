@@ -20,4 +20,9 @@ urlpatterns = [
         name="mark_as_read",
     ),
     path("notifications/all", views.all_notifications, name="all_notifications"),
+    path(
+        "notifications/<int:notification_id>/mark_as_read_fullpage/",
+        views.mark_as_read_fullpage,
+        name="mark_as_read_fullpage",
+    ),
 ]

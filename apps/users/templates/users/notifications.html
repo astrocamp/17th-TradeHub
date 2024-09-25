@@ -10,12 +10,12 @@
             border border-gray-300 rounded-lg shadow-md p-4 transition duration-300">
             {% if notification.sender_type == 'PurchaseOrder' %}
             <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
-                hx-get="{% url 'users:mark_as_read' notification.id %}"
+                hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
                 hx-target="this"
                 hx-swap="outerHTML">
             {% elif notification.sender_type == 'GoodsReceipt' %}
             <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
-                hx-get="{% url 'users:mark_as_read' notification.id %}"
+                hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
                 hx-target="this"
                 hx-swap="outerHTML">
             {% endif %}
@@ -25,7 +25,7 @@
                             <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
                         </div>
                         <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
-                            <p>{{ notification.message }}</p>
+                            <pre>{{ notification.message }}</pre>
                         </div>
                     </div>
                     <div class="flex items-center ml-4 flex-shrink-0">
@@ -40,5 +40,35 @@
         <li class="text-center text-gray-500">沒有通知</li>
         {% endfor %}
     </ul>
+    <div class="pagination join flex justify-center mt-4">
+        {% if page_obj.has_other_pages %}
+        <span class="step-links">
+
+          <a href="?page=1"
+            ><button class="join-item btn">第1頁</button></a
+          >
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}"
+            ><button class="join-item btn" >«</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">«</button>
+          {% endif %}
+          <button class="join-item btn">
+            第{{ page_obj.number }}頁
+          </button>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+            ><button class="join-item btn">»</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">»</button>
+          {% endif %}
+          <a href="?page={{ page_obj.paginator.num_pages }}"
+            ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
+          >
+        </span>
+        {% endif %}
+      </div>
 </div>
 {% endblock %}

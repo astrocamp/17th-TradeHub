@@ -15,7 +15,12 @@
               hx-target="this"
               hx-swap="outerHTML"
               class="cursor-pointer">
-
+          {% elif notification.sender_type == 'Inventory' %}
+            <a href="{% url 'inventory:index' %}?select={{ notification.sender_state }}"
+              hx-get="{% url 'users:mark_as_read' notification.id %}"
+              hx-target="this"
+              hx-swap="outerHTML"
+              class="cursor-pointer">
           {% endif %}
             <div class="flex justify-between text-sm">
                 <p>{{ notification.created_at|date:"y/m/d H:i" }}</p>
@@ -24,7 +29,7 @@
                 {% endif %}
               </div>
               <div class="flex flex-col font-bold text-sm">
-                <p>{{ notification.message }}</p>
+                <pre>{{ notification.message }}</pre>
             </div>
           </a>
         </li>
