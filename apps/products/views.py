@@ -236,6 +236,7 @@ def export_sample(request):
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+
     if not Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
             product=instance,
@@ -243,7 +244,7 @@ def update_state(sender, instance, **kwargs):
             quantity=0,
             safety_stock=0,
             note=f"{time_now} 新建商品，預建庫存",
-            state="new_stock",
+            state=Inventory.NEW_STOCK,
         )
     post_save.disconnect(update_state, sender=Product)
     product = SalesOrderProductItem.objects.filter(product=instance.id).count()

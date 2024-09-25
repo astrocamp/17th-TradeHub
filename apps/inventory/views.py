@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta, timezone
 
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -238,9 +238,11 @@ def export_sample(request):
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+
     pre_save.disconnect(update_state, sender=Inventory)
-    if instance.safety_stock == 0:
+    if instance.safety_stock == 0 and instance.quantity == 0:
         instance.set_new_stock()
+        instance.save()
     if instance.quantity <= 0:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
@@ -268,25 +270,26 @@ def update_state(sender, instance, **kwargs):
             order_number = generate_order_number(order)
             order.order_number = order_number
             order.amount = orderitem.subtotal
-            order.save()
+            order.save(update_fields=["order_number", "amount"])
 
-        else:
-            message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
-            order = PurchaseOrder.objects.get(
-                supplier=instance.supplier,
-                state=PurchaseOrder.PENDING,
-            )
-            order.note += "\n" + message
-            orderitem = ProductItem.objects.create(
-                purchase_order=order,
-                product=instance.product,
-                quantity=instance.safety_stock,
-                cost_price=instance.product.cost_price,
-                subtotal=instance.product.cost_price * instance.safety_stock,
-            )
+            # else:
+            #     message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
+            #     order = PurchaseOrder.objects.get(
+            #         supplier=instance.supplier,
+            #         state=PurchaseOrder.PENDING,
+            #     )
+            #     order.note += "\n" + message
+            #     orderitem = ProductItem.objects.create(
+            #         purchase_order=order,
+            #         product=instance.product,
+            #         quantity=instance.safety_stock,
+            #         cost_price=instance.product.cost_price,
+            #         subtotal=instance.product.cost_price * instance.safety_stock,
+            #     )
             order.amount += orderitem.subtotal
-            order.save()
+            order.save(update_fields=["amount"])
         instance.set_out_stock()
+        instance.save()
     elif instance.quantity < instance.safety_stock:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
@@ -315,29 +318,31 @@ def update_state(sender, instance, **kwargs):
             order_number = generate_order_number(order)
             order.order_number = order_number
             order.amount = orderitem.subtotal
-            order.save()
-        else:
-            message = (
-                f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
-            )
-            order = PurchaseOrder.objects.get(
-                supplier=instance.supplier,
-                state=PurchaseOrder.PENDING,
-                note__contains="低水位",
-            )
-            order.note += "\n" + message
-            orderitem = ProductItem.objects.create(
-                purchase_order=order,
-                product=instance.product,
-                quantity=instance.safety_stock - instance.quantity,
-                cost_price=instance.product.cost_price,
-                subtotal=instance.product.cost_price
-                * (instance.safety_stock - instance.quantity),
-            )
+            order.save(update_fields=["order_number", "amount"])
+            # else:
+            #     message = (
+            #         f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
+            #     )
+            #     order = PurchaseOrder.objects.get(
+            #         supplier=instance.supplier,
+            #         state=PurchaseOrder.PENDING,
+            #         note__contains="低水位",
+            #     )
+            #     order.note += "\n" + message
+            #     orderitem = ProductItem.objects.create(
+            #         purchase_order=order,
+            #         product=instance.product,
+            #         quantity=instance.safety_stock - instance.quantity,
+            #         cost_price=instance.product.cost_price,
+            #         subtotal=instance.product.cost_price
+            #         * (instance.safety_stock - instance.quantity),
+            #     )
             orderitem.quantity += instance.safety_stock - instance.quantity
             order.amount += orderitem.subtotal
-            order.save()
+            order.save(update_fields=["amount"])
         instance.set_low_stock()
+        instance.save()
     else:
         instance.set_normal()
+        instance.save()
     pre_save.connect(update_state, sender=Inventory)

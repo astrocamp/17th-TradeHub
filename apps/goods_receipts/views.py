@@ -274,15 +274,15 @@ def update_state(sender, instance, **kwargs):
                         last_updated=timezone.now(),
                         note=note,
                     )
-                else:
-                    Inventory.objects.create(
-                        product=item.product,
-                        supplier=instance.supplier,
-                        quantity=item.received_quantity,
-                        safety_stock=0,
-                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
-                        last_updated=time_now,
-                    )
+                # else:
+                #     Inventory.objects.create(
+                #         product=item.product,
+                #         supplier=instance.supplier,
+                #         quantity=item.received_quantity,
+                #         safety_stock=0,
+                #         note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
+                #         last_updated=time_now,
+                #     )
 
                 item.ordered_quantity -= item.received_quantity
                 item.received_quantity = 0
@@ -298,15 +298,15 @@ def update_state(sender, instance, **kwargs):
                         f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
                     )
                     inventory.save(update_fields=["quantity", "last_updated", "note"])
-                else:
-                    Inventory.objects.create(
-                        product=item.product,
-                        supplier=instance.supplier,
-                        quantity=item.received_quantity,
-                        safety_stock=0,
-                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}{time_now}",
-                        last_updated=time_now,
-                    )
+                # else:
+                #     Inventory.objects.create(
+                #         product=item.product,
+                #         supplier=instance.supplier,
+                #         quantity=item.received_quantity,
+                #         safety_stock=0,
+                #         note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.receipt_number}{time_now}",
+                #         last_updated=time_now,
+                #     )
 
                 instance.note += (
                     f"入庫{item.received_quantity}個：{item.product}{time_now}"
