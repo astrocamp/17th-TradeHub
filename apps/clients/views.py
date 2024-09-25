@@ -50,6 +50,11 @@ def new(request):
     return render(request, "clients/new.html", {"form": form})
 
 
+def show(request, id):
+    client = get_object_or_404(Client, id=id)
+    return render(request, "clients/show.html", {"client": client})
+
+
 def client_update_and_delete(request, id):
     client = get_object_or_404(Client, id=id)
     if request.method == "POST":
@@ -68,6 +73,13 @@ def client_update_and_delete(request, id):
                 )
     form = ClientForm(instance=client)
     return render(request, "clients/edit.html", {"client": client, "form": form})
+
+
+def delete(request, id):
+    client = get_object_or_404(Client, id=id)
+    client.delete()
+    messages.success(request, "刪除完成!")
+    return redirect("clients:index")
 
 
 def import_file(request):
