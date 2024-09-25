@@ -3,195 +3,1501 @@
     "model": "inventory.inventory",
     "pk": 1,
     "fields": {
+      "number": "I001",
       "product": 1,
       "supplier": 1,
-      "quantity": 150,
-      "safety_stock": 30,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-01T12:00:00Z",
-      "note": ""
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新進貨"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 2,
     "fields": {
+      "number": "I002",
       "product": 2,
       "supplier": 1,
-      "quantity": 100,
-      "safety_stock": 20,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-02T12:00:00Z",
-      "note": ""
+      "quantity": 150,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "補貨"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 3,
     "fields": {
+      "number": "I003",
       "product": 3,
       "supplier": 1,
       "quantity": 80,
       "safety_stock": 15,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-03T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "即將缺貨"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 4,
     "fields": {
+      "number": "I004",
       "product": 4,
-      "supplier": 2,
+      "supplier": 1,
       "quantity": 200,
       "safety_stock": 50,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-04T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 5,
     "fields": {
+      "number": "I005",
       "product": 5,
-      "supplier": 2,
-      "quantity": 150,
-      "safety_stock": 30,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-05T12:00:00Z",
-      "note": ""
+      "supplier": 1,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "近期出貨"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 6,
     "fields": {
+      "number": "I006",
       "product": 6,
-      "supplier": 2,
+      "supplier": 1,
       "quantity": 120,
-      "safety_stock": 20,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-06T12:00:00Z",
-      "note": ""
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "補充中"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 7,
     "fields": {
+      "number": "I007",
       "product": 7,
-      "supplier": 3,
-      "quantity": 75,
+      "supplier": 1,
+      "quantity": 90,
       "safety_stock": 15,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-07T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "經常需求"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 8,
     "fields": {
+      "number": "I008",
       "product": 8,
-      "supplier": 3,
-      "quantity": 60,
-      "safety_stock": 10,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-08T12:00:00Z",
-      "note": ""
+      "supplier": 1,
+      "quantity": 110,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存穩定"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 9,
     "fields": {
+      "number": "I009",
       "product": 9,
-      "supplier": 3,
-      "quantity": 50,
+      "supplier": 1,
+      "quantity": 70,
       "safety_stock": 10,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-09T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存檢查中"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 10,
     "fields": {
+      "number": "I010",
       "product": 10,
-      "supplier": 4,
-      "quantity": 140,
+      "supplier": 1,
+      "quantity": 130,
       "safety_stock": 25,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-10T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "持續需求"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 11,
     "fields": {
+      "number": "I011",
       "product": 11,
-      "supplier": 4,
-      "quantity": 110,
+      "supplier": 2,
+      "quantity": 100,
       "safety_stock": 20,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-11T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨生菜"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 12,
     "fields": {
+      "number": "I012",
       "product": 12,
-      "supplier": 4,
-      "quantity": 130,
-      "safety_stock": 25,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-12T12:00:00Z",
-      "note": ""
+      "supplier": 2,
+      "quantity": 80,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨番茄"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 13,
     "fields": {
+      "number": "I013",
       "product": 13,
-      "supplier": 5,
-      "quantity": 200,
-      "safety_stock": 50,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-13T12:00:00Z",
-      "note": ""
+      "supplier": 2,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨黃瓜"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 14,
     "fields": {
+      "number": "I014",
       "product": 14,
-      "supplier": 5,
-      "quantity": 180,
-      "safety_stock": 40,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-14T12:00:00Z",
-      "note": ""
+      "supplier": 2,
+      "quantity": 90,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨胡蘿蔔"
     }
   },
   {
     "model": "inventory.inventory",
     "pk": 15,
     "fields": {
+      "number": "I015",
       "product": 15,
-      "supplier": 5,
-      "quantity": 160,
+      "supplier": 2,
+      "quantity": 110,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨青椒"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 16,
+    "fields": {
+      "number": "I016",
+      "product": 16,
+      "supplier": 2,
+      "quantity": 70,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨洋蔥"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 17,
+    "fields": {
+      "number": "I017",
+      "product": 17,
+      "supplier": 2,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨地瓜"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 18,
+    "fields": {
+      "number": "I018",
+      "product": 18,
+      "supplier": 2,
+      "quantity": 50,
+      "safety_stock": 8,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨茄子"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 19,
+    "fields": {
+      "number": "I019",
+      "product": 19,
+      "supplier": 2,
+      "quantity": 200,
       "safety_stock": 30,
-      "created_at": "2024-08-04T11:05:22Z",
-      "last_updated": "2024-09-15T12:00:00Z",
-      "note": ""
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨香菜"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 20,
+    "fields": {
+      "number": "I020",
+      "product": 20,
+      "supplier": 2,
+      "quantity": 150,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進貨白菜"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 21,
+    "fields": {
+      "number": "I021",
+      "product": 21,
+      "supplier": 3,
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 22,
+    "fields": {
+      "number": "I022",
+      "product": 22,
+      "supplier": 3,
+      "quantity": 50,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 23,
+    "fields": {
+      "number": "I023",
+      "product": 23,
+      "supplier": 3,
+      "quantity": 30,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存緊張"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 24,
+    "fields": {
+      "number": "I024",
+      "product": 24,
+      "supplier": 3,
+      "quantity": 80,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存正常"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 25,
+    "fields": {
+      "number": "I025",
+      "product": 25,
+      "supplier": 3,
+      "quantity": 20,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 26,
+    "fields": {
+      "number": "I026",
+      "product": 26,
+      "supplier": 3,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存正常"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 27,
+    "fields": {
+      "number": "I027",
+      "product": 27,
+      "supplier": 3,
+      "quantity": 40,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存正常"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 28,
+    "fields": {
+      "number": "I028",
+      "product": 28,
+      "supplier": 3,
+      "quantity": 10,
+      "safety_stock": 3,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存緊張"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 29,
+    "fields": {
+      "number": "I029",
+      "product": 29,
+      "supplier": 3,
+      "quantity": 15,
+      "safety_stock": 2,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 30,
+    "fields": {
+      "number": "I030",
+      "product": 30,
+      "supplier": 3,
+      "quantity": 200,
+      "safety_stock": 50,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 31,
+    "fields": {
+      "number": "I031",
+      "product": 31,
+      "supplier": 4,
+      "quantity": 150,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 32,
+    "fields": {
+      "number": "I032",
+      "product": 32,
+      "supplier": 4,
+      "quantity": 80,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 33,
+    "fields": {
+      "number": "I033",
+      "product": 33,
+      "supplier": 4,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存緊張"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 34,
+    "fields": {
+      "number": "I034",
+      "product": 34,
+      "supplier": 4,
+      "quantity": 70,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存正常"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 35,
+    "fields": {
+      "number": "I035",
+      "product": 35,
+      "supplier": 4,
+      "quantity": 90,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存正常"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 36,
+    "fields": {
+      "number": "I036",
+      "product": 36,
+      "supplier": 4,
+      "quantity": 40,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 37,
+    "fields": {
+      "number": "I037",
+      "product": 37,
+      "supplier": 4,
+      "quantity": 100,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 38,
+    "fields": {
+      "number": "I038",
+      "product": 38,
+      "supplier": 4,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存充足"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 39,
+    "fields": {
+      "number": "I039",
+      "product": 39,
+      "supplier": 4,
+      "quantity": 50,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "需補貨"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 40,
+    "fields": {
+      "number": "I040",
+      "product": 40,
+      "supplier": 4,
+      "quantity": 30,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "庫存緊張"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 41,
+    "fields": {
+      "number": "I041",
+      "product": 41,
+      "supplier": 5,
+      "quantity": 200,
+      "safety_stock": 50,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "充足庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 42,
+    "fields": {
+      "number": "I042",
+      "product": 42,
+      "supplier": 5,
+      "quantity": 180,
+      "safety_stock": 40,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "持平需求"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 43,
+    "fields": {
+      "number": "I043",
+      "product": 43,
+      "supplier": 5,
+      "quantity": 150,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "供應穩定"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 44,
+    "fields": {
+      "number": "I044",
+      "product": 44,
+      "supplier": 5,
+      "quantity": 130,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "慢速流通"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 45,
+    "fields": {
+      "number": "I045",
+      "product": 45,
+      "supplier": 5,
+      "quantity": 220,
+      "safety_stock": 60,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新產品"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 46,
+    "fields": {
+      "number": "I046",
+      "product": 46,
+      "supplier": 5,
+      "quantity": 90,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "季節性產品"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 47,
+    "fields": {
+      "number": "I047",
+      "product": 47,
+      "supplier": 5,
+      "quantity": 110,
+      "safety_stock": 35,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "持平需求"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 48,
+    "fields": {
+      "number": "I048",
+      "product": 48,
+      "supplier": 5,
+      "quantity": 140,
+      "safety_stock": 45,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "高需求"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 49,
+    "fields": {
+      "number": "I049",
+      "product": 49,
+      "supplier": 5,
+      "quantity": 75,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "慢速流通"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 50,
+    "fields": {
+      "number": "I050",
+      "product": 50,
+      "supplier": 5,
+      "quantity": 130,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新進貨品"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 51,
+    "fields": {
+      "number": "I051",
+      "product": 51,
+      "supplier": 6,
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍雞翅庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 52,
+    "fields": {
+      "number": "I052",
+      "product": 52,
+      "supplier": 6,
+      "quantity": 80,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍牛肉庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 53,
+    "fields": {
+      "number": "I053",
+      "product": 53,
+      "supplier": 6,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍豬肉庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 54,
+    "fields": {
+      "number": "I054",
+      "product": 54,
+      "supplier": 6,
+      "quantity": 50,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍海鮮拼盤庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 55,
+    "fields": {
+      "number": "I055",
+      "product": 55,
+      "supplier": 6,
+      "quantity": 200,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍蔬菜庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 56,
+    "fields": {
+      "number": "I056",
+      "product": 56,
+      "supplier": 6,
+      "quantity": 90,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍水餃庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 57,
+    "fields": {
+      "number": "I057",
+      "product": 57,
+      "supplier": 6,
+      "quantity": 75,
+      "safety_stock": 12,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍漢堡庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 58,
+    "fields": {
+      "number": "I058",
+      "product": 58,
+      "supplier": 6,
+      "quantity": 110,
+      "safety_stock": 18,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍比薩庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 59,
+    "fields": {
+      "number": "I059",
+      "product": 59,
+      "supplier": 6,
+      "quantity": 130,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍玉米庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 60,
+    "fields": {
+      "number": "I060",
+      "product": 60,
+      "supplier": 6,
+      "quantity": 150,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "冷凍豆腐庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 61,
+    "fields": {
+      "number": "I061",
+      "product": 61,
+      "supplier": 7,
+      "quantity": 90,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "蘋果庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 62,
+    "fields": {
+      "number": "I062",
+      "product": 62,
+      "supplier": 7,
+      "quantity": 200,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "香蕉庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 63,
+    "fields": {
+      "number": "I063",
+      "product": 63,
+      "supplier": 7,
+      "quantity": 120,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "橙子庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 64,
+    "fields": {
+      "number": "I064",
+      "product": 64,
+      "supplier": 7,
+      "quantity": 80,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "葡萄庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 65,
+    "fields": {
+      "number": "I065",
+      "product": 65,
+      "supplier": 7,
+      "quantity": 90,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "草莓庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 66,
+    "fields": {
+      "number": "I066",
+      "product": 66,
+      "supplier": 7,
+      "quantity": 110,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "西瓜庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 67,
+    "fields": {
+      "number": "I067",
+      "product": 67,
+      "supplier": 7,
+      "quantity": 130,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "檸檬庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 68,
+    "fields": {
+      "number": "I068",
+      "product": 68,
+      "supplier": 7,
+      "quantity": 140,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "梨庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 69,
+    "fields": {
+      "number": "I069",
+      "product": 69,
+      "supplier": 7,
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "奇異果庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 70,
+    "fields": {
+      "number": "I070",
+      "product": 70,
+      "supplier": 7,
+      "quantity": 150,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "檸檬庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 71,
+    "fields": {
+      "number": "I071",
+      "product": 71,
+      "supplier": 8,
+      "quantity": 200,
+      "safety_stock": 50,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "啤酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 72,
+    "fields": {
+      "number": "I072",
+      "product": 72,
+      "supplier": 8,
+      "quantity": 80,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "紅酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 73,
+    "fields": {
+      "number": "I073",
+      "product": 73,
+      "supplier": 8,
+      "quantity": 70,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "白酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 74,
+    "fields": {
+      "number": "I074",
+      "product": 74,
+      "supplier": 8,
+      "quantity": 40,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "威士忌庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 75,
+    "fields": {
+      "number": "I075",
+      "product": 75,
+      "supplier": 8,
+      "quantity": 30,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "香檳庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 76,
+    "fields": {
+      "number": "I076",
+      "product": 76,
+      "supplier": 8,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "蘇打水庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 77,
+    "fields": {
+      "number": "I077",
+      "product": 77,
+      "supplier": 8,
+      "quantity": 90,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "米酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 78,
+    "fields": {
+      "number": "I078",
+      "product": 78,
+      "supplier": 8,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "果酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 79,
+    "fields": {
+      "number": "I079",
+      "product": 79,
+      "supplier": 8,
+      "quantity": 50,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "烈酒庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 80,
+    "fields": {
+      "number": "I080",
+      "product": 80,
+      "supplier": 8,
+      "quantity": 75,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "調酒材料庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 81,
+    "fields": {
+      "number": "I081",
+      "product": 81,
+      "supplier": 9,
+      "quantity": 200,
+      "safety_stock": 50,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "醬油庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 82,
+    "fields": {
+      "number": "I082",
+      "product": 82,
+      "supplier": 9,
+      "quantity": 180,
+      "safety_stock": 40,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "蠔油庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 83,
+    "fields": {
+      "number": "I083",
+      "product": 83,
+      "supplier": 9,
+      "quantity": 160,
+      "safety_stock": 35,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "香油庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 84,
+    "fields": {
+      "number": "I084",
+      "product": 84,
+      "supplier": 9,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "辣椒醬庫存"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 85,
+    "fields": {
+      "number": "I085",
+      "product": 85,
+      "supplier": 9,
+      "quantity": 110,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "醋庫存"
+    }
+  },
+
+  {
+    "model": "inventory.inventory",
+    "pk": 86,
+    "fields": {
+      "number": "I086",
+      "product": 86,
+      "supplier": 9,
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "主要供應魚露"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 87,
+    "fields": {
+      "number": "I087",
+      "product": 87,
+      "supplier": 9,
+      "quantity": 150,
+      "safety_stock": 30,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "備貨米醋"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 88,
+    "fields": {
+      "number": "I088",
+      "product": 88,
+      "supplier": 9,
+      "quantity": 80,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "各式香料"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 89,
+    "fields": {
+      "number": "I089",
+      "product": 89,
+      "supplier": 9,
+      "quantity": 120,
+      "safety_stock": 25,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "特製沙茶醬"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 90,
+    "fields": {
+      "number": "I090",
+      "product": 90,
+      "supplier": 10,
+      "quantity": 90,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "各式果醬"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 91,
+    "fields": {
+      "number": "I091",
+      "product": 91,
+      "supplier": 10,
+      "quantity": 70,
+      "safety_stock": 15,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新鮮豬肉片"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 92,
+    "fields": {
+      "number": "I092",
+      "product": 92,
+      "supplier": 10,
+      "quantity": 60,
+      "safety_stock": 12,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "優質牛肉片"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 93,
+    "fields": {
+      "number": "I093",
+      "product": 93,
+      "supplier": 10,
+      "quantity": 100,
+      "safety_stock": 20,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "健康雞胸肉"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 94,
+    "fields": {
+      "number": "I094",
+      "product": 94,
+      "supplier": 10,
+      "quantity": 40,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "美味鴨腿"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 95,
+    "fields": {
+      "number": "I095",
+      "product": 95,
+      "supplier": 10,
+      "quantity": 50,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "進口火腿"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 96,
+    "fields": {
+      "number": "I096",
+      "product": 96,
+      "supplier": 10,
+      "quantity": 30,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "手工香腸"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 97,
+    "fields": {
+      "number": "I097",
+      "product": 97,
+      "supplier": 10,
+      "quantity": 25,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "嫩滑牛腩"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 98,
+    "fields": {
+      "number": "I098",
+      "product": 98,
+      "supplier": 10,
+      "quantity": 20,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新鮮羊肉片"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 99,
+    "fields": {
+      "number": "I099",
+      "product": 99,
+      "supplier": 10,
+      "quantity": 15,
+      "safety_stock": 5,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "優質鴨胸肉"
+    }
+  },
+  {
+    "model": "inventory.inventory",
+    "pk": 100,
+    "fields": {
+      "number": "I100",
+      "product": 100,
+      "supplier": 10,
+      "quantity": 60,
+      "safety_stock": 10,
+      "created_at": "2024-09-01T12:34:56Z",
+      "last_updated": "2024-09-01T12:34:56Z",
+      "deleted_at": null,
+      "note": "新鮮豬腳"
     }
   }
 ]

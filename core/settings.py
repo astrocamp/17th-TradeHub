@@ -70,6 +70,7 @@ INSTALLED_APPS = [
     "apps.goods_receipts",
     "social_django",
     "django_htmx",
+    "apps.company",
 ]
 
 if is_dev():
@@ -89,6 +90,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "apps.users.middleware.middleware.LoginRequiredMiddleware",
+    "middleware.middleware.Redirect404Middleware",
 ]
 
 # 未登入時導向的頁面（登入頁面）

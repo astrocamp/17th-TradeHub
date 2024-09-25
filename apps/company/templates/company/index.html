@@ -1,0 +1,24 @@
+{% extends "layouts/base.html" %} {% load static %}
+
+{% block content %}
+
+<button>
+    <a href="{% url 'company:new' %}" class="btn btn-primary">新增</a>
+</button>
+
+<div>
+    <ul>
+        {% for company in company_list %}
+        <a href="{% url 'company:show' company.id %}">
+            <p>公司代碼：{{company.company_id}}</p>
+            <p>公司名稱：{{company.name}}</p>
+            <p>統一編號：{{company.gui_number}}</p>
+            <p>公司地址：{{company.address}}</p>
+            <p>公司負責人：{{company.user}}</p>
+            <!-- <p>{{company.created_at}}</p> -->
+        </a>
+        {% endfor %}
+    </ul>
+</div>
+
+{% endblock %}

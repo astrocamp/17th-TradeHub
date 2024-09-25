@@ -1,4 +1,6 @@
 import csv
+import random
+import string
 from datetime import datetime, timedelta
 
 import pandas as pd
@@ -52,14 +54,14 @@ def index(request):
 
 
 def new(request):
-    new_order_number = generate_order_number()
     if request.method == "POST":
         form = PurchaseOrderForm(request.POST)
         formset = ProductItemFormSet(request.POST, instance=form.instance)
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
-            order.order_number = new_order_number
             order.username = request.user.username
+            order.save()
+            order.order_number = generate_order_number(order)
             order.save()
             formset.instance = order
             formset.save()
@@ -136,7 +138,7 @@ def load_supplier_info(request):
     supplier_id = request.GET.get("supplier_id")
     supplier = Supplier.objects.get(id=supplier_id)
     products = Product.objects.filter(supplier=supplier).values(
-        "id", "product_number", "product_name", "cost_price", "sale_price"
+        "id", "number", "product_name", "cost_price", "sale_price"
     )
     products_data = list(products)
     data = {
@@ -154,21 +156,13 @@ def load_product_info(request):
     return JsonResponse({"cost_price": product.cost_price})
 
 
-def generate_order_number():
+def generate_order_number(order):
     today = timezone.localtime().strftime("%Y%m%d")
-    last_order = (
-        PurchaseOrder.all_objects.filter(order_number__startswith=today)
-        .order_by("-order_number")
-        .first()
-    )
-
-    if last_order:
-        last_order_number = int(last_order.order_number[-3:])
-        new_order_number = f"{last_order_number + 1:03d}"
-    else:
-        new_order_number = "001"
-
-    return f"{today}{new_order_number}"
+    order_id = order.id
+    order_suffix = f"{order_id:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
+    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
 def export_csv(request):

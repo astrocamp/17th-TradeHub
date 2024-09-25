@@ -5,6 +5,7 @@ from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.clients.models import Client
+from apps.company.models import Company
 from apps.inventory.models import Inventory
 from apps.products.models import Product
 
@@ -15,7 +16,7 @@ class SalesOrderManager(models.Manager):
 
 
 class SalesOrder(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=20)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, related_name="sales_orders"
     )
@@ -24,6 +25,13 @@ class SalesOrder(models.Model):
     client_email = models.EmailField(unique=False)
     amount = models.PositiveIntegerField()
     username = models.CharField(max_length=150, default="admin")
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="sales_orders",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -48,8 +56,14 @@ class SalesOrder(models.Model):
 
     def format_client_tel(self, number):
         number = re.sub(r"\D", "", number)
+
+        # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
         elif len(number) == 9 and number.startswith("0"):
             return f"{number[:2]}-{number[2:]}"
         else:

@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
+from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
 
@@ -14,7 +15,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=11)
+    order_number = models.CharField(max_length=20)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -25,6 +26,13 @@ class PurchaseOrder(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)
     amount = models.PositiveIntegerField()
+    company = models.ForeignKey(
+        Company,
+        on_delete=models.PROTECT,
+        related_name="purchase_orders",
+        blank=True,
+        null=True,
+    )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
 
@@ -42,6 +50,10 @@ class PurchaseOrder(models.Model):
         number = re.sub(r"\D", "", number)
         if len(number) == 10 and number.startswith("09"):
             return f"{number[:4]}-{number[4:]}"
+        elif len(number) == 10 and number.startswith(("037", "049")):
+            return f"{number[:3]}-{number[3:]}"
+        elif len(number) == 10:
+            return f"{number[:2]}-{number[2:]}"
         elif len(number) == 9 and number.startswith("0"):
             return f"{number[:2]}-{number[2:]}"
         else:
