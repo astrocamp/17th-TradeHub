@@ -36,6 +36,7 @@ def register(request):
             company = Company.objects.get(id=1)
             user.company = company
             user.save()
+            messages.success(request, "成功註冊!")
             login(request, user)
 
             return redirect("pages:welcome")
@@ -125,6 +126,7 @@ def profile(request, id):
         form = ProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, "新增完成!")
             return redirect("users:profile", id=user.id)
     else:
         form = ProfileForm(instance=user)
@@ -141,6 +143,7 @@ def edit_profile(request, id):
         form = ProfileForm(request.POST, instance=user)
         if form.is_valid():
             form.save()
+            messages.success(request, "編輯完成!")
             return redirect("users:profile", user.id)
     else:
         form = ProfileForm(instance=user)
@@ -168,6 +171,7 @@ def invitation_register(request):
         form = InvitationRegistrationForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "邀約完成!")
             login(request, form)
             return redirect("pages:welcome")
         else:

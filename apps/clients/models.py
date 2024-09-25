@@ -17,7 +17,7 @@ class Client(models.Model):
     name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
-    email = models.EmailField(unique=True)
+    email = models.EmailField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     deleted_at = models.DateTimeField(null=True, blank=True)

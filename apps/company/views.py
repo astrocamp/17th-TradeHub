@@ -60,6 +60,7 @@ def edit(request, id):
         form = CompanyForm(request.POST, instance=company)
         if form.is_valid():
             form.save()
+            messages.success(request, "更新完成!")
             return redirect("company:show", id=id)
         return render(request, "company/edit.html", {"company": company, "form": form})
     if request.user.company is None:

@@ -45,7 +45,7 @@ class Inventory(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.number = f"P{self.id:03d}"
+        self.number = f"I{self.id:03d}"
         super().save(update_fields=["number"])
 
     OUT_STOCK = "out_stock"

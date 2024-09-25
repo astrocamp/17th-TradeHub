@@ -3,8 +3,10 @@ import csv
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.http import HttpResponse
+from django.views.decorators.http import require_POST
 from django.shortcuts import get_object_or_404, redirect, render
+from django.http import HttpResponse
+
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
@@ -43,6 +45,7 @@ def new(request):
         form = ClientForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "新增完成!")
             return redirect("clients:index")
         else:
             return render(request, "clients/new.html", {"form": form})
@@ -61,6 +64,7 @@ def client_update_and_delete(request, id):
             form = ClientForm(request.POST, instance=client)
             if form.is_valid():
                 form.save()
+                messages.success(request, "更新完成!")
                 return redirect("clients:index")
             else:
                 return render(
@@ -70,48 +74,66 @@ def client_update_and_delete(request, id):
     return render(request, "clients/edit.html", {"client": client, "form": form})
 
 
+@require_POST
 def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-            if file.name.endswith(".csv"):
+    form = FileUploadForm(request.POST, request.FILES)
 
+    if form.is_valid():
+        file = request.FILES["file"]
+
+        try:
+            if file.name.endswith(".csv"):
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.reader(decoded_file)
-                next(reader)
+                next(reader)  # Skip the header
+
+                last_client = Client.objects.order_by("-id").first()
+                next_number = 1 if not last_client else int(last_client.number[1:]) + 1
 
                 for row in reader:
                     Client.objects.create(
-                        name=row[0],
-                        phone_number=row[1],
-                        address=row[2],
-                        email=row[3],
-                        note=row[4],
+                        number=f"C{next_number:03d}",
+                        name=row[1],
+                        phone_number=row[2],
+                        address=row[3],
+                        email=row[4],
+                        note=row[5],
                     )
+                    next_number += 1
+
                 messages.success(request, "CSV檔案已成功匯入")
                 return redirect("clients:index")
 
             elif file.name.endswith(".xlsx"):
                 df = pd.read_excel(file, dtype={"phone_number": str})
+
+                last_client = Client.objects.order_by("-id").first()
+                next_number = 1 if not last_client else int(last_client.number[1:]) + 1
+
                 for _, row in df.iterrows():
                     Client.objects.create(
+                        number=f"C{next_number:03d}",
                         name=str(row["name"]),
                         phone_number=str(row["phone_number"]),
                         address=str(row["address"]),
                         email=str(row["email"]),
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
                     )
+                    next_number += 1  # Increment for the next client
 
                 messages.success(request, "成功匯入 Excel")
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗 (檔案不是 CSV 或 Excel)")
                 return render(request, "layouts/import.html", {"form": form})
 
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
+        except Exception as e:
+            messages.error(request, f"匯入失敗: {str(e)}")
+            return redirect("clients:index")
+    else:
+        messages.error(request, "表單無效，請檢查上傳的檔案。")
+        return redirect("clients:index")
 
 
 def export_csv(request):
@@ -119,9 +141,7 @@ def export_csv(request):
     response["Content-Disposition"] = 'attachment; filename="Clients.csv"'
 
     writer = csv.writer(response)
-    writer.writerow(
-        ["客戶名稱", "電話", "地址", "Email", "建立時間", "刪除時間", "備註"]
-    )
+    writer.writerow(["客戶名稱", "電話", "地址", "Email", "建立時間", "備註"])
 
     clients = Client.objects.all()
     for client in clients:
@@ -132,7 +152,6 @@ def export_csv(request):
                 client.address,
                 client.email,
                 client.created_at,
-                client.delete_at,
                 client.note,
             ]
         )
@@ -147,7 +166,12 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
 
     clients = Client.objects.all().values(
-        "name", "phone_number", "address", "email", "created_at", "delete_at", "note"
+        "name",
+        "phone_number",
+        "address",
+        "email",
+        "created_at",
+        "note",
     )
 
     df = pd.DataFrame(clients)
@@ -160,7 +184,6 @@ def export_excel(request):
         "address": "地址",
         "email": "Email",
         "created_at": "建立時間",
-        "delete_at": "刪除時間",
         "note": "備註",
     }
 

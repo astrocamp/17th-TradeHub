@@ -17,7 +17,7 @@ class Supplier(models.Model):
     name = models.CharField(max_length=20)
     telephone = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
