@@ -243,7 +243,7 @@ def update_state(sender, instance, **kwargs):
     if instance.safety_stock == 0 and instance.quantity == 0:
         instance.set_new_stock()
         instance.save()
-    if instance.quantity <= 0:
+    if instance.quantity <= 0 and instance.safety_stock != 0:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
             state=PurchaseOrder.PENDING,

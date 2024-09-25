@@ -286,7 +286,7 @@ def update_state(sender, instance, **kwargs):
 
                 item.ordered_quantity -= item.received_quantity
                 item.received_quantity = 0
-                item.save()
+                item.save(update_fields=["received_quantity", "ordered_quantity"])
 
         if item.received_quantity == item.ordered_quantity:
             if instance.is_finished and item.received_quantity != 0:
@@ -313,12 +313,12 @@ def update_state(sender, instance, **kwargs):
                 )
                 item.ordered_quantity = 0
                 item.received_quantity = 0
-                item.save()
+                item.save(update_fields=["received_quantity", "ordered_quantity"])
     instance.is_finished = False
 
     ordered_quantity = [item.ordered_quantity for item in receipts_items]
     received_quantity = [item.received_quantity for item in receipts_items]
-    print(0 in received_quantity, ordered_quantity != received_quantity)
+
     if ordered_quantity != received_quantity:
         instance.set_to_be_stocked()
         instance.save()
