@@ -51,7 +51,7 @@
                     <th><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">名稱{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">統一編號{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                
+
                     <th></th>
                 </tr>
             </thead>
@@ -80,7 +80,7 @@
                     <th class="text-xl">{{ supplier.name }}</th>
                     <th class="mobile text-xl">{{ supplier.telephone }}</th>
                     <th class="mobile text-xl">{{ supplier.gui_number }}</th>
-                  
+
                     <th>
                       <div class="dropdown dropdown-left">
                         <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>

@@ -9,8 +9,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
-from django.views.decorators.http import require_POST
 from django.utils import timezone
+from django.views.decorators.http import require_POST
 
 from apps.sales_orders.models import SalesOrder
 
