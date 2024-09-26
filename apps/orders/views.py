@@ -63,6 +63,7 @@ def new(request):
             order.save()
             formset.instance = order
             formset.save()
+            messages.success(request, "新增完成!")
             return redirect("orders:index")
         else:
             return render(
@@ -96,6 +97,7 @@ def edit(request, id):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            messages.success(request, "更新完成!")
             return redirect("orders:show", order.id)
         return render(
             request,
@@ -164,22 +166,38 @@ def export_csv(request):
 
     writer = csv.writer(response)
     writer.writerow(
-        ["序號", "客戶名稱", "商品名稱", "備註", "建立時間", "更新時間", "刪除時間"]
+        [
+            "序號",
+            "客戶名稱",
+            "客戶電話",
+            "客戶地址",
+            "客戶Email",
+            "商品名稱",
+            "數量",
+            "備註",
+            "建立時間",
+            "更新時間",
+        ]
     )
 
-    orders = Order.objects.all()
+    orders = Order.objects.select_related("client").all()
     for order in orders:
-        writer.writerow(
-            [
-                order.code,
-                order.client,
-                order.product,
-                order.note,
-                order.created_at,
-                order.updated_at,
-                order.deleted_at,
-            ]
-        )
+        for item in order.items.all():  # Iterate over related OrderProductItem
+            writer.writerow(
+                [
+                    order.order_number,
+                    order.client.name,
+                    order.client_tel,
+                    order.client_address,
+                    order.client_email,
+                    item.product.product_name,
+                    item.ordered_quantity,
+                    order.note,
+                    order.created_at,
+                    order.updated_at,
+                ]
+            )
+
     return response
 
 
@@ -189,31 +207,59 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Orders.xlsx"
 
-    orders = Order.objects.select_related("client", "product").values(
-        "code",
-        "client__name",
-        "product__product_name",
-        "note",
-        "created_at",
-        "updated_at",
-        "deleted_at",
+    orders = (
+        Order.objects.select_related("client")
+        .prefetch_related("items")
+        .values(
+            "order_number",
+            "client__name",
+            "client_tel",
+            "client_address",
+            "client_email",
+            "items__product__product_name",
+            "items__ordered_quantity",
+            "note",
+            "created_at",
+            "updated_at",
+        )
     )
 
-    df = pd.DataFrame(orders)
+    # Prepare the data for DataFrame
+    data = []
+    for order in orders:
+        data.append(
+            [
+                order["order_number"],
+                order["client__name"],
+                order["client_tel"],
+                order["client_address"],
+                order["client_email"],
+                order.get("items__product__product_name", ""),
+                order.get("items__ordered_quantity", ""),
+                order["note"],
+                order["created_at"],
+                order["updated_at"],
+            ]
+        )
+
+    df = pd.DataFrame(
+        data,
+        columns=[
+            "序號",
+            "客戶名稱",
+            "客戶電話",
+            "客戶地址",
+            "客戶Email",
+            "商品名稱",
+            "數量",
+            "備註",
+            "建立時間",
+            "更新時間",
+        ],
+    )
+
     for col in df.select_dtypes(include=["datetime64[ns, UTC]"]).columns:
         df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
-
-    column_mapping = {
-        "code": "序號",
-        "client__name": "客戶名稱",
-        "product__product_name": "商品名稱",
-        "note": "備註",
-        "created_at": "建立時間",
-        "updated_at": "更新時間",
-        "deleted_at": "刪除時間",
-    }
-
-    df.rename(columns=column_mapping, inplace=True)
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="Orders")

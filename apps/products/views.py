@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from apps.inventory.models import Inventory
 from apps.products.models import Product
@@ -52,22 +53,31 @@ def new(request):
             product = form.save(commit=False)
             product.user = request.user
             product.save()
+            messages.success(request, "新增完成!")
             return redirect("products:index")
         return render(request, "products/new.html", {"form": form})
     form = ProductForm()
     return render(request, "products/new.html", {"form": form})
 
 
+def show(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, "products/show.html", {"product": product})
+
+
 def edit(request, id):
     product = get_object_or_404(Product, id=id)
+    form = ProductForm(instance=product)
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
+            messages.success(request, "更新完成!")
             return redirect("products:index")
-
-    else:
-        form = ProductForm(instance=product)
+        else:
+            return render(
+                request, "products/edit.html", {"product": product, "form": form}
+            )
     return render(request, "products/edit.html", {"product": product, "form": form})
 
 
@@ -78,32 +88,57 @@ def delete(request, id):
     return redirect("products:index")
 
 
+@require_POST
 def import_file(request):
-    if request.method == "POST":
-        form = FileUploadForm(request.POST, request.FILES)
-        if form.is_valid():
-            file = request.FILES["file"]
-            if file.name.endswith(".csv"):
+    form = FileUploadForm(request.POST, request.FILES)
 
+    if form.is_valid():
+        file = request.FILES["file"]
+        try:
+            if file.name.endswith(".csv"):
                 decoded_file = file.read().decode("utf-8").splitlines()
                 reader = csv.reader(decoded_file)
                 next(reader)
 
+                # Find the highest existing product number, even if products were deleted
+                existing_numbers = Product.objects.values_list("number", flat=True)
+                if existing_numbers:
+                    existing_numbers = [
+                        int(num[1:]) for num in existing_numbers if num.startswith("P")
+                    ]
+                    next_number = max(existing_numbers) + 1
+                else:
+                    next_number = 1
+
                 for row in reader:
-                    if len(row) < 1:
+                    if len(row) < 6:
                         continue
                     try:
                         supplier = Supplier.objects.get(id=row[4])
+
+                        # Check if product number already exists and increment next_number
+                        while Product.objects.filter(
+                            number=f"P{next_number:03d}"
+                        ).exists():
+                            next_number += 1
+
                         Product.objects.create(
-                            number=row[0],
+                            number=f"P{next_number:03d}",
                             product_name=row[1],
-                            cost_price=row[2],
-                            sale_price=row[3],
+                            cost_price=int(row[2]),
+                            sale_price=int(row[3]),
                             supplier=supplier,
                             note=row[5],
                         )
-                    except Supplier.DoesNotExist as e:
-                        messages.error(request, f"匯入失敗，找不到供應商: {e}")
+                        next_number += 1
+                    except Supplier.DoesNotExist:
+                        messages.error(request, f"匯入失敗，找不到供應商 ID: {row[4]}")
+                        return redirect("products:index")
+                    except ValueError:
+                        messages.error(
+                            request,
+                            f"匯入失敗，價格必須是有效的數字: {row[2]}, {row[3]}",
+                        )
                         return redirect("products:index")
 
                 messages.success(request, "成功匯入 CSV")
@@ -122,29 +157,62 @@ def import_file(request):
                     },
                     inplace=True,
                 )
+
+                # Find the highest existing product number, even if products were deleted
+                existing_numbers = Product.objects.values_list("number", flat=True)
+                if existing_numbers:
+                    existing_numbers = [
+                        int(num[1:]) for num in existing_numbers if num.startswith("P")
+                    ]
+                    next_number = max(existing_numbers) + 1
+                else:
+                    next_number = 1
+
                 for _, row in df.iterrows():
                     try:
                         supplier = Supplier.objects.get(id=int(row["supplier"]))
+
+                        # Check if product number already exists and increment next_number
+                        while Product.objects.filter(
+                            number=f"P{next_number:03d}"
+                        ).exists():
+                            next_number += 1
+
                         Product.objects.create(
-                            number=str(row["number"]),
+                            number=f"P{next_number:03d}",
                             product_name=str(row["product_name"]),
-                            cost_price=str(row["cost_price"]),
-                            sale_price=str(row["sale_price"]),
+                            cost_price=int(row["cost_price"]),
+                            sale_price=int(row["sale_price"]),
                             supplier=supplier,
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
-                    except Supplier.DoesNotExist as e:
-                        messages.error(request, f"匯入失敗，找不到供應商: {e}")
+                        next_number += 1  # Increment for the next product
+                    except Supplier.DoesNotExist:
+                        messages.error(
+                            request,
+                            f"匯入失敗，找不到供應商 ID: {int(row['supplier'])}",
+                        )
                         return redirect("products:index")
+                    except ValueError:
+                        messages.error(
+                            request,
+                            f"匯入失敗，價格必須是有效的數字: {row['cost_price']}, {row['sale_price']}",
+                        )
+                        return redirect("products:index")
+
                 messages.success(request, "成功匯入 Excel")
                 return redirect("products:index")
 
             else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗 (檔案不是 CSV 或 Excel)")
                 return render(request, "layouts/import.html", {"form": form})
 
-    form = FileUploadForm()
-    return render(request, "layouts/import.html", {"form": form})
+        except Exception as e:
+            messages.error(request, f"匯入失敗: {str(e)}")
+            return redirect("products:index")
+    else:
+        messages.error(request, "表單無效，請檢查上傳的檔案。")
+        return redirect("products:index")
 
 
 def export_csv(request):
@@ -197,7 +265,6 @@ def export_excel(request):
         df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
 
     column_mapping = {
-        "number": "商品編號",
         "product_name": "商品名稱",
         "cost_price": "商品進價",
         "sale_price": "商品售價",
@@ -219,11 +286,10 @@ def export_sample(request):
     response["Content-Disposition"] = "attachment; filename=ProductSample.xlsx"
 
     data = {
-        "number": ["P033"],
         "product_name": ["米"],
         "cost_price": ["100"],
         "sale_price": ["120"],
-        "supplier": ["1"],
+        "supplier": ["2"],
         "note": ["這是一個備註"],
     }
 

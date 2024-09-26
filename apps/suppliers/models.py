@@ -8,17 +8,12 @@ from apps.company.models import Company
 from apps.users.models import CustomUser
 
 
-class SupplierManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(deleted_at=None)
-
-
 class Supplier(models.Model):
     number = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
     telephone = models.CharField(max_length=15)
     contact_person = models.CharField(max_length=20)
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
     gui_number = models.CharField(max_length=8, unique=True)
     address = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
@@ -35,12 +30,6 @@ class Supplier(models.Model):
         CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     note = models.TextField(blank=True, null=True)
-
-    objects = SupplierManager()
-
-    def delete(self):
-        self.deleted_at = timezone.now()
-        self.save()
 
     def __str__(self):
         return f"{self.name} ({self.gui_number})"

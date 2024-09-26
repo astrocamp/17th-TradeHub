@@ -1,13 +1,8 @@
+import json
 from datetime import timedelta
 from math import pi
 
 import pandas as pd
-from bokeh.embed import components
-from bokeh.models import ColumnDataSource
-from bokeh.palettes import Category20c
-from bokeh.plotting import figure
-from bokeh.resources import CDN
-from bokeh.transform import cumsum
 from django.db.models import Count, Sum
 from django.shortcuts import redirect, render
 from django.utils import timezone
@@ -164,88 +159,67 @@ def sales_chart(request):
         .order_by("-total_amount")[:5]
     )
 
-    # 做圓餅圖表
+    # 圓餅圖
     sales_orders = SalesOrder.objects.all()
     sales_data = (
         sales_orders.values("items__product__product_name")
         .annotate(total_quantity=Sum("items__ordered_quantity"))
         .order_by("-total_quantity")
     )
-
     data = {
         "product": [item["items__product__product_name"] for item in sales_data],
         "quantity": [item["total_quantity"] for item in sales_data],
     }
 
     df = pd.DataFrame(data)
-    df["angle"] = df["quantity"] / df["quantity"].sum() * 2 * pi
+    df["percent"] = df["quantity"] / df["quantity"].sum() * 100
 
     num_products = len(df)
 
+    # 設置顏色
     if num_products == 0:
         df = pd.DataFrame({"product": ["無資料"], "quantity": [1]})
-        df["angle"] = [2 * pi]
         df["color"] = ["#d9d9d9"]
     else:
+        # 顏色調色板
+        palette = []
         if num_products == 1:
             palette = ["#1f77b4"]
         elif num_products == 2:
             palette = ["#1f77b4", "#ff7f0e"]
         elif num_products <= 20:
-            palette = Category20c[num_products]
+            palette = [
+                "#1f77b4",
+                "#ff7f0e",
+                "#2ca02c",
+                "#d62728",
+                "#9467bd",
+                "#8c564b",
+                "#e377c2",
+                "#7f7f7f",
+                "#bcbd22",
+                "#17becf",
+            ][:num_products]
         else:
-            palette = Category20c[20]
-
-            top_20 = df[:20]
-            others = df[20:]
-
-            other_sum = others["quantity"].sum()
-            top_20 = top_20.append(
+            palette = ["#1f77b4"] * 20  # 或使用其他顏色
+            others_sum = df["quantity"].sum() - df["quantity"].head(20).sum()
+            df = df.head(20).append(
                 pd.DataFrame(
                     {
                         "product": ["其他"],
-                        "quantity": [other_sum],
-                        "angle": [other_sum / df["quantity"].sum() * 2 * pi],
+                        "quantity": [others_sum],
+                        "color": ["#d9d9d9"],
                     }
                 )
             )
 
-            palette.append("#d9d9d9")
-            df = top_20
-
         df["color"] = palette[: len(df)]
 
-    source1 = ColumnDataSource(df)
-
-    p1 = figure(
-        title="熱銷商品",
-        width=600,
-        height=300,
-        tools="pan,wheel_zoom,box_zoom,reset",
-        toolbar_location="above",
-    )
-
-    p1.wedge(
-        x=0,
-        y=1,
-        radius=0.4,
-        start_angle=cumsum("angle", include_zero=True),
-        end_angle=cumsum("angle"),
-        line_color="white",
-        fill_color="color",
-        legend_field="product",
-        source=source1,
-    )
-
-    p1.grid.grid_line_color = None
-    p1.axis.visible = False
-    p1.legend.location = "top_left"
-    p1.legend.label_text_font_size = "10pt"
-
-    script1, div1 = components(p1)
-
-    bokeh_js = CDN.js_files[0]
-    bokeh_css = CDN.css_files[0] if CDN.css_files else None
+        data1 = {
+            "product": df["product"].tolist(),
+            "quantity": df["quantity"].tolist(),
+            "color": df["color"].tolist(),
+        }
 
     content = {
         "clients_num": clients_num,
@@ -256,10 +230,6 @@ def sales_chart(request):
         "sales_orders_num": sales_orders_num,
         "purchase_orders_num": purchase_orders_num,
         "goods_receipts_num": goods_receipts_num,
-        "script1": script1,
-        "div1": div1,
-        "bokeh_js": bokeh_js,
-        "bokeh_css": bokeh_css,
         "orders_progress_num": orders_progress_num,
         "orders_pending_num": orders_pending_num,
         "sales_orders_progress_num": sales_orders_progress_num,
@@ -275,6 +245,11 @@ def sales_chart(request):
         "vip_clients": vip_clients,
         "first_day_of_month": first_day_of_month_chinese,
         "last_day_of_month": last_day_of_month_chinese,
+        "data": {
+            "product": df["product"].tolist(),
+            "quantity": df["quantity"].tolist(),
+            "color": df["color"].tolist(),
+        },
     }
 
     return render(request, "pages/sales_chart.html", content)

@@ -1,7 +1,7 @@
 {% extends 'layouts/base.html' %}
 
 {% block content %}
-<div class="flex justify-end mt-20 gap-2">
+<div class="flex justify-end mt-10 gap-2">
     <a href="{% url 'suppliers:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
@@ -45,7 +45,6 @@
                     <th><a href="{% url 'suppliers:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商編號{% if order_by == 'number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'suppliers:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'name' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'suppliers:index' %}?sort=telephone&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'telephone' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'suppliers:index' %}?sort=gui_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">統一編號{% if order_by == 'gui_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'suppliers:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'suppliers:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th></th>
@@ -75,7 +74,6 @@
                     <th>{{ supplier.number }}</th>
                     <th>{{ supplier.name }}</th>
                     <th>{{ supplier.telephone }}</th>
-                    <th>{{ supplier.gui_number }}</th>
                     <th>{{ supplier.note }}</th>
                     <th>{{ supplier.updated_at|date:"Y-m-d H:i" }}</th>
                     <th>

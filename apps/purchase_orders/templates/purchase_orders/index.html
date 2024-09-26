@@ -44,7 +44,6 @@
                     </th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'purchase_orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
@@ -69,7 +68,6 @@
                     {% endif %}
                     <th>{{ purchase_order.order_number }}</th>
                     <th>{{ purchase_order.supplier.name }}</th>
-                    <th>{{ purchase_order.supplier_tel }}</th>
                     <th>{{ purchase_order.amount }}</th>
                     <th>{{ purchase_order.note|truncatechars:15 }}</th>
                     <th>{{ purchase_order.updated_at|date:"Y-m-d H:i"  }}</th>

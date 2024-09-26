@@ -1,56 +1,56 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div
-  class="inner_container max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8"
+  class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8"
 >
   <div
     class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
   >
-    <h1 class="text-2xl font-extrabold text-gray-900">{{ product.product_name }}</h1>
+    <h1 class="text-2xl font-extrabold text-gray-900">{{ client.name }}</h1>
     <a
-      href="{% url 'products:index' %}"
+      href="{% url 'clients:index' %}"
       class="rounded-lg bg-blue-500 text-white px-4 py-2 font-semibold shadow-md hover:bg-blue-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
-      返回商品列表
+      返回客戶列表
     </a>
   </div>
   <div class="space-y-6">
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">商品編號:</label>
-        <p class="text-lg text-gray-600">{{ product.number }}</p>
+        <label class="text-lg font-semibold text-gray-800">客戶編號:</label>
+        <p class="text-lg text-gray-600">{{ client.number }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">進價:</label>
-        <p class="text-lg text-gray-600">{{ product.cost_price }}</p>
+        <label class="text-lg font-semibold text-gray-800">電話:</label>
+        <p class="text-lg text-gray-600">{{ client.phone_number }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">進價:</label>
-        <p class="text-lg text-gray-600">{{ product.sale_price }}</p>
+        <label class="text-lg font-semibold text-gray-800">Email:</label>
+        <p class="text-lg text-gray-600">{{ client.email }}</p>
       </div>
       <div class="flex flex-col">
-        <label class="text-lg font-semibold text-gray-800">供應商名稱:</label>
-        <p class="text-lg text-gray-600">{{ product.supplier }}</p>
+        <label class="text-lg font-semibold text-gray-800">地址:</label>
+        <p class="text-lg text-gray-600">{{ client.address }}</p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">備註:</label>
-        <p class="text-lg text-gray-600">{{ product.note }}</p>
+        <p class="text-lg text-gray-600">{{ client.note }}</p>
       </div>
       <div class="flex flex-col">
         <label class="text-lg font-semibold text-gray-800">建立日期:</label>
-        <p class="text-lg text-gray-600">{{ product.created_at|date:"Y-m-d H:i" }}</p>
+        <p class="text-lg text-gray-600">{{ client.created_at|date:"Y-m-d H:i" }}</p>
       </div>
     </div>
   </div>
 
   <div class="flex justify-center gap-4 mt-6">
     <a
-      href="{% url 'products:edit' product.id %}"
+      href="{% url 'clients:edit' client.id %}"
       class="rounded-lg bg-green-500 text-white px-6 py-3 font-semibold shadow-md hover:bg-green-600 transition duration-300 ease-in-out transform hover:scale-105"
     >
       編輯
     </a>
     <form
-      action="{% url 'products:delete' product.id %}"
+      action="{% url 'clients:edit' client.id %}"
       method="POST"
       class="inline-block"
     >

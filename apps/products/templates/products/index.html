@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %} {% block content %}{% load static %}
-<div class="flex justify-end mt-20 gap-2">
+<div class="flex justify-end mt-10 gap-2">
   <a href="{% url 'products:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
@@ -41,8 +41,6 @@
             </th>
             <th><a href="{% url 'products:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
             <th><a href="{% url 'products:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -51,7 +49,7 @@
         </thead>
         <tbody>
           {% for product in products %}
-          <tr class="hover">
+          <tr onclick="window.location.href='{% url 'products:show' product.id %}'" class="hover cursor-pointer">
             {% if product.state == "often" %}
             <th>
               <span class="btn btn-sm btn-success text-lg">經常購買</span>
@@ -67,8 +65,6 @@
             {% endif %}
             <th>{{product.number}}</th>
             <th>{{product.product_name}}</th>
-            <th>{{product.cost_price}}</th>
-            <th>{{product.sale_price}}</th>
             <th>{{product.supplier}}</th>
             <th>{{product.note}}</th>
             <th>{{product.updated_at|date:"Y-m-d H:i"}}</th>

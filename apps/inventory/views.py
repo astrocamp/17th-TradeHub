@@ -52,10 +52,16 @@ def new(request):
             inventory = form.save(commit=False)
             inventory.user = request.user
             inventory.save()
+            messages.success(request, "新增完成!")
             return redirect("inventory:index")
     else:
         form = RestockForm()
     return render(request, "inventory/new.html", {"form": form})
+
+
+def show(request, id):
+    inventory = get_object_or_404(Inventory, id=id)
+    return render(request, "inventory/show.html", {"inventory": inventory})
 
 
 def edit(request, id):
@@ -64,6 +70,7 @@ def edit(request, id):
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
             form.save()
+            messages.success(request, "更新完成!")
             return redirect("inventory:index")
     else:
         form = RestockForm(instance=inventory)

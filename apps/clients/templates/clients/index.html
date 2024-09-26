@@ -1,5 +1,5 @@
 {% extends "layouts/base.html" %} {% block content %}
-<div class="flex justify-end mt-20 gap-2">
+<div class="flex justify-end mt-10 gap-2">
   <a href="{% url 'clients:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
   >
@@ -9,7 +9,7 @@
 </div>
 <div class="divider text-3xl font-bold">客戶列表</div>
 <div class="flex justify-center mt-10">
-  <div class="overflow-x-auto w-full">
+  <div class="overflow w-full">
     <table class="table table-xl text-center">
       <thead>
         <tr class="text-xl">
@@ -42,8 +42,6 @@
           <th><a href="{% url 'clients:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=phone_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">電話{% if order_by == 'phone_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=address&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">地址{% if order_by == 'address' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th><a href="{% url 'clients:index' %}?sort=email&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">Email{% if order_by == 'email' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th><a href="{% url 'clients:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th></th>
@@ -51,7 +49,7 @@
       </thead>
       <tbody>
         {% for client in clients %}
-        <tr class="hover">
+        <tr onclick="window.location.href='{% url 'clients:show' client.id %}'" class="hover cursor-pointer">
           {% if client.state == "often" %}
           <th>
             <span class="btn btn-sm btn-success text-lg">經常購買</span>
@@ -68,23 +66,22 @@
           <th>{{ client.number }}</th>
           <td>{{ client.name }}</td>
           <td>{{ client.phone_number }}</td>
-          <td>{{ client.address }}</td>
-          <td>{{ client.email }}</td>
           <td>{{ client.note }}</td>
           <td>{{ client.created_at|date:"Y-m-d H:i" }}</td>
-          <td class="flex justify-center gap-1">
-            <a href="{% url 'clients:edit' client.id %}" class="btn btn-primary">
-              編輯
-            </a>
-            <form
-              action="{% url 'clients:edit' client.id %}"
-              method="post"
-              onsubmit="return confirm('確認刪除?')"
-            >
-              {% csrf_token %}
-              <button class="btn btn-error" name="delete">刪除</button>
-            </form>
+          <td>
+            <div class="dropdown dropdown-left">
+              <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                <li><a href="{% url 'clients:edit' client.id %}" class="btn btn-primary">編輯</a></li>
+                <li>
+                  <a onclick="return confirm('確認刪除?')" href="{% url 'clients:delete' client.id %}" class="btn btn-error">
+                    刪除
+                  </a>
+                </li>
+              </ul>
+            </div>
           </td>
+
         </tr>
         {% endfor %}
       </tbody>

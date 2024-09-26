@@ -64,6 +64,7 @@ def new(request):
             order.save()
             formset.instance = order
             formset.save()
+            messages.success(request, "新增完成!")
             return redirect("sales_orders:index")
         else:
             return render(
@@ -97,6 +98,7 @@ def edit(request, id):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            messages.success(request, "更新完成!")
             return redirect("sales_orders:show", sales_order.id)
         return render(
             request,
@@ -167,30 +169,44 @@ def export_csv(request):
     writer.writerow(
         [
             "客戶",
+            "客戶電話",
+            "客戶地址",
+            "客戶Email",
             "商品",
-            "數量",
-            "庫存",
+            "訂購數量",
+            "實發數量",
+            "庫存狀態",
             "價位",
             "建立時間",
             "更新時間",
-            "刪除時間",
         ]
     )
 
-    sales_orders = SalesOrder.objects.all()
+    sales_orders = SalesOrder.objects.prefetch_related("items").all()
     for sales_order in sales_orders:
-        writer.writerow(
-            [
-                sales_order.client,
-                sales_order.product,
-                sales_order.quantity,
-                sales_order.stock,
-                sales_order.price,
-                sales_order.created_at,
-                sales_order.last_updated,
-                sales_order.deleted_at,
-            ]
-        )
+        for item in sales_order.items.all():
+            writer.writerow(
+                [
+                    sales_order.client.name,  # Assuming Client model has a name field
+                    sales_order.client_tel,
+                    sales_order.client_address,
+                    sales_order.client_email,
+                    item.product.product_name,  # Assuming Product model has product_name
+                    item.ordered_quantity,
+                    item.shipped_quantity,
+                    item.stock_quantity.state,  # Assuming Inventory model has a state field
+                    item.sale_price,
+                    sales_order.created_at.strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),  # Format datetime
+                    sales_order.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
+                    (
+                        sales_order.deleted_at.strftime("%Y-%m-%d %H:%M:%S")
+                        if sales_order.deleted_at
+                        else ""
+                    ),
+                ]
+            )
 
     return response
 
@@ -201,38 +217,59 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=SalesOrders.xlsx"
 
-    sales_orders = SalesOrder.objects.select_related(
-        "client", "product", "stock"
-    ).values(
+    sales_orders = SalesOrder.objects.prefetch_related("items").values(
         "client__name",
-        "product__product_name",
-        "quantity",
-        "stock__state",
-        "price",
+        "client_tel",
+        "client_address",
+        "client_email",
+        "items__product__product_name",
+        "items__ordered_quantity",
+        "items__shipped_quantity",
+        "items__stock_quantity__state",  # Assuming Inventory model has a state field
+        "items__sale_price",
         "created_at",
-        "last_updated",
-        "deleted_at",
+        "updated_at",
     )
 
-    df = pd.DataFrame(sales_orders)
-    for col in df.select_dtypes(include=["datetime64[ns, UTC]"]).columns:
-        df[col] = df[col].dt.strftime("%Y-%m-%d %H:%M:%S")
+    # Prepare the data for DataFrame
+    data = []
+    for sales_order in sales_orders:
+        data.append(
+            [
+                sales_order["client__name"],
+                sales_order["client_tel"],
+                sales_order["client_address"],
+                sales_order["client_email"],
+                sales_order.get("items__product__product_name", ""),
+                sales_order.get("items__ordered_quantity", ""),
+                sales_order.get("items__shipped_quantity", ""),
+                sales_order.get("items__stock_quantity__state", ""),
+                sales_order.get("items__sale_price", ""),
+                sales_order["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
+                sales_order["updated_at"].strftime("%Y-%m-%d %H:%M:%S"),
+            ]
+        )
 
-    column_mapping = {
-        "client__name": "客戶",
-        "product__product_name": "商品",
-        "quantity": "數量",
-        "stock__state": "庫存",
-        "price": "價位",
-        "created_at": "建立時間",
-        "last_updated": "更新時間",
-        "deleted_at": "刪除時間",
-    }
-
-    df.rename(columns=column_mapping, inplace=True)
+    df = pd.DataFrame(
+        data,
+        columns=[
+            "客戶",
+            "客戶電話",
+            "客戶地址",
+            "客戶Email",
+            "商品",
+            "訂購數量",
+            "實發數量",
+            "庫存狀態",
+            "價位",
+            "建立時間",
+            "更新時間",
+        ],
+    )
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="SalesOrders")
+
     return response
 
 
