@@ -242,9 +242,9 @@ def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
 
     pre_save.disconnect(update_state, sender=Inventory)
-    if instance.safety_stock == 0 and instance.quantity == 0:
-        instance.set_new_stock()
-        instance.save()
+    # if instance.safety_stock == 0 and instance.quantity == 0:
+    #     instance.set_new_stock()
+    #     instance.save()
     if instance.quantity <= 0 and instance.safety_stock != 0:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
@@ -346,5 +346,5 @@ def update_state(sender, instance, **kwargs):
         instance.save()
     else:
         instance.set_normal()
-        instance.save()
+        # instance.save()
     pre_save.connect(update_state, sender=Inventory)

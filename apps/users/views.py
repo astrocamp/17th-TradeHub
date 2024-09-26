@@ -199,7 +199,7 @@ def notifications(request):
     ).order_by("-created_at")[:5]
     sender_type = request.GET.get("sender_type")
     sender_state = request.GET.get("sender_state")
-    unread_count = Notification.objects.filter(is_read=False,user=request.user).count()
+    unread_count = Notification.objects.filter(is_read=False, user=request.user).count()
 
     return render(
         request,
@@ -272,7 +272,8 @@ def unread_count(request):
         return JsonResponse({"unread_count": unread_count})
     else:
         return JsonResponse({"unread_count": 0})
-    
+
+
 def mark_all_as_read(request):
     Notification.objects.all().update(is_read=True)
     return redirect("users:all_notifications")

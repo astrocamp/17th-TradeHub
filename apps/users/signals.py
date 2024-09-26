@@ -1,6 +1,7 @@
+from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.db import models
+
 from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
 from apps.orders.models import Order
@@ -11,8 +12,8 @@ from .models import Notification
 
 
 @receiver(post_save, sender=Order)
-def notify_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
+def notify_order(sender, instance, created, **kwargs):
+    if instance.order_number:
         if created:
             if instance.state == Order.PROGRESS:
                 notification = Notification(
@@ -42,8 +43,8 @@ def notify_order(sender, instance, created, order_number, **kwargs):
 
 
 @receiver(post_save, sender=PurchaseOrder)
-def notify_purchase_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
+def notify_purchase_order(sender, instance, created, **kwargs):
+    if instance.order_number:
         if created:
             if instance.state == PurchaseOrder.PENDING:
                 notification = Notification(
@@ -89,8 +90,8 @@ def notify_purchase_order(sender, instance, created, order_number, **kwargs):
 
 
 @receiver(post_save, sender=GoodsReceipt)
-def notify_goods_receipt(sender, instance, created, order_number, **kwargs):
-    if order_number:
+def notify_goods_receipt(sender, instance, created, **kwargs):
+    if instance.order_number:
         if created:
             if instance.state == GoodsReceipt.TO_BE_RESTOCKED:
                 notification = Notification(
@@ -136,8 +137,8 @@ def notify_goods_receipt(sender, instance, created, order_number, **kwargs):
 
 
 @receiver(post_save, sender=SalesOrder)
-def notify_sale_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
+def notify_sale_order(sender, instance, created, **kwargs):
+    if instance.order_number:
         if created:
             if instance.state == SalesOrder.PENDING:
                 notification = Notification(
@@ -175,15 +176,15 @@ def notify_sale_order(sender, instance, created, order_number, **kwargs):
 
 
 @receiver(post_save, sender=Inventory)
-def notify_inventory(sender, instance, created, number, **kwargs):
-    if number:
+def notify_inventory(sender, instance, created, **kwargs):
+    if instance.number:
         if created:
             if instance.state == Inventory.OUT_STOCK:
                 notification = Notification(
-                message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",
-                sender_type="Inventory",
-                sender_state="out_stock",
-                user=instance.user,
+                    message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",
+                    sender_type="Inventory",
+                    sender_state="out_stock",
+                    user=instance.user,
                 )
                 notification.save()
             elif instance.state == Inventory.LOW_STOCK:

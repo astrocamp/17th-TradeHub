@@ -246,7 +246,7 @@ def update_state(sender, instance, **kwargs):
             client_tel=instance.client_tel,
             client_address=instance.client_address,
             client_email=instance.client_email,
-            client_user=instance.client.user,
+            username=instance.username,
             amount=0,
             note=f"轉銷貨單{time_now}",
         )

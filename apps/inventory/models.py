@@ -1,5 +1,4 @@
-from django.db import models
-from django.db import transaction
+from django.db import models, transaction
 from django.utils import timezone
 from django_fsm import FSMField, transition
 

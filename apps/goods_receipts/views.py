@@ -34,6 +34,7 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
 
     goods_receipts = GoodsReceipt.objects.all()
+    print(goods_receipts)
 
     if state in GoodsReceipt.AVAILABLE_STATES:
         goods_receipts = GoodsReceipt.objects.filter(state=state)
