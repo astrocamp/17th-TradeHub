@@ -7,6 +7,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.users.models import CustomUser
 
+
 class ClientManager(models.Manager):
     def get_queryset(self):
         return super().get_queryset().filter(deleted_at=None)

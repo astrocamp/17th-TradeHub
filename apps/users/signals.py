@@ -1,6 +1,7 @@
+from django.db import models
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
-from django.db import models
+
 from apps.goods_receipts.models import GoodsReceipt
 from apps.inventory.models import Inventory
 from apps.orders.models import Order
@@ -11,203 +12,198 @@ from .models import Notification
 
 
 @receiver(post_save, sender=Order)
-def notify_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
-        if created:
-            if instance.state == Order.PROGRESS:
-                notification = Notification(
-                    message=f"[訂單編號 {instance.order_number}]\n訂單已建立，且進入訂單流程",
-                    sender_type="Order",
-                    sender_state="progress",
-                    user=instance.user,
-                )
-                notification.save()
-        else:
-            if instance.state == Order.PROGRESS:
-                notification = Notification(
-                    message=f"[訂單編號 {instance.order_number}]\n訂單已進入訂單流程",
-                    sender_type="Order",
-                    sender_state="progress",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == Order.FINISHED:
-                notification = Notification(
-                    message=f"[訂單編號 {instance.order_number}]\n訂單已結案",
-                    sender_type="Order",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
+def notify_order(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == Order.PROGRESS:
+            notification = Notification(
+                message=f"[訂單編號 {instance.order_number}]\n訂單已建立，且進入訂單流程",
+                sender_type="Order",
+                sender_state="progress",
+                user=instance.user,
+            )
+            notification.save()
+    else:
+        if instance.state == Order.PROGRESS:
+            notification = Notification(
+                message=f"[訂單編號 {instance.order_number}]\n訂單已進入訂單流程",
+                sender_type="Order",
+                sender_state="progress",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == Order.FINISHED:
+            notification = Notification(
+                message=f"[訂單編號 {instance.order_number}]\n訂單已結案",
+                sender_type="Order",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
 
 
 @receiver(post_save, sender=PurchaseOrder)
-def notify_purchase_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
-        if created:
-            if instance.state == PurchaseOrder.PENDING:
-                notification = Notification(
-                    message=f"[採購單編號 {instance.order_number}]\n等待審核",
-                    sender_type="PurchaseOrder",
-                    sender_state="pending",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == PurchaseOrder.PROGRESS:
-                notification = Notification(
-                    message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
-                    sender_type="PurchaseOrder",
-                    sender_state="progress",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == PurchaseOrder.FINISHED:
-                notification = Notification(
-                    message=f"[採購單編號 {instance.order_number}]\n已結案",
-                    sender_type="PurchaseOrder",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
-        else:
-            if instance.state == PurchaseOrder.PROGRESS:
-                notification = Notification(
-                    message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
-                    sender_type="PurchaseOrder",
-                    sender_state="progress",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == PurchaseOrder.FINISHED:
-                notification = Notification(
-                    message=f"[採購單編號 {instance.order_number}]\n已結案",
-                    sender_type="PurchaseOrder",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
+def notify_purchase_order(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == PurchaseOrder.PENDING:
+            notification = Notification(
+                message=f"[採購單編號 {instance.order_number}]\n等待審核",
+                sender_type="PurchaseOrder",
+                sender_state="pending",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == PurchaseOrder.PROGRESS:
+            notification = Notification(
+                message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
+                sender_type="PurchaseOrder",
+                sender_state="progress",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == PurchaseOrder.FINISHED:
+            notification = Notification(
+                message=f"[採購單編號 {instance.order_number}]\n已結案",
+                sender_type="PurchaseOrder",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
+    else:
+        if instance.state == PurchaseOrder.PROGRESS:
+            notification = Notification(
+                message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
+                sender_type="PurchaseOrder",
+                sender_state="progress",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == PurchaseOrder.FINISHED:
+            notification = Notification(
+                message=f"[採購單編號 {instance.order_number}]\n已結案",
+                sender_type="PurchaseOrder",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
 
 
 @receiver(post_save, sender=GoodsReceipt)
-def notify_goods_receipt(sender, instance, created, order_number, **kwargs):
-    if order_number:
-        if created:
-            if instance.state == GoodsReceipt.TO_BE_RESTOCKED:
-                notification = Notification(
-                    message=f"[進貨單編號 {instance.order_number}]\n待進貨",
-                    sender_type="GoodsReceipt",
-                    sender_state="to_be_restocked",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == GoodsReceipt.TO_BE_STOCKED:
-                notification = Notification(
-                    message=f"[進貨單編號{instance.order_number}]\n已進貨",
-                    sender_type="GoodsReceipt",
-                    sender_state="to_be_stocked",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == GoodsReceipt.FINISHED:
-                notification = Notification(
-                    message=f"[進貨單編號{instance.order_number}]\n已入庫",
-                    sender_type="GoodsReceipt",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
-        else:
-            if instance.state == GoodsReceipt.TO_BE_STOCKED:
-                notification = Notification(
-                    message=f"[進貨單編號{instance.order_number}]\n已進貨",
-                    sender_type="GoodsReceipt",
-                    sender_state="to_be_stocked",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == GoodsReceipt.FINISHED:
-                notification = Notification(
-                    message=f"[進貨單編號{instance.order_number}]\n已入庫",
-                    sender_type="GoodsReceipt",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
+def notify_goods_receipt(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == GoodsReceipt.TO_BE_RESTOCKED:
+            notification = Notification(
+                message=f"[進貨單編號 {instance.order_number}]\n待進貨",
+                sender_type="GoodsReceipt",
+                sender_state="to_be_restocked",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == GoodsReceipt.TO_BE_STOCKED:
+            notification = Notification(
+                message=f"[進貨單編號{instance.order_number}]\n已進貨",
+                sender_type="GoodsReceipt",
+                sender_state="to_be_stocked",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == GoodsReceipt.FINISHED:
+            notification = Notification(
+                message=f"[進貨單編號{instance.order_number}]\n已入庫",
+                sender_type="GoodsReceipt",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
+    else:
+        if instance.state == GoodsReceipt.TO_BE_STOCKED:
+            notification = Notification(
+                message=f"[進貨單編號{instance.order_number}]\n已進貨",
+                sender_type="GoodsReceipt",
+                sender_state="to_be_stocked",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == GoodsReceipt.FINISHED:
+            notification = Notification(
+                message=f"[進貨單編號{instance.order_number}]\n已入庫",
+                sender_type="GoodsReceipt",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
 
 
 @receiver(post_save, sender=SalesOrder)
-def notify_sale_order(sender, instance, created, order_number, **kwargs):
-    if order_number:
-        if created:
-            if instance.state == SalesOrder.PENDING:
-                notification = Notification(
-                    message=f"[銷貨單編號 {instance.order_number}]\n待出貨",
-                    sender_type="SalesOrder",
-                    sender_state="pending",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == SalesOrder.FINISHED:
-                notification = Notification(
-                    message=f"[銷貨單編號{instance.order_number}]\n已結案",
-                    sender_type="SalesOrder",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
-        else:
-            if instance.state == SalesOrder.PROGRESS:
-                notification = Notification(
-                    message=f"[銷貨單編號{instance.order_number}]\n已出貨",
-                    sender_type="SalesOrder",
-                    sender_state="progress",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == SalesOrder.FINISHED:
-                notification = Notification(
-                    message=f"[銷貨單編號{instance.order_number}]\n已結案",
-                    sender_type="SalesOrder",
-                    sender_state="finished",
-                    user=instance.user,
-                )
-                notification.save()
+def notify_sale_order(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == SalesOrder.PENDING:
+            notification = Notification(
+                message=f"[銷貨單編號 {instance.order_number}]\n待出貨",
+                sender_type="SalesOrder",
+                sender_state="pending",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == SalesOrder.FINISHED:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已結案",
+                sender_type="SalesOrder",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
+    else:
+        if instance.state == SalesOrder.PROGRESS:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已出貨",
+                sender_type="SalesOrder",
+                sender_state="progress",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == SalesOrder.FINISHED:
+            notification = Notification(
+                message=f"[銷貨單編號{instance.order_number}]\n已結案",
+                sender_type="SalesOrder",
+                sender_state="finished",
+                user=instance.user,
+            )
+            notification.save()
 
 
 @receiver(post_save, sender=Inventory)
-def notify_inventory(sender, instance, created, number, **kwargs):
-    if number:
-        if created:
-            if instance.state == Inventory.OUT_STOCK:
-                notification = Notification(
+def notify_inventory(sender, instance, created, **kwargs):
+    if created:
+        if instance.state == Inventory.OUT_STOCK:
+            notification = Notification(
                 message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",
                 sender_type="Inventory",
                 sender_state="out_stock",
                 user=instance.user,
-                )
-                notification.save()
-            elif instance.state == Inventory.LOW_STOCK:
-                notification = Notification(
-                    message=f"[庫存項目{instance.product.product_name}]\n已建立，現有庫存低於預設安全庫存量",
-                    sender_type="Inventory",
-                    sender_state="low_stock",
-                    user=instance.user,
-                )
-                notification.save()
-        else:
-            if instance.state == Inventory.OUT_STOCK:
-                notification = Notification(
-                    message=f"[庫存項目{instance.product.product_name}]\n目前庫存量為0",
-                    sender_type="Inventory",
-                    sender_state="out_stock",
-                    user=instance.user,
-                )
-                notification.save()
-            elif instance.state == Inventory.LOW_STOCK:
-                notification = Notification(
-                    message=f"[庫存項目{instance.product.product_name}]\n現有庫存數量低於預設安全庫存量",
-                    sender_type="Inventory",
-                    sender_state="low_stock",
-                    user=instance.user,
-                )
-                notification.save()
+            )
+            notification.save()
+        elif instance.state == Inventory.LOW_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n已建立，現有庫存低於預設安全庫存量",
+                sender_type="Inventory",
+                sender_state="low_stock",
+                user=instance.user,
+            )
+            notification.save()
+    else:
+        if instance.state == Inventory.OUT_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n目前庫存量為0",
+                sender_type="Inventory",
+                sender_state="out_stock",
+                user=instance.user,
+            )
+            notification.save()
+        elif instance.state == Inventory.LOW_STOCK:
+            notification = Notification(
+                message=f"[庫存項目{instance.product.product_name}]\n現有庫存數量低於預設安全庫存量",
+                sender_type="Inventory",
+                sender_state="low_stock",
+                user=instance.user,
+            )
+            notification.save()
