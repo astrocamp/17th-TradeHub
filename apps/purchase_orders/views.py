@@ -3,7 +3,7 @@ import random
 import string
 from datetime import datetime, timedelta
 
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -65,6 +65,7 @@ def new(request):
             order.save()
             formset.instance = order
             formset.save()
+            messages.success(request, "新增完成!")
             return redirect("purchase_orders:index")
         else:
             return render(
@@ -98,6 +99,7 @@ def edit(request, id):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            messages.success(request, "更新完成!")
             return redirect("purchase_orders:show", purchase_order.id)
         return render(
             request,

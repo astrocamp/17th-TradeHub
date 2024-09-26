@@ -3,7 +3,6 @@ import random
 import string
 
 import pandas as pd
-import pytz
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -65,6 +64,7 @@ def new(request):
             order.save()
             formset.instance = order
             formset.save()
+            messages.success(request, "新增完成!")
             return redirect("goods_receipts:index")
         else:
             return render(
@@ -97,6 +97,7 @@ def edit(request, id):
         if form.is_valid() and formset.is_valid():
             form.save()
             formset.save()
+            messages.success(request, "更新完成!")
             return redirect("goods_receipts:show", goods_receipt.id)
         return render(
             request,
@@ -175,30 +176,45 @@ def export_csv(request):
     writer.writerow(
         [
             "收據號碼",
-            "供應商",
+            "供應商名稱",
+            "供應商電話",
+            "聯絡人",
+            "供應商Email",
             "商品",
-            "數量",
+            "訂購數量",
+            "實收數量",
+            "成本價格",
+            "金額",
             "傳送方式",
             "建立時間",
-            "刪除時間",
             "備註",
         ]
     )
 
-    goods_receipts = GoodsReceipt.objects.all()
+    goods_receipts = (
+        GoodsReceipt.objects.select_related("supplier").prefetch_related("items").all()
+    )
     for goods_receipt in goods_receipts:
-        writer.writerow(
-            [
-                goods_receipt.receipt_number,
-                goods_receipt.supplier,
-                goods_receipt.goods_name,
-                goods_receipt.quantity,
-                goods_receipt.method,
-                goods_receipt.date,
-                goods_receipt.deleted_at,
-                goods_receipt.note,
-            ]
-        )
+        for item in goods_receipt.items.all():
+            writer.writerow(
+                [
+                    goods_receipt.order_number,
+                    goods_receipt.supplier.name,  # Assuming Supplier model has a name field
+                    goods_receipt.supplier_tel,
+                    goods_receipt.contact_person,
+                    goods_receipt.supplier_email,
+                    item.product.product_name,  # Assuming Product model has a product_name field
+                    item.ordered_quantity,
+                    item.received_quantity,
+                    item.cost_price,
+                    goods_receipt.amount,
+                    goods_receipt.receiving_method,
+                    goods_receipt.created_at.strftime(
+                        "%Y-%m-%d %H:%M:%S"
+                    ),  # Formatting date
+                    goods_receipt.note,
+                ]
+            )
 
     return response
 
@@ -209,36 +225,71 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=GoodsReceipts.xlsx"
 
-    goods_receipts = GoodsReceipt.objects.select_related("product", "supplier").values(
-        "receipt_number",
-        "supplier__name",
-        "goods_name__product_name",
-        "quantity",
-        "method",
-        "date",
-        "deleted_at",
-        "note",
+    goods_receipts = (
+        GoodsReceipt.objects.select_related("supplier")
+        .prefetch_related("items")
+        .values(
+            "order_number",
+            "supplier__name",
+            "supplier_tel",
+            "contact_person",
+            "supplier_email",
+            "items__product__product_name",
+            "items__ordered_quantity",
+            "items__received_quantity",
+            "items__cost_price",
+            "amount",
+            "receiving_method",
+            "created_at",
+            "note",
+        )
     )
 
-    df = pd.DataFrame(goods_receipts)
-    for col in df.select_dtypes(include=["datetime64[ns, UTC]"]).columns:
-        df[col] = df[col].dt.strftime("%Y-%m-%d")
+    # Prepare the data for DataFrame
+    data = []
+    for goods_receipt in goods_receipts:
+        data.append(
+            [
+                goods_receipt["order_number"],
+                goods_receipt["supplier__name"],
+                goods_receipt["supplier_tel"],
+                goods_receipt["contact_person"],
+                goods_receipt["supplier_email"],
+                goods_receipt.get("items__product__product_name", ""),
+                goods_receipt.get("items__ordered_quantity", ""),
+                goods_receipt.get("items__received_quantity", ""),
+                goods_receipt.get("items__cost_price", ""),
+                goods_receipt["amount"],
+                goods_receipt["receiving_method"],
+                goods_receipt["created_at"].strftime(
+                    "%Y-%m-%d %H:%M:%S"
+                ),  # Formatting date
+                goods_receipt["note"],
+            ]
+        )
 
-    column_mapping = {
-        "receipt_number": "收據號碼",
-        "supplier__name": "供應商",
-        "goods_name__product_name": "商品",
-        "quantity": "數量",
-        "method": "傳送方式",
-        "date": "建立時間",
-        "deleted_at": "刪除時間",
-        "note": "備註",
-    }
-
-    df.rename(columns=column_mapping, inplace=True)
+    df = pd.DataFrame(
+        data,
+        columns=[
+            "收據號碼",
+            "供應商名稱",
+            "供應商電話",
+            "聯絡人",
+            "供應商Email",
+            "商品",
+            "訂購數量",
+            "實收數量",
+            "成本價格",
+            "金額",
+            "傳送方式",
+            "建立時間",
+            "備註",
+        ],
+    )
 
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="GoodsReceipts")
+
     return response
 
 

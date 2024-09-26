@@ -29,7 +29,7 @@ POSITION_CHOICES = [
 
 class CustomUser(AbstractUser):
 
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=False)
     birthday = models.DateField(blank=True, null=True)
     phone = models.CharField(max_length=15, blank=True, null=False, default="")
     address = models.CharField(max_length=100, blank=False, null=False, default="")

@@ -1,7 +1,7 @@
 import csv
 from datetime import datetime, timedelta, timezone
 
-# import pandas as pd
+import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models.signals import pre_save
@@ -50,6 +50,7 @@ def new(request):
         form = RestockForm(request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "新增完成!")
             return redirect("inventory:index")
     else:
         form = RestockForm()
@@ -67,6 +68,7 @@ def edit(request, id):
         form = RestockForm(request.POST, instance=inventory)
         if form.is_valid():
             form.save()
+            messages.success(request, "更新完成!")
             return redirect("inventory:index")
     else:
         form = RestockForm(instance=inventory)
