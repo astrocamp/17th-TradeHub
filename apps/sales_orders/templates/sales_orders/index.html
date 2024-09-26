@@ -38,8 +38,8 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">銷貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">銷貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'client_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <!-- <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -69,8 +69,8 @@
                       value="{{ sales_order.id }}"
                       class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /> {% endcomment %}
-                    <th class="text-xl">{{ sales_order.order_number }}</th>
-                    <th class="mobile text-xl">{{ sales_order.client.name }}</th>
+                    <th class="mobile text-xl">{{ sales_order.order_number }}</th>
+                    <th class="text-xl">{{ sales_order.client.name }}</th>
                     <th class="mobile text-xl">{{ sales_order.client_tel }}</th>
                     <th class="mobile text-xl">{{ sales_order.amount }}</th>
                     <!-- <th class="mobile">{{ sales_order.note|date:"Y-m-d" }}</th>

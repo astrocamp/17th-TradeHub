@@ -42,8 +42,8 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <!-- <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -67,15 +67,16 @@
                       <span class="btn btn-sm btn-warning text-white text-lg">進行中</span>
                     </th>
                     {% endif %}
-                    <th class="text-xl">{{ purchase_order.order_number }}</th>
-                    <th class="mobile text-xl">{{ purchase_order.supplier.name }}</th>
+                    <th class="mobile text-xl">{{ purchase_order.order_number }}</th>
+                    <th class="text-xl">{{ purchase_order.supplier.name }}</th>
                     <th class="mobile text-xl">{{ purchase_order.supplier_tel }}</th>
                     <th class="mobile text-xl">{{ purchase_order.amount }}</th>
                     <th class="mobile text-xl">{{ purchase_order.note|truncatechars:15 }}</th>
                     <!-- <th class="mobile text-xl">{{ purchase_order.updated_at|date:"Y-m-d H:i"  }}</th> -->
                     <th>
                       <div class="dropdown dropdown-left">
-                        <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
+                        <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1 white-space: nowrap;
+                      }" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
                           <li><a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
                           <li>
