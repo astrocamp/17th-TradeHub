@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="flex justify-end mt-10 gap-2">
-  <a href="{% url 'sales_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
+  <!-- <a href="{% url 'sales_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
-  >
+  > -->
 
   <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
@@ -40,7 +40,6 @@
                     </th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">銷貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'client_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
@@ -71,7 +70,6 @@
                     /> {% endcomment %}
                     <th>{{ sales_order.order_number }}</th>
                     <th>{{ sales_order.client.name }}</th>
-                    <th>{{ sales_order.client_tel }}</th>
                     <th>{{ sales_order.amount }}</th>
                     <th>{{ sales_order.note|date:"Y-m-d" }}</th>
                     <th>{{ sales_order.updated_at|date:"Y-m-d H:i" }}</th>

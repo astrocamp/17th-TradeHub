@@ -55,16 +55,23 @@ def new(request):
     return render(request, "products/new.html", {"form": form})
 
 
+def show(request, id):
+    product = get_object_or_404(Product, id=id)
+    return render(request, "products/show.html", {"product": product})
+
+
 def edit(request, id):
     product = get_object_or_404(Product, id=id)
+    form = ProductForm(instance=product)
     if request.method == "POST":
         form = ProductForm(request.POST, instance=product)
         if form.is_valid():
             form.save()
             return redirect("products:index")
-
-    else:
-        form = ProductForm(instance=product)
+        else:
+            return render(
+                request, "products/edit.html", {"product": product, "form": form}
+            )
     return render(request, "products/edit.html", {"product": product, "form": form})
 
 

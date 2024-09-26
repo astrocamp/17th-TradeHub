@@ -7,7 +7,7 @@ app_name = "pages"
 
 urlpatterns = [
     path("", views.sales_chart, name="home"),
-    path("welcome/", views.welcome, name="welcome"),
+    # path("welcome/", views.welcome, name="welcome"),
     path("home", views.out_home, name="out_home"),
     path("search/", views.search, name="search"),
 ]

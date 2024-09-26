@@ -1,6 +1,6 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div
-  class="max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-lg space-y-8 mt-8"
+  class="inner_container max-w-3xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8"
 >
   <div
     class="flex justify-between items-center border-b border-gray-200 pb-4 mb-6"
@@ -13,39 +13,40 @@
       返回供應商列表
     </a>
   </div>
-
   <div class="space-y-6">
-    <div class="flex flex-col"></div>
-      <label class="text-lg font-semibold text-gray-800">供應商編號:</label>
-      <p class="text-lg text-gray-600">{{ supplier.number }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">電話:</label>
-      <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
-      <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">Email:</label>
-      <p class="text-lg text-gray-600">{{ supplier.email }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">統一編號:</label>
-      <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">地址:</label>
-      <p class="text-lg text-gray-600">{{ supplier.address }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">備註:</label>
-      <p class="text-lg text-gray-600">{{ supplier.note }}</p>
-    </div>
-    <div class="flex flex-col">
-      <label class="text-lg font-semibold text-gray-800">建立日期:</label>
-      <p class="text-lg text-gray-600">{{ supplier.created_at|date:"Y-m-d H:i" }}</p>
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">供應商編號:</label>
+        <p class="text-lg text-gray-600">{{ supplier.number }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">電話:</label>
+        <p class="text-lg text-gray-600">{{ supplier.telephone }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">聯絡人:</label>
+        <p class="text-lg text-gray-600">{{ supplier.contact_person }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">Email:</label>
+        <p class="text-lg text-gray-600">{{ supplier.email }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">統一編號:</label>
+        <p class="text-lg text-gray-600">{{ supplier.gui_number }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">地址:</label>
+        <p class="text-lg text-gray-600">{{ supplier.address }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">備註:</label>
+        <p class="text-lg text-gray-600">{{ supplier.note }}</p>
+      </div>
+      <div class="flex flex-col">
+        <label class="text-lg font-semibold text-gray-800">建立日期:</label>
+        <p class="text-lg text-gray-600">{{ supplier.created_at|date:"Y-m-d H:i" }}</p>
+      </div>
     </div>
   </div>
 

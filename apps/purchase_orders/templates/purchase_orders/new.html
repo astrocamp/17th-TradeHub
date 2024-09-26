@@ -1,8 +1,8 @@
 {% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
-    <div class="max-w-5xl mx-auto p-6 bg-white shadow-md border rounded-lg mt-8">
-        <form action="{% url 'purchase_orders:new' %}" method="POST" class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+    <div class="inner_container max-w-5xl mx-auto p-6 bg-white shadow-md border rounded-lg mt-8">
+        <form action="{% url 'purchase_orders:new' %}" method="POST" class="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {% csrf_token %}
 
             <div class=" flex justify-between items-end col-span-full p-2 px-4">
@@ -53,12 +53,11 @@
             {{ formset.management_form }}
             <div class="col-span-full rounded-lg bg-white shadow-sm border p-4">
                 <h2 class="text-2xl font-bold text-gray-800 text-center mb-4">採購單細項</h2>
-
                 <!-- Table header -->
                 <div class="flex items-center justify-between p-4 gap-4 text-center border-b-2 border-gray-200 mb-4">
-                    <span class="flex-1 text-lg font-semibold text-gray-800">商品名稱</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">商品數量</span>
-                    <span class="flex-1 text-lg font-semibold text-gray-800">商品進價</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">名稱</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">數量</span>
+                    <span class="flex-1 text-lg font-semibold text-gray-800">進價</span>
                     <span class="flex-1 text-lg font-semibold text-gray-800">小計</span>
                     <button type="button" id="add-item" class="bg-blue-500 text-white py-2 px-4 rounded-md hover:bg-blue-600 transition">
                         新增
@@ -69,10 +68,18 @@
                     {% for form in formset %}
                         <fieldset class="p-3 bg-gray-100 ">
                             <div class="flex items-center gap-4">
-                                <div class="flex-1">{{ form.product }}</div>
-                                <div class="flex-1">{{ form.quantity }}</div>
-                                <div class="flex-1">{{ form.cost_price }}</div>
-                                <div class="flex-1">{{ form.subtotal }}</div>
+                                <div class="flex-1">
+                                    {{ form.product }}
+                                </div>
+                                <div class="flex-1">
+                                    {{ form.quantity }}
+                                </div>
+                                <div class="flex-1">
+                                    {{ form.cost_price }}
+                                </div>
+                                <div class="flex-1">
+                                    {{ form.subtotal }}
+                                </div>
                                 <div class="mx-4 text-center">
                                     <button type="button" class="bg-red-500 text-white py-2 px-4 rounded-md hover:bg-red-600 transition delete-item">
                                         刪除

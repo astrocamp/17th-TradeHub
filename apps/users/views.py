@@ -37,8 +37,8 @@ def register(request):
             user.company = company
             user.save()
             login(request, user)
-
-            return redirect("pages:welcome")
+            messages.success(request, "註冊成功，並完成登入!")
+            return redirect("pages:home")
 
         else:
             return render(request, "users/register.html", {"user_form": user_form})
