@@ -47,11 +47,11 @@ class Client(models.Model):
     def __str__(self):
         return self.name
 
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_phone_number(self.phone_number)
-        super().save(*args, **kwargs)
-        self.number = f"C{self.id:03d}"
-        super().save(update_fields=["number"])
+    # def save(self, *args, **kwargs):
+    #     self.phone_number = self.format_phone_number(self.phone_number)
+    #     super().save(update_fields=["phone_number"])
+    #     self.number = f"C{self.id:03d}"
+    #     super().save(update_fields=["number"])
 
     def format_phone_number(self, number):
         number = re.sub(r"\D", "", number)

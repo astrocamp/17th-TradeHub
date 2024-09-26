@@ -45,11 +45,11 @@ class Supplier(models.Model):
     def __str__(self):
         return f"{self.name} ({self.gui_number})"
 
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_telephone_number(self.telephone)
-        super().save(*args, **kwargs)
-        self.number = f"S{self.id:03d}"
-        super().save(update_fields=["number"])
+    # def save(self, *args, **kwargs):
+    #     self.phone_number = self.format_telephone_number(self.telephone)
+    #     super().save(*args, **kwargs)
+    #     self.number = f"S{self.id:03d}"
+    #     super().save(update_fields=["number"])
 
     def format_telephone_number(self, number):
         number = re.sub(r"\D", "", number)

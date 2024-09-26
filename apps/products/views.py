@@ -1,5 +1,6 @@
 import csv
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
@@ -8,6 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.inventory.models import Inventory
 from apps.products.models import Product
@@ -51,6 +53,7 @@ def new(request):
         if form.is_valid():
             product = form.save(commit=False)
             product.user = request.user
+            product.number = generate_number(Product)
             product.save()
             return redirect("products:index")
         return render(request, "products/new.html", {"form": form})
@@ -235,12 +238,23 @@ def export_sample(request):
     return response
 
 
+def generate_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(number__contains=today).last())
+    order_suffix = f"P{today_num:03d}"
+    if today_num:
+        return f"{order_suffix}"
+    else:
+        return f"P001"
+
+
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
-    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
 
     if not Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
+            number=generate_number(Inventory),
             product=instance,
             supplier=instance.supplier,
             quantity=0,

@@ -44,10 +44,10 @@ class Product(models.Model):
     def __str__(self):
         return self.product_name
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.number = f"I{self.id:03d}"
-        super().save(update_fields=["number"])
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     self.number = f"I{self.id:03d}"
+    #     super().save(update_fields=["number"])
 
     OFTEN = "often"
     HAPLY = "haply"

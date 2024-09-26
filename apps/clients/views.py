@@ -1,4 +1,6 @@
 import csv
+import random
+import string
 
 import pandas as pd
 from django.contrib import messages
@@ -7,6 +9,7 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 
 from apps.sales_orders.models import SalesOrder
 
@@ -46,7 +49,10 @@ def new(request):
     if request.method == "POST":
         form = ClientForm(request.POST)
         if form.is_valid():
-            form.save()
+            client = form.save(commit=False)
+            client.phone_number = client.format_phone_number(client.phone_number)
+            client.number = generate_number(Client)
+            client.save()
             return redirect("clients:index")
         else:
             return render(request, "clients/new.html", {"form": form})
@@ -198,6 +204,16 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
+
+
+def generate_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(name__contains=today).last())
+    order_suffix = f"C{today_num:03d}"
+    if today_num:
+        return f"{order_suffix}"
+    else:
+        return f"C001"
 
 
 @receiver(post_save, sender=Client)

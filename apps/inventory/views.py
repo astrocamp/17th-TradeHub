@@ -51,6 +51,7 @@ def new(request):
         if form.is_valid():
             inventory = form.save(commit=False)
             inventory.user = request.user
+            inventory.number = generate_order_number(PurchaseOrder)
             inventory.save()
             return redirect("inventory:index")
     else:
@@ -269,25 +270,25 @@ def update_state(sender, instance, **kwargs):
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price * instance.safety_stock,
             )
-            order_number = generate_order_number(order)
+            order_number = generate_order_number(PurchaseOrder)
             order.order_number = order_number
             order.amount = orderitem.subtotal
             order.save(update_fields=["order_number", "amount"])
 
-            # else:
-            #     message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
-            #     order = PurchaseOrder.objects.get(
-            #         supplier=instance.supplier,
-            #         state=PurchaseOrder.PENDING,
-            #     )
-            #     order.note += "\n" + message
-            #     orderitem = ProductItem.objects.create(
-            #         purchase_order=order,
-            #         product=instance.product,
-            #         quantity=instance.safety_stock,
-            #         cost_price=instance.product.cost_price,
-            #         subtotal=instance.product.cost_price * instance.safety_stock,
-            #     )
+        else:
+            message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
+            order = PurchaseOrder.objects.get(
+                supplier=instance.supplier,
+                state=PurchaseOrder.PENDING,
+            )
+            order.note += "\n" + message
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price * instance.safety_stock,
+            )
             order.amount += orderitem.subtotal
             order.save(update_fields=["amount"])
         instance.set_out_stock()
@@ -301,6 +302,7 @@ def update_state(sender, instance, **kwargs):
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
             supplier = Supplier.objects.get(name=instance.supplier.name)
             order = PurchaseOrder.objects.create(
+                order_number=generate_order_number(PurchaseOrder),
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
                 contact_person=supplier.contact_person,
@@ -317,28 +319,26 @@ def update_state(sender, instance, **kwargs):
                 subtotal=instance.product.cost_price
                 * (instance.safety_stock - instance.quantity),
             )
-            order_number = generate_order_number(order)
-            order.order_number = order_number
             order.amount = orderitem.subtotal
-            order.save(update_fields=["order_number", "amount"])
-            # else:
-            #     message = (
-            #         f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
-            #     )
-            #     order = PurchaseOrder.objects.get(
-            #         supplier=instance.supplier,
-            #         state=PurchaseOrder.PENDING,
-            #         note__contains="低水位",
-            #     )
-            #     order.note += "\n" + message
-            #     orderitem = ProductItem.objects.create(
-            #         purchase_order=order,
-            #         product=instance.product,
-            #         quantity=instance.safety_stock - instance.quantity,
-            #         cost_price=instance.product.cost_price,
-            #         subtotal=instance.product.cost_price
-            #         * (instance.safety_stock - instance.quantity),
-            #     )
+            order.save(update_fields=["amount"])
+        else:
+            message = (
+                f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
+            )
+            order = PurchaseOrder.objects.get(
+                supplier=instance.supplier,
+                state=PurchaseOrder.PENDING,
+                note__contains="低水位",
+            )
+            order.note += "\n" + message
+            orderitem = ProductItem.objects.create(
+                purchase_order=order,
+                product=instance.product,
+                quantity=instance.safety_stock - instance.quantity,
+                cost_price=instance.product.cost_price,
+                subtotal=instance.product.cost_price
+                * (instance.safety_stock - instance.quantity),
+            )
             orderitem.quantity += instance.safety_stock - instance.quantity
             order.amount += orderitem.subtotal
             order.save(update_fields=["amount"])

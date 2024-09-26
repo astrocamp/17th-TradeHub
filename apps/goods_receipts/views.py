@@ -63,11 +63,9 @@ def new(request):
             order.username = request.user.username
             order.user = request.user
             with transaction.atomic():
-                order.save()
-                order.order_number = generate_order_number(order)
-                order.save()
+                order.order_number = generate_order_number(GoodsReceipt)
                 formset.instance = order
-                formset.save()
+                order.save()
             return redirect("goods_receipts:index")
         else:
             return render(
@@ -166,13 +164,24 @@ def load_product_info(request):
     return JsonResponse({"cost_price": product.cost_price})
 
 
-def generate_order_number(order):
+# def generate_order_number(order):
+#     today = timezone.localtime().strftime("%Y%m%d")
+#     order_id = order.id
+#     order_suffix = f"{order_id:03d}"
+#     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+#     random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
+#     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
+
+
+def generate_order_number(model_name):
     today = timezone.localtime().strftime("%Y%m%d")
-    order_id = order.id
-    order_suffix = f"{order_id:03d}"
+    today_num = bool(model_name.objects.filter(name__contains=today).last())
+    order_suffix = f"{today_num:03d}"
     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
-    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
-    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
+    if today_num:
+        return f"{today}{random_code_1}{order_suffix+1}"
+    else:
+        return f"{today}{random_code_1}001"
 
 
 def export_csv(request):
@@ -277,15 +286,15 @@ def update_state(sender, instance, **kwargs):
                             last_updated=timezone.now(),
                             note=note,
                         )
-                else:
-                    Inventory.objects.create(
-                        product=item.product,
-                        supplier=instance.supplier,
-                        quantity=item.received_quantity,
-                        safety_stock=0,
-                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
-                        last_updated=time_now,
-                    )
+                # else:
+                #     Inventory.objects.create(
+                #         product=item.product,
+                #         supplier=instance.supplier,
+                #         quantity=item.received_quantity,
+                #         safety_stock=0,
+                #         note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
+                #         last_updated=time_now,
+                #     )
 
                 item.ordered_quantity -= item.received_quantity
                 item.received_quantity = 0

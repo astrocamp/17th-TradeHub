@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
+from django.utils import timezone
 from django.views.decorators.http import require_POST
 
 from .forms.supplier_form import FileUploadForm, SupplierForm
@@ -45,6 +46,7 @@ def new(request):
         if form.is_valid():
             supplier = form.save(commit=False)
             supplier.user = request.user
+            supplier.number = generate_number(Supplier)
             supplier.save()
             return redirect("suppliers:index")
         else:
@@ -252,3 +254,13 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Suppliers")
 
     return response
+
+
+def generate_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(name__contains=today).last())
+    order_suffix = f"P{today_num:03d}"
+    if today_num:
+        return f"{order_suffix}"
+    else:
+        return f"P001"

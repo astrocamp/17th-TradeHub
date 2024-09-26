@@ -59,10 +59,9 @@ def new(request):
             order = form.save(commit=False)
             order.username = request.user.username
             order.user = request.user
-            order.save()
-            order.order_number = generate_order_number(order)
-            order.save()
+            order.order_number = generate_order_number(SalesOrder)
             formset.instance = order
+            order.save()
             formset.save()
             return redirect("sales_orders:index")
         else:
@@ -234,6 +233,17 @@ def export_excel(request):
     with pd.ExcelWriter(response, engine="openpyxl") as writer:
         df.to_excel(writer, index=False, sheet_name="SalesOrders")
     return response
+
+
+def generate_order_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(name__contains=today).last())
+    order_suffix = f"{today_num:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    if today_num:
+        return f"{today}{random_code_1}{order_suffix}"
+    else:
+        return f"{today}{random_code_1}001"
 
 
 @receiver(post_save, sender=SalesOrder)

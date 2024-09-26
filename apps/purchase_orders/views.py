@@ -61,10 +61,9 @@ def new(request):
             order = form.save(commit=False)
             order.username = request.user.username
             order.user = request.user
-            order.save()
-            order.order_number = generate_order_number(order)
-            order.save()
+            order.order_number = generate_order_number(PurchaseOrder)
             formset.instance = order
+            order.save()
             formset.save()
             return redirect("purchase_orders:index")
         else:
@@ -155,15 +154,6 @@ def load_product_info(request):
     product_id = request.GET.get("id")
     product = Product.objects.get(id=product_id)
     return JsonResponse({"cost_price": product.cost_price})
-
-
-def generate_order_number(order):
-    today = timezone.localtime().strftime("%Y%m%d")
-    order_id = order.id
-    order_suffix = f"{order_id:03d}"
-    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
-    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
-    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
 def export_csv(request):
@@ -272,6 +262,17 @@ def export_excel(request):
     return response
 
 
+def generate_order_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(order_number__contains=today).last())
+    order_suffix = f"{today_num:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    if today_num:
+        return f"{today}{random_code_1}{order_suffix}"
+    else:
+        return f"{today}{random_code_1}001"
+
+
 @receiver(post_save, sender=PurchaseOrder)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
@@ -290,7 +291,7 @@ def update_state(sender, instance, **kwargs):
                     item.save()
 
             receipt = GoodsReceipt.objects.create(
-                order_number=instance.order_number,
+                order_number=generate_order_number(GoodsReceipt),
                 user=instance.user,
                 supplier=instance.supplier,
                 supplier_tel=instance.supplier_tel,
