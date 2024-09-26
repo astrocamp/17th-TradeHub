@@ -246,6 +246,7 @@ def update_state(sender, instance, **kwargs):
             client_tel=instance.client_tel,
             client_address=instance.client_address,
             client_email=instance.client_email,
+            client_user=instance.client.user,
             amount=0,
             note=f"轉銷貨單{time_now}",
         )
@@ -269,6 +270,6 @@ def update_state(sender, instance, **kwargs):
 def transform_sales_order(request, id):
     order = get_object_or_404(Order, id=id)
     order.is_finished = True
-    post_save.send(sender=Order, instance=order, created=True)
+    post_save.send(sender=Order, instance=order, created=False)
     messages.success(request, "轉銷貨單完成!")
     return redirect("orders:index")

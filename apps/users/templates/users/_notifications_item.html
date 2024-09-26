@@ -10,12 +10,12 @@
     <a href="{% url 'sales_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
 {% endif %}
     <div class="flex justify-between text-sm">
-      <p>{{ notification.created_at|date:"y/m/d H:i" }}</p>
-      {% if not notification.is_read %}
-        <span class="text-red-500">(未讀)</span>
+        <p>{{ notification.created_at|date:"y/m/d H:i" }}</p>
+        {% if not notification.is_read %}
+            <span class="text-red-500">(未讀)</span>
       {% endif %}
     </div>
     <div class="flex flex-col font-bold text-sm">
-      <pre>{{ notification.message }}</pre>
+        <pre>{{ notification.message }}</pre>
     </div>
-  </a>
+</a>

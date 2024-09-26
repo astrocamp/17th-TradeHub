@@ -5,7 +5,7 @@ from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
-
+from apps.users.models import CustomUser
 
 class ClientManager(models.Manager):
     def get_queryset(self):
@@ -24,6 +24,13 @@ class Client(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
+        related_name="clients",
+        blank=True,
+        null=True,
+    )
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
         related_name="clients",
         blank=True,
         null=True,

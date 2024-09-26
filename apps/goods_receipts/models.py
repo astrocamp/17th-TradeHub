@@ -38,7 +38,7 @@ class GoodsReceipt(models.Model):
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
     user = models.ForeignKey(
-        CustomUser, on_delete=models.PROTECT, blank=True, null=True
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     RECEIVING_METHOD_CHOICES = [
         ("貨運", "貨運"),

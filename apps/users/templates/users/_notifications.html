@@ -3,7 +3,7 @@
   <ul class="flex-grow overflow-y-auto">
       {% for notification in notifications %}
         <li class="notification-item hover:bg-gray-200 w-full rounded-md p-2">
-          {% if notification.sender_type == 'PurchaseOrder' %}
+          {% if notification.sender_type == 'PurchaseOrder'%}
             <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}"
               hx-get="{% url 'users:mark_as_read' notification.id %}"
               hx-target="this"

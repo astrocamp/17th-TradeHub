@@ -199,7 +199,7 @@ def notifications(request):
     ).order_by("-created_at")[:5]
     sender_type = request.GET.get("sender_type")
     sender_state = request.GET.get("sender_state")
-    unread_count = Notification.objects.filter(is_read=False, user=request.user).count()
+    unread_count = Notification.objects.filter(is_read=False,user=request.user).count()
 
     return render(
         request,
@@ -215,7 +215,7 @@ def notifications(request):
 
 def all_notifications(request):
     page = request.GET.get("page")
-    paginator = Paginator(Notification.objects.order_by("-created_at"), 5)
+    paginator = Paginator(Notification.objects.order_by("-created_at").filter(), 5)
     notifications_list = paginator.get_page(page)
     page_obj = paginator.get_page(page)
     sender_type = request.GET.get("sender_type")
@@ -253,14 +253,12 @@ def mark_as_read_fullpage(request, notification_id):
     notification.is_read = True
     notification.save()
 
-    notifications = Notification.objects.filter(is_read=False)
-    notifications.update(is_read=True)
-    notifications.save()
+    # notifications = Notification.objects.filter(is_read=False)
 
     html = render_to_string(
         "users/_notifications_item_all.html",
         {
-            "notifications": notifications,
+            "notification": notification,
         },
     )
     return HttpResponse(html)
@@ -274,3 +272,7 @@ def unread_count(request):
         return JsonResponse({"unread_count": unread_count})
     else:
         return JsonResponse({"unread_count": 0})
+    
+def mark_all_as_read(request):
+    Notification.objects.all().update(is_read=True)
+    return redirect("users:all_notifications")

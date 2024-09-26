@@ -291,6 +291,7 @@ def update_state(sender, instance, **kwargs):
 
             receipt = GoodsReceipt.objects.create(
                 order_number=instance.order_number,
+                user=instance.user,
                 supplier=instance.supplier,
                 supplier_tel=instance.supplier_tel,
                 contact_person=instance.contact_person,

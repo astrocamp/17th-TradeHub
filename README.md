@@ -1,12 +1,13 @@
 # TradeHub
+- 網站連結：https://www.tradehub17th.com/
+- 電子信箱：tradehub17th@gmail.com
 
 ### 技術使用
 
-- 前端：Tailwindcss, DaisyUI, Alpine.js
+- 前端：Tailwind CSS, daisyUI, Alpine.js
 - 後端：Python, Django
 - 資料庫：PostgreSQL
 - 版本控制：Git
-- 電子信箱：tradehub17th@gmail.com
 - 部署：AWS EC2/RDS
 
 ### TradeHub Team

@@ -1,4 +1,5 @@
 from django.db import models
+from django.db import transaction
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
@@ -48,9 +49,8 @@ class Inventory(models.Model):
         return f"{self.quantity}"
 
     def save(self, *args, **kwargs):
-        if not self.id:
-            super().save(*args, **kwargs)
-            self.number = f"P{self.id:03d}"
+        super().save(*args, **kwargs)
+        self.number = f"P{self.id:03d}"
         super().save(*args, update_fields=["number"])
 
     OUT_STOCK = "out_stock"
