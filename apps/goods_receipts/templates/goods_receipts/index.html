@@ -1,10 +1,10 @@
 {% extends "layouts/base.html" %} {% block content %}{% load static %}
 <div class="flex justify-end mt-10 gap-2">
-  <a
+  <!-- <a
     href="{% url 'goods_receipts:new' %}"
     class="btn bg-orange-600 text-white hover:bg-orange-700"
     >新增</a
-  >
+  > -->
   <div class="dropdown dropdown-bottom dropdown-end">
     <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
@@ -45,7 +45,6 @@
                     </th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
@@ -70,7 +69,6 @@
                   {% endif %}
                     <th>{{ goods_receipt.order_number }}</th>
                     <th>{{ goods_receipt.supplier.name }}</th>
-                    <th>{{ goods_receipt.supplier_tel }}</th>
                     <th>{{ goods_receipt.amount }}</th>
                     <th>{{ goods_receipt.note|date:"Y-m-d" }}</th>
                     <th>{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>

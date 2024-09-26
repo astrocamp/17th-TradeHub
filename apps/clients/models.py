@@ -84,10 +84,6 @@ class Client(models.Model):
     def set_normal(self):
         pass
 
-    def save(self, *args, **kwargs):
-        self.phone_number = self.format_phone_number(self.phone_number)
-        super().save(*args, **kwargs)
-
     def format_phone_number(self, number):
         # 把所有非數字符號改為空字串(清除)
         number = re.sub(r"\D", "", number)

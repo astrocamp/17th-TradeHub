@@ -57,6 +57,11 @@ def new(request):
     return render(request, "inventory/new.html", {"form": form})
 
 
+def show(request, id):
+    inventory = get_object_or_404(Inventory, id=id)
+    return render(request, "inventory/show.html", {"inventory": inventory})
+
+
 def edit(request, id):
     inventory = get_object_or_404(Inventory, id=id)
     if request.method == "POST":
