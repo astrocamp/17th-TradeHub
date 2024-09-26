@@ -4,9 +4,9 @@
     >新增</a
   > -->
 
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+  <button class="btn bg-orange-600 text-xl text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
-<div class="divider text-3xl font-bold">銷貨單列表</div>
+<div class="divider text-5xl font-bold">銷貨單列表</div>
 
 <div class="flex justify-center mt-10">
     <div class="overflow w-full">
@@ -38,11 +38,12 @@
                         </button>
                       </form>
                     </th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">銷貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">銷貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'sales_orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'sales_orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'client_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <!-- <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'sales_orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th> -->
                     <th></th>
                 </tr>
             </thead>
@@ -51,15 +52,15 @@
                 <tr onclick="window.location.href='{% url 'sales_orders:show' sales_order.id %}'"      class="hover">
                     {% if sale_order.state == "finished" %}
                     <th>
-                      <span class="btn btn-sm btn-success text-lg">完成</span>
+                      <span class="btn btn-sm btn-success text-white text-lg">完成</span>
                     </th>
                     {% elif sales_order.state == "pending" %}
                     <th>
-                      <span class="btn btn-sm btn-error text-lg">待處理</span>
+                      <span class="btn btn-sm btn-error text-white text-lg">待處理</span>
                     </th>
                     {% elif sales_order.state == "progress" %}
                     <th>
-                      <span class="btn btn-sm btn-warning text-lg">進行中</span>
+                      <span class="btn btn-sm btn-warning text-white text-lg">進行中</span>
                     </th>
                     {% endif %}
                     {% comment %} <input
@@ -68,22 +69,23 @@
                       value="{{ sales_order.id }}"
                       class="mr-4 h-6 w-6 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                     /> {% endcomment %}
-                    <th>{{ sales_order.order_number }}</th>
-                    <th>{{ sales_order.client.name }}</th>
-                    <th>{{ sales_order.amount }}</th>
-                    <th>{{ sales_order.note|date:"Y-m-d" }}</th>
-                    <th>{{ sales_order.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th class="mobile text-xl">{{ sales_order.order_number }}</th>
+                    <th class="text-xl">{{ sales_order.client.name }}</th>
+                    <th class="mobile text-xl">{{ sales_order.client_tel }}</th>
+                    <th class="mobile text-xl">{{ sales_order.amount }}</th>
+                    <!-- <th class="mobile">{{ sales_order.note|date:"Y-m-d" }}</th>
+                    <th class="mobile">{{ sales_order.updated_at|date:"Y-m-d H:i" }}</th> -->
                     <th>
                       <div class="dropdown dropdown-left">
-                        <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                        <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                          <li><a href="{% url 'sales_orders:edit' sales_order.id %}" class="btn btn-primary">編輯</a></li>
+                          <li><a href="{% url 'sales_orders:edit' sales_order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
                           <li>
-                            <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' sales_order.id %}" class="btn btn-error">
+                            <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' sales_order.id %}" class="btn btn-error text-white text-lg">
                               刪除
                             </a>
                           </li>
-                          <li><a onclick="return confirm('確認扣除庫存?')" href="/" class="btn btn-info">確認庫存</a></li>
+                          <li><a onclick="return confirm('確認扣除庫存?')" href="/" class="btn btn-info text-white text-lg">確認庫存</a></li>
                         </ul>
                       </div>
                     </th>
@@ -92,7 +94,7 @@
             </tbody>
         </table>
         {% if page_obj.has_other_pages %}
-        <div class="pagination join flex justify-center">
+        <div class="pagination join flex justify-center mt-10">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
             {% if page_obj.has_previous %}

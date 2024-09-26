@@ -6,13 +6,13 @@
     >新增</a
   > -->
   <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+    <div x-data tabindex="0" role="button" class="btn btn-success text-xl text-white">檔案</div>
     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+      <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
     </ul>
   </div>
 </div>
-<div class="divider text-3xl font-bold">進貨單列表</div>
+<div class="divider text-5xl font-bold">進貨單列表</div>
 <div class="flex justify-center mt-10">
     <div class="overflow w-full">
         <table class="table table-xl text-center">
@@ -43,11 +43,12 @@
                             </button>
                         </form>
                     </th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <!-- <th class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th> -->
                     <th></th>
                 </tr>
             </thead>
@@ -56,30 +57,31 @@
                 <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover cursor-pointer">
                   {% if goods_receipt.state == "finished" %}
                   <th>
-                    <span class="btn btn-sm btn-success text-lg">完成</span>
+                    <span class="btn btn-sm btn-success text-white text-lg">完成</span>
                   </th>
                   {% elif goods_receipt.state == "to_be_restocked" %}
                   <th>
-                    <span class="btn btn-sm btn-error text-lg">待進貨</span>
+                    <span class="btn btn-sm btn-error text-white text-lg">待進貨</span>
                   </th>
                   {% elif goods_receipt.state == "to_be_stocked" %}
                   <th>
-                    <span class="btn btn-sm btn-warning text-lg">待入庫</span>
+                    <span class="btn btn-sm btn-warning text-white text-lg">待入庫</span>
                   </th>
                   {% endif %}
-                    <th>{{ goods_receipt.order_number }}</th>
-                    <th>{{ goods_receipt.supplier.name }}</th>
-                    <th>{{ goods_receipt.amount }}</th>
-                    <th>{{ goods_receipt.note|date:"Y-m-d" }}</th>
-                    <th>{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th class="mobile text-xl">{{ goods_receipt.order_number }}</th>
+                    <th class="text-xl">{{ goods_receipt.supplier.name }}</th>
+                    <th class="mobile text-xl">{{ goods_receipt.supplier_tel }}</th>
+                    <th class="mobile text-xl">{{ goods_receipt.amount }}</th>
+                    <!-- <th class="mobile text-xl">{{ goods_receipt.note|date:"Y-m-d" }}</th> -->
+                    <!-- <th class="mobile">{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th> -->
                     <th>
                         <div class="flex justify-center">
                             <div class="dropdown dropdown-left">
-                                <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                                <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
                                 <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                                    <li><a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">編輯</a></li>
-                                    <li><a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">刪除</a></li>
-                                    <li><a onclick="return confirm('確認入庫?')" href="{% url 'goods_receipts:stocked' goods_receipt.id %}" class="btn btn-info">入庫</a></li>
+                                    <li><a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
+                                    <li><a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error text-white text-lg">刪除</a></li>
+                                    <li><a onclick="return confirm('確認入庫?')" href="{% url 'goods_receipts:stocked' goods_receipt.id %}" class="btn btn-info text-white text-lg">入庫</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -89,7 +91,7 @@
             </tbody>
         </table>
         {% if page_obj.paginator.num_pages > 1 %}
-        <div class="pagination join flex justify-center">
+        <div class="pagination join flex justify-center mt-10">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
             {% if page_obj.has_previous %}

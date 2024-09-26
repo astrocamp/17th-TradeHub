@@ -1,0 +1,21 @@
+.btn-yellow{
+    background-color: #fbb137;
+}
+
+.btn-orange{
+    background-color: #f45e3d;
+}
+
+.orange{
+    opacity: 20%;
+}
+
+.btn-blue{
+    background-color: #3385d9;
+}
+
+@media (max-width:768px) {
+    .mobile{
+      display: none;
+    }
+  }
