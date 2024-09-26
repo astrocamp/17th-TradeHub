@@ -3,10 +3,9 @@ import csv
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.views.decorators.http import require_POST
-from django.shortcuts import get_object_or_404, redirect, render
 from django.http import HttpResponse
-
+from django.shortcuts import get_object_or_404, redirect, render
+from django.views.decorators.http import require_POST
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client

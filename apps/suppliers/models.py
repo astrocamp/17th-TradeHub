@@ -7,11 +7,6 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 
 
-class SupplierManager(models.Manager):
-    def get_queryset(self):
-        return super().get_queryset().filter(deleted_at=None)
-
-
 class Supplier(models.Model):
     number = models.CharField(max_length=20, unique=True)
     name = models.CharField(max_length=20)
@@ -31,12 +26,6 @@ class Supplier(models.Model):
         null=True,
     )
     note = models.TextField(blank=True, null=True)
-
-    objects = SupplierManager()
-
-    def delete(self):
-        self.deleted_at = timezone.now()
-        self.save()
 
     def __str__(self):
         return f"{self.name} ({self.gui_number})"

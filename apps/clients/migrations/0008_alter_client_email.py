@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('clients', '0007_merge_20240924_0009'),
+        ("clients", "0007_merge_20240924_0009"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='client',
-            name='email',
+            model_name="client",
+            name="email",
             field=models.EmailField(max_length=254),
         ),
     ]
