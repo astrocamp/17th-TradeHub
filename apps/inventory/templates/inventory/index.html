@@ -5,14 +5,14 @@
     >新增</a
   > -->
   <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+    <div x-data tabindex="0" role="button" class="btn btn-success text-xl text-white">檔案</div>
     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-orange-500 text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
-      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+      <button class="btn bg-orange-500 text-xl text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
+      <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
     </ul>
   </div>
 </div>
-<div class="divider text-3xl font-bold">庫存列表</div>
+<div class="divider text-5xl font-bold">庫存列表</div>
 <div class="flex justify-center mt-5">
   <div class="overflow-x-auto w-full">
     <table class="table table-xl text-center">
@@ -45,13 +45,13 @@
               </button>
             </form>
           </th>
-          <th><a href="{% url 'inventory:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存編號{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">商品名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">庫存編號{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <!-- <th class="mobile"><a href="{% url 'inventory:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th> -->
           <th class="mobile"><a href="{% url 'inventory:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">現有庫存數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th class="mobile"><a href="{% url 'inventory:index' %}?sort=safety_stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">安全庫存數量{% if order_by == 'safety_stock' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <!-- <th class="mobile"><a href="{% url 'inventory:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th class="mobile"><a href="{% url 'inventory:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th> -->
           <th></th>
         </tr>
       </thead>
@@ -60,35 +60,35 @@
         <tr class="hover">
           {% if item.state == "normal" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">正常</span>
+            <span class="btn btn-sm btn-success text-white text-lg">正常</span>
           </th>
           {% elif item.state == "low_stock" %}
           <th>
-            <span class="btn btn-sm btn-warning text-lg">低庫存</span>
+            <span class="btn btn-sm btn-warning text-white text-lg">低庫存</span>
           </th>
           {% elif item.state == "out_stock" %}
           <th>
-            <span class="btn btn-sm btn-error text-lg">缺貨</span>
+            <span class="btn btn-sm btn-error text-white text-lg">缺貨</span>
           </th>
           {% elif item.state == "new_stock" %}
           <th>
-            <span class="btn btn-sm btn-success text-lg">新庫存</span>
+            <span class="btn btn-sm btn-success text-white text-lg">新庫存</span>
           </th>
           {% endif %}
-          <td>{{ item.number }}</td>
-          <td class="mobile">{{ item.product }}</td>
-          <td class="mobile">{{ item.supplier }}</td>
-          <td class="mobile">{{ item.quantity }}</td>
-          <td class="mobile">{{ item.safety_stock }}</td>
-          <td class="mobile">{{ item.note|truncatechars:15 }}</td>
-          <td class="mobile">{{ item.last_updated|date:"Y/m/d H:i" }}</td>
+          <td class="mobile text-xl">{{ item.number }}</td>
+          <td class="text-xl">{{ item.product }}</td>
+          <!-- <td class="mobile">{{ item.supplier }}</td> -->
+          <td class="mobile text-xl">{{ item.quantity }}</td>
+          <td class="mobile text-xl">{{ item.safety_stock }}</td>
+          <!-- <td class="mobile">{{ item.note|truncatechars:15 }}</td>
+          <td class="mobile">{{ item.last_updated|date:"Y/m/d H:i" }}</td> -->
           <td>
             <div class="dropdown dropdown-left">
-              <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+              <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
               <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                <li><a href="{% url 'inventory:edit' item.id %}" class="btn btn-primary">編輯</a></li>
+                <li><a href="{% url 'inventory:edit' item.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
                 <li>
-                  <a onclick="return confirm('確認刪除?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error">
+                  <a onclick="return confirm('確認刪除?')" href="{% url 'inventory:delete' item.id %}" class="btn btn-error text-white text-lg">
                     刪除
                   </a>
                 </li>
@@ -100,7 +100,7 @@
       </tbody>
     </table>
     {% if page_obj.paginator.num_pages > 1 %}
-    <div class="pagination join flex justify-center">
+    <div class="pagination join flex justify-center mt-10">
       <span class="step-links">
         <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
           ><button class="join-item btn">第1頁</button></a

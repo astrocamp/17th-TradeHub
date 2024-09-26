@@ -1,11 +1,11 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="flex justify-end mt-10 gap-2">
-  <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700"
+  <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-xl text-white hover:bg-orange-700"
     >新增</a
   >
-  <button class="btn bg-orange-600 text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
+  <button class="btn bg-orange-600 text-xl text-white hover:bg-orange-700" onclick="my_modal_2.showModal()">匯出檔案</button>
 </div>
-<div class="divider text-3xl font-bold">客戶訂單列表</div>
+<div class="divider text-5xl font-bold">客戶訂單列表</div>
 
 <div class="flex justify-center mt-10">
     <div class="overflow w-full">
@@ -41,8 +41,8 @@
                     <th class="mobile"><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="mobile"><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="mobile"><a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="mobile"><a href="{% url 'orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <!-- <th class="mobile"><a href="{% url 'orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'orders:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'updated_at' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th> -->
                     <th></th>
                 </tr>
             </thead>
@@ -51,32 +51,32 @@
                 <tr onclick="window.location.href='{% url 'orders:show' order.id %}'" class="hover cursor-pointer">
                     {% if order.state == "finished" %}
                     <th>
-                      <span class="btn btn-sm btn-success text-lg">完成</span>
+                      <span class="btn btn-sm btn-success text-white text-lg">完成</span>
                     </th>
                     {% elif order.state == "to_be_confirmed" %}
                     <th>
-                      <span class="btn btn-sm btn-error text-lg">待確認</span>
+                      <span class="btn btn-sm btn-error text-white text-lg">待確認</span>
                     </th>
                     {% elif order.state == "progress" %}
                     <th>
-                      <span class="btn btn-sm btn-warning text-lg">進行中</span>
+                      <span class="btn btn-sm btn-warning text-white text-lg">進行中</span>
                     </th>
                     {% endif %}
-                    <th>{{ order.order_number }}</th>
-                    <th class="mobile">{{ order.client.name }}</th>
-                    <th class="mobile">{{ order.client_tel }}</th>
-                    <th class="mobile">{{ order.amount }}</th>
-                    <th class="mobile">{{ order.note|date:"Y-m-d" }}</th>
-                    <th class="mobile">{{ order.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th class="text-xl">{{ order.order_number }}</th>
+                    <th class="mobile text-xl">{{ order.client.name }}</th>
+                    <th class="mobile text-xl">{{ order.client_tel }}</th>
+                    <th class="mobile text-xl">{{ order.amount }}</th>
+                    <!-- <th class="mobile">{{ order.note|date:"Y-m-d" }}</th>
+                    <th class="mobile">{{ order.updated_at|date:"Y-m-d H:i" }}</th> -->
                     <th>
                       <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}
                         <div class="dropdown dropdown-left">
-                          <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
+                          <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                          <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary">編輯</a></li>
+                          <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
                           <li>
-                              <button type="submit" class="btn btn-error" name="delete">
+                              <button type="submit" class="btn btn-error text-white text-lg" name="delete">
                                 刪除
                               </button>
                           </li>
@@ -92,7 +92,7 @@
             </tbody>
         </table>
         {% if page_obj.has_other_pages %}
-        <div class="pagination join flex justify-center">
+        <div class="pagination join flex justify-center mt-10">
           <span class="step-links">
             <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
             {% if page_obj.has_previous %}
