@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -60,10 +60,10 @@ def new(request):
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
-            order.save()
-            order.order_number = generate_order_number(order)
-            order.save()
+            order.user = request.user
+            order.order_number = generate_order_number(PurchaseOrder)
             formset.instance = order
+            order.save()
             formset.save()
             messages.success(request, "新增完成!")
             return redirect("purchase_orders:index")
@@ -117,9 +117,13 @@ def edit(request, id):
 
 def delete(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
-    purchase_order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("purchase_orders:index")
+    try:
+        purchase_order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("purchase_orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("purchase_orders:index")
 
 
 def get_product_item_formset(extra):
@@ -152,15 +156,6 @@ def load_product_info(request):
     product_id = request.GET.get("id")
     product = Product.objects.get(id=product_id)
     return JsonResponse({"cost_price": product.cost_price})
-
-
-def generate_order_number(order):
-    today = timezone.localtime().strftime("%Y%m%d")
-    order_id = order.id
-    order_suffix = f"{order_id:03d}"
-    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
-    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
-    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
 def export_csv(request):
@@ -269,18 +264,37 @@ def export_excel(request):
     return response
 
 
-@receiver(pre_save, sender=PurchaseOrder)
+def generate_order_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(order_number__contains=today).last())
+    order_suffix = f"{today_num:03d}"
+    random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+    if today_num:
+        return f"{today}{random_code_1}{order_suffix}"
+    else:
+        return f"{today}{random_code_1}001"
+
+
+@receiver(post_save, sender=PurchaseOrder)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.state == PurchaseOrder.PENDING:
         if instance.is_finished:
             instance.set_progress()
             instance.is_finished = False
+            instance.save()
+
     if instance.state == PurchaseOrder.PROGRESS:
         if instance.is_finished:
             items = ProductItem.objects.filter(purchase_order=instance)
+
+            for item in items:
+                if not item.pk:
+                    item.save()
+
             receipt = GoodsReceipt.objects.create(
-                order_number="G" + instance.order_number,
+                order_number=generate_order_number(GoodsReceipt),
+                user=instance.user,
                 supplier=instance.supplier,
                 supplier_tel=instance.supplier_tel,
                 contact_person=instance.contact_person,
@@ -288,6 +302,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=f"訂單編號{instance.order_number}採購->進貨{time_now}",
             )
+
             for item in items:
                 receipt_item = GoodsReceiptProductItem.objects.create(
                     goods_receipt=receipt,
@@ -298,9 +313,11 @@ def update_state(sender, instance, **kwargs):
                     subtotal=item.cost_price * item.quantity,
                 )
                 receipt.amount += receipt_item.subtotal
-            receipt.save()
+
+            receipt.save(update_fields=["amount"])
             instance.set_finished()
             instance.is_finished = False
+            instance.save()
 
 
 def transform_goods_receipt(request, id):

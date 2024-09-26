@@ -8,6 +8,7 @@ from apps.clients.models import Client
 from apps.company.models import Company
 from apps.inventory.models import Inventory
 from apps.products.models import Product
+from apps.users.models import CustomUser
 
 
 class SalesOrderManager(models.Manager):
@@ -16,15 +17,18 @@ class SalesOrderManager(models.Manager):
 
 
 class SalesOrder(models.Model):
-    order_number = models.CharField(max_length=20, unique=True)
+    order_number = models.CharField(max_length=20)
     client = models.ForeignKey(
         Client, on_delete=models.PROTECT, related_name="sales_orders"
     )
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)
     client_email = models.EmailField(unique=False)
-    amount = models.PositiveIntegerField()
+    amount = models.PositiveIntegerField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
@@ -44,8 +48,6 @@ class SalesOrder(models.Model):
 
     objects = SalesOrderManager()
     all_objects = models.Manager()
-
-    is_finished = models.BooleanField(default=False)
 
     is_finished = models.BooleanField(default=False)
 
@@ -107,7 +109,7 @@ class SalesOrder(models.Model):
 
 class SalesOrderProductItem(models.Model):
     sales_order = models.ForeignKey(
-        "SalesOrder", on_delete=models.CASCADE, related_name="items"
+        SalesOrder, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     stock_quantity = models.ForeignKey(

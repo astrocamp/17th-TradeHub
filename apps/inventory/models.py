@@ -1,10 +1,11 @@
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class InventoryManager(models.Manager):
@@ -31,6 +32,9 @@ class Inventory(models.Model):
         blank=True,
         null=True,
     )
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)
 
@@ -43,10 +47,10 @@ class Inventory(models.Model):
     def __str__(self):
         return f"{self.quantity}"
 
-    def save(self, *args, **kwargs):
-        super().save(*args, **kwargs)
-        self.number = f"I{self.id:03d}"
-        super().save(update_fields=["number"])
+    # def save(self, *args, **kwargs):
+    #     super().save(*args, **kwargs)
+    #     self.number = f"P{self.id:03d}"
+    #     super().save(*args, update_fields=["number"])
 
     OUT_STOCK = "out_stock"
     LOW_STOCK = "low_stock"

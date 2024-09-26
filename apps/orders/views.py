@@ -1,12 +1,13 @@
 import csv
 import random
 import string
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -15,7 +16,7 @@ from django.utils import timezone
 
 from apps.clients.models import Client
 from apps.products.models import Product
-from apps.sales_orders.models import SalesOrder
+from apps.sales_orders.models import SalesOrder, SalesOrderProductItem
 
 from .forms.orders_form import OrderForm, OrderProductItemForm, OrderProductItemFormSet
 from .models import Order, OrderProductItem
@@ -56,10 +57,10 @@ def new(request):
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
-            order.save()
-            order.order_number = generate_order_number(order)
-            order.save()
+            order.user = request.user
+            order.order_number = generate_order_number(Order)
             formset.instance = order
+            order.save()
             formset.save()
             messages.success(request, "新增完成!")
             return redirect("orders:index")
@@ -113,9 +114,13 @@ def edit(request, id):
 
 def delete(request, id):
     order = get_object_or_404(Order, pk=id)
-    order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("orders:index")
+    try:
+        order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("orders:index")
 
 
 def get_product_item_formset(extra):
@@ -145,13 +150,24 @@ def load_product_info(request):
     return JsonResponse({"sale_price": product.sale_price})
 
 
-def generate_order_number(order):
+# def generate_order_number(order):
+#     today = timezone.localtime().strftime("%Y%m%d")
+#     order_id = order.id
+#     order_suffix = f"{order_id:03d}"
+#     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
+#     random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
+#     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
+
+
+def generate_order_number(model_name):
     today = timezone.localtime().strftime("%Y%m%d")
-    order_id = order.id
-    order_suffix = f"{order_id:03d}"
+    today_num = bool(model_name.objects.filter(order_number__contains=today).last())
+    order_suffix = f"{today_num:03d}"
     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
-    random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
-    return f"{random_code_1}{today}{random_code_2}{order_suffix}"
+    if today_num:
+        return f"{today}{random_code_1}{order_suffix}"
+    else:
+        return f"{today}{random_code_1}001"
 
 
 def export_csv(request):
@@ -261,30 +277,55 @@ def export_excel(request):
     return response
 
 
-# @receiver(pre_save, sender=Orders)
-# def update_state(sender, instance, **kwargs):
-#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-#     if instance.quantity > instance.stock_quantity.quantity:
-#         instance.set_to_be_confirmed()
-#     elif instance.quantity <= instance.stock_quantity.quantity:
-#         instance.set_progress()
-#         if instance.is_finished:
-#             SalesOrder.objects.create(
-#                 client=instance.client,
-#                 product=instance.product,
-#                 quantity=instance.quantity,
-#                 stock=instance.stock_quantity,
-#                 price=instance.price,
-#                 note=f"{time_now}轉銷貨單",
-#             )
-#             instance.note = f"{time_now}已轉銷貨單"
-#             instance.set_finished()
-#             instance.is_finished = False
+@receiver(post_save, sender=Order)
+def update_state(sender, instance, **kwargs):
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    order_items = OrderProductItem.objects.filter(order=instance)
+
+    ordered_quantity = [item.ordered_quantity for item in order_items]
+    stock_quantity = [item.stock_quantity.quantity for item in order_items]
+    order_zip_stock = zip(ordered_quantity, stock_quantity)
+    quantity_bool = [quantity[0] > quantity[1] for quantity in order_zip_stock]
+
+    post_save.disconnect(update_state, sender=Order)
+    if True in quantity_bool:
+        instance.set_to_be_confirmed()
+        instance.save()
+    else:
+        instance.set_progress()
+        instance.save()
+
+    if instance.is_finished:
+        order = SalesOrder.objects.create(
+            order_number=generate_order_number(Order),
+            client=instance.client,
+            client_tel=instance.client_tel,
+            client_address=instance.client_address,
+            client_email=instance.client_email,
+            user=instance.client.user,
+            amount=0,
+            note=f"轉銷貨單{time_now}",
+        )
+        for item in order_items:
+            SalesOrderProductItem.objects.create(
+                sales_order=order,
+                product=item.product,
+                ordered_quantity=item.ordered_quantity,
+                sale_price=item.sale_price,
+                shipped_quantity=0,
+                subtotal=item.subtotal,
+                stock_quantity=item.stock_quantity,
+            )
+        instance.note = f"{time_now}已轉銷貨單"
+        instance.is_finished = False
+        instance.set_finished()
+        instance.save()
+    post_save.connect(update_state, sender=Order)
 
 
-# def transform_sales_order(request, id):
-#     order = get_object_or_404(Orders, id=id)
-#     order.is_finished = True
-#     order.save()
-#     messages.success(request, "轉銷貨單完成!")
-#     return redirect("orders:index")
+def transform_sales_order(request, id):
+    order = get_object_or_404(Order, id=id)
+    order.is_finished = True
+    post_save.send(sender=Order, instance=order, created=False)
+    messages.success(request, "轉銷貨單完成!")
+    return redirect("orders:index")

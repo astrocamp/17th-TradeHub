@@ -1,11 +1,18 @@
 import csv
+import random
+import string
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.utils import timezone
+
+from apps.sales_orders.models import SalesOrder
 
 from .forms.clients_form import ClientForm, FileUploadForm
 from .models import Client
@@ -43,8 +50,10 @@ def new(request):
     if request.method == "POST":
         form = ClientForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, "新增完成!")
+            client = form.save(commit=False)
+            client.phone_number = client.format_phone_number(client.phone_number)
+            client.number = generate_number(Client)
+            client.save()
             return redirect("clients:index")
         else:
             return render(request, "clients/new.html", {"form": form})
@@ -228,3 +237,27 @@ def export_sample(request):
         df.to_excel(writer, index=False, sheet_name="Clients")
 
     return response
+
+
+def generate_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(name__contains=today).last())
+    order_suffix = f"C{today_num:03d}"
+    if today_num:
+        return f"{order_suffix}"
+    else:
+        return f"C001"
+
+
+@receiver(post_save, sender=Client)
+def update_state(sender, instance, **kwargs):
+    post_save.disconnect(update_state, sender=Client)
+    order = SalesOrder.objects.filter(client=instance.id).count()
+    if order == 0:
+        instance.set_never()
+    elif order > 0 and order < 3:
+        instance.set_haply()
+    elif order > 3:
+        instance.set_often()
+    instance.save()
+    post_save.connect(update_state, sender=Client)

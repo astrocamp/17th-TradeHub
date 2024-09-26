@@ -8,6 +8,7 @@ from apps.clients.models import Client
 from apps.company.models import Company
 from apps.inventory.models import Inventory
 from apps.products.models import Product
+from apps.users.models import CustomUser
 
 
 class OrdersManager(models.Manager):
@@ -16,13 +17,16 @@ class OrdersManager(models.Manager):
 
 
 class Order(models.Model):
-    order_number = models.CharField(max_length=20, unique=True)
+    order_number = models.CharField(max_length=20)
     client = models.ForeignKey(Client, on_delete=models.PROTECT, related_name="orders")
     client_tel = models.CharField(max_length=15)
     client_address = models.CharField(max_length=150)
     client_email = models.EmailField(unique=False)
     amount = models.PositiveIntegerField()
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
@@ -39,10 +43,6 @@ class Order(models.Model):
     all_objects = models.Manager()
 
     is_finished = models.BooleanField(default=False)
-
-    def save(self, *args, **kwargs):
-        # self.stock_quantity = Inventory.objects.get(product=self.product)
-        super().save(*args, **kwargs)
 
     def delete(self):
         self.deleted_at = timezone.now()
@@ -92,7 +92,7 @@ class Order(models.Model):
 
 
 class OrderProductItem(models.Model):
-    order = models.ForeignKey("Order", on_delete=models.CASCADE, related_name="items")
+    order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordered_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()

@@ -2,43 +2,94 @@
 
 {% block content %}
 <div id="notification-list" class="p-4 max-w-4xl mx-auto">
-    <h3 class="text-2xl font-bold mb-4">所有通知</h3>
+    <div class="flex justify-between items-center mb-4 border-b border-gray-300">
+        <h3 class="text-2xl font-bold mb-4">所有通知</h3>
+        <form action="{% url 'users:mark_all_as_read' %}" method="post">
+            {% csrf_token %}
+            <button class="text-sm text-gray-500 mx-4 align-middle">全部標記為已讀</button>
+        </form>
+    </div>
     <ul class="space-y-4">
         {% for notification in notifications %}
-        <li class="notification-item
-            {% if notification.is_read %}bg-gray-200{% else %}bg-gray-50 hover:bg-gray-100{% endif %}
-            border border-gray-300 rounded-lg shadow-md p-4 transition duration-300">
-            {% if notification.sender_type == 'PurchaseOrder' %}
-            <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
-                hx-get="{% url 'users:mark_as_read' notification.id %}"
-                hx-target="this"
-                hx-swap="outerHTML">
-            {% elif notification.sender_type == 'GoodsReceipt' %}
-            <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
-                hx-get="{% url 'users:mark_as_read' notification.id %}"
-                hx-target="this"
-                hx-swap="outerHTML">
-            {% endif %}
-                <div class="flex justify-between items-center">
-                    <div class="flex-grow">
-                        <div class="flex justify-between">
-                            <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
+            <li class="notification-item
+                {% if notification.is_read %}bg-gray-200{% else %}bg-gray-50 hover:bg-gray-100{% endif %}
+                border border-gray-300 rounded-lg shadow-md p-4 transition duration-300">
+                {% if notification.sender_type == 'PurchaseOrder' %}
+                <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                    hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                    hx-target="this"
+                    hx-swap="outerHTML">
+                {% elif notification.sender_type == 'GoodsReceipt' %}
+                <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                    hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                    hx-target="this"
+                    hx-swap="outerHTML">
+                {% elif notification.sender_type == 'Inventory' %}
+                <a href="{% url 'inventory:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                    hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                    hx-target="this"
+                    hx-swap="outerHTML">
+                {% elif notification.sender_type == 'Order' %}
+                <a href="{% url 'orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                    hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                    hx-target="this"
+                    hx-swap="outerHTML">
+                {% elif notification.sender_type == 'SalesOrder' %}
+                <a href="{% url 'sales_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer"
+                    hx-get="{% url 'users:mark_as_read_fullpage' notification.id %}"
+                    hx-target="this"
+                    hx-swap="outerHTML">
+                {% endif %}
+                    <div class="flex justify-between items-center">
+                        <div class="flex-grow">
+                            <div class="flex justify-between">
+                                <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
+                            </div>
+                            <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
+                                <pre>{{ notification.message }}</pre>
+                            </div>
                         </div>
-                        <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
-                            <p>{{ notification.message }}</p>
+                        <div class="flex items-center ml-4 flex-shrink-0">
+                            {% if not notification.is_read %}
+                                <span class="text-red-500 font-bold mr-2">(未讀)</span>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="flex items-center ml-4 flex-shrink-0">
-                        {% if not notification.is_read %}
-                            <span class="text-red-500 font-bold mr-2">(未讀)</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-        </li>
+                </a>
+            </li>
         {% empty %}
         <li class="text-center text-gray-500">沒有通知</li>
         {% endfor %}
     </ul>
+    <div class="pagination join flex justify-center mt-4">
+        {% if page_obj.has_other_pages %}
+        <span class="step-links">
+
+          <a href="?page=1"
+            ><button class="join-item btn">第1頁</button></a
+          >
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}"
+            ><button class="join-item btn" >«</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">«</button>
+          {% endif %}
+          <button class="join-item btn">
+            第{{ page_obj.number }}頁
+          </button>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}"
+            ><button class="join-item btn">»</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">»</button>
+          {% endif %}
+          <a href="?page={{ page_obj.paginator.num_pages }}"
+            ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
+          >
+        </span>
+        {% endif %}
+      </div>
 </div>
 {% endblock %}

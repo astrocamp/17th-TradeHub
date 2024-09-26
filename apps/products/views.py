@@ -1,5 +1,6 @@
 import csv
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
@@ -9,9 +10,11 @@ from django.dispatch import receiver
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.http import require_POST
+from django.utils import timezone
 
 from apps.inventory.models import Inventory
 from apps.products.models import Product
+from apps.sales_orders.models import SalesOrderProductItem
 from apps.suppliers.models import Supplier
 
 from .forms.product_form import FileUploadForm, ProductForm
@@ -49,7 +52,10 @@ def new(request):
     if request.method == "POST":
         form = ProductForm(request.POST)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.user = request.user
+            product.number = generate_number(Product)
+            product.save()
             messages.success(request, "新增完成!")
             return redirect("products:index")
         return render(request, "products/new.html", {"form": form})
@@ -298,14 +304,39 @@ def export_sample(request):
     return response
 
 
+def generate_number(model_name):
+    today = timezone.localtime().strftime("%Y%m%d")
+    today_num = bool(model_name.objects.filter(number__contains=today).last())
+    order_suffix = f"P{today_num:03d}"
+    if today_num:
+        return f"{order_suffix}"
+    else:
+        return f"P001"
+
+
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
-    time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if Inventory.objects.filter(product=instance).exists():
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+
+    if not Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
+            number=generate_number(Inventory),
             product=instance,
             supplier=instance.supplier,
             quantity=0,
             safety_stock=0,
             note=f"{time_now} 新建商品，預建庫存",
+            state=Inventory.NEW_STOCK,
         )
+    post_save.disconnect(update_state, sender=Product)
+    product = SalesOrderProductItem.objects.filter(product=instance.id).count()
+    if product == 0:
+        instance.set_never()
+        instance.save()
+    elif product > 0 and product < 3:
+        instance.set_haply()
+        instance.save()
+    elif product > 3:
+        instance.set_often()
+        instance.save()
+    post_save.connect(update_state, sender=Product)
