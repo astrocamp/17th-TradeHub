@@ -198,9 +198,9 @@ def send_invitation(request, company_id):
 
 
 def notifications(request):
-    notifications_list = Notification.objects.filter(
-        is_read=False
-    ).order_by("-created_at")[:5]
+    notifications_list = Notification.objects.filter(is_read=False).order_by(
+        "-created_at"
+    )[:5]
     sender_type = request.GET.get("sender_type")
     sender_state = request.GET.get("sender_state")
     unread_count = Notification.objects.filter(is_read=False).count()

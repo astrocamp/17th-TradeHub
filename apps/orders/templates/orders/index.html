@@ -22,7 +22,7 @@
         <table class="table table-sm text-center text-nowrap sm:table-lg">
             <thead>
                 <tr class="text-lg sm:text-xl">
-                    <th class="w-1/3 sm:w-1/5">
+                    <th class="w-1/3 sm:w-1/6">
                       <form action="{% url 'orders:index' %}" method="GET">
                         <select
                           class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
@@ -47,32 +47,34 @@
                         </button>
                       </form>
                     </th>
-                    <th class="w-1/3 sm:w-1/5"  ><a href="{% url 'orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶訂單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="hidden sm:table-cell sm:w-1/5"><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="hidden sm:table-cell sm:w-1/5"><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="w-1/3 sm:w-1/5"></th>
+                    <th class="w-1/3 sm:w-1/6"  ><a href="{% url 'orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶訂單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="mobile"><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="w-1/3 sm:w-1/6"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for order in orders %}
                 <tr onclick="window.location.href='{% url 'orders:show' order.id %}'" class="hover cursor-pointer">
                     {% if order.state == "finished" %}
-                    <th class="w-1/3 sm:w-1/5">
+                    <th class="w-1/3 sm:w-1/6">
                       <span class="btn btn-sm btn-success text-white text-lg">完成</span>
                     </th>
                     {% elif order.state == "to_be_confirmed" %}
-                    <th class="w-1/3 sm:w-1/5">
+                    <th class="w-1/3 sm:w-1/6">
                       <span class="btn btn-sm btn-error text-white text-lg">待確認</span>
                     </th>
                     {% elif order.state == "progress" %}
-                    <th class="w-1/3 sm:w-1/5">
+                    <th class="w-1/3 sm:w-1/6">
                       <span class="btn btn-sm btn-warning text-white text-lg">進行中</span>
                     </th>
                     {% endif %}
-                    <th class="text-lg w-1/3 sm:w-1/5 sm:text-xl">{{ order.order_number }}</th>
-                    <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ order.client.name }}</th>
-                    <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ order.client_tel }}</th>
-                    <th class="w-1/3 sm:w-1/5">
+                    <th class="text-lg w-1/3 sm:w-1/6 sm:text-xl">{{ order.order_number }}</th>
+                    <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client.name }}</th>
+                    <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client_tel }}</th>
+                    <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client_tel }}</th>
+                    <th class="w-1/3 sm:w-1/6">
                       <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}
                         <div class="dropdown dropdown-left">
