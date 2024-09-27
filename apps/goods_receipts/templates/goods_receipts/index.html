@@ -1,24 +1,28 @@
 {% extends "layouts/base.html" %} {% block content %}{% load static %}
-<div class="flex justify-end mt-10 gap-2">
-  <!-- <a
-    href="{% url 'goods_receipts:new' %}"
-    class="btn bg-orange-600 text-white hover:bg-orange-700"
-    >新增</a
-  > -->
-  <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
-    </ul>
-  </div>
-</div>
-<div class="divider text-3xl font-bold">進貨單列表</div>
+<div class="flex flex-col mx-auto w-full justify-center items-start">
+    <div class="flex flex-row justify-between">
+      <div class="divider text-3xl font-bold ml-4">進貨單列表</div>
+      <div class="flex flex-row gap-2">
+      <!-- <a
+        href="{% url 'goods_receipts:new' %}"
+        class="btn bg-orange-600 text-white hover:bg-orange-700"
+        >新增</a
+      > -->
+        <div class="dropdown dropdown-bottom dropdown-end">
+          <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
+          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+            <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+          </ul>
+        </div>
+      </div>
+    </div>
+
 <div class="flex justify-center mt-10">
     <div class="overflow w-full">
         <table class="table table-xl text-center">
             <thead>
                 <tr class="text-xl">
-                    <th>
+                    <th class="w-1/3 sm:w-1/5 md:w-1/7">
                         <form action="{% url 'goods_receipts:index' %}" method="GET">
                           <select
                             class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
@@ -43,36 +47,36 @@
                             </button>
                         </form>
                     </th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-                    <th></th>
+                    <th class="w-1/3 sm:w-1/5 md:w-1/7"><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7"><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7"><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:hidden md:w-1/7"><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:hidden md:w-1/7"><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
+                    <th class="w-1/3 sm:w-1/5 md:w-1/7"></th>
                 </tr>
             </thead>
             <tbody>
                 {% for goods_receipt in goods_receipts %}
                 <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover cursor-pointer">
                   {% if goods_receipt.state == "finished" %}
-                  <th>
+                  <th class="w-1/3 sm:w-1/5 md:w-1/7">
                     <span class="btn btn-sm btn-success text-lg">完成</span>
                   </th>
                   {% elif goods_receipt.state == "to_be_restocked" %}
-                  <th>
+                  <th class="w-1/3 sm:w-1/5 md:w-1/7">
                     <span class="btn btn-sm btn-error text-lg">待進貨</span>
                   </th>
                   {% elif goods_receipt.state == "to_be_stocked" %}
-                  <th>
+                  <th class="w-1/3 sm:w-1/5 md:w-1/7">
                     <span class="btn btn-sm btn-warning text-lg">待入庫</span>
                   </th>
                   {% endif %}
-                    <th>{{ goods_receipt.order_number }}</th>
-                    <th>{{ goods_receipt.supplier.name }}</th>
-                    <th>{{ goods_receipt.amount }}</th>
-                    <th>{{ goods_receipt.note|date:"Y-m-d" }}</th>
-                    <th>{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>
-                    <th>
+                    <th class="w-1/3 sm:w-1/5 md:w-1/7">{{ goods_receipt.order_number }}</th>
+                    <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7">{{ goods_receipt.supplier.name }}</th>
+                    <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7">{{ goods_receipt.amount }}</th>
+                    <th class="hidden sm:table-cell sm:hidden md:w-1/7">{{ goods_receipt.note|date:"Y-m-d" }}</th>
+                    <th class="hidden sm:table-cell sm:hidden md:w-1/7">{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>
+                    <th class="w-1/3 sm:w-1/5 md:w-1/7">
                         <div class="flex justify-center">
                             <div class="dropdown dropdown-left">
                                 <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
