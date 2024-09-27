@@ -82,7 +82,6 @@ def client_update_and_delete(request, id):
     return render(request, "clients/edit.html", {"client": client, "form": form})
 
 
-@require_POST
 def delete(request, id):
     client = get_object_or_404(Client, id=id)
     client.delete()
