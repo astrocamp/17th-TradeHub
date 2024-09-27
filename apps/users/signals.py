@@ -132,7 +132,7 @@ def notify_sale_order(sender, instance, **kwargs):
 
 @receiver(post_save, sender=Inventory)
 def notify_inventory(sender, instance, **kwargs):
-    if instance.order_number != "":
+    if instance.number != "":
         if instance.state == Inventory.OUT_STOCK:
             notification = Notification(
                 message=f"[庫存項目{instance.product.product_name}]\n已建立，目前庫存量為0",

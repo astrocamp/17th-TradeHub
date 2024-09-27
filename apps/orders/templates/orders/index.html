@@ -1,13 +1,13 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="flex flex-col mx-auto w-full justify-center">
-  <div class="flex flex-row justify-between mt-6">
-    <div class="divider text-5xl font-bold">客戶訂單列表</div>
-    <div class="flex flex-row gap-2">
-      <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-xl text-white hover:bg-orange-700"
+  <div class="w-full flex flex-row justify-between mt-6 w-full">
+    <div class="divider text-3xl sm:text-4xl font-bold">客戶訂單列表</div>
+    <div class="flex flex-row gap-2 justify-end">
+      <a href="{% url 'orders:new' %}" class="btn bg-orange-600 text-lg text-white hover:bg-orange-700"
         >新增</a
       >
       <div class="dropdown dropdown-bottom dropdown-end">
-        <div x-data tabindex="0" role="button" class="btn btn-success text-xl text-white">檔案</div>
+        <div x-data tabindex="0" role="button" class="btn btn-success text-lg text-white">檔案</div>
         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
           <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
         </ul>
@@ -19,9 +19,9 @@
 
 <div class="flex justify-center mt-14">
     <div class="overflow w-full">
-        <table class="table table-xl text-center">
+        <table class="table table-sm text-center text-nowrap sm:table-lg">
             <thead>
-                <tr class="text-xl">
+                <tr class="text-lg sm:text-xl">
                     <th class="w-1/3 sm:w-1/5">
                       <form action="{% url 'orders:index' %}" method="GET">
                         <select
@@ -69,23 +69,23 @@
                       <span class="btn btn-sm btn-warning text-white text-lg">進行中</span>
                     </th>
                     {% endif %}
-                    <th class="text-xl w-1/3 sm:w-1/5">{{ order.order_number }}</th>
-                    <th class="text-xl hidden sm:table-cell sm:w-1/5">{{ order.client.name }}</th>
-                    <th class="text-xl hidden sm:table-cell sm:w-1/5">{{ order.client_tel }}</th>
+                    <th class="text-lg w-1/3 sm:w-1/5 sm:text-xl">{{ order.order_number }}</th>
+                    <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ order.client.name }}</th>
+                    <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ order.client_tel }}</th>
                     <th class="w-1/3 sm:w-1/5">
                       <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}
                         <div class="dropdown dropdown-left">
-                          <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
+                          <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1 w-20 btn-sm" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                          <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
+                          <li><a href="{% url 'orders:edit' order.id %}" class="btn btn-primary btn-sm text-white text-lg">編輯</a></li>
                           <li>
-                              <button type="submit" class="btn btn-error text-white text-lg" name="delete">
+                              <button type="submit" class="btn btn-sm btn-error text-white text-lg" name="delete">
                                 刪除
                               </button>
                           </li>
                           {% if order.state == "progress" %}
-                          <li><a onclick="return confirm('確認轉銷貨單?')" href="{% url 'orders:transform' order.id %}" class="btn btn-info text-white text-lg">轉銷貨單</a></li>
+                          <li><a onclick="return confirm('確認轉銷貨單?')" href="{% url 'orders:transform' order.id %}" class="btn btn-info btn-sm text-white text-lg">轉銷貨單</a></li>
                           {% endif %}
                           </ul>
                         </div>

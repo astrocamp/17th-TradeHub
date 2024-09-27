@@ -1,12 +1,13 @@
 {% extends 'layouts/base.html' %} {% block content %}
 <div class="flex flex-col mx-auto w-full justify-center">
-  <div class="flex flex-row justify-between mt-6">
-    <div class="divider text-5xl font-bold">採購單列表</div>
-    <div class="flex flex-row gap-2">
-      <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-white hover:bg-orange-700 text-xl"
+  <div class="w-full flex flex-row justify-between mt-6 w-full">
+    <div class="divider text-3xl sm:text-4xl font-bold">採購單列表</div>
+    <div class="flex flex-row gap-2 justify-end">
+      <a href="{% url 'purchase_orders:new' %}" class="btn bg-orange-600 text-lg text-white hover:bg-orange-700"
         >新增</a>
+
       <div class="dropdown dropdown-bottom dropdown-end">
-        <div x-data tabindex="0" role="button" class="btn btn-success text-white text-xl">檔案</div>
+        <div x-data tabindex="0" role="button" class="btn btn-success text-lg text-white">檔案</div>
         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
           <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
         </ul>
@@ -16,9 +17,9 @@
 
   <div class="flex justify-center mt-14">
     <div class="overflow w-full">
-          <table class="table table-xl table-fixed text-center">
+          <table class="table table-sm text-center text-nowrap sm:table-lg">
               <thead>
-                  <tr class="text-xl">
+                  <tr class="text-lg sm:text-xl">
                       <th class="w-1/3 sm:w-1/5>
                         <form action="{% url 'purchase_orders:index' %}" method="GET">
                           <select
@@ -44,12 +45,10 @@
                           </button>
                         </form>
                       </th>
-                      <th class="w-1/3 sm:w-1/5 md:w-1/7"><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7"><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="hidden sm:table-cell sm:w-1/5 md:w-1/7"><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="hidden sm:table-cell sm:hidden md:w-1/7"><a href="{% url 'purchase_orders:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="hidden sm:table-cell sm:hidden md:w-1/7"><a href="{% url 'purchase_orders:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}"  class="hidden sm:block">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="w-1/3 sm:w-1/5 md:w-1/7"></th>
+                      <th class="w-1/3 sm:w-1/5"><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                      <th class="hidden sm:table-cell sm:w-1/5"><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                      <th class="hidden sm:table-cell sm:w-1/5"><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                      <th class="w-1/3 sm:w-1/5"></th>
                   </tr>
               </thead>
               <tbody>
@@ -57,37 +56,35 @@
                   <tr onclick="window.location.href='{% url 'purchase_orders:show' purchase_order.id %}'" class="hover cursor-pointer">
                       {% if purchase_order.state == "finished" %}
                       <th class="w-1/3 sm:w-1/5">
-                        <span class="btn btn-sm btn-success text-lg">完成</span>
+                        <span class="btn btn-sm btn-success text-white text-lg">完成</span>
                       </th>
                       {% elif purchase_order.state == "pending" %}
                       <th class="w-1/3 sm:w-1/5">
-                        <span class="btn btn-sm btn-error text-lg">待處理</span>
+                        <span class="btn btn-sm btn-error text-white text-lg">待處理</span>
                       </th>
                       {% elif purchase_order.state == "progress" %}
                       <th class="w-1/3 sm:w-1/5">
                         <span class="btn btn-sm btn-warning text-lg">進行中</span>
                       </th>
                       {% endif %}
-                      <th class="text-xl w-1/3 sm:w-1/5">{{ purchase_order.order_number }}</th>
-                      <th class="text-xl hidden sm:table-cell sm:w-1/5">{{ purchase_order.supplier.name }}</th>
-                      <th class="text-xl hidden sm:table-cell sm:w-1/5">{{ purchase_order.amount }}</th>
-                      <th class="text-xl hidden sm:table-cell sm:hidden">{{ purchase_order.note|truncatechars:15 }}</th>
-                      <th class="text-xl hidden sm:table-cell sm:hidden">{{ purchase_order.updated_at|date:"Y-m-d H:i"  }}</th>
+                      <th class="text-lg w-1/3 sm:w-1/5 sm:text-xl">{{ purchase_order.order_number }}</th>
+                      <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ purchase_order.supplier.name }}</th>
+                      <th class="text-lg hidden sm:table-cell sm:w-1/5 sm:text-xl">{{ purchase_order.amount }}</th>
                       <th class="w-1/3 sm:w-1/5">
                         <div class="dropdown dropdown-left">
-                          <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
-                        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                            <li><a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
+                          <div x-data tabindex="0" role="button" class="btn btn-sm btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
+                          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                            <li><a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-sm btn-primary text-white text-lg">編輯</a></li>
                             <li>
-                              <a onclick="return confirm('確認刪除?')" href="{% url 'purchase_orders:delete' purchase_order.id %}" class="btn btn-error">
+                              <a onclick="return confirm('確認刪除?')" href="{% url 'purchase_orders:delete' purchase_order.id %}" class="btn btn-sm btn-error text-white text-lg">
                                 刪除
                               </a>
                             </li>
                             {% if purchase_order.state == "progress" %}
-                            <li><a onclick="return confirm('確認轉進貨單?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info">轉進貨單</a></li>
+                            <li><a onclick="return confirm('確認轉進貨單?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info btn-sm text-white text-lg">轉進貨單</a></li>
                             {% endif %}
                             {% if purchase_order.state == "pending" %}
-                            <li><a onclick="return confirm('確認轉成進行中?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info">轉進行中</a></li>
+                            <li><a onclick="return confirm('確認轉成進行中?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info btn-sm text-white text-lg">轉進行中</a></li>
                             {% endif %}
                           </ul>
                         </div>
