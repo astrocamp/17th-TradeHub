@@ -265,15 +265,50 @@ def search(request):
 
     if category == "Product":
         products = Product.objects.filter(product_name__contains=search)
-        results = [fields[:-3] for fields in products.values_list()]
+        results = []
+        for item in products:
+            results += [
+                (
+                    item.id,
+                    item.product_name,
+                    item.cost_price,
+                    item.sale_price,
+                    item.supplier,
+                    item.note,
+                )
+            ]
         fields_names = [fields for fields in ProductForm._meta.labels.values()]
     elif category == "Client":
         clients = Client.objects.filter(name__contains=search)
-        results = [fields[:5] for fields in clients.values_list()]
+        results = []
+        for item in clients:
+            results += [
+                (
+                    item.id,
+                    item.name,
+                    item.phone_number,
+                    item.address,
+                    item.email,
+                    item.note,
+                )
+            ]
         fields_names = [fields for fields in ClientForm._meta.labels.values()]
     elif category == "Supplier":
         suppliers = Supplier.objects.filter(name__contains=search)
-        results = [fields[:7] for fields in suppliers.values_list()]
+        results = []
+        for item in suppliers:
+            results += [
+                (
+                    item.id,
+                    item.name,
+                    item.telephone,
+                    item.contact_person,
+                    item.email,
+                    item.gui_number,
+                    item.address,
+                    item.note,
+                )
+            ]
         fields_names = [fields for fields in SupplierForm._meta.labels.values()]
     elif category == "Inventory":
         inventory = Inventory.objects.filter(product__product_name__contains=search)
@@ -297,12 +332,12 @@ def search(request):
             results += [
                 (
                     order.id,
-                    order.order_number,
-                    order.client.name,
+                    order.client,
                     order.client_tel,
                     order.client_address,
                     order.client_email,
-                    order.username,
+                    order.note,
+                    order.amount,
                 )
             ]
         fields_names = [fields for fields in OrderForm._meta.labels.values()]
@@ -313,9 +348,9 @@ def search(request):
             results += [
                 (
                     order.id,
-                    order.order_number,
-                    order.supplier.name,
+                    order.supplier,
                     order.supplier_tel,
+                    order.contact_person,
                     order.supplier_email,
                     order.amount,
                     order.note,
@@ -328,12 +363,13 @@ def search(request):
         for order in purchase:
             results += [
                 (
-                    order.order_number,
+                    order.id,
                     order.client,
                     order.client_tel,
                     order.client_address,
                     order.client_email,
                     order.shipping_method,
+                    order.amount,
                     order.note,
                 )
             ]
@@ -344,7 +380,7 @@ def search(request):
         for order in purchase:
             results += [
                 (
-                    order.order_number,
+                    order.id,
                     order.supplier.name,
                     order.supplier_tel,
                     order.contact_person,

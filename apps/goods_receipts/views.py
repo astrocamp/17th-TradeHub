@@ -177,57 +177,6 @@ def generate_order_number(order):
     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="GoodsReceipts.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "收據號碼",
-            "供應商名稱",
-            "供應商電話",
-            "聯絡人",
-            "供應商Email",
-            "商品",
-            "訂購數量",
-            "實收數量",
-            "成本價格",
-            "金額",
-            "傳送方式",
-            "建立時間",
-            "備註",
-        ]
-    )
-
-    goods_receipts = (
-        GoodsReceipt.objects.select_related("supplier").prefetch_related("items").all()
-    )
-    for goods_receipt in goods_receipts:
-        for item in goods_receipt.items.all():
-            writer.writerow(
-                [
-                    goods_receipt.order_number,
-                    goods_receipt.supplier.name,  # Assuming Supplier model has a name field
-                    goods_receipt.supplier_tel,
-                    goods_receipt.contact_person,
-                    goods_receipt.supplier_email,
-                    item.product.product_name,  # Assuming Product model has a product_name field
-                    item.ordered_quantity,
-                    item.received_quantity,
-                    item.cost_price,
-                    goods_receipt.amount,
-                    goods_receipt.receiving_method,
-                    goods_receipt.created_at.strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    ),  # Formatting date
-                    goods_receipt.note,
-                ]
-            )
-
-    return response
-
-
 def export_excel(request):
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

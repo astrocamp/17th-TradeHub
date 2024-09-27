@@ -161,56 +161,6 @@ def generate_order_number(order):
     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="SalesOrders.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "客戶",
-            "客戶電話",
-            "客戶地址",
-            "客戶Email",
-            "商品",
-            "訂購數量",
-            "實發數量",
-            "庫存狀態",
-            "價位",
-            "建立時間",
-            "更新時間",
-        ]
-    )
-
-    sales_orders = SalesOrder.objects.prefetch_related("items").all()
-    for sales_order in sales_orders:
-        for item in sales_order.items.all():
-            writer.writerow(
-                [
-                    sales_order.client.name,  # Assuming Client model has a name field
-                    sales_order.client_tel,
-                    sales_order.client_address,
-                    sales_order.client_email,
-                    item.product.product_name,  # Assuming Product model has product_name
-                    item.ordered_quantity,
-                    item.shipped_quantity,
-                    item.stock_quantity.state,  # Assuming Inventory model has a state field
-                    item.sale_price,
-                    sales_order.created_at.strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    ),  # Format datetime
-                    sales_order.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    (
-                        sales_order.deleted_at.strftime("%Y-%m-%d %H:%M:%S")
-                        if sales_order.deleted_at
-                        else ""
-                    ),
-                ]
-            )
-
-    return response
-
-
 def export_excel(request):
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"

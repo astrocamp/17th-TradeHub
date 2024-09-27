@@ -96,29 +96,7 @@ def import_file(request):
         file = request.FILES["file"]
 
         try:
-            if file.name.endswith(".csv"):
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)  # Skip the header
-
-                last_client = Client.objects.order_by("-id").first()
-                next_number = 1 if not last_client else int(last_client.number[1:]) + 1
-
-                for row in reader:
-                    Client.objects.create(
-                        number=f"C{next_number:03d}",
-                        name=row[1],
-                        phone_number=row[2],
-                        address=row[3],
-                        email=row[4],
-                        note=row[5],
-                    )
-                    next_number += 1
-
-                messages.success(request, "CSV檔案已成功匯入")
-                return redirect("clients:index")
-
-            elif file.name.endswith(".xlsx"):
+            if file.name.endswith(".xlsx"):
                 df = pd.read_excel(file, dtype={"phone_number": str})
 
                 last_client = Client.objects.order_by("-id").first()
@@ -139,7 +117,7 @@ def import_file(request):
                 return redirect("clients:index")
 
             else:
-                messages.error(request, "匯入失敗 (檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗 檔案不是 Excel")
                 return render(request, "layouts/import.html", {"form": form})
 
         except Exception as e:
@@ -148,29 +126,6 @@ def import_file(request):
     else:
         messages.error(request, "表單無效，請檢查上傳的檔案。")
         return redirect("clients:index")
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="Clients.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(["客戶名稱", "電話", "地址", "Email", "建立時間", "備註"])
-
-    clients = Client.objects.all()
-    for client in clients:
-        writer.writerow(
-            [
-                client.name,
-                client.phone_number,
-                client.address,
-                client.email,
-                client.created_at,
-                client.note,
-            ]
-        )
-
-    return response
 
 
 def export_excel(request):
