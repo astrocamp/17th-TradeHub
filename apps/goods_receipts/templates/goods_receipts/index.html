@@ -117,9 +117,7 @@
     </div>
   </div>
 </div>
-{% url 'goods_receipts:import_file' as import_file_url %}
-{% url 'goods_receipts:export_csv' as export_csv_url %}
 {% url 'goods_receipts:export_excel' as export_excel_url %}
 
-{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
+{% include "shared/import_export.html" with urlExcel=export_excel_url %}
 {% endblock %}

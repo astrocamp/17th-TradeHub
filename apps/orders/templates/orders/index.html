@@ -118,8 +118,7 @@
         {% endif %}
     </div>
 </div>
-{% url 'orders:export_csv' as export_csv_url %}
 {% url 'orders:export_excel' as export_excel_url %}
 
-{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
+{% include "shared/import_export.html" with urlExcel=export_excel_url %}
 {% endblock %}
