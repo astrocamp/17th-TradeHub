@@ -56,6 +56,10 @@ class GoodsReceipt(models.Model):
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"
 
+    def save(self, *args, **kwargs):
+        self.supplier_tel = self.format_supplier_tel(self.supplier_tel)
+        super().save(*args, **kwargs)
+
     def format_supplier_tel(self, number):
         number = re.sub(r"\D", "", number)
         # 將輸入的電話號碼格式化為 09XX-XXXXXX 或 0X-XXXXXXX

@@ -158,11 +158,11 @@
             {% if unread_count == 0 %}
             {% else %}
             <span class="indicator-item badge badge-sm badge-secondary absolute top-0 right-0 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
-              {% if unread_count < 10 %}
-              {{ unread_count }}
-              {% else %}
-              9+
-              {% endif %}
+            {% if unread_count < 10 %}
+            {{ unread_count }}
+            {% else %}
+            9+
+            {% endif %}
             </span>
             {% endif %}
 
