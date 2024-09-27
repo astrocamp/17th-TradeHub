@@ -1,6 +1,10 @@
 {% extends 'layouts/base.html' %} {% block content %}
-<div class="inner_container max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8">
-  <div class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6">
+<div
+  class="inner_container max-w-5xl mx-auto p-12 bg-white rounded-lg shadow-md border space-y-8 mt-8"
+>
+  <div
+    class="flex justify-between items-end border-b border-gray-200 pb-4 mb-6"
+  >
     <h1 class="text-2xl font-extrabold text-gray-900">
       進貨單編號: {{ goods_receipt.order_number }}
     </h1>
@@ -105,7 +109,7 @@
     >
       編輯
     </a>
-    <form
+    <!-- <form
       action="{% url 'goods_receipts:delete' goods_receipt.id %}"
       method="POST"
       class="inline-block"
@@ -117,7 +121,7 @@
       >
         刪除
       </button>
-    </form>
+    </form> -->
   </div>
 </div>
 {% endblock %}

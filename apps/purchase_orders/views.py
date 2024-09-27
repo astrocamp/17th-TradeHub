@@ -168,57 +168,6 @@ def generate_order_number(order):
     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
 
 
-def export_csv(request):
-    response = HttpResponse(content_type="csv")
-    response["Content-Disposition"] = 'attachment; filename="Purchase_Orders.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "序號",
-            "供應商名稱",
-            "電話",
-            "連絡人",
-            "Email",
-            "建立時間",
-            "刪除時間",
-            "商品",
-            "數量",
-            "價格",
-            "小計",
-            "總金額",
-            "備註",
-        ]
-    )
-
-    purchase_orders = PurchaseOrder.objects.all()
-
-    for purchase_order in purchase_orders:
-
-        product_items = ProductItem.objects.filter(purchase_order=purchase_order)
-
-        for product_item in product_items:
-            writer.writerow(
-                [
-                    purchase_order.order_number,
-                    purchase_order.supplier.name,
-                    purchase_order.supplier_tel,
-                    purchase_order.contact_person,
-                    purchase_order.supplier_email,
-                    purchase_order.created_at,
-                    purchase_order.deleted_at,
-                    product_item.product,
-                    product_item.quantity,
-                    product_item.cost_price,
-                    product_item.subtotal,
-                    purchase_order.amount,
-                    purchase_order.note,
-                ]
-            )
-
-    return response
-
-
 def export_excel(request):
     response = HttpResponse(
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
