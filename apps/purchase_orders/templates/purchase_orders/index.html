@@ -77,11 +77,11 @@
                       }" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
                           <li><a href="{% url 'purchase_orders:edit' purchase_order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
-                          <li>
+                          <!-- <li>
                             <a onclick="return confirm('確認刪除?')" href="{% url 'purchase_orders:delete' purchase_order.id %}" class="btn btn-error text-white text-lg">
                               刪除
                             </a>
-                          </li>
+                          </li> -->
                           {% if purchase_order.state == "progress" %}
                           <li><a onclick="return confirm('確認轉進貨單?')" href="{% url 'purchase_orders:transform' purchase_order.id %}" class="btn btn-info">轉進貨單</a></li>
                           {% endif %}

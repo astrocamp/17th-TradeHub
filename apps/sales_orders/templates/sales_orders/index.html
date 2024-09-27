@@ -81,11 +81,11 @@
                         <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
                         <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
                           <li><a href="{% url 'sales_orders:edit' sales_order.id %}" class="btn btn-primary text-white text-lg">編輯</a></li>
-                          <li>
+                          <!-- <li>
                             <a onclick="return confirm('確認刪除?')" href="{% url 'sales_orders:delete' sales_order.id %}" class="btn btn-error text-white text-lg">
                               刪除
                             </a>
-                          </li>
+                          </li> -->
                           <li><a onclick="return confirm('確認扣除庫存?')" href="{% url 'sales_orders:transform' sales_order.id %}" class="btn btn-info text-white text-lg">扣除庫存</a></li>
                         </ul>
                       </div>
