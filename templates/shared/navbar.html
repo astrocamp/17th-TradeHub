@@ -59,7 +59,7 @@
     {% endif %} -->
   </div>
   <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal gap-x-5 font-bold text-md">
+    <ul class="menu menu-horizontal font-bold text-md">
       <li>
         {% if request.user.is_authenticated %}
         <details name="dropdown">
@@ -139,7 +139,7 @@
             x-ref="searchInput"
             class="grow"
             name="search"
-            placeholder="請輸入名稱 / 單號"
+            placeholder="請輸入名稱/單號"
             x-model="searchField"
             @keydown.enter="$el.form.submit()"
           />
@@ -181,13 +181,13 @@
       {% if request.user.is_authenticated %} {% if request.user.first_name %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[85px] flex justify-center"
+        class="w-full flex justify-center"
         >{{ request.user.first_name }}</a
       >
       {% else %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[100px] flex justify-center text-lg font-bold"
+        class="w-full flex justify-center text-lg font-bold"
         >{{ request.user.username }}</a
       >
       {% endif %}

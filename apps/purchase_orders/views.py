@@ -303,15 +303,15 @@ def update_state(sender, instance, **kwargs):
             )
 
             for item in items:
-                receipt_item = GoodsReceiptProductItem.objects.create(
+                GoodsReceiptProductItem.objects.create(
                     goods_receipt=receipt,
                     product=item.product,
                     ordered_quantity=item.quantity,
                     received_quantity=0,
                     cost_price=item.cost_price,
-                    subtotal=item.cost_price * item.quantity,
+                    subtotal=0,
                 )
-                receipt.amount += receipt_item.subtotal
+                # receipt.amount += receipt_item.subtotal
 
             receipt.save(update_fields=["amount"])
             instance.set_finished()

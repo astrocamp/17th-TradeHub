@@ -291,7 +291,7 @@ def update_stats(sender, instance, **kwargs):
             if instance.is_finished:
                 inventory = Inventory.objects.get(id=item.stock_quantity.id)
                 inventory.quantity -= item.shipped_quantity
-                inventory.note += f"扣除庫存:{item.shipped_quantity}{time_now}"
+                inventory.note += f"扣除庫存:{item.shipped_quantity}，{time_now}"
                 item.shipped_quantity = 0
                 inventory.save()
                 item.save()
