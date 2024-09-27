@@ -1,128 +1,131 @@
 {% extends "layouts/base.html" %} {% block content %}{% load static %}
-<div class="flex justify-end mt-10 gap-2">
-  <a href="{% url 'products:new' %}" class="btn bg-orange-600 text-xl text-white hover:bg-orange-700"
-    >新增</a
-  >
-  <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-xl text-white">檔案</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-orange-500 text-xl text-white py-3 rounded-md hover:bg-orange-600 transition font-bold" onclick="my_modal_1.showModal()">匯入檔案</button>
-      <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
-    </ul>
-  </div>
-</div>
-<div class="divider text-5xl font-bold">商品列表</div>
-<div class="flex justify-center mt-10">
-    <div class="overflow-x-auto w-full">
-      <table class="table table-xl text-center">
-        <thead>
-          <tr class="text-xl">
-            <th class="mobile">
-              <form action="{% url 'products:index' %}" method="GET">
-              <select
-                class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
-                name="select"
-              >
-                <option disabled>Select</option>
-                <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
-                <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
-                <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
-                <option value="never" {% if selected_state == "never" %}selected{% endif %}>未購買</option>
-              </select>
-              <input type="hidden" name="page" value="{{ page_obj.number }}">
-              <button type="submit" class="btn btn-square btn-sm">
-                <svg
-                  class="w-5 h-5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 512 512"
-                >
-                  <path
-                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                  />
-                </svg>
-              </button>
-            </form>
-            </th>
-            <th class="mobile"><a href="{% url 'products:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th class="mobile"><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th class="mobile"><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for product in products %}
-          <tr onclick="window.location.href='{% url 'products:show' product.id %}'" class="hover cursor-pointer">
-            {% if product.state == "often" %}
-            <th>
-              <span class="btn btn-sm btn-success text-white text-lg">經常購買</span>
-            </th>
-            {% elif product.state == "haply" %}
-            <th>
-              <span class="btn btn-sm btn-warning text-white text-lg">偶爾購買</span>
-            </th>
-            {% elif product.state == "never" %}
-            <th>
-              <span class="btn btn-sm btn-error text-white text-lg">未購買</span>
-            </th>
-            {% endif %}
-            <th class="mobile text-xl">{{product.number}}</th>
-            <th class="text-xl">{{product.product_name}}</th>
-            <th class="mobile text-xl">{{product.cost_price}}</th>
-            <th class="mobile text-xl">{{product.sale_price}}</th>
-            <th>
-              <div class="dropdown dropdown-left">
-                <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg m-1" @click.stop>操作</div>
-                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                  <li>
-                    <a href="{% url 'products:edit' product.id %}" class="btn btn-primary text-white text-lg">
-                    編輯
-                    </a>
-                  </li>
-                  <!-- <li>
-                    <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error text-white text-lg">
-                      刪除
-                    </a>
-                  </li> -->
-                </ul>
-              </div>
-            </th>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      <div class="pagination join flex justify-center mt-10">
-        {% if page_obj.has_other_pages %}
-        <span class="step-links">
-
-          <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn">第1頁</button></a
-          >
-          {% if page_obj.has_previous %}
-          <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn" >«</button></a
-          >
-          {% else %}
-          <button class="join-item btn" disabled="disabled">«</button>
-          {% endif %}
-          <button class="join-item btn">
-            第{{ page_obj.number }}頁
-          </button>
-          {% if page_obj.has_next %}
-          <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn">»</button></a
-          >
-          {% else %}
-          <button class="join-item btn" disabled="disabled">»</button>
-          {% endif %}
-          <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
-          >
-        </span>
-        {% endif %}
+<div class="flex flex-col mx-auto w-full justify-center">
+  <div class="w-full flex flex-row justify-between mt-6 w-full">
+    <div class="divider text-3xl sm:text-4xl font-bold">商品列表</div>
+    <div class="flex flex-row gap-2 justify-end mr-4">
+      <a href="{% url 'products:new' %}" class="btn bg-orange-600 text-xl text-white hover:bg-orange-700"
+        >新增</a
+      >
+      <div class="dropdown dropdown-bottom dropdown-end">
+        <div x-data tabindex="0" role="button" class="btn btn-success text-xl text-white">檔案</div>
+        <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+          <button class="btn bg-yellow-500 text-xl text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+        </ul>
       </div>
     </div>
   </div>
+
+  <div class="flex justify-center mt-14">
+      <div class="overflow w-full">
+        <table class="table table-sm text-center text-nowrap sm:table-lg">
+          <thead>
+            <tr class="text-lg sm:text-xl">
+              <th class="w-1/3 sm:w-1/6">
+                <form action="{% url 'products:index' %}" method="GET">
+                <select
+                  class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                  name="select"
+                >
+                  <option disabled>Select</option>
+                  <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                  <option value="often" {% if selected_state == "often" %}selected{% endif %}>經常購買</option>
+                  <option value="haply" {% if selected_state == "haply" %}selected{% endif %}>偶爾購買</option>
+                  <option value="never" {% if selected_state == "never" %}selected{% endif %}>未購買</option>
+                </select>
+                <input type="hidden" name="page" value="{{ page_obj.number }}">
+                <button type="submit" class="btn btn-square btn-sm">
+                  <svg
+                    class="w-5 h-5"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 512 512"
+                  >
+                    <path
+                      d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                    />
+                  </svg>
+                </button>
+              </form>
+              </th>
+              <th class="w-1/3 sm:w-1/6"><a href="{% url 'products:index' %}?sort=number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">編號{% if order_by == 'number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+              <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'products:index' %}?sort=product_name&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">名稱{% if order_by == 'product_name' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+              <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'products:index' %}?sort=cost_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進價{% if order_by == 'cost_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+              <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'products:index' %}?sort=sale_price&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">售價{% if order_by == 'sale_price' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+              <th class="w-1/3 sm:w-1/6"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for product in products %}
+            <tr onclick="window.location.href='{% url 'products:show' product.id %}'" class="hover cursor-pointer">
+              {% if product.state == "often" %}
+              <th class="w-1/3 sm:w-1/6">
+                <span class="btn btn-sm btn-success text-white text-lg">經常購買</span>
+              </th>
+              {% elif product.state == "haply" %}
+              <th class="w-1/3 sm:w-1/6">
+                <span class="btn btn-sm btn-warning text-white text-lg">偶爾購買</span>
+              </th>
+              {% elif product.state == "never" %}
+              <th class="w-1/3 sm:w-1/6">
+                <span class="btn btn-sm btn-error text-white text-lg">未購買</span>
+              </th>
+              {% endif %}
+              <th class="text-lg w-1/3 sm:w-1/6">{{product.number}}</th>
+              <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{product.product_name}}</th>
+              <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{product.cost_price}}</th>
+              <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{product.sale_price}}</th>
+              <th class="w-1/3 sm:w-1/6">
+                <div class="dropdown dropdown-left">
+                  <div x-data tabindex="0" role="button" class="btn btn-sm btn-success text-white text-lg m-1" @click.stop>操作</div>
+                  <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                    <li>
+                      <a href="{% url 'products:edit' product.id %}" class="btn btn-sm btn-primary text-white text-lg">
+                      編輯
+                      </a>
+                    </li>
+                    <!-- <li>
+                      <a onclick="return confirm('確認刪除?')" href="{% url 'products:delete' product.id %}" class="btn btn-error text-white text-lg">
+                        刪除
+                      </a>
+                    </li> -->
+                  </ul>
+                </div>
+              </th>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <div class="pagination join flex justify-center mt-10">
+          {% if page_obj.has_other_pages %}
+          <span class="step-links">
+
+            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">第1頁</button></a
+            >
+            {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn" >«</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">«</button>
+            {% endif %}
+            <button class="join-item btn">
+              第{{ page_obj.number }}頁
+            </button>
+            {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">»</button></a
+            >
+            {% else %}
+            <button class="join-item btn" disabled="disabled">»</button>
+            {% endif %}
+            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+              ><button class="join-item btn">第{{ page_obj.paginator.num_pages }}頁</button></a
+            >
+          </span>
+          {% endif %}
+        </div>
+      </div>
+    </div>
 </div>
 {% url 'products:export_sample' as urlExmportSample %}
 {% url 'products:import_file' as import_file_url %}
