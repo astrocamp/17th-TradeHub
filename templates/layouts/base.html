@@ -16,10 +16,9 @@
       {% include "shared/navbar.html" %}
       {% block out_home %}{% endblock %}
       <div class="container mx-auto mb-1 relative w-90p sm:w-85p md:w-80p lg:w-75p left:0 right:0">
-        <div class="relative top-24">
-            {% block content %} {% endblock %}
+        <div class="relative top-24 mx-auto">
+          {% block content %} {% endblock %}
           <div class="h-[60px] w-full"></div>
-          <div class="h-[30px] w-full"></div>
         </div>
       </div>
       {% include "shared/footer.html" %}
