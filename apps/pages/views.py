@@ -269,7 +269,7 @@ def search(request):
         for item in products:
             results += [
                 (
-                    item.id,
+                    item.number,
                     item.product_name,
                     item.cost_price,
                     item.sale_price,
@@ -284,7 +284,7 @@ def search(request):
         for item in clients:
             results += [
                 (
-                    item.id,
+                    item.number,
                     item.name,
                     item.phone_number,
                     item.address,
@@ -299,7 +299,7 @@ def search(request):
         for item in suppliers:
             results += [
                 (
-                    item.id,
+                    item.number,
                     item.name,
                     item.telephone,
                     item.contact_person,
@@ -316,7 +316,7 @@ def search(request):
         for item in inventory:
             results += [
                 (
-                    item.id,
+                    item.number,
                     item.product,
                     item.supplier,
                     item.quantity,
@@ -331,7 +331,7 @@ def search(request):
         for order in orders:
             results += [
                 (
-                    order.id,
+                    order.order_number,
                     order.client,
                     order.client_tel,
                     order.client_address,
@@ -347,7 +347,7 @@ def search(request):
         for order in purchase:
             results += [
                 (
-                    order.id,
+                    order.order_number,
                     order.supplier,
                     order.supplier_tel,
                     order.contact_person,
@@ -363,7 +363,7 @@ def search(request):
         for order in purchase:
             results += [
                 (
-                    order.id,
+                    order.order_number,
                     order.client,
                     order.client_tel,
                     order.client_address,
@@ -380,7 +380,7 @@ def search(request):
         for order in purchase:
             results += [
                 (
-                    order.id,
+                    order.order_number,
                     order.supplier.name,
                     order.supplier_tel,
                     order.contact_person,
