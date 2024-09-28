@@ -69,10 +69,10 @@
             <span class="btn btn-sm btn-error text-white text-lg">缺貨</span>
           </th>
           {% endif %}
-          <td class="text-lg w-1/3 sm:w-1/6 sm:text-xl">{{ item.number }}</td>
-          <td class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.product }}</td>
-          <td class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.quantity }}</td>
-          <td class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.safety_stock }}</td>
+          <td class="text-lg font-bold w-1/3 sm:w-1/6 sm:text-xl">{{ item.number }}</td>
+          <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.product }}</td>
+          <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.quantity }}</td>
+          <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.safety_stock }}</td>
           <td class="w-1/3 sm:w-1/6">
             <div class="dropdown dropdown-left">
               <div x-data tabindex="0" role="button" class="btn btn-sm btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
