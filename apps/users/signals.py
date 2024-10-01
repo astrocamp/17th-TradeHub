@@ -15,7 +15,7 @@ def notify_order(sender, instance, **kwargs):
     if instance.order_number != "":
         if instance.state == Order.TO_BE_CONFIRMED:
             notification = Notification(
-                message=f"[訂單編號 {instance.order_number}]\n訂單已建立，且進入訂單流程",
+                message=f"[訂單編號{instance.order_number}]\n訂單已建立，且進入訂單流程",
                 sender_type="Order",
                 sender_state="to_be_confirmed",
                 user=instance.user,
@@ -25,7 +25,7 @@ def notify_order(sender, instance, **kwargs):
 
         elif instance.state == Order.PROGRESS:
             notification = Notification(
-                message=f"[訂單編號 {instance.order_number}]\n訂單已進入訂單流程",
+                message=f"[訂單編號{instance.order_number}]\n訂單已進入訂單流程",
                 sender_type="Order",
                 sender_state="progress",
                 user=instance.user,
@@ -34,7 +34,7 @@ def notify_order(sender, instance, **kwargs):
                 notification.save()
         elif instance.state == Order.FINISHED:
             notification = Notification(
-                message=f"[訂單編號 {instance.order_number}]\n訂單已結案",
+                message=f"[訂單編號{instance.order_number}]\n訂單已結案",
                 sender_type="Order",
                 sender_state="finished",
                 user=instance.user,
@@ -48,7 +48,7 @@ def notify_purchase_order(sender, instance, **kwargs):
     if instance.order_number != "":
         if instance.state == PurchaseOrder.PENDING:
             notification = Notification(
-                message=f"[採購單編號 {instance.order_number}]\n等待審核",
+                message=f"[採購單編號{instance.order_number}]\n等待審核",
                 sender_type="PurchaseOrder",
                 sender_state="pending",
                 user=instance.user,
@@ -57,7 +57,7 @@ def notify_purchase_order(sender, instance, **kwargs):
                 notification.save()
         elif instance.state == PurchaseOrder.PROGRESS:
             notification = Notification(
-                message=f"[採購單編號 {instance.order_number}]\n已進入採購流程",
+                message=f"[採購單編號{instance.order_number}]\n已進入採購流程",
                 sender_type="PurchaseOrder",
                 sender_state="progress",
                 user=instance.user,
@@ -66,7 +66,7 @@ def notify_purchase_order(sender, instance, **kwargs):
                 notification.save()
         elif instance.state == PurchaseOrder.FINISHED:
             notification = Notification(
-                message=f"[採購單編號 {instance.order_number}]\n已結案",
+                message=f"[採購單編號{instance.order_number}]\n已結案",
                 sender_type="PurchaseOrder",
                 sender_state="finished",
                 user=instance.user,
@@ -80,7 +80,7 @@ def notify_goods_receipt(sender, instance, **kwargs):
     if instance.order_number != "":
         if instance.state == GoodsReceipt.TO_BE_RESTOCKED:
             notification = Notification(
-                message=f"[進貨單編號 {instance.order_number}]\n待進貨",
+                message=f"[進貨單編號{instance.order_number}]\n待進貨",
                 sender_type="GoodsReceipt",
                 sender_state="to_be_restocked",
                 user=instance.user,
@@ -112,7 +112,7 @@ def notify_sale_order(sender, instance, **kwargs):
     if instance.order_number != "":
         if instance.state == SalesOrder.PENDING:
             notification = Notification(
-                message=f"[銷貨單編號 {instance.order_number}]\n待出貨",
+                message=f"[銷貨單編號{instance.order_number}]\n待出貨",
                 sender_type="SalesOrder",
                 sender_state="pending",
                 user=instance.user,
