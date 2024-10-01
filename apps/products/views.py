@@ -24,7 +24,7 @@ def index(request):
     is_desc = request.GET.get("desc", True) == "False"
     state_match = {"often", "haply", "never"}
 
-    products = Product.objects.all()
+    products = Product.objects.filter(user=request.user)
 
     if state in state_match:
         products = Product.objects.filter(state=state)
@@ -48,15 +48,16 @@ def index(request):
 
 def new(request):
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, user=request.user)
         if form.is_valid():
             product = form.save(commit=False)
             product.user = request.user
             product.save()
             messages.success(request, "新增完成!")
             return redirect("products:index")
-        return render(request, "products/new.html", {"form": form})
-    form = ProductForm()
+    else:
+        form = ProductForm(user=request.user)
+
     return render(request, "products/new.html", {"form": form})
 
 

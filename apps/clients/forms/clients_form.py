@@ -93,8 +93,6 @@ class ClientForm(forms.ModelForm):
 
         if email == "":
             self.add_error("email", "請填入電子信箱")
-        elif Client.objects.filter(email=email).exclude(id=self.instance.id).exists():
-            self.add_error("email", "此電子信箱已被使用")
 
         if not address:
             self.add_error("address", "請填入地址")

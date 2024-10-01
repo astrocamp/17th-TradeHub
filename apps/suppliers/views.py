@@ -17,7 +17,7 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"often", "haply", "never"}
 
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.filter(user=request.user)
 
     if state in state_match:
         suppliers = Supplier.objects.filter(state=state)

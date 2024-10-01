@@ -23,7 +23,7 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    inventory = Inventory.objects.order_by(order_by)
+    inventory = Inventory.objects.filter(user=request.user).order_by(order_by)
 
     if state in Inventory.AVAILABLE_STATES:
         inventory = Inventory.objects.filter(state=state)

@@ -21,7 +21,7 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"often", "haply", "never"}
 
-    clients = Client.objects.all()
+    clients = Client.objects.filter(user=request.user)
 
     if state in state_match:
         clients = Client.objects.filter(state=state)
@@ -47,7 +47,10 @@ def new(request):
     if request.method == "POST":
         form = ClientForm(request.POST)
         if form.is_valid():
-            form.save()
+            client = form.save(commit=False)
+            client.user = request.user
+            client.save()
+
             messages.success(request, "新增完成!")
             return redirect("clients:index")
         else:

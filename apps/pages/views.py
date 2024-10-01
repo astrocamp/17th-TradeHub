@@ -1,4 +1,4 @@
-import json
+import calendar
 from datetime import timedelta
 from math import pi
 
@@ -44,32 +44,22 @@ def welcome(request):
 def sales_chart(request):
 
     # 抓基本資料數值
-    clients_num = len(Client.objects.values("name"))
-    products_num = len(Product.objects.values("number"))
-    suppliers_num = len(Supplier.objects.values("name"))
-    inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
-
-    def arabic_to_chinese(num):
-        chinese_digits = {
-            "0": "十",
-            "1": "一",
-            "2": "二",
-            "3": "三",
-            "4": "四",
-            "5": "五",
-            "6": "六",
-            "7": "七",
-            "8": "八",
-            "9": "九",
-        }
-        return "".join(chinese_digits[digit] for digit in str(num))
+    clients_num = len(Client.objects.filter(user=request.user).values("name"))
+    products_num = len(Product.objects.filter(user=request.user).values("number"))
+    suppliers_num = len(Supplier.objects.filter(user=request.user).values("name"))
+    inventory_num = Inventory.objects.filter(user=request.user).aggregate(
+        total_quantity=Sum("quantity")
+    )
 
     def format_chinese_date(date_obj):
-        month = arabic_to_chinese(date_obj.month)
-        day = arabic_to_chinese(date_obj.day)
+        month = date_obj.month
+        day = date_obj.day
         return f"{month}月{day}日"
 
     now = timezone.now()
+    year, month = now.year, now.month
+
+    _, last_day = calendar.monthrange(year, month)
     first_day_of_month = now.replace(day=1)
     last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(
         day=1
@@ -79,23 +69,19 @@ def sales_chart(request):
     last_day_of_month_chinese = format_chinese_date(last_day_of_month)
 
     clients_month_num = Client.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     products_month_num = Product.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     suppliers_month_num = Supplier.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     inventory_month_num = Inventory.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     # 抓訂單類數值
@@ -264,7 +250,9 @@ def search(request):
     category = request.POST.get("select")
 
     if category == "Product":
-        products = Product.objects.filter(product_name__contains=search)
+        products = Product.objects.filter(
+            product_name__contains=search, user=request.user
+        )
         results = []
         for item in products:
             results += [
@@ -279,7 +267,7 @@ def search(request):
             ]
         fields_names = [fields for fields in ProductForm._meta.labels.values()]
     elif category == "Client":
-        clients = Client.objects.filter(name__contains=search)
+        clients = Client.objects.filter(name__contains=search, user=request.user)
         results = []
         for item in clients:
             results += [
@@ -294,7 +282,7 @@ def search(request):
             ]
         fields_names = [fields for fields in ClientForm._meta.labels.values()]
     elif category == "Supplier":
-        suppliers = Supplier.objects.filter(name__contains=search)
+        suppliers = Supplier.objects.filter(name__contains=search, user=request.user)
         results = []
         for item in suppliers:
             results += [
@@ -311,7 +299,9 @@ def search(request):
             ]
         fields_names = [fields for fields in SupplierForm._meta.labels.values()]
     elif category == "Inventory":
-        inventory = Inventory.objects.filter(product__product_name__contains=search)
+        inventory = Inventory.objects.filter(
+            product__product_name__contains=search, user=request.user
+        )
         results = []
         for item in inventory:
             results += [
@@ -326,7 +316,7 @@ def search(request):
             ]
         fields_names = [fields for fields in RestockForm._meta.labels.values()]
     elif category == "Order":
-        orders = Order.objects.filter(order_number__contains=search)
+        orders = Order.objects.filter(order_number__contains=search, user=request.user)
         results = []
         for order in orders:
             results += [
@@ -342,7 +332,9 @@ def search(request):
             ]
         fields_names = [fields for fields in OrderForm._meta.labels.values()]
     elif category == "PurchaseOrder":
-        purchase = PurchaseOrder.objects.filter(order_number__contains=search)
+        purchase = PurchaseOrder.objects.filter(
+            order_number__contains=search, user=request.user
+        )
         results = []
         for order in purchase:
             results += [
@@ -358,7 +350,9 @@ def search(request):
             ]
         fields_names = [fields for fields in PurchaseOrderForm._meta.labels.values()]
     elif category == "SalesOrder":
-        purchase = SalesOrder.objects.filter(order_number__contains=search)
+        purchase = SalesOrder.objects.filter(
+            order_number__contains=search, user=request.user
+        )
         results = []
         for order in purchase:
             results += [
@@ -375,7 +369,9 @@ def search(request):
             ]
         fields_names = [fields for fields in SalesOrderForm._meta.labels.values()]
     elif category == "GoodsReceipt":
-        purchase = GoodsReceipt.objects.filter(order_number__contains=search)
+        purchase = GoodsReceipt.objects.filter(
+            order_number__contains=search, user=request.user
+        )
         results = []
         for order in purchase:
             results += [

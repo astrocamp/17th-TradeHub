@@ -1,7 +1,7 @@
 from django import forms
 from django.forms import ModelForm
 
-from apps.products.models import Product
+from apps.products.models import Product, Supplier
 
 
 class FileUploadForm(forms.Form):
@@ -66,7 +66,12 @@ class ProductForm(ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
+        if self.user:
+            self.fields["supplier"].queryset = Supplier.objects.filter(user=self.user)
+
         for field in self.fields.values():
             field.required = False
 
