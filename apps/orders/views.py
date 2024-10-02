@@ -1,4 +1,3 @@
-import csv
 import random
 import string
 from datetime import datetime, timedelta
@@ -27,7 +26,7 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    orders = Order.objects.all()
+    orders = Order.objects.filter(user=request.user)
 
     if state in Order.AVAILABLE_STATES:
         orders = Order.objects.filter(state=state)
@@ -52,8 +51,10 @@ def index(request):
 
 def new(request):
     if request.method == "POST":
-        form = OrderForm(request.POST)
-        formset = OrderProductItemFormSet(request.POST, instance=form.instance)
+        form = OrderForm(request.POST, user=request.user)
+        formset = OrderProductItemFormSet(
+            request.POST, user=request.user, instance=form.instance
+        )
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
@@ -69,8 +70,8 @@ def new(request):
             return render(
                 request, "orders/new.html", {"form": form, "formset": formset}
             )
-    form = OrderForm()
-    formset = OrderProductItemFormSet(instance=form.instance)
+    form = OrderForm(user=request.user)
+    formset = OrderProductItemFormSet(instance=form.instance, user=request.user)
     return render(
         request,
         "orders/new.html",

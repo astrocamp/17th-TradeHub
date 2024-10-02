@@ -30,7 +30,7 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    sales_orders = SalesOrder.objects.all()
+    sales_orders = SalesOrder.objects.filter(user=request.user)
 
     if state in SalesOrder.AVAILABLE_STATES:
         sales_orders = SalesOrder.objects.filter(state=state)

@@ -32,7 +32,7 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    purchase_orders = PurchaseOrder.objects.all()
+    purchase_orders = PurchaseOrder.objects.filter(user=request.user)
 
     if state in PurchaseOrder.AVAILABLE_STATES:
         purchase_orders = purchase_orders.filter(state=state)
@@ -55,8 +55,10 @@ def index(request):
 
 def new(request):
     if request.method == "POST":
-        form = PurchaseOrderForm(request.POST)
-        formset = ProductItemFormSet(request.POST, instance=form.instance)
+        form = PurchaseOrderForm(request.POST, user=request.user)
+        formset = ProductItemFormSet(
+            request.POST, user=request.user, instance=form.instance
+        )
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
@@ -72,8 +74,8 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-    form = PurchaseOrderForm()
-    formset = ProductItemFormSet(instance=form.instance)
+    form = PurchaseOrderForm(user=request.user)
+    formset = ProductItemFormSet(instance=form.instance, user=request.user)
     return render(
         request,
         "purchase_orders/new.html",

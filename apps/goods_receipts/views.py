@@ -32,8 +32,7 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    goods_receipts = GoodsReceipt.objects.all()
-    print(goods_receipts)
+    goods_receipts = GoodsReceipt.objects.filter(user=request.user)
 
     if state in GoodsReceipt.AVAILABLE_STATES:
         goods_receipts = GoodsReceipt.objects.filter(state=state)

@@ -85,54 +85,54 @@ def sales_chart(request):
     ).count()
 
     # 抓訂單類數值
-    orders_num = len(Order.objects.values("deleted_at").filter(deleted_at=None))
-    orders_progress_num = len(
-        Order.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
+    orders_num = len(
+        Order.objects.filter(
+            user=request.user,
         )
+    )
+    orders_progress_num = len(
+        Order.objects.values("state").filter(user=request.user, state="progress")
     )
     orders_pending_num = len(
-        Order.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_confirmed"
-        )
+        Order.objects.values("state").filter(user=request.user, state="to_be_confirmed")
     )
     sales_orders_num = len(
-        SalesOrder.objects.values("deleted_at").filter(deleted_at=None)
+        SalesOrder.objects.filter(
+            user=request.user,
+        )
     )
     sales_orders_progress_num = len(
-        SalesOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
-        )
+        SalesOrder.objects.values("state").filter(user=request.user, state="progress")
     )
     sales_orders_pending_num = len(
-        SalesOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
-        )
+        SalesOrder.objects.values("state").filter(user=request.user, state="pending")
     )
     purchase_orders_num = len(
-        PurchaseOrder.objects.values("deleted_at").filter(deleted_at=None)
+        PurchaseOrder.objects.filter(
+            user=request.user,
+        )
     )
     purchase_orders_progress_num = len(
-        PurchaseOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
+        PurchaseOrder.objects.values("state").filter(
+            user=request.user, state="progress"
         )
     )
     purchase_orders_pending_num = len(
-        PurchaseOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
-        )
+        PurchaseOrder.objects.values("state").filter(user=request.user, state="pending")
     )
     goods_receipts_num = len(
-        GoodsReceipt.objects.values("deleted_at").filter(deleted_at=None)
+        GoodsReceipt.objects.filter(
+            user=request.user,
+        )
     )
     goods_receipts_progress_num = len(
-        GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_stocked"
+        GoodsReceipt.objects.values("state").filter(
+            user=request.user, state="to_be_stocked"
         )
     )
     goods_receipts_pending_num = len(
-        GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_restocked"
+        GoodsReceipt.objects.values("state").filter(
+            user=request.user, state="to_be_restocked"
         )
     )
 
@@ -141,12 +141,12 @@ def sales_chart(request):
         Client.objects.annotate(
             total_quantity=Count("orders"), total_amount=Sum("orders__amount")
         )
-        .filter(total_quantity__gt=0)
+        .filter(user=request.user, total_quantity__gt=0)
         .order_by("-total_amount")[:5]
     )
 
     # 圓餅圖
-    sales_orders = SalesOrder.objects.all()
+    sales_orders = SalesOrder.objects.filter(user=request.user)
     sales_data = (
         sales_orders.values("items__product__product_name")
         .annotate(total_quantity=Sum("items__ordered_quantity"))
