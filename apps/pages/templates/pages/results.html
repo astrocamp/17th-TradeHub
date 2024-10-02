@@ -1,20 +1,25 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
 <div class="divider text-3xl font-bold mt-10">搜尋結果</div>
-<div class="flex justify-center mt-10">
-  <div class="overflow">
-    <table class="table table-xl text-center">
+<div class="container flex justify-center mt-14">
+  <div class="overflow-x-auto">
+    <table class="table table-sm text-center sm:table-lg">
       <thead>
         <th></th>
         {% for fields_name in fields_names %}
         <th class="text-xl">{{ fields_name }}</th>
         {% endfor %}
       </thead>
-      </tbody>
+      <tbody>
         {% for items in results %}
-        <tr>
+        <tr
+          onclick="location.href='{% if item_id == '' %}{% url url_link %}{% else %}{% url url_link item_id %}{% endif %}'"
+          class="hover:bg-gray-200 cursor-pointer"
+        >
           {% for item in items %}
-          <td class="text-lg">{{ item }}</td>
+          <td class="text-lg p-0">
+            <a>{{ item|truncatechars:15 }}</a>
+          </td>
           {% endfor %}
         </tr>
         {% endfor %}
