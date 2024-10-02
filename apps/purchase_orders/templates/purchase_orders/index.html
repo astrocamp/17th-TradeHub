@@ -47,7 +47,7 @@
                       </th>
                       <th class="w-1/3 sm:w-1/6"><a href="{% url 'purchase_orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">採購單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                       <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'purchase_orders:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                      <th class="mobile"><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                      <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'purchase_orders:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                       <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'purchase_orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                       <th class="w-1/3 sm:w-1/6"></th>
                   </tr>
