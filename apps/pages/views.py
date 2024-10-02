@@ -318,7 +318,7 @@ def search(request):
         fields_names = [fields for fields in SupplierForm._meta.labels.values()]
     elif category == "Inventory":
         inventory = Inventory.objects.filter(product__product_name__contains=search)
-        url_link = "inventory:index"
+        url_link = "inventory:show"
         results = []
         for item in inventory:
             results += [
@@ -331,7 +331,7 @@ def search(request):
                     item.note,
                 )
             ]
-            item_id = ""
+            item_id = item.id
         fields_names = [fields for fields in RestockForm._meta.labels.values()]
     elif category == "Order":
         orders = Order.objects.filter(order_number__contains=search)

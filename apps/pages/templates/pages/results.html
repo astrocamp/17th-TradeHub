@@ -11,12 +11,19 @@
         {% endfor %}
       </thead>
       <tbody>
-        {% for items in results %}
+        {% for items in results %} {% if items.0|length == 4 %}
         <tr
-          onclick="location.href='{% if item_id == '' %}{% url url_link %}{% else %}{% url url_link item_id %}{% endif %}'"
+          onclick="location.href='{% url url_link items.0|slice:'1:4' %}'"
           class="hover:bg-gray-200 cursor-pointer"
         >
-          {% for item in items %}
+          {% elif items.0|length == 15 %}
+        </tr>
+
+        <tr
+          onclick="location.href='{% url url_link items.0|slice:'12:' %}'"
+          class="hover:bg-gray-200 cursor-pointer"
+        >
+          {% endif %} {% for item in items %}
           <td class="text-lg p-0">
             <a>{{ item|truncatechars:15 }}</a>
           </td>
