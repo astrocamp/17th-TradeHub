@@ -7,7 +7,7 @@ from django_fsm import FSMField, transition
 from apps.clients.models import Client
 from apps.company.models import Company
 from apps.inventory.models import Inventory
-from apps.products.models import Product
+from apps.products.models import CustomUser, Product
 from apps.users.models import CustomUser
 
 
@@ -119,6 +119,9 @@ class SalesOrderProductItem(models.Model):
     shipped_quantity = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.product} - {self.shipped_quantity} @ {self.sale_price}"

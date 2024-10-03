@@ -255,6 +255,7 @@ def update_state(sender, instance, **kwargs):
             username=instance.username,
             amount=0,
             note=f"轉銷貨單{time_now}",
+            user=instance.user,
         )
         for item in order_items:
             SalesOrderProductItem.objects.create(
@@ -265,6 +266,7 @@ def update_state(sender, instance, **kwargs):
                 shipped_quantity=0,
                 subtotal=item.subtotal,
                 stock_quantity=item.stock_quantity,
+                user=instance.user,
             )
         instance.note = f"{time_now}已轉銷貨單"
         instance.is_finished = False

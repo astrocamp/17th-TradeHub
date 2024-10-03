@@ -73,7 +73,7 @@
                     <th class="text-lg w-1/3 sm:w-1/6 sm:text-xl">{{ order.order_number }}</th>
                     <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client.name }}</th>
                     <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client_tel }}</th>
-                    <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client_tel }}</th>
+                    <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.amount }}</th>
                     <th class="w-1/3 sm:w-1/6">
                       <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}

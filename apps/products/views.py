@@ -233,6 +233,7 @@ def update_state(sender, instance, **kwargs):
             safety_stock=0,
             note=f"{time_now} 新建商品，預建庫存",
             state=Inventory.NEW_STOCK,
+            user=instance.user,
         )
     post_save.disconnect(update_state, sender=Product)
     product = SalesOrderProductItem.objects.filter(product=instance.id).count()
