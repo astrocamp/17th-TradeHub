@@ -34,9 +34,6 @@ def register(request):
             company = Company.objects.get(id=1)
             user.company = company
             user.save()
-
-            write_fake(user)
-
             messages.success(request, "成功註冊!")
             login(request, user)
             messages.success(request, "註冊成功，並完成登入!")
@@ -282,78 +279,3 @@ def unread_count(request):
 def mark_all_as_read(request):
     Notification.objects.all().update(is_read=True)
     return redirect("users:all_notifications")
-
-
-def write_fake(user):
-    import json
-    from apps.suppliers.models import Supplier
-    from apps.clients.models import Client
-    from apps.products.models import Product
-    from apps.inventory.models import Inventory
-
-    with open("./fake_data/suppliers_data.json", "r", encoding="utf-8") as fake:
-        template_data = json.load(fake)
-    for items in template_data:
-        data = items["fields"]
-        Supplier.objects.create(
-            number=data["number"],
-            name=data["name"],
-            address=data["address"],
-            email=data["email"],
-            gui_number=data["gui_number"],
-            contact_person=data["contact_person"],
-            telephone=data["telephone"],
-            created_at=data["created_at"],
-            updated_at=data["updated_at"],
-            note=data["note"],
-            user=user,
-        )
-
-    with open("./fake_data/clients_data.json", "r", encoding="utf-8") as fake:
-        template_data = json.load(fake)
-    for items in template_data:
-        data = items["fields"]
-        Client.objects.create(
-            number=data["number"],
-            name=data["name"],
-            phone_number=data["phone_number"],
-            address=data["address"],
-            email=data["email"],
-            created_at=data["created_at"],
-            updated_at=data["updated_at"],
-            note=data["note"],
-            user=user,
-        )
-
-    with open("./fake_data/products_data.json", "r", encoding="utf-8") as fake:
-        template_data = json.load(fake)
-    for items in template_data:
-        data = items["fields"]
-        Product.objects.create(
-            number=data["number"],
-            supplier=Supplier.objects.get(pk=data["supplier"]),
-            note=data["note"],
-            sale_price=data["sale_price"],
-            cost_price=data["cost_price"],
-            created_at=data["created_at"],
-            updated_at=data["updated_at"],
-            product_name=data["product_name"],
-            user=user,
-        )
-
-    with open("./fake_data/inventory_data.json", "r", encoding="utf-8") as fake:
-        template_data = json.load(fake)
-    for items in template_data:
-        data = items["fields"]
-        Inventory.objects.create(
-            number=data["number"],
-            product=Product.objects.get(pk=data["product"]),
-            supplier=Supplier.objects.get(pk=data["supplier"]),
-            quantity=data["quantity"],
-            safety_stock=data["safety_stock"],
-            created_at=data["created_at"],
-            deleted_at=data.get("deleted_at"),
-            note=data["note"],
-            last_updated=data["last_updated"],
-            user=user,
-        )
