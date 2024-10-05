@@ -49,7 +49,7 @@
                     </th>
                     <th class="w-1/3 sm:w-1/6"  ><a href="{% url 'orders:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶訂單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'orders:index' %}?sort=client&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶名稱{% if order_by == 'client' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th class="mobile"><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                    <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'orders:index' %}?sort=client_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">客戶電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'orders:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
                     <th class="w-1/3 sm:w-1/6"></th>
                 </tr>
@@ -73,8 +73,8 @@
                     <th class="text-lg w-1/3 sm:w-1/6 sm:text-xl">{{ order.order_number }}</th>
                     <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client.name }}</th>
                     <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.client_tel }}</th>
-                    <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.amount }}</th>
-                    <th class="w-1/3 sm:w-1/6">
+                    <th class="hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ order.amount }}</th>
+                    <th class="text-lg w-1/3 sm:w-1/6">
                       <form action="{% url 'orders:delete' order.id %}" method="POST">
                         {% csrf_token %}
                         <div class="dropdown dropdown-left">
