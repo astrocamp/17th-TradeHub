@@ -208,11 +208,14 @@ def update_state(sender, instance, **kwargs):
     if instance.quantity <= 0 and instance.safety_stock != 0:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
+            user=instance.user,
             state=PurchaseOrder.PENDING,
         )
         if not purchase_order:
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
-            supplier = Supplier.objects.get(name=instance.supplier.name)
+            supplier = Supplier.objects.get(
+                name=instance.supplier.name, user=instance.user
+            )
             order = PurchaseOrder.objects.create(
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
@@ -221,6 +224,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                user=instance.user,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -228,6 +232,7 @@ def update_state(sender, instance, **kwargs):
                 quantity=instance.safety_stock,
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price * instance.safety_stock,
+                user=instance.user,
             )
             order_number = generate_order_number(order)
             order.order_number = order_number
@@ -255,11 +260,14 @@ def update_state(sender, instance, **kwargs):
     elif instance.quantity < instance.safety_stock:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
+            user=instance.user,
             state=PurchaseOrder.PENDING,
         )
         if not purchase_order:
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
-            supplier = Supplier.objects.get(name=instance.supplier.name)
+            supplier = Supplier.objects.get(
+                name=instance.supplier.name, user=instance.user
+            )
             order = PurchaseOrder.objects.create(
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
@@ -268,6 +276,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                user=instance.user,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -276,6 +285,7 @@ def update_state(sender, instance, **kwargs):
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price
                 * (instance.safety_stock - instance.quantity),
+                user=instance.user,
             )
             order_number = generate_order_number(order)
             order.order_number = order_number

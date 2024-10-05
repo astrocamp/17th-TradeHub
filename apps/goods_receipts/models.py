@@ -116,6 +116,9 @@ class GoodsReceiptProductItem(models.Model):
     received_quantity = models.PositiveIntegerField()
     cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.product} - {self.received_quantity} @ {self.cost_price}"

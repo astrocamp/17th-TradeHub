@@ -7,7 +7,7 @@ from apps.orders.models import Order
 from apps.purchase_orders.models import PurchaseOrder
 from apps.sales_orders.models import SalesOrder
 
-from .models import Notification, CustomUser
+from .models import CustomUser, Notification
 
 
 @receiver(post_save, sender=Order)
@@ -156,10 +156,11 @@ def notify_inventory(sender, instance, **kwargs):
 @receiver(post_save, sender=CustomUser)
 def write_fake(sender, instance, created, **kwargs):
     import json
-    from apps.suppliers.models import Supplier
+
     from apps.clients.models import Client
-    from apps.products.models import Product
     from apps.inventory.models import Inventory
+    from apps.products.models import Product
+    from apps.suppliers.models import Supplier
 
     if created:
         with open("./fake_data/suppliers_data.json", "r", encoding="utf-8") as fake:

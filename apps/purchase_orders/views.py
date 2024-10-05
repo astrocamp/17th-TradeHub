@@ -236,7 +236,9 @@ def update_state(sender, instance, **kwargs):
 
     if instance.state == PurchaseOrder.PROGRESS:
         if instance.is_finished:
-            items = ProductItem.objects.filter(purchase_order=instance)
+            items = ProductItem.objects.filter(
+                purchase_order=instance, user=instance.user
+            )
 
             for item in items:
                 if not item.pk:
@@ -261,6 +263,7 @@ def update_state(sender, instance, **kwargs):
                     received_quantity=0,
                     cost_price=item.cost_price,
                     subtotal=0,
+                    user=instance.user,
                 )
                 # receipt.amount += receipt_item.subtotal
 

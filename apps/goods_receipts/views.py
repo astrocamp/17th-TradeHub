@@ -262,7 +262,9 @@ def update_state(sender, instance, **kwargs):
             instance.save()
             if instance.is_finished and item.received_quantity != 0:
                 instance.note += f"入庫{item.received_quantity}個：{item.product}，剩餘{item.ordered_quantity}個{time_now}\n"
-                inventory = Inventory.objects.filter(product=item.product).first()
+                inventory = Inventory.objects.filter(
+                    product=item.product, user=instance.user
+                ).first()
 
                 if inventory:
 
@@ -277,15 +279,15 @@ def update_state(sender, instance, **kwargs):
                             last_updated=timezone.now(),
                             note=note,
                         )
-                else:
-                    Inventory.objects.create(
-                        product=item.product,
-                        supplier=instance.supplier,
-                        quantity=item.received_quantity,
-                        safety_stock=0,
-                        note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
-                        last_updated=time_now,
-                    )
+                # else:
+                #     Inventory.objects.create(
+                #         product=item.product,
+                #         supplier=instance.supplier,
+                #         quantity=item.received_quantity,
+                #         safety_stock=0,
+                #         note=f"新進貨物{item.product}：{item.received_quantity}個，供應商：{instance.supplier}，收據號碼：{instance.supplier}，收據號碼：{instance.order_number}{time_now}",
+                #         last_updated=time_now,
+                #     )
 
                 item.ordered_quantity -= item.received_quantity
                 item.received_quantity = 0
@@ -293,16 +295,16 @@ def update_state(sender, instance, **kwargs):
 
         if item.received_quantity == item.ordered_quantity:
             if instance.is_finished and item.received_quantity != 0:
-                inventory = Inventory.objects.filter(product=item.product).first()
+                inventory = Inventory.objects.filter(
+                    product=item.product, user=instance.user
+                ).first()
                 if inventory:
 
                     with transaction.atomic():
                         inventory.quantity += item.received_quantity
                         inventory.last_updated = time_now
                         inventory.note += f"入庫{item.received_quantity}個：{item.product}{time_now}\n"
-                        inventory.save(
-                            update_fields=["quantity", "last_updated", "note"]
-                        )
+                        inventory.save()
                 # else:
                 #     Inventory.objects.create(
                 #         product=item.product,
