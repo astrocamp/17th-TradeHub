@@ -160,6 +160,7 @@ def write_fake(sender, instance, created, **kwargs):
     from apps.clients.models import Client
     from apps.inventory.models import Inventory
     from apps.products.models import Product
+    from apps.products.views import update_state
     from apps.suppliers.models import Supplier
 
     if created:
@@ -197,6 +198,7 @@ def write_fake(sender, instance, created, **kwargs):
                 user=instance,
             )
 
+        post_save.disconnect(update_state, sender=Product)
         with open("./fake_data/products_data.json", "r", encoding="utf-8") as fake:
             template_data = json.load(fake)
         for items in template_data:
@@ -212,6 +214,7 @@ def write_fake(sender, instance, created, **kwargs):
                 product_name=data["product_name"],
                 user=instance,
             )
+        post_save.connect(update_state, sender=Product)
 
         with open("./fake_data/inventory_data.json", "r", encoding="utf-8") as fake:
             template_data = json.load(fake)
