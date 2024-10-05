@@ -253,6 +253,7 @@ def search(request):
         products = Product.objects.filter(
             product_name__contains=search, user=request.user
         )
+        url_link = "products:show"
         results = []
         for item in products:
             results += [
@@ -265,9 +266,11 @@ def search(request):
                     item.note,
                 )
             ]
+            item_id = item.id
         fields_names = [fields for fields in ProductForm._meta.labels.values()]
     elif category == "Client":
         clients = Client.objects.filter(name__contains=search, user=request.user)
+        url_link = "clients:show"
         results = []
         for item in clients:
             results += [
@@ -280,9 +283,11 @@ def search(request):
                     item.note,
                 )
             ]
+            item_id = item.id
         fields_names = [fields for fields in ClientForm._meta.labels.values()]
     elif category == "Supplier":
         suppliers = Supplier.objects.filter(name__contains=search, user=request.user)
+        url_link = "suppliers:show"
         results = []
         for item in suppliers:
             results += [
@@ -297,11 +302,13 @@ def search(request):
                     item.note,
                 )
             ]
+            item_id = item.id
         fields_names = [fields for fields in SupplierForm._meta.labels.values()]
     elif category == "Inventory":
         inventory = Inventory.objects.filter(
             product__product_name__contains=search, user=request.user
         )
+        url_link = "inventory:show"
         results = []
         for item in inventory:
             results += [
@@ -314,9 +321,11 @@ def search(request):
                     item.note,
                 )
             ]
+            item_id = item.id
         fields_names = [fields for fields in RestockForm._meta.labels.values()]
     elif category == "Order":
         orders = Order.objects.filter(order_number__contains=search, user=request.user)
+        url_link = "orders:show"
         results = []
         for order in orders:
             results += [
@@ -330,11 +339,13 @@ def search(request):
                     order.amount,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in OrderForm._meta.labels.values()]
     elif category == "PurchaseOrder":
         purchase = PurchaseOrder.objects.filter(
             order_number__contains=search, user=request.user
         )
+        url_link = "purchase_orders:show"
         results = []
         for order in purchase:
             results += [
@@ -348,11 +359,13 @@ def search(request):
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in PurchaseOrderForm._meta.labels.values()]
     elif category == "SalesOrder":
         purchase = SalesOrder.objects.filter(
             order_number__contains=search, user=request.user
         )
+        url_link = "sales_orders:show"
         results = []
         for order in purchase:
             results += [
@@ -367,11 +380,13 @@ def search(request):
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in SalesOrderForm._meta.labels.values()]
     elif category == "GoodsReceipt":
         purchase = GoodsReceipt.objects.filter(
             order_number__contains=search, user=request.user
         )
+        url_link = "goods_receipts:show"
         results = []
         for order in purchase:
             results += [
@@ -386,9 +401,12 @@ def search(request):
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in GoodsReceiptForm._meta.labels.values()]
 
     content = {
+        "url_link": url_link,
+        "item_id": item_id,
         "search": search,
         "category": category,
         "results": results,
