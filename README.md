@@ -5,7 +5,7 @@
 </div>
 
 - 網站連結：https://www.tradehub17th.com/
-  [網站說明](https://docs.google.com/presentation/d/1v2hQw_RKSWMy0oe8V-FXMv5XkIlaJOuUAqhZvGWlnzQ/edit#slide=id.p)
+  [簡報說明](https://docs.google.com/presentation/d/1v2hQw_RKSWMy0oe8V-FXMv5XkIlaJOuUAqhZvGWlnzQ/edit#slide=id.p)、[介紹影片](https://youtu.be/xHtVyjpEEGk?si=yQsw16fvhiQ_Wjo6)
 
 ### 技術使用
 
