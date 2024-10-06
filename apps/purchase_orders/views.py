@@ -35,7 +35,7 @@ def index(request):
     purchase_orders = PurchaseOrder.objects.filter(user=request.user)
 
     if state in PurchaseOrder.AVAILABLE_STATES:
-        purchase_orders = purchase_orders.filter(state=state)
+        purchase_orders = purchase_orders.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     purchase_orders = purchase_orders.order_by(order_by_field)
     paginator = Paginator(purchase_orders, 5)

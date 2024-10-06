@@ -35,7 +35,7 @@ def index(request):
     goods_receipts = GoodsReceipt.objects.filter(user=request.user)
 
     if state in GoodsReceipt.AVAILABLE_STATES:
-        goods_receipts = GoodsReceipt.objects.filter(state=state)
+        goods_receipts = GoodsReceipt.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     goods_receipts = goods_receipts.order_by(order_by_field)
     paginator = Paginator(goods_receipts, 5)

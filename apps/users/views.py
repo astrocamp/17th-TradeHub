@@ -196,9 +196,9 @@ def send_invitation(request, company_id):
 
 
 def notifications(request):
-    notifications_list = Notification.objects.filter(is_read=False).order_by(
-        "-created_at"
-    )[:5]
+    notifications_list = Notification.objects.filter(
+        is_read=False, user=request.user
+    ).order_by("-created_at")[:5]
     sender_type = request.GET.get("sender_type")
     sender_state = request.GET.get("sender_state")
     unread_count = Notification.objects.filter(is_read=False).count()
@@ -217,7 +217,9 @@ def notifications(request):
 
 def all_notifications(request):
     page = request.GET.get("page")
-    paginator = Paginator(Notification.objects.order_by("-created_at").filter(), 5)
+    paginator = Paginator(
+        Notification.objects.order_by("-created_at").filter(user=request.user), 5
+    )
     notifications_list = paginator.get_page(page)
     page_obj = paginator.get_page(page)
     sender_type = request.GET.get("sender_type")
@@ -240,7 +242,9 @@ def all_notifications(request):
 
 
 def mark_as_read(request, notification_id):
-    notification = get_object_or_404(Notification, pk=notification_id)
+    notification = get_object_or_404(
+        Notification, pk=notification_id, user=request.user
+    )
     notification.is_read = True
     notification.save()
 
@@ -251,7 +255,9 @@ def mark_as_read(request, notification_id):
 
 
 def mark_as_read_fullpage(request, notification_id):
-    notification = get_object_or_404(Notification, pk=notification_id)
+    notification = get_object_or_404(
+        Notification, pk=notification_id, user=request.user
+    )
     notification.is_read = True
     notification.save()
 
@@ -277,5 +283,5 @@ def unread_count(request):
 
 
 def mark_all_as_read(request):
-    Notification.objects.all().update(is_read=True)
+    Notification.objects.filter(user=request.user).update(is_read=True)
     return redirect("users:all_notifications")

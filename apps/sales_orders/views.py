@@ -33,7 +33,7 @@ def index(request):
     sales_orders = SalesOrder.objects.filter(user=request.user)
 
     if state in SalesOrder.AVAILABLE_STATES:
-        sales_orders = SalesOrder.objects.filter(state=state)
+        sales_orders = SalesOrder.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     sales_orders = sales_orders.order_by(order_by_field)
     paginator = Paginator(sales_orders, 5)

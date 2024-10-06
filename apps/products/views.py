@@ -27,7 +27,7 @@ def index(request):
     products = Product.objects.filter(user=request.user)
 
     if state in state_match:
-        products = Product.objects.filter(state=state)
+        products = Product.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     products = products.order_by(order_by_field)
 

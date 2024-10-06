@@ -29,7 +29,7 @@ def index(request):
     orders = Order.objects.filter(user=request.user)
 
     if state in Order.AVAILABLE_STATES:
-        orders = Order.objects.filter(state=state)
+        orders = Order.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     orders = orders.order_by(order_by_field)
 

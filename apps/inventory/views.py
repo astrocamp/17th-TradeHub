@@ -26,7 +26,7 @@ def index(request):
     inventory = Inventory.objects.filter(user=request.user).order_by(order_by)
 
     if state in Inventory.AVAILABLE_STATES:
-        inventory = Inventory.objects.filter(state=state)
+        inventory = Inventory.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     inventory = inventory.order_by(order_by_field)
 
