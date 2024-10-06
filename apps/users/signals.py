@@ -87,15 +87,6 @@ def notify_goods_receipt(sender, instance, **kwargs):
             )
             if not Notification.objects.filter(message=notification.message).exists():
                 notification.save()
-        elif instance.state == GoodsReceipt.TO_BE_STOCKED:
-            notification = Notification(
-                message=f"[進貨單編號{instance.order_number}]\n已進貨",
-                sender_type="GoodsReceipt",
-                sender_state="to_be_stocked",
-                user=instance.user,
-            )
-            if not Notification.objects.filter(message=notification.message).exists():
-                notification.save()
         elif instance.state == GoodsReceipt.FINISHED:
             notification = Notification(
                 message=f"[進貨單編號{instance.order_number}]\n已入庫",

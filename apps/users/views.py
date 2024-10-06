@@ -272,16 +272,6 @@ def mark_as_read_fullpage(request, notification_id):
     return HttpResponse(html)
 
 
-def unread_count(request):
-    if request.user.is_authenticated:
-        unread_count = Notification.objects.filter(
-            is_read=False, user=request.user
-        ).count()
-        return JsonResponse({"unread_count": unread_count})
-    else:
-        return JsonResponse({"unread_count": 0})
-
-
 def mark_all_as_read(request):
     Notification.objects.filter(user=request.user).update(is_read=True)
     return redirect("users:all_notifications")
