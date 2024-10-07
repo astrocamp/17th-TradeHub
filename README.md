@@ -1,7 +1,7 @@
 <div align="center"><h1>TradeHub</h1></div>
 <div align="center">
-    <img src="/static/images/cover.png" alt="Image 1" width="450">
-    <img src="/static/images/flow_chart.png" alt="Image 2" width="450">
+    <img src="/static/images/cover.png" alt="Image 1" width="400">
+    <img src="/static/images/flow_chart.png" alt="Image 2" width="400">
 </div>
 
 - 網站連結：https://www.tradehub17th.com/
