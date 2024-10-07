@@ -1,10 +1,11 @@
-from django.db import models
+from django.db import models, transaction
 from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class InventoryManager(models.Manager):
@@ -13,7 +14,7 @@ class InventoryManager(models.Manager):
 
 
 class Inventory(models.Model):
-    number = models.CharField(max_length=20, unique=True)
+    number = models.CharField(max_length=20)
     product = models.ForeignKey(
         Product, on_delete=models.PROTECT, related_name="inventories"
     )
@@ -30,6 +31,9 @@ class Inventory(models.Model):
         related_name="inventories",
         blank=True,
         null=True,
+    )
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     deleted_at = models.DateTimeField(null=True)
     note = models.TextField(blank=True)

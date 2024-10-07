@@ -17,10 +17,10 @@ def index(request):
     is_desc = request.GET.get("desc", "True") == "False"
     state_match = {"often", "haply", "never"}
 
-    suppliers = Supplier.objects.all()
+    suppliers = Supplier.objects.filter(user=request.user)
 
     if state in state_match:
-        suppliers = Supplier.objects.filter(state=state)
+        suppliers = Supplier.objects.filter(state=state, user=request.user)
     order_by_field = f"{'-' if is_desc else ''}{order_by or '-id'}"
     suppliers = suppliers.order_by(order_by_field)
 
@@ -43,7 +43,9 @@ def new(request):
     if request.method == "POST":
         form = SupplierForm(request.POST)
         if form.is_valid():
-            form.save()
+            supplier = form.save(commit=False)
+            supplier.user = request.user
+            supplier.save()
             messages.success(request, "新增完成!")
             return redirect("suppliers:index")
         else:
@@ -93,27 +95,7 @@ def import_file(request):
         if form.is_valid():
             file = request.FILES["file"]
             try:
-                if file.name.endswith(".csv"):
-                    decoded_file = file.read().decode("utf-8").splitlines()
-                    reader = csv.reader(decoded_file)
-                    next(reader)  # Skip the header
-
-                    for row in reader:
-                        if len(row) < 7:
-                            continue
-                        Supplier.objects.create(
-                            name=row[0],
-                            telephone=row[1],
-                            contact_person=row[2],
-                            email=row[3],
-                            gui_number=row[4],
-                            address=row[5],
-                            note=row[6],
-                        )
-                    messages.success(request, "成功匯入 CSV")
-                    return redirect("suppliers:index")
-
-                elif file.name.endswith(".xlsx"):
+                if file.name.endswith(".xlsx"):
                     df = pd.read_excel(file)
                     df.rename(
                         columns={
@@ -152,42 +134,6 @@ def import_file(request):
     else:
         form = FileUploadForm()  # Ensure form is instantiated for GET requests
     return redirect("suppliers:index")
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="csv")
-    response["Content-Disposition"] = 'attachment; filename="Suppliers.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "供應商名稱",
-            "電話",
-            "連絡人",
-            "Email",
-            "統一編號",
-            "地址",
-            "建立時間",
-            "備註",
-        ]
-    )
-
-    suppliers = Supplier.objects.all()
-    for supplier in suppliers:
-        writer.writerow(
-            [
-                supplier.name,
-                supplier.telephone,
-                supplier.contact_person,
-                supplier.email,
-                supplier.gui_number,
-                supplier.address,
-                supplier.created_at,
-                supplier.note,
-            ]
-        )
-
-    return response
 
 
 def export_excel(request):

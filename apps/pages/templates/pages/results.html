@@ -1,20 +1,32 @@
 {% extends "layouts/base.html" %} {% block content %} {% load static %}
 
 <div class="divider text-3xl font-bold mt-10">搜尋結果</div>
-<div class="flex justify-center mt-10">
-  <div class="overflow">
-    <table class="table table-xl text-center">
+<div class="container flex justify-center mt-14">
+  <div class="overflow-x-auto">
+    <table class="table table-sm text-center sm:table-lg">
       <thead>
         <th></th>
         {% for fields_name in fields_names %}
         <th class="text-xl">{{ fields_name }}</th>
         {% endfor %}
       </thead>
-      </tbody>
-        {% for items in results %}
-        <tr>
-          {% for item in items %}
-          <td class="text-lg">{{ item }}</td>
+      <tbody>
+        {% for items in results %} {% if items.0|length == 4 %}
+        <tr
+          onclick="location.href='{% url url_link items.0|slice:'1:4' %}'"
+          class="hover:bg-gray-200 cursor-pointer"
+        >
+          {% elif items.0|length == 15 %}
+        </tr>
+
+        <tr
+          onclick="location.href='{% url url_link items.0|slice:'12:' %}'"
+          class="hover:bg-gray-200 cursor-pointer"
+        >
+          {% endif %} {% for item in items %}
+          <td class="text-lg p-0">
+            <a>{{ item|truncatechars:15 }}</a>
+          </td>
           {% endfor %}
         </tr>
         {% endfor %}

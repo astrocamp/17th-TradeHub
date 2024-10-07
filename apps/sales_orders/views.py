@@ -1,12 +1,13 @@
 import csv
 import random
 import string
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from datetime import timezone as tz
 
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -29,10 +30,10 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    sales_orders = SalesOrder.objects.all()
+    sales_orders = SalesOrder.objects.filter(user=request.user)
 
     if state in SalesOrder.AVAILABLE_STATES:
-        sales_orders = SalesOrder.objects.filter(state=state)
+        sales_orders = SalesOrder.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     sales_orders = sales_orders.order_by(order_by_field)
     paginator = Paginator(sales_orders, 5)
@@ -57,6 +58,7 @@ def new(request):
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
+            order.user = request.user
             order.save()
             order.order_number = generate_order_number(order)
             order.save()
@@ -65,9 +67,6 @@ def new(request):
             messages.success(request, "新增完成!")
             return redirect("sales_orders:index")
         else:
-            print(form.errors)
-            print("------")
-            print(formset.errors)
             return render(
                 request, "sales_orders/new.html", {"form": form, "formset": formset}
             )
@@ -117,9 +116,13 @@ def edit(request, id):
 
 def delete(request, id):
     sales_order = get_object_or_404(SalesOrder, pk=id)
-    sales_order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("sales_orders:index")
+    try:
+        sales_order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("sales_orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("sales_orders:index")
 
 
 def get_product_item_formset(extra):
@@ -156,56 +159,6 @@ def generate_order_number(order):
     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
     random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="SalesOrders.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "客戶",
-            "客戶電話",
-            "客戶地址",
-            "客戶Email",
-            "商品",
-            "訂購數量",
-            "實發數量",
-            "庫存狀態",
-            "價位",
-            "建立時間",
-            "更新時間",
-        ]
-    )
-
-    sales_orders = SalesOrder.objects.prefetch_related("items").all()
-    for sales_order in sales_orders:
-        for item in sales_order.items.all():
-            writer.writerow(
-                [
-                    sales_order.client.name,  # Assuming Client model has a name field
-                    sales_order.client_tel,
-                    sales_order.client_address,
-                    sales_order.client_email,
-                    item.product.product_name,  # Assuming Product model has product_name
-                    item.ordered_quantity,
-                    item.shipped_quantity,
-                    item.stock_quantity.state,  # Assuming Inventory model has a state field
-                    item.sale_price,
-                    sales_order.created_at.strftime(
-                        "%Y-%m-%d %H:%M:%S"
-                    ),  # Format datetime
-                    sales_order.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-                    (
-                        sales_order.deleted_at.strftime("%Y-%m-%d %H:%M:%S")
-                        if sales_order.deleted_at
-                        else ""
-                    ),
-                ]
-            )
-
-    return response
 
 
 def export_excel(request):
@@ -270,25 +223,39 @@ def export_excel(request):
     return response
 
 
-# @receiver(pre_save, sender=SalesOrder)
-# def update_stats(sender, instance, **kwargs):
-#     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-#     if instance.quantity > instance.stock.quantity:
-#         instance.set_pending()
-#     elif instance.quantity < instance.stock.quantity:
-#         instance.set_progress()
-#         if instance.is_finished:
-#             inventory = Inventory.objects.get(id=instance.stock.id)
-#             inventory.quantity -= instance.quantity
-#             inventory.note += f"{time_now} 扣除庫存{instance.quantity}\n"
-#             inventory.save()
-#             instance.set_finished()
-#             instance.is_finished = True
+@receiver(post_save, sender=SalesOrder)
+def update_stats(sender, instance, **kwargs):
+    time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
+    order_items = SalesOrderProductItem.objects.filter(sales_order=instance)
+
+    post_save.disconnect(update_stats, sender=SalesOrder)
+    for item in order_items:
+        if item.ordered_quantity > item.stock_quantity.quantity:
+            instance.set_pending()
+            instance.save()
+
+        elif item.ordered_quantity <= item.stock_quantity.quantity:
+            instance.set_progress()
+            instance.save()
+
+            if instance.is_finished:
+                inventory = Inventory.objects.get(id=item.stock_quantity.id)
+                inventory.quantity -= item.shipped_quantity
+                inventory.note += f"扣除庫存:{item.shipped_quantity}，{time_now}"
+                item.shipped_quantity = 0
+                inventory.save()
+                item.save()
+                instance.set_finished()
+                instance.save()
+
+    instance.is_finished = False
+    instance.save()
+    post_save.connect(update_stats, sender=SalesOrder)
 
 
-# def transform(request, id):
-#     sales_order = get_object_or_404(SalesOrder, id=id)
-#     sales_order.is_finished = True
-#     sales_order.save()
-#     messages.success(request, "扣除庫存完成!")
-#     return redirect("sales_orders:index")
+def transform(request, id):
+    sales_order = get_object_or_404(SalesOrder, id=id)
+    sales_order.is_finished = True
+    post_save.send(sender=SalesOrder, instance=sales_order, created=False)
+    messages.success(request, "扣除庫存完成!")
+    return redirect("sales_orders:index")

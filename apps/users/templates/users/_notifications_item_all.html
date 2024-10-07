@@ -1,21 +1,28 @@
 {% if notification.sender_type == 'PurchaseOrder' %}
     <a href="{% url 'purchase_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
-    {% elif notification.sender_type == 'GoodsReceipt' %}
+{% elif notification.sender_type == 'GoodsReceipt' %}
     <a href="{% url 'goods_receipts:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
-    {% endif %}
-        <div class="flex justify-between items-center">
-            <div class="flex-grow">
-                <div class="flex justify-between">
-                    <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
-                </div>
-                <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
-                    <p>{{ notification.message }}</p>
-                </div>
+{% elif notification.sender_type == 'Inventory' %}
+    <a href="{% url 'inventory:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% elif notification.sender_type == 'Order' %}
+    <a href="{% url 'orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% elif notification.sender_type == 'SalesOrder' %}
+    <a href="{% url 'sales_orders:index' %}?select={{ notification.sender_state }}" class="cursor-pointer">
+{% endif %}
+
+    <div class="flex justify-between items-center">
+        <div class="flex-grow">
+            <div class="flex justify-between">
+                <p class="text-sm text-gray-500">{{ notification.created_at|date:"y/m/d H:i" }}</p>
             </div>
-            <div class="flex items-center ml-4 flex-shrink-0">
-                {% if not notification.is_read %}
-                    <span class="text-red-500 font-bold mr-2">(未讀)</span>
-                {% endif %}
+            <div class="font-bold text-md mt-1 {% if notification.is_read %}text-gray-400{% else %}text-gray-800{% endif %}">
+                <pre>{{ notification.message }}</pre>
             </div>
         </div>
-    </a>
+        <div class="flex items-center ml-4 flex-shrink-0">
+            {% if not notification.is_read %}
+                <span class="text-red-500 font-bold mr-2">(未讀)</span>
+            {% endif %}
+        </div>
+    </div>
+</a>

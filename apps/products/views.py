@@ -12,6 +12,7 @@ from django.views.decorators.http import require_POST
 
 from apps.inventory.models import Inventory
 from apps.products.models import Product
+from apps.sales_orders.models import SalesOrderProductItem
 from apps.suppliers.models import Supplier
 
 from .forms.product_form import FileUploadForm, ProductForm
@@ -23,10 +24,10 @@ def index(request):
     is_desc = request.GET.get("desc", True) == "False"
     state_match = {"often", "haply", "never"}
 
-    products = Product.objects.all()
+    products = Product.objects.filter(user=request.user)
 
     if state in state_match:
-        products = Product.objects.filter(state=state)
+        products = Product.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     products = products.order_by(order_by_field)
 
@@ -47,13 +48,16 @@ def index(request):
 
 def new(request):
     if request.method == "POST":
-        form = ProductForm(request.POST)
+        form = ProductForm(request.POST, user=request.user)
         if form.is_valid():
-            form.save()
+            product = form.save(commit=False)
+            product.user = request.user
+            product.save()
             messages.success(request, "新增完成!")
             return redirect("products:index")
-        return render(request, "products/new.html", {"form": form})
-    form = ProductForm()
+    else:
+        form = ProductForm(user=request.user)
+
     return render(request, "products/new.html", {"form": form})
 
 
@@ -92,56 +96,7 @@ def import_file(request):
     if form.is_valid():
         file = request.FILES["file"]
         try:
-            if file.name.endswith(".csv"):
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)
-
-                # Find the highest existing product number, even if products were deleted
-                existing_numbers = Product.objects.values_list("number", flat=True)
-                if existing_numbers:
-                    existing_numbers = [
-                        int(num[1:]) for num in existing_numbers if num.startswith("P")
-                    ]
-                    next_number = max(existing_numbers) + 1
-                else:
-                    next_number = 1
-
-                for row in reader:
-                    if len(row) < 6:
-                        continue
-                    try:
-                        supplier = Supplier.objects.get(id=row[4])
-
-                        # Check if product number already exists and increment next_number
-                        while Product.objects.filter(
-                            number=f"P{next_number:03d}"
-                        ).exists():
-                            next_number += 1
-
-                        Product.objects.create(
-                            number=f"P{next_number:03d}",
-                            product_name=row[1],
-                            cost_price=int(row[2]),
-                            sale_price=int(row[3]),
-                            supplier=supplier,
-                            note=row[5],
-                        )
-                        next_number += 1
-                    except Supplier.DoesNotExist:
-                        messages.error(request, f"匯入失敗，找不到供應商 ID: {row[4]}")
-                        return redirect("products:index")
-                    except ValueError:
-                        messages.error(
-                            request,
-                            f"匯入失敗，價格必須是有效的數字: {row[2]}, {row[3]}",
-                        )
-                        return redirect("products:index")
-
-                messages.success(request, "成功匯入 CSV")
-                return redirect("products:index")
-
-            elif file.name.endswith(".xlsx"):
+            if file.name.endswith(".xlsx"):
                 df = pd.read_excel(file)
                 df.rename(
                     columns={
@@ -155,7 +110,6 @@ def import_file(request):
                     inplace=True,
                 )
 
-                # Find the highest existing product number, even if products were deleted
                 existing_numbers = Product.objects.values_list("number", flat=True)
                 if existing_numbers:
                     existing_numbers = [
@@ -169,7 +123,6 @@ def import_file(request):
                     try:
                         supplier = Supplier.objects.get(id=int(row["supplier"]))
 
-                        # Check if product number already exists and increment next_number
                         while Product.objects.filter(
                             number=f"P{next_number:03d}"
                         ).exists():
@@ -183,7 +136,7 @@ def import_file(request):
                             supplier=supplier,
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
                         )
-                        next_number += 1  # Increment for the next product
+                        next_number += 1
                     except Supplier.DoesNotExist:
                         messages.error(
                             request,
@@ -201,7 +154,7 @@ def import_file(request):
                 return redirect("products:index")
 
             else:
-                messages.error(request, "匯入失敗 (檔案不是 CSV 或 Excel)")
+                messages.error(request, "匯入失敗檔案不是 Excel)")
                 return render(request, "layouts/import.html", {"form": form})
 
         except Exception as e:
@@ -210,36 +163,6 @@ def import_file(request):
     else:
         messages.error(request, "表單無效，請檢查上傳的檔案。")
         return redirect("products:index")
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="Products.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "序號",
-            "商品",
-            "價位",
-            "供應商",
-            "備註",
-        ]
-    )
-
-    products = Product.objects.all()
-    for product in products:
-        writer.writerow(
-            [
-                product.number,
-                product.product_name,
-                product.price,
-                product.supplier,
-                product.note,
-            ]
-        )
-
-    return response
 
 
 def export_excel(request):
@@ -301,11 +224,26 @@ def export_sample(request):
 @receiver(post_save, sender=Product)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if Inventory.objects.filter(product=instance).exists():
+
+    if not Inventory.objects.filter(product=instance).exists():
         Inventory.objects.create(
             product=instance,
             supplier=instance.supplier,
             quantity=0,
             safety_stock=0,
             note=f"{time_now} 新建商品，預建庫存",
+            state=Inventory.NEW_STOCK,
+            user=instance.user,
         )
+    post_save.disconnect(update_state, sender=Product)
+    product = SalesOrderProductItem.objects.filter(product=instance.id).count()
+    if product == 0:
+        instance.set_never()
+        instance.save()
+    elif product > 0 and product < 3:
+        instance.set_haply()
+        instance.save()
+    elif product > 3:
+        instance.set_often()
+        instance.save()
+    post_save.connect(update_state, sender=Product)

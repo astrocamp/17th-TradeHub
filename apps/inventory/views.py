@@ -23,10 +23,10 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    inventory = Inventory.objects.order_by(order_by)
+    inventory = Inventory.objects.filter(user=request.user).order_by(order_by)
 
     if state in Inventory.AVAILABLE_STATES:
-        inventory = Inventory.objects.filter(state=state)
+        inventory = Inventory.objects.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     inventory = inventory.order_by(order_by_field)
 
@@ -49,7 +49,9 @@ def new(request):
     if request.method == "POST":
         form = RestockForm(request.POST)
         if form.is_valid():
-            form.save()
+            inventory = form.save(commit=False)
+            inventory.user = request.user
+            inventory.save()
             messages.success(request, "新增完成!")
             return redirect("inventory:index")
     else:
@@ -90,99 +92,52 @@ def import_file(request):
         form = FileUploadForm(request.POST, request.FILES)
         if form.is_valid():
             file = request.FILES["file"]
-            if file.name.endswith(".csv"):
+            try:
+                if file.name.endswith(".xlsx"):
+                    df = pd.read_excel(file)
+                    df.rename(
+                        columns={
+                            "商品": "product",
+                            "供應商": "supplier",
+                            "數量": "quantity",
+                            "安全水位": "safety_stock",
+                            "備註": "note",
+                        },
+                        inplace=True,
+                    )
+                    for _, row in df.iterrows():
+                        try:
+                            product = Product.objects.get(id=int(row["product"]))
+                            supplier = Supplier.objects.get(id=int(row["supplier"]))
 
-                decoded_file = file.read().decode("utf-8").splitlines()
-                reader = csv.reader(decoded_file)
-                next(reader)  # Skip header row
+                            Inventory.objects.create(
+                                product=product,
+                                supplier=supplier,
+                                quantity=int(row["quantity"]),
+                                safety_stock=int(row["safety_stock"]),
+                                note=(
+                                    str(row["note"]) if not pd.isna(row["note"]) else ""
+                                ),
+                            )
+                        except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
+                            messages.error(request, f"匯入失敗，找不到廠商或商品: {e}")
+                            return redirect("inventory:index")
 
-                for row in reader:
-                    if len(row) < 1:
-                        continue
-                    try:
-                        product = Product.objects.get(id=row[0])
-                        supplier = Supplier.objects.get(id=row[1])
-                        Inventory.objects.create(
-                            product=product,
-                            supplier=supplier,
-                            quantity=row[2],
-                            safety_stock=row[3],
-                            note=row[4],
-                        )
-                    except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("inventory:index")
+                    messages.success(request, "成功匯入 Excel")
+                    return redirect("inventory:index")
 
-                messages.success(request, "成功匯入 CSV")
+                else:
+                    messages.error(
+                        request, "匯入失敗(檔案格式不正確，請上傳 .xlsx 檔案)"
+                    )
+                    return render(request, "layouts/import.html", {"form": form})
+
+            except Exception as e:
+                messages.error(request, f"匯入失敗，出現錯誤: {e}")
                 return redirect("inventory:index")
-
-            elif file.name.endswith(".xlsx"):
-                df = pd.read_excel(file)
-                df.rename(
-                    columns={
-                        "商品": "product",
-                        "供應商": "supplier",
-                        "數量": "quantity",
-                        "安全水位": "safety_stock",
-                        "備註": "note",
-                    },
-                    inplace=True,
-                )
-                for _, row in df.iterrows():
-                    try:
-                        product = Product.objects.get(id=int(row["product"]))
-                        supplier = Supplier.objects.get(id=int(row["supplier"]))
-                        Inventory.objects.create(
-                            product=product,
-                            supplier=supplier,
-                            quantity=int(row["quantity"]),
-                            safety_stock=int(row["safety_stock"]),
-                            note=str(row["note"]) if not pd.isna(row["note"]) else "",
-                        )
-                    except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
-                        messages.error(request, f"匯入失敗，找不到客戶或商品: {e}")
-                        return redirect("inventory:index")
-                messages.success(request, "成功匯入 Excel")
-                return redirect("inventory:index")
-
-            else:
-                messages.error(request, "匯入失敗(檔案不是 CSV 或 Excel)")
-                return render(request, "layouts/import.html", {"form": form})
 
     form = FileUploadForm()
     return render(request, "layouts/import.html", {"form": form})
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="text/csv")
-    response["Content-Disposition"] = 'attachment; filename="Inventory.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "商品",
-            "供應商",
-            "數量",
-            "安全水位",
-            "最後更新",
-            "備註",
-        ]
-    )
-
-    inventorys = Inventory.objects.all()
-    for inventory in inventorys:
-        writer.writerow(
-            [
-                inventory.product,
-                inventory.supplier,
-                inventory.quantity,
-                inventory.safety_stock,
-                inventory.last_updated,
-                inventory.note,
-            ]
-        )
-
-    return response
 
 
 def export_excel(request):
@@ -245,16 +200,22 @@ def export_sample(request):
 @receiver(pre_save, sender=Inventory)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(timezone(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
-    if instance.safety_stock == 0:
-        instance.set_new_stock()
-    if instance.quantity <= 0:
+
+    pre_save.disconnect(update_state, sender=Inventory)
+    # if instance.safety_stock == 0 and instance.quantity == 0:
+    #     instance.set_new_stock()
+    #     instance.save()
+    if instance.quantity <= 0 and instance.safety_stock != 0:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
+            user=instance.user,
             state=PurchaseOrder.PENDING,
         )
         if not purchase_order:
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
-            supplier = Supplier.objects.get(name=instance.supplier.name)
+            supplier = Supplier.objects.get(
+                name=instance.supplier.name, user=instance.user
+            )
             order = PurchaseOrder.objects.create(
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
@@ -263,6 +224,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                user=instance.user,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -270,11 +232,12 @@ def update_state(sender, instance, **kwargs):
                 quantity=instance.safety_stock,
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price * instance.safety_stock,
+                user=instance.user,
             )
             order_number = generate_order_number(order)
             order.order_number = order_number
             order.amount = orderitem.subtotal
-            order.save()
+            order.save(update_fields=["order_number", "amount"])
 
         else:
             message = f"缺貨，下單{instance.safety_stock}個{instance.product}{time_now}"
@@ -291,16 +254,20 @@ def update_state(sender, instance, **kwargs):
                 subtotal=instance.product.cost_price * instance.safety_stock,
             )
             order.amount += orderitem.subtotal
-            order.save()
+            order.save(update_fields=["amount"])
         instance.set_out_stock()
+        instance.save()
     elif instance.quantity < instance.safety_stock:
         purchase_order = PurchaseOrder.objects.filter(
             supplier=instance.supplier,
+            user=instance.user,
             state=PurchaseOrder.PENDING,
         )
         if not purchase_order:
             message = f"低水位，下單{instance.safety_stock - instance.quantity}個{instance.product}{time_now}"
-            supplier = Supplier.objects.get(name=instance.supplier.name)
+            supplier = Supplier.objects.get(
+                name=instance.supplier.name, user=instance.user
+            )
             order = PurchaseOrder.objects.create(
                 supplier=instance.supplier,
                 supplier_tel=supplier.telephone,
@@ -309,6 +276,7 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=message,
                 state=PurchaseOrder.PENDING,
+                user=instance.user,
             )
             orderitem = ProductItem.objects.create(
                 purchase_order=order,
@@ -317,11 +285,12 @@ def update_state(sender, instance, **kwargs):
                 cost_price=instance.product.cost_price,
                 subtotal=instance.product.cost_price
                 * (instance.safety_stock - instance.quantity),
+                user=instance.user,
             )
             order_number = generate_order_number(order)
             order.order_number = order_number
             order.amount = orderitem.subtotal
-            order.save()
+            order.save(update_fields=["order_number", "amount"])
         else:
             message = (
                 f"低水位，下單{instance.safety_stock}個{instance.product}{time_now}"
@@ -342,7 +311,10 @@ def update_state(sender, instance, **kwargs):
             )
             orderitem.quantity += instance.safety_stock - instance.quantity
             order.amount += orderitem.subtotal
-            order.save()
+            order.save(update_fields=["amount"])
         instance.set_low_stock()
+        instance.save()
     else:
         instance.set_normal()
+        # instance.save()
+    pre_save.connect(update_state, sender=Inventory)

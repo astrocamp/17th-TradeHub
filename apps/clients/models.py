@@ -5,10 +5,11 @@ from django.utils import timezone
 from django_fsm import FSMField, transition
 
 from apps.company.models import Company
+from apps.users.models import CustomUser
 
 
 class Client(models.Model):
-    number = models.CharField(max_length=20, unique=True)
+    number = models.CharField(max_length=20)
     name = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=15)
     address = models.CharField(max_length=150)
@@ -19,6 +20,13 @@ class Client(models.Model):
     company = models.ForeignKey(
         Company,
         on_delete=models.PROTECT,
+        related_name="clients",
+        blank=True,
+        null=True,
+    )
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
         related_name="clients",
         blank=True,
         null=True,
@@ -63,25 +71,16 @@ class Client(models.Model):
         protected=True,
     )
 
-    def update_state(self):
-        if self.quantity <= 0:
-            self.set_out_stock()
-        elif self.quantity < self.safety_stock:
-            self.set_low_stock()
-        else:
-            self.set_normal()
-        self.save()
-
     @transition(field=state, source="*", target=OFTEN)
-    def set_out_stock(self):
+    def set_often(self):
         pass
 
     @transition(field=state, source="*", target=HAPLY)
-    def set_low_stock(self):
+    def set_haply(self):
         pass
 
     @transition(field=state, source="*", target=NEVER)
-    def set_normal(self):
+    def set_never(self):
         pass
 
     def format_phone_number(self, number):

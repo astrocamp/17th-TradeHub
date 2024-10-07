@@ -4,6 +4,7 @@ from django_fsm import FSMField, transition
 
 from apps.company.models import Company
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class ProductManager(models.Manager):
@@ -12,7 +13,7 @@ class ProductManager(models.Manager):
 
 
 class Product(models.Model):
-    number = models.CharField(max_length=20, unique=True)
+    number = models.CharField(max_length=20)
     product_name = models.CharField(max_length=20)
     cost_price = models.PositiveIntegerField()
     sale_price = models.PositiveIntegerField()
@@ -25,6 +26,9 @@ class Product(models.Model):
         related_name="products",
         blank=True,
         null=True,
+    )
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
     )
     note = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)

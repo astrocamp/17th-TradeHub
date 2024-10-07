@@ -1,6 +1,6 @@
 {% load static %}
 <div
-  class="navbar bg-base-100 shadow-md rounded-box z-50 fixed top-0 left-0 right-0"
+  class="navbar bg-base-100 shadow-md rounded-box z-50 fixed top-0 left-0 right-0 h-[80px]"
 >
   <div class="navbar-start">
     <div class="dropdown">
@@ -59,7 +59,7 @@
     {% endif %} -->
   </div>
   <div class="navbar-center hidden lg:flex">
-    <ul class="menu menu-horizontal gap-x-5 font-bold text-md">
+    <ul class="menu menu-horizontal font-bold text-md">
       <li>
         {% if request.user.is_authenticated %}
         <details name="dropdown">
@@ -139,7 +139,7 @@
             x-ref="searchInput"
             class="grow"
             name="search"
-            placeholder="請輸入名稱 / 單號"
+            placeholder="請輸入名稱/單號"
             x-model="searchField"
             @keydown.enter="$el.form.submit()"
           />
@@ -152,20 +152,26 @@
     <!-- 小鈴鐺通知，登入後才會看到 -->
     {% if request.user.is_authenticated %}
     <div class="dropdown relative" x-data="{ isOpen: false }" @click.away="isOpen = false">
-        <button href="javascript:void(0);" class="btn btn-ghost"
+        <button href="javascript:void(0);" class="btn btn-ghost indicator"
             @click="isOpen = !isOpen; if (isOpen) { htmx.ajax('GET', '{% url 'users:notifications' %}', {target: '#notifications-container', swap: 'innerHTML'}); }">
-            <?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg width="24px" height="24px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M381.7,225.9c0-97.6-52.5-130.8-101.6-138.2c0-0.5,0.1-1,0.1-1.6c0-12.3-10.9-22.1-24.2-22.1c-13.3,0-23.8,9.8-23.8,22.1   c0,0.6,0,1.1,0.1,1.6c-49.2,7.5-102,40.8-102,138.4c0,113.8-28.3,126-66.3,158h384C410.2,352,381.7,339.7,381.7,225.9z"/><path d="M256.2,448c26.8,0,48.8-19.9,51.7-43H204.5C207.3,428.1,229.4,448,256.2,448z"/></g></svg>
-            {% if unread_count > 0 %}
-            <span class="absolute top-0 right-0 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
-                {{ unread_count }}
+            <?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg width="30px" height="30px" id="Layer_1" style="enable-background:new 0 0 512 512;" version="1.1" viewBox="0 0 512 512" width="512px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M381.7,225.9c0-97.6-52.5-130.8-101.6-138.2c0-0.5,0.1-1,0.1-1.6c0-12.3-10.9-22.1-24.2-22.1c-13.3,0-23.8,9.8-23.8,22.1   c0,0.6,0,1.1,0.1,1.6c-49.2,7.5-102,40.8-102,138.4c0,113.8-28.3,126-66.3,158h384C410.2,352,381.7,339.7,381.7,225.9z"/><path d="M256.2,448c26.8,0,48.8-19.9,51.7-43H204.5C207.3,428.1,229.4,448,256.2,448z"/></g></svg>
+            {% if unread_count == 0 %}
+            {% else %}
+            <span class="indicator-item badge badge-sm badge-secondary absolute top-0 right-0 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-xs">
+            {% if unread_count < 10 %}
+            {{ unread_count }}
+            {% else %}
+            9+
+            {% endif %}
             </span>
-        {% endif %}
+            {% endif %}
+
         </button>
         <div id="notifications-container"
-             class="w-[220px] p-2 bg-base-100 rounded-box shadow-md overflow-y-auto absolute z-50"
-             x-show="isOpen"
-             style="display: none;">
-             <!-- 通知內容在這裡加載 -->
+            class="w-[230px] p-2 bg-base-100 rounded-box shadow-md overflow-y-auto absolute left-[-20px] top-[63px] z-50"
+            x-show="isOpen"
+            style="display: none;">
+            <!-- 通知內容在這裡加載 -->
         </div>
     </div>
 {% endif %}
@@ -175,13 +181,13 @@
       {% if request.user.is_authenticated %} {% if request.user.first_name %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[85px] flex justify-center"
+        class="w-full flex justify-center"
         >{{ request.user.first_name }}</a
       >
       {% else %}
       <a
         href="{% url 'users:profile' user.id %}"
-        class="w-[100px] flex justify-center text-lg font-bold"
+        class="w-full flex justify-center text-lg font-bold"
         >{{ request.user.username }}</a
       >
       {% endif %}

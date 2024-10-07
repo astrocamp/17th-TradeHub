@@ -1,4 +1,4 @@
-import json
+import calendar
 from datetime import timedelta
 from math import pi
 
@@ -44,32 +44,22 @@ def welcome(request):
 def sales_chart(request):
 
     # 抓基本資料數值
-    clients_num = len(Client.objects.values("name"))
-    products_num = len(Product.objects.values("number"))
-    suppliers_num = len(Supplier.objects.values("name"))
-    inventory_num = Inventory.objects.aggregate(total_quantity=Sum("quantity"))
-
-    def arabic_to_chinese(num):
-        chinese_digits = {
-            "0": "十",
-            "1": "一",
-            "2": "二",
-            "3": "三",
-            "4": "四",
-            "5": "五",
-            "6": "六",
-            "7": "七",
-            "8": "八",
-            "9": "九",
-        }
-        return "".join(chinese_digits[digit] for digit in str(num))
+    clients_num = len(Client.objects.filter(user=request.user).values("name"))
+    products_num = len(Product.objects.filter(user=request.user).values("number"))
+    suppliers_num = len(Supplier.objects.filter(user=request.user).values("name"))
+    inventory_num = Inventory.objects.filter(user=request.user).aggregate(
+        total_quantity=Sum("quantity")
+    )
 
     def format_chinese_date(date_obj):
-        month = arabic_to_chinese(date_obj.month)
-        day = arabic_to_chinese(date_obj.day)
+        month = date_obj.month
+        day = date_obj.day
         return f"{month}月{day}日"
 
     now = timezone.now()
+    year, month = now.year, now.month
+
+    _, last_day = calendar.monthrange(year, month)
     first_day_of_month = now.replace(day=1)
     last_day_of_month = (first_day_of_month + timedelta(days=32)).replace(
         day=1
@@ -79,74 +69,70 @@ def sales_chart(request):
     last_day_of_month_chinese = format_chinese_date(last_day_of_month)
 
     clients_month_num = Client.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     products_month_num = Product.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     suppliers_month_num = Supplier.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     inventory_month_num = Inventory.objects.filter(
-        created_at__range=(first_day_of_month, last_day_of_month),
-        deleted_at=None,
+        user=request.user,
     ).count()
 
     # 抓訂單類數值
-    orders_num = len(Order.objects.values("deleted_at").filter(deleted_at=None))
-    orders_progress_num = len(
-        Order.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
+    orders_num = len(
+        Order.objects.filter(
+            user=request.user,
         )
+    )
+    orders_progress_num = len(
+        Order.objects.values("state").filter(user=request.user, state="progress")
     )
     orders_pending_num = len(
-        Order.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_confirmed"
-        )
+        Order.objects.values("state").filter(user=request.user, state="to_be_confirmed")
     )
     sales_orders_num = len(
-        SalesOrder.objects.values("deleted_at").filter(deleted_at=None)
+        SalesOrder.objects.filter(
+            user=request.user,
+        )
     )
     sales_orders_progress_num = len(
-        SalesOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
-        )
+        SalesOrder.objects.values("state").filter(user=request.user, state="progress")
     )
     sales_orders_pending_num = len(
-        SalesOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
-        )
+        SalesOrder.objects.values("state").filter(user=request.user, state="pending")
     )
     purchase_orders_num = len(
-        PurchaseOrder.objects.values("deleted_at").filter(deleted_at=None)
+        PurchaseOrder.objects.filter(
+            user=request.user,
+        )
     )
     purchase_orders_progress_num = len(
-        PurchaseOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="progress"
+        PurchaseOrder.objects.values("state").filter(
+            user=request.user, state="progress"
         )
     )
     purchase_orders_pending_num = len(
-        PurchaseOrder.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="pending"
-        )
+        PurchaseOrder.objects.values("state").filter(user=request.user, state="pending")
     )
     goods_receipts_num = len(
-        GoodsReceipt.objects.values("deleted_at").filter(deleted_at=None)
+        GoodsReceipt.objects.filter(
+            user=request.user,
+        )
     )
     goods_receipts_progress_num = len(
-        GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_stocked"
+        GoodsReceipt.objects.values("state").filter(
+            user=request.user, state="to_be_stocked"
         )
     )
     goods_receipts_pending_num = len(
-        GoodsReceipt.objects.values("deleted_at", "state").filter(
-            deleted_at=None, state="to_be_restocked"
+        GoodsReceipt.objects.values("state").filter(
+            user=request.user, state="to_be_restocked"
         )
     )
 
@@ -155,12 +141,12 @@ def sales_chart(request):
         Client.objects.annotate(
             total_quantity=Count("orders"), total_amount=Sum("orders__amount")
         )
-        .filter(total_quantity__gt=0)
+        .filter(user=request.user, total_quantity__gt=0)
         .order_by("-total_amount")[:5]
     )
 
     # 圓餅圖
-    sales_orders = SalesOrder.objects.all()
+    sales_orders = SalesOrder.objects.filter(user=request.user)
     sales_data = (
         sales_orders.values("items__product__product_name")
         .annotate(total_quantity=Sum("items__ordered_quantity"))
@@ -264,24 +250,70 @@ def search(request):
     category = request.POST.get("select")
 
     if category == "Product":
-        products = Product.objects.filter(product_name__contains=search)
-        results = [fields[:-3] for fields in products.values_list()]
+        products = Product.objects.filter(
+            product_name__contains=search, user=request.user
+        )
+        url_link = "products:show"
+        results = []
+        for item in products:
+            results += [
+                (
+                    item.number,
+                    item.product_name,
+                    item.cost_price,
+                    item.sale_price,
+                    item.supplier,
+                    item.note,
+                )
+            ]
+            item_id = item.id
         fields_names = [fields for fields in ProductForm._meta.labels.values()]
     elif category == "Client":
-        clients = Client.objects.filter(name__contains=search)
-        results = [fields[:5] for fields in clients.values_list()]
+        clients = Client.objects.filter(name__contains=search, user=request.user)
+        url_link = "clients:show"
+        results = []
+        for item in clients:
+            results += [
+                (
+                    item.number,
+                    item.name,
+                    item.phone_number,
+                    item.address,
+                    item.email,
+                    item.note,
+                )
+            ]
+            item_id = item.id
         fields_names = [fields for fields in ClientForm._meta.labels.values()]
     elif category == "Supplier":
-        suppliers = Supplier.objects.filter(name__contains=search)
-        results = [fields[:7] for fields in suppliers.values_list()]
+        suppliers = Supplier.objects.filter(name__contains=search, user=request.user)
+        url_link = "suppliers:show"
+        results = []
+        for item in suppliers:
+            results += [
+                (
+                    item.number,
+                    item.name,
+                    item.telephone,
+                    item.contact_person,
+                    item.email,
+                    item.gui_number,
+                    item.address,
+                    item.note,
+                )
+            ]
+            item_id = item.id
         fields_names = [fields for fields in SupplierForm._meta.labels.values()]
     elif category == "Inventory":
-        inventory = Inventory.objects.filter(product__product_name__contains=search)
+        inventory = Inventory.objects.filter(
+            product__product_name__contains=search, user=request.user
+        )
+        url_link = "inventory:show"
         results = []
         for item in inventory:
             results += [
                 (
-                    item.id,
+                    item.number,
                     item.product,
                     item.supplier,
                     item.quantity,
@@ -289,41 +321,51 @@ def search(request):
                     item.note,
                 )
             ]
+            item_id = item.id
         fields_names = [fields for fields in RestockForm._meta.labels.values()]
     elif category == "Order":
-        orders = Order.objects.filter(order_number__contains=search)
+        orders = Order.objects.filter(order_number__contains=search, user=request.user)
+        url_link = "orders:show"
         results = []
         for order in orders:
             results += [
                 (
-                    order.id,
                     order.order_number,
-                    order.client.name,
+                    order.client,
                     order.client_tel,
                     order.client_address,
                     order.client_email,
-                    order.username,
+                    order.note,
+                    order.amount,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in OrderForm._meta.labels.values()]
     elif category == "PurchaseOrder":
-        purchase = PurchaseOrder.objects.filter(order_number__contains=search)
+        purchase = PurchaseOrder.objects.filter(
+            order_number__contains=search, user=request.user
+        )
+        url_link = "purchase_orders:show"
         results = []
         for order in purchase:
             results += [
                 (
-                    order.id,
                     order.order_number,
-                    order.supplier.name,
+                    order.supplier,
                     order.supplier_tel,
+                    order.contact_person,
                     order.supplier_email,
                     order.amount,
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in PurchaseOrderForm._meta.labels.values()]
     elif category == "SalesOrder":
-        purchase = SalesOrder.objects.filter(order_number__contains=search)
+        purchase = SalesOrder.objects.filter(
+            order_number__contains=search, user=request.user
+        )
+        url_link = "sales_orders:show"
         results = []
         for order in purchase:
             results += [
@@ -334,12 +376,17 @@ def search(request):
                     order.client_address,
                     order.client_email,
                     order.shipping_method,
+                    order.amount,
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in SalesOrderForm._meta.labels.values()]
     elif category == "GoodsReceipt":
-        purchase = GoodsReceipt.objects.filter(order_number__contains=search)
+        purchase = GoodsReceipt.objects.filter(
+            order_number__contains=search, user=request.user
+        )
+        url_link = "goods_receipts:show"
         results = []
         for order in purchase:
             results += [
@@ -354,9 +401,12 @@ def search(request):
                     order.note,
                 )
             ]
+            item_id = order.id
         fields_names = [fields for fields in GoodsReceiptForm._meta.labels.values()]
 
     content = {
+        "url_link": url_link,
+        "item_id": item_id,
         "search": search,
         "category": category,
         "results": results,

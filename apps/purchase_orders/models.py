@@ -7,6 +7,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class PurchaseOrderManager(models.Manager):
@@ -15,7 +16,7 @@ class PurchaseOrderManager(models.Manager):
 
 
 class PurchaseOrder(models.Model):
-    order_number = models.CharField(max_length=20, unique=True)
+    order_number = models.CharField(max_length=20)
     supplier = models.ForeignKey(
         Supplier, on_delete=models.PROTECT, related_name="purchase_orders"
     )
@@ -35,6 +36,9 @@ class PurchaseOrder(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     objects = PurchaseOrderManager()
     all_objects = models.Manager()
@@ -94,12 +98,15 @@ class PurchaseOrder(models.Model):
 
 class ProductItem(models.Model):
     purchase_order = models.ForeignKey(
-        "PurchaseOrder", on_delete=models.CASCADE, related_name="items"
+        PurchaseOrder, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField()
     cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, null=True, blank=True
+    )
 
     def __str__(self):
         return f"{self.product} - {self.quantity} @ {self.cost_price}"

@@ -2,8 +2,10 @@ import re
 
 from django import forms
 from django.forms import inlineformset_factory
+from django.forms.models import BaseInlineFormSet
 
-from apps.orders.models import Order, OrderProductItem
+from apps.clients.models import Client
+from apps.orders.models import Order, OrderProductItem, Product
 
 
 class FileUploadForm(forms.Form):
@@ -50,16 +52,14 @@ class OrderForm(forms.ModelForm):
                 }
             ),
         }
-        # help_texts = {
-        #     "client": "請輸入客戶名稱。",
-        #     "client_tel",
-        #     "client_address",
-        #     "client_email",
-        #     "note",
-        # }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
+        if self.user:
+            self.fields["client"].queryset = Client.objects.filter(user=self.user)
+
         for field in self.fields.values():
             field.required = False
 
@@ -108,7 +108,35 @@ class OrderProductItemForm(forms.ModelForm):
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if self.user:
+            self.fields["product"].queryset = Product.objects.filter(user=self.user)
+
+
+class BaseOrderProductItemFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        for form in self.forms:
+            form.user = self.user
+            if self.user:
+                form.fields["product"].queryset = Product.objects.filter(user=self.user)
+
+    def _construct_form(self, i, **kwargs):
+        form = super()._construct_form(i, **kwargs)
+        form.user = self.user
+        return form
+
 
 OrderProductItemFormSet = inlineformset_factory(
-    Order, OrderProductItem, form=OrderProductItemForm, extra=1, can_delete=True
+    Order,
+    OrderProductItem,
+    form=OrderProductItemForm,
+    formset=BaseOrderProductItemFormSet,
+    extra=1,
+    can_delete=True,
 )

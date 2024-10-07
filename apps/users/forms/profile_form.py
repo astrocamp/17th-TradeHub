@@ -66,13 +66,22 @@ class ProfileForm(forms.ModelForm):
                 }
             ),
             "phone": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "手機號碼或其他聯絡電話",
+                }
             ),
             "address": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "住家地址或其他聯絡地址",
+                }
             ),
             "note": forms.TextInput(
-                attrs={"class": "w-full form-control border px-2 py-1"}
+                attrs={
+                    "class": "w-full form-control border px-2 py-1",
+                    "placeholder": "備註",
+                }
             ),
         }
         labels = {

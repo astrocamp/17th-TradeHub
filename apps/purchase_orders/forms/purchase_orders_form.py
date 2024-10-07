@@ -2,8 +2,9 @@ import re
 
 from django import forms
 from django.forms import inlineformset_factory
+from django.forms.models import BaseInlineFormSet
 
-from apps.purchase_orders.models import ProductItem, PurchaseOrder
+from apps.purchase_orders.models import Product, ProductItem, PurchaseOrder, Supplier
 
 
 class PurchaseOrderForm(forms.ModelForm):
@@ -46,16 +47,14 @@ class PurchaseOrderForm(forms.ModelForm):
                 }
             ),
         }
-        # help_texts = {
-        #     "supplier": "請輸入供應商名稱。",
-        #     "supplier_tel":"請輸入供應商電話。",
-        #     "contact_person":"請輸入聯絡人。",
-        #     "supplier_email":"請輸入供應商Email。",
-        #     "note": "請輸入備註。",
-        # }
 
     def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
         super().__init__(*args, **kwargs)
+
+        if self.user:
+            self.fields["supplier"].queryset = Supplier.objects.filter(user=self.user)
+
         for field in self.fields.values():
             field.required = False
 
@@ -97,7 +96,35 @@ class ProductItemForm(forms.ModelForm):
             "subtotal": forms.NumberInput(attrs={"class": "w-full"}),
         }
 
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        if self.user:
+            self.fields["product"].queryset = Product.objects.filter(user=self.user)
+
+
+class BaseOrderProductItemFormSet(BaseInlineFormSet):
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user", None)
+        super().__init__(*args, **kwargs)
+
+        for form in self.forms:
+            form.user = self.user
+            if self.user:
+                form.fields["product"].queryset = Product.objects.filter(user=self.user)
+
+    def _construct_form(self, i, **kwargs):
+        form = super()._construct_form(i, **kwargs)
+        form.user = self.user
+        return form
+
 
 ProductItemFormSet = inlineformset_factory(
-    PurchaseOrder, ProductItem, form=ProductItemForm, extra=1, can_delete=True
+    PurchaseOrder,
+    ProductItem,
+    form=ProductItemForm,
+    formset=BaseOrderProductItemFormSet,
+    extra=1,
+    can_delete=True,
 )

@@ -1,4 +1,5 @@
 import re
+from typing import Iterable
 
 from django.db import models
 from django.utils import timezone
@@ -7,6 +8,7 @@ from django_fsm import FSMField, transition
 from apps.company.models import Company
 from apps.products.models import Product
 from apps.suppliers.models import Supplier
+from apps.users.models import CustomUser
 
 
 class GoodReceiptManager(models.Manager):
@@ -35,6 +37,9 @@ class GoodsReceipt(models.Model):
     )
     note = models.TextField(blank=True, null=True)
     username = models.CharField(max_length=150, default="admin")
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
     RECEIVING_METHOD_CHOICES = [
         ("貨運", "貨運"),
         ("自取", "自取"),
@@ -50,6 +55,10 @@ class GoodsReceipt(models.Model):
 
     def __repr__(self):
         return f"{self.order_number} - {self.supplier.name}"
+
+    def save(self, *args, **kwargs):
+        self.supplier_tel = self.format_supplier_tel(self.supplier_tel)
+        super().save(*args, **kwargs)
 
     def format_supplier_tel(self, number):
         number = re.sub(r"\D", "", number)
@@ -95,18 +104,21 @@ class GoodsReceipt(models.Model):
 
     @transition(field=state, source="*", target=FINISHED)
     def set_finished(self):
-        self.is_finished = False
+        pass
 
 
 class GoodsReceiptProductItem(models.Model):
     goods_receipt = models.ForeignKey(
-        "GoodsReceipt", on_delete=models.CASCADE, related_name="items"
+        GoodsReceipt, on_delete=models.CASCADE, related_name="items"
     )
     product = models.ForeignKey(Product, on_delete=models.CASCADE)
     ordered_quantity = models.PositiveIntegerField()
     received_quantity = models.PositiveIntegerField()
     cost_price = models.PositiveIntegerField()
     subtotal = models.PositiveIntegerField()
+    user = models.ForeignKey(
+        CustomUser, on_delete=models.CASCADE, blank=True, null=True
+    )
 
     def __str__(self):
         return f"{self.product} - {self.received_quantity} @ {self.cost_price}"

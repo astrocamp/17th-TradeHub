@@ -44,17 +44,13 @@
           Google
         </a>
         <a class="log_in-btn border-2 border-black w-1/2 flex items-center justify-center gap-2" href="{% url 'social:begin' 'github' %}">
-          <img src="{% static 'images/GitHub.png' %}" alt="Github" width="25" height="25" />
+          <img src="{% static 'images/Github.png' %}" alt="Github" width="25" height="25" />
           Github
         </a>
       </div>
       <span class="text-gray-500 text-sm">或</span>
       <a class="log_in-btn w-full text-white bg-black" href="{% url 'users:register' %}">
         註冊
-      </a>
-      <span class="text-gray-500 text-sm">或</span>
-      <a class="text-blue-500 text-sm" href="{% url 'users:forget_password' %}">
-        忘記密碼?
       </a>
     </div>
   </form>

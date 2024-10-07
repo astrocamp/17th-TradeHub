@@ -6,7 +6,7 @@ from datetime import datetime, timedelta
 import pandas as pd
 from django.contrib import messages
 from django.core.paginator import Paginator
-from django.db.models.signals import pre_save
+from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.forms import inlineformset_factory
 from django.http import HttpResponse, JsonResponse
@@ -32,10 +32,10 @@ def index(request):
     order_by = request.GET.get("sort", "id")
     is_desc = request.GET.get("desc", "True") == "False"
 
-    purchase_orders = PurchaseOrder.objects.all()
+    purchase_orders = PurchaseOrder.objects.filter(user=request.user)
 
     if state in PurchaseOrder.AVAILABLE_STATES:
-        purchase_orders = purchase_orders.filter(state=state)
+        purchase_orders = purchase_orders.filter(state=state, user=request.user)
     order_by_field = order_by if is_desc else "-" + order_by
     purchase_orders = purchase_orders.order_by(order_by_field)
     paginator = Paginator(purchase_orders, 5)
@@ -55,11 +55,14 @@ def index(request):
 
 def new(request):
     if request.method == "POST":
-        form = PurchaseOrderForm(request.POST)
-        formset = ProductItemFormSet(request.POST, instance=form.instance)
+        form = PurchaseOrderForm(request.POST, user=request.user)
+        formset = ProductItemFormSet(
+            request.POST, user=request.user, instance=form.instance
+        )
         if form.is_valid() and formset.is_valid():
             order = form.save(commit=False)
             order.username = request.user.username
+            order.user = request.user
             order.save()
             order.order_number = generate_order_number(order)
             order.save()
@@ -71,8 +74,8 @@ def new(request):
             return render(
                 request, "purchase_orders/new.html", {"form": form, "formset": formset}
             )
-    form = PurchaseOrderForm()
-    formset = ProductItemFormSet(instance=form.instance)
+    form = PurchaseOrderForm(user=request.user)
+    formset = ProductItemFormSet(instance=form.instance, user=request.user)
     return render(
         request,
         "purchase_orders/new.html",
@@ -117,9 +120,13 @@ def edit(request, id):
 
 def delete(request, id):
     purchase_order = get_object_or_404(PurchaseOrder, pk=id)
-    purchase_order.delete()
-    messages.success(request, "刪除完成!")
-    return redirect("purchase_orders:index")
+    try:
+        purchase_order.delete()
+        messages.success(request, "刪除完成!")
+        return redirect("purchase_orders:index")
+    except:
+        messages.success(request, "刪除完成!")
+        return redirect("purchase_orders:index")
 
 
 def get_product_item_formset(extra):
@@ -161,57 +168,6 @@ def generate_order_number(order):
     random_code_1 = "".join(random.choices(string.ascii_uppercase, k=2))
     random_code_2 = "".join(random.choices(string.ascii_uppercase, k=2))
     return f"{random_code_1}{today}{random_code_2}{order_suffix}"
-
-
-def export_csv(request):
-    response = HttpResponse(content_type="csv")
-    response["Content-Disposition"] = 'attachment; filename="Purchase_Orders.csv"'
-
-    writer = csv.writer(response)
-    writer.writerow(
-        [
-            "序號",
-            "供應商名稱",
-            "電話",
-            "連絡人",
-            "Email",
-            "建立時間",
-            "刪除時間",
-            "商品",
-            "數量",
-            "價格",
-            "小計",
-            "總金額",
-            "備註",
-        ]
-    )
-
-    purchase_orders = PurchaseOrder.objects.all()
-
-    for purchase_order in purchase_orders:
-
-        product_items = ProductItem.objects.filter(purchase_order=purchase_order)
-
-        for product_item in product_items:
-            writer.writerow(
-                [
-                    purchase_order.order_number,
-                    purchase_order.supplier.name,
-                    purchase_order.supplier_tel,
-                    purchase_order.contact_person,
-                    purchase_order.supplier_email,
-                    purchase_order.created_at,
-                    purchase_order.deleted_at,
-                    product_item.product,
-                    product_item.quantity,
-                    product_item.cost_price,
-                    product_item.subtotal,
-                    purchase_order.amount,
-                    purchase_order.note,
-                ]
-            )
-
-    return response
 
 
 def export_excel(request):
@@ -269,18 +225,22 @@ def export_excel(request):
     return response
 
 
-@receiver(pre_save, sender=PurchaseOrder)
+@receiver(post_save, sender=PurchaseOrder)
 def update_state(sender, instance, **kwargs):
     time_now = datetime.now(tz(timedelta(hours=+8))).strftime("%Y/%m/%d %H:%M:%S")
     if instance.state == PurchaseOrder.PENDING:
         if instance.is_finished:
             instance.set_progress()
             instance.is_finished = False
+            instance.save()
+
     if instance.state == PurchaseOrder.PROGRESS:
         if instance.is_finished:
             items = ProductItem.objects.filter(purchase_order=instance)
+
             receipt = GoodsReceipt.objects.create(
-                order_number="G" + instance.order_number,
+                order_number=instance.order_number,
+                user=instance.user,
                 supplier=instance.supplier,
                 supplier_tel=instance.supplier_tel,
                 contact_person=instance.contact_person,
@@ -288,19 +248,23 @@ def update_state(sender, instance, **kwargs):
                 amount=0,
                 note=f"訂單編號{instance.order_number}採購->進貨{time_now}",
             )
+
             for item in items:
-                receipt_item = GoodsReceiptProductItem.objects.create(
+                GoodsReceiptProductItem.objects.create(
                     goods_receipt=receipt,
                     product=item.product,
                     ordered_quantity=item.quantity,
                     received_quantity=0,
                     cost_price=item.cost_price,
-                    subtotal=item.cost_price * item.quantity,
+                    subtotal=0,
+                    user=instance.user,
                 )
-                receipt.amount += receipt_item.subtotal
-            receipt.save()
+                # receipt.amount += receipt_item.subtotal
+
+            receipt.save(update_fields=["amount"])
             instance.set_finished()
             instance.is_finished = False
+            instance.save()
 
 
 def transform_goods_receipt(request, id):

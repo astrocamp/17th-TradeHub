@@ -9,6 +9,6 @@ class Redirect404Middleware:
     def __call__(self, request):
         response = self.get_response(request)
         if response.status_code == 404:
-            messages.error(request, "抱歉，找不到您要的頁面")
+            # messages.error(request, "抱歉，找不到您要的頁面")
             return redirect("pages:home")
         return response

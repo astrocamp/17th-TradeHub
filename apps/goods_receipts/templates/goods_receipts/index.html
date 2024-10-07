@@ -1,125 +1,123 @@
-{% extends "layouts/base.html" %} {% block content %}{% load static %}
-<div class="flex justify-end mt-10 gap-2">
-  <!-- <a
-    href="{% url 'goods_receipts:new' %}"
-    class="btn bg-orange-600 text-white hover:bg-orange-700"
-    >新增</a
-  > -->
-  <div class="dropdown dropdown-bottom dropdown-end">
-    <div x-data tabindex="0" role="button" class="btn btn-success text-white">檔案</div>
-    <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
-      <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
-    </ul>
-  </div>
-</div>
-<div class="divider text-3xl font-bold">進貨單列表</div>
-<div class="flex justify-center mt-10">
-    <div class="overflow w-full">
-        <table class="table table-xl text-center">
-            <thead>
-                <tr class="text-xl">
-                    <th>
-                        <form action="{% url 'goods_receipts:index' %}" method="GET">
-                          <select
-                            class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
-                            name="select"
-                          >
-                          <option disabled>選擇</option>
-                          <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
-                          <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
-                          <option value="to_be_restocked" {% if selected_state == "to_be_restocked" %}selected{% endif %}>待進貨</option>
-                          <option value="to_be_stocked" {% if selected_state == "to_be_stocked" %}selected{% endif %}>待入庫</option>
-                          </select>
-                          <button type="submit" class="btn btn-square btn-sm">
-                              <svg
-                                class="w-5 h-5"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 512 512"
-                              >
-                                <path
-                                    d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
-                                />
-                              </svg>
-                            </button>
-                        </form>
-                    </th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=note&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">備註{% if order_by == 'note' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
-                    <th><a href="{% url 'goods_receipts:index' %}?sort=updated_at&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:" ▲, ▼" }}{% endif %}</a></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for goods_receipt in goods_receipts %}
-                <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover cursor-pointer">
-                  {% if goods_receipt.state == "finished" %}
-                  <th>
-                    <span class="btn btn-sm btn-success text-lg">完成</span>
-                  </th>
-                  {% elif goods_receipt.state == "to_be_restocked" %}
-                  <th>
-                    <span class="btn btn-sm btn-error text-lg">待進貨</span>
-                  </th>
-                  {% elif goods_receipt.state == "to_be_stocked" %}
-                  <th>
-                    <span class="btn btn-sm btn-warning text-lg">待入庫</span>
-                  </th>
-                  {% endif %}
-                    <th>{{ goods_receipt.order_number }}</th>
-                    <th>{{ goods_receipt.supplier.name }}</th>
-                    <th>{{ goods_receipt.amount }}</th>
-                    <th>{{ goods_receipt.note|date:"Y-m-d" }}</th>
-                    <th>{{ goods_receipt.updated_at|date:"Y-m-d H:i" }}</th>
-                    <th>
-                        <div class="flex justify-center">
-                            <div class="dropdown dropdown-left">
-                                <div x-data tabindex="0" role="button" class="btn btn-success m-1" @click.stop>操作</div>
-                                <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
-                                    <li><a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-primary">編輯</a></li>
-                                    <li><a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error">刪除</a></li>
-                                    <li><a onclick="return confirm('確認入庫?')" href="{% url 'goods_receipts:stocked' goods_receipt.id %}" class="btn btn-info">入庫</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </th>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% if page_obj.paginator.num_pages > 1 %}
-        <div class="pagination join flex justify-center">
-          <span class="step-links">
-            <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
-            {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}">
-            <button class="join-item btn">«</button></a>
-            {% else %}
-            <button class="join-item btn" disabled="disabled">«</button>
-            {% endif %}
-            <button class="join-item btn">{{ page_obj.number }}</button>
-            {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn">»</button></a
-            >
-            {% else %}
-            <button class="join-item btn" disabled="disabled">»</button>
-            {% endif %}
-            <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
-            ><button class="join-item btn">
-            第{{ page_obj.paginator.num_pages }}頁
-            </button></a
-            >
-        </span>
+{% extends "layouts/base.html" %} {% block content %}
+<div class="flex flex-col mx-auto w-full justify-center">
+  <div class="w-full flex flex-row justify-between mt-6 w-full">
+    <div class="divider text-3xl sm:text-4xl font-bold">進貨單列表</div>
+    <div class="flex flex-row gap-2 justify-end mr-4">
+        <div class="dropdown dropdown-bottom dropdown-end">
+          <div x-data tabindex="0" role="button" class="btn btn-success text-white text-lg">檔案</div>
+          <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow gap-2">
+            <button class="btn bg-yellow-500 text-white py-3 rounded-md hover:bg-yellow-600 transition text-center font-bold" onclick="my_modal_2.showModal()">匯出檔案</button>
+          </ul>
+        </div>
       </div>
-      {% endif %}
     </div>
   </div>
+
+
+<div class="flex justify-center mt-14">
+  <div class="overflow w-full">
+    <table class="table table-sm text-center text-nowrap sm:table-lg">
+          <thead>
+              <tr class="text-lg sm:text-xl">
+                  <th class="w-1/3 sm:w-1/6">
+                      <form action="{% url 'goods_receipts:index' %}" method="GET">
+                        <select
+                          class="select select-bordered select-sm w-25 max-w-xs md:w-auto"
+                          name="select"
+                        >
+                        <option disabled>選擇</option>
+                        <option value="All" {% if selected_state == "All" %}selected{% endif %}>全部</option>
+                        <option value="finished" {% if selected_state == "finished" %}selected{% endif %}>已完成</option>
+                        <option value="to_be_restocked" {% if selected_state == "to_be_restocked" %}selected{% endif %}>待進貨</option>
+                        <option value="to_be_stocked" {% if selected_state == "to_be_stocked" %}selected{% endif %}>待入庫</option>
+                        </select>
+                        <button type="submit" class="btn btn-square btn-sm">
+                            <svg
+                              class="w-5 h-5"
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 512 512"
+                            >
+                              <path
+                                  d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 352a144 144 0 1 0 0-288 144 144 0 1 0 0 288z"
+                              />
+                            </svg>
+                          </button>
+                      </form>
+                  </th>
+                  <th class="w-1/3 sm:w-1/6" class="mobile"><a href="{% url 'goods_receipts:index' %}?sort=order_number&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">進貨單編號{% if order_by == 'order_number' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                  <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'goods_receipts:index' %}?sort=supplier&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商名稱{% if order_by == 'supplier' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                  <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'goods_receipts:index' %}?sort=supplier_tel&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">供應商電話{% if order_by == 'supplier_tel' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                  <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'goods_receipts:index' %}?sort=amount&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">總金額{% if order_by == 'amount' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+                  <th class="w-1/3 sm:w-1/6"></th>
+              </tr>
+          </thead>
+          <tbody>
+              {% for goods_receipt in goods_receipts %}
+              <tr onclick="window.location.href='{% url 'goods_receipts:show' goods_receipt.id %}'" class="hover cursor-pointer">
+                {% if goods_receipt.state == "finished" %}
+                <th class="w-1/3 sm:w-1/6">
+                  <span class="btn btn-sm btn-success text-white text-lg">完成</span>
+                </th>
+                {% elif goods_receipt.state == "to_be_restocked" %}
+                <th class="w-1/3 sm:w-1/6">
+                  <span class="btn btn-sm btn-error text-white text-lg">待進貨</span>
+                </th>
+                {% elif goods_receipt.state == "to_be_stocked" %}
+                <th class="w-1/3 sm:w-1/6">
+                  <span class="btn btn-sm btn-warning text-white text-lg">待入庫</span>
+                </th>
+                {% endif %}
+                  <th class="text-lg w-1/3 sm:w-1/6 sm:text-xl">{{ goods_receipt.order_number }}</th>
+                  <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ goods_receipt.supplier.name }}</th>
+                  <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ goods_receipt.supplier_tel }}</th>
+                  <th class="text-lg hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ goods_receipt.amount }}</th>
+                  <th class="w-1/3 sm:w-1/6">
+                      <div class="flex justify-center">
+                          <div class="dropdown dropdown-left">
+                              <div x-data tabindex="0" role="button" class="btn btn-sm btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
+                              <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-[1] w-28 p-2 shadow gap-2">
+                                  <li><a href="{% url 'goods_receipts:edit' goods_receipt.id %}" class="btn btn-sm btn-primary text-white text-lg">編輯</a></li>
+                                  <!-- <li><a onclick="return confirm('確認刪除?')" href="{% url 'goods_receipts:delete' goods_receipt.id %}" class="btn btn-error text-white text-lg">刪除</a></li> -->
+                                  <li><a onclick="return confirm('確認入庫?')" href="{% url 'goods_receipts:stocked' goods_receipt.id %}" class="btn btn-sm btn-info text-white text-lg">入庫</a></li>
+                              </ul>
+                          </div>
+                      </div>
+                  </th>
+              </tr>
+              {% endfor %}
+          </tbody>
+      </table>
+      {% if page_obj.paginator.num_pages > 1 %}
+      <div class="pagination join flex justify-center mt-10">
+        <span class="step-links">
+          <a href="?page=1{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"><button class="join-item btn">第1頁</button></a>
+          {% if page_obj.has_previous %}
+          <a href="?page={{ page_obj.previous_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}">
+          <button class="join-item btn">«</button></a>
+          {% else %}
+          <button class="join-item btn" disabled="disabled">«</button>
+          {% endif %}
+          <button class="join-item btn">{{ page_obj.number }}</button>
+          {% if page_obj.has_next %}
+          <a href="?page={{ page_obj.next_page_number }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">»</button></a
+          >
+          {% else %}
+          <button class="join-item btn" disabled="disabled">»</button>
+          {% endif %}
+          <a href="?page={{ page_obj.paginator.num_pages }}{% if selected_state %}&select={{ selected_state }}{% endif %}{% if order_by %}&sort={{ order_by }}{% endif %}{% if is_desc %}&desc={{ is_desc }}{% endif %}"
+          ><button class="join-item btn">
+          第{{ page_obj.paginator.num_pages }}頁
+          </button></a
+          >
+      </span>
+    </div>
+    {% endif %}
+  </div>
 </div>
+
 {% url 'goods_receipts:import_file' as import_file_url %}
-{% url 'goods_receipts:export_csv' as export_csv_url %}
 {% url 'goods_receipts:export_excel' as export_excel_url %}
 
-{% include "shared/import_export.html" with urlImport=import_file_url urlCSV=export_csv_url urlExcel=export_excel_url %}
+{% include "shared/import_export.html" with urlImport=import_file_url urlExcel=export_excel_url %}
 {% endblock %}
