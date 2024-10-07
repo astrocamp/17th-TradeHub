@@ -118,6 +118,7 @@ def import_file(request):
                                 note=(
                                     str(row["note"]) if not pd.isna(row["note"]) else ""
                                 ),
+                                user=request.user,
                             )
                         except (Product.DoesNotExist, Supplier.DoesNotExist) as e:
                             messages.error(request, f"匯入失敗，找不到廠商或商品: {e}")
@@ -146,13 +147,17 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Inventory.xlsx"
 
-    inventory = Inventory.objects.select_related("product", "supplier").values(
-        "product__product_name",
-        "supplier__name",
-        "quantity",
-        "safety_stock",
-        "last_updated",
-        "note",
+    inventory = (
+        Inventory.objects.filter(user=request.user)
+        .select_related("product", "supplier")
+        .values(
+            "product__product_name",
+            "supplier__name",
+            "quantity",
+            "safety_stock",
+            "last_updated",
+            "note",
+        )
     )
 
     df = pd.DataFrame(inventory)

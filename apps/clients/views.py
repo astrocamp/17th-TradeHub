@@ -113,6 +113,7 @@ def import_file(request):
                         address=str(row["address"]),
                         email=str(row["email"]),
                         note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                        user=request.user,
                     )
                     next_number += 1  # Increment for the next client
 
@@ -137,7 +138,7 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Clients.xlsx"
 
-    clients = Client.objects.all().values(
+    clients = Client.objects.filter(user=request.user).values(
         "name",
         "phone_number",
         "address",

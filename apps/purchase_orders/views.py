@@ -176,10 +176,10 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Purchase_Orders.xlsx"
 
-    # 使用 prefetch_related 获取关联的 items
     purchase_orders = (
-        PurchaseOrder.objects.select_related("supplier")
-        .prefetch_related("items__product")  # 使用 `items` 作为 related_name
+        PurchaseOrder.objects.filter(user=request.user)
+        .select_related("supplier")
+        .prefetch_related("items__product")
         .values(
             "order_number",
             "supplier__name",

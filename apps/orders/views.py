@@ -168,7 +168,8 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=Orders.xlsx"
 
     orders = (
-        Order.objects.select_related("client")
+        Order.objects.filter(user=request.user)
+        .select_related("client")
         .prefetch_related("items")
         .values(
             "order_number",
@@ -183,8 +184,6 @@ def export_excel(request):
             "updated_at",
         )
     )
-
-    # Prepare the data for DataFrame
     data = []
     for order in orders:
         data.append(

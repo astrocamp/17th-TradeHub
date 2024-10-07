@@ -183,7 +183,8 @@ def export_excel(request):
     response["Content-Disposition"] = "attachment; filename=GoodsReceipts.xlsx"
 
     goods_receipts = (
-        GoodsReceipt.objects.select_related("supplier")
+        GoodsReceipt.objects.filter(user=request.user)
+        .select_related("supplier")
         .prefetch_related("items")
         .values(
             "order_number",

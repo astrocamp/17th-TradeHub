@@ -135,6 +135,7 @@ def import_file(request):
                             sale_price=int(row["sale_price"]),
                             supplier=supplier,
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                            user=request.user,
                         )
                         next_number += 1
                     except Supplier.DoesNotExist:
@@ -171,13 +172,17 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Products.xlsx"
 
-    products = Product.objects.select_related("product", "supplier").values(
-        "number",
-        "product_name",
-        "cost_price",
-        "sale_price",
-        "supplier__name",
-        "note",
+    products = (
+        Product.objects.filter(user=request.user)
+        .select_related("product", "supplier")
+        .values(
+            "number",
+            "product_name",
+            "cost_price",
+            "sale_price",
+            "supplier__name",
+            "note",
+        )
     )
 
     df = pd.DataFrame(products)

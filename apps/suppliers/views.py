@@ -119,6 +119,7 @@ def import_file(request):
                             gui_number=str(row["gui_number"]),
                             address=str(row["address"]),
                             note=str(row["note"]) if not pd.isna(row["note"]) else "",
+                            user=request.user,
                         )
                     messages.success(request, "成功匯入 Excel")
                     return redirect("suppliers:index")
@@ -142,7 +143,7 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=Suppliers.xlsx"
 
-    suppliers = Supplier.objects.all().values(
+    suppliers = Supplier.objects.filter(user=request.user).values(
         "name",
         "telephone",
         "contact_person",
