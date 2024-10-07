@@ -167,18 +167,22 @@ def export_excel(request):
     )
     response["Content-Disposition"] = "attachment; filename=SalesOrders.xlsx"
 
-    sales_orders = SalesOrder.objects.prefetch_related("items").values(
-        "client__name",
-        "client_tel",
-        "client_address",
-        "client_email",
-        "items__product__product_name",
-        "items__ordered_quantity",
-        "items__shipped_quantity",
-        "items__stock_quantity__state",  # Assuming Inventory model has a state field
-        "items__sale_price",
-        "created_at",
-        "updated_at",
+    sales_orders = (
+        SalesOrder.objects.filter(user=request.user)
+        .prefetch_related("items")
+        .values(
+            "client__name",
+            "client_tel",
+            "client_address",
+            "client_email",
+            "items__product__product_name",
+            "items__ordered_quantity",
+            "items__shipped_quantity",
+            "items__stock_quantity__state",  # Assuming Inventory model has a state field
+            "items__sale_price",
+            "created_at",
+            "updated_at",
+        )
     )
 
     # Prepare the data for DataFrame
