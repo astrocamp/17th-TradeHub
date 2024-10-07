@@ -1,11 +1,11 @@
 <div align="center"><h1>TradeHub</h1></div>
 <div align="center">
-    <img src="/static/images/cover.png" alt="Image 1" width="500" style="margin-right: 100px;">
-    <img src="/static/images/flow_chart.png" alt="Image 2" width="500">
+    <img src="/static/images/cover.png" alt="Image 1" width="470">
+    <img src="/static/images/flow_chart.png" alt="Image 2" width="470">
 </div>
 
 - 網站連結：https://www.tradehub17th.com/
-  [簡報說明](https://docs.google.com/presentation/d/1v2hQw_RKSWMy0oe8V-FXMv5XkIlaJOuUAqhZvGWlnzQ/edit#slide=id.p)、[介紹影片](https://youtu.be/xHtVyjpEEGk?si=yQsw16fvhiQ_Wjo6)
+- [簡報說明](https://docs.google.com/presentation/d/1v2hQw_RKSWMy0oe8V-FXMv5XkIlaJOuUAqhZvGWlnzQ/edit#slide=id.p)、[介紹影片](https://youtu.be/xHtVyjpEEGk?si=yQsw16fvhiQ_Wjo6)
 
 ### 技術使用
 
