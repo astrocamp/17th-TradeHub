@@ -50,6 +50,7 @@
           <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'inventory:index' %}?sort=product&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">名稱{% if order_by == 'product' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'inventory:index' %}?sort=quantity&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">現有庫存數量{% if order_by == 'quantity' %} {{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'inventory:index' %}?sort=safety_stock&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">安全庫存數量{% if order_by == 'safety_stock' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
+          <th class="hidden sm:table-cell sm:w-1/6"><a href="{% url 'inventory:index' %}?sort=last_updated&select={{ selected_state }}&desc={{ is_desc }}&page={{ page_obj.number }}">最後更新時間{% if order_by == 'last_updated' %}{{ is_desc|yesno:' ▲, ▼' }}{% endif %}</a></th>
           <th class="w-1/3 sm:w-1/6"></th>
         </tr>
       </thead>
@@ -73,6 +74,7 @@
           <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.product }}</td>
           <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.quantity }}</td>
           <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.safety_stock }}</td>
+          <td class="text-lg font-bold hidden sm:table-cell sm:w-1/6 sm:text-xl">{{ item.last_updated|date:"Y-m-d H:i" }}</td>
           <td class="w-1/3 sm:w-1/6">
             <div class="dropdown dropdown-left">
               <div x-data tabindex="0" role="button" class="btn btn-sm btn-success text-white text-lg m-1 w-20" @click.stop>操作</div>
